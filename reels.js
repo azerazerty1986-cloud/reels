@@ -21,40 +21,45 @@ let reelsUnifiedDB = JSON.parse(localStorage.getItem('reels_unified_db') || '[]'
 
 // ========== 2. دوال يوتيوب ==========
 
-async function fetchYouTubeTrending(limit = 20) {
+async function fetchYouTubeTrending(limit = 120) {
     try {
-        const searchUrl = `https://www.googleapis.com/youtube/v3/search?` +
-            `part=snippet&type=video&videoDuration=short&` +
-            `order=viewCount&maxResults=${limit}&key=${MULTI_PLATFORM.youtubeKey}`;
+        // 👇 رابط Worker الجديد
+        const workerUrl = 'https://reels.azerazerty1986.workers.dev';
         
-        const response = await fetch(searchUrl);
-        const data = await response.json();
+        // قائمة فيديوهات مشهورة
+        const popularVideos = [
+            'dQw4w9WgXcQ',
+            'kJQP7kiw5Fk',
+            'fJ9rUzIMcZQ',
+            'RgKAFK5djSk',
+            'OPf0YbXqDm0',
+            'JGwWNGJdvx8'
+        ];
         
-        if (data.error) {
-            console.log('⚠️ يوتيوب API غير متاح، استخدام بيانات محاكاة');
-            return getMockYouTubeData(limit);
+        const results = [];
+        
+        for (let i = 0; i < limit; i++) {
+            const videoId = popularVideos[i % popularVideos.length];
+            
+            const response = await fetch(`${workerUrl}?videoId=${videoId}`);
+            const data = await response.json();
+            
+            results.push({
+                platform: 'youtube',
+                id: data.id,
+                title: data.title || 'فيديو يوتيوب',
+                channel: 'YouTube',
+                thumbnail: `https://img.youtube.com/vi/${data.id}/maxresdefault.jpg`,
+                url: `https://youtube.com/shorts/${data.id}`,
+                views: data.views || Math.floor(Math.random() * 1000000),
+                date: new Date().toISOString()
+            });
         }
         
-        const videoIds = data.items.map(item => item.id.videoId).join(',');
-        const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?` +
-            `part=statistics&id=${videoIds}&key=${MULTI_PLATFORM.youtubeKey}`;
-        
-        const detailsResponse = await fetch(detailsUrl);
-        const detailsData = await detailsResponse.json();
-        
-        return data.items.map((item, index) => ({
-            platform: 'youtube',
-            id: item.id.videoId,
-            title: item.snippet.title,
-            channel: item.snippet.channelTitle,
-            thumbnail: item.snippet.thumbnails.high.url,
-            url: `https://youtube.com/shorts/${item.id.videoId}`,
-            views: detailsData.items[index]?.statistics.viewCount || 0,
-            date: item.snippet.publishedAt
-        }));
+        return results;
         
     } catch (error) {
-        console.error('خطأ في يوتيوب:', error);
+        console.error('خطأ في جلب يوتيوب:', error);
         return getMockYouTubeData(limit);
     }
 }
