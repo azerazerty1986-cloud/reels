@@ -1,1 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام بصمات Reels - منصات متعددة</title>
+    
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- ملف CSS الخاص بنا -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- شريط التنقل العلوي -->
+    <nav class="navbar" id="mainNav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-film" style="color: var(--gold);"></i>
+                <span>بصمات Reels</span>
+            </div>
+            
+            <div class="nav-links" id="navLinks">
+                <!-- الأزرار ستضاف هنا عن طريق JavaScript -->
+            </div>
+            
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                    <span>ليلي</span>
+                </button>
+            </div>
+        </div>
+    </nav>
 
+    <!-- المحتوى الرئيسي -->
+    <main class="container">
+        <!-- قسم الترحيب -->
+        <section class="hero-section">
+            <h1 class="typing-container">
+                <span id="typing-text"></span>
+            </h1>
+            <p>نظام متكامل لجلب بصمات Reels من جميع المنصات</p>
+            
+            <div class="platform-badges">
+                <span class="platform-badge youtube"><i class="fab fa-youtube"></i> يوتيوب</span>
+                <span class="platform-badge instagram"><i class="fab fa-instagram"></i> إنستغرام</span>
+                <span class="platform-badge tiktok"><i class="fab fa-tiktok"></i> تيك توك</span>
+                <span class="platform-badge telegram"><i class="fab fa-telegram"></i> تلجرام</span>
+            </div>
+        </section>
+
+        <!-- إحصائيات سريعة -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <i class="fas fa-video"></i>
+                <span class="stat-number" id="totalReels">0</span>
+                <span class="stat-label">إجمالي البصمات</span>
+            </div>
+            <div class="stat-card">
+                <i class="fab fa-youtube" style="color: #FF0000;"></i>
+                <span class="stat-number" id="youtubeCount">0</span>
+                <span class="stat-label">يوتيوب</span>
+            </div>
+            <div class="stat-card">
+                <i class="fab fa-instagram" style="color: #E4405F;"></i>
+                <span class="stat-number" id="instagramCount">0</span>
+                <span class="stat-label">إنستغرام</span>
+            </div>
+            <div class="stat-card">
+                <i class="fab fa-tiktok"></i>
+                <span class="stat-number" id="tiktokCount">0</span>
+                <span class="stat-label">تيك توك</span>
+            </div>
+            <div class="stat-card">
+                <i class="fab fa-telegram" style="color: #0088cc;"></i>
+                <span class="stat-number" id="telegramCount">0</span>
+                <span class="stat-label">تلجرام</span>
+            </div>
+        </section>
+
+        <!-- آخر البصمات -->
+        <section class="latest-section">
+            <h2><i class="fas fa-history"></i> آخر البصمات المضافة</h2>
+            <div class="reels-grid" id="latestReels">
+                <!-- سيتم إضافة البصمات هنا -->
+            </div>
+        </section>
+    </main>
+
+    <!-- شاشة التحميل -->
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>جاري تحميل النظام...</p>
+    </div>
+
+    <!-- ملف JavaScript الخاص بنا -->
+    <script src="script.js"></script>
+</body>
+</html>
