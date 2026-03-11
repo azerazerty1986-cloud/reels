@@ -5,7 +5,7 @@ const MULTI_PLATFORM = {
         token: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
         channelId: '-1003822964890'
     },
-    youtubeKey: 'AIzaSyCwLqX3oXoXoXoXoXoXoXoXoXoXoXo', // استبدل بمفتاحك الحقيقي
+    youtubeKey: 'https://lucky-forest-3409.azerazerty1986.workers.dev/', // استبدل بمفتاحك الحقيقي
     platforms: [
         { name: 'youtube', icon: 'fab fa-youtube', color: '#FF0000', enabled: true },
         { name: 'instagram', icon: 'fab fa-instagram', color: '#E4405F', enabled: true },
