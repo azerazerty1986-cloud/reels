@@ -1,812 +1,1304 @@
-<!-- ===== نظام الجولة التفاعلية - شاشة مزدوجة ===== -->
-<div class="tour-modal" id="tourModal">
-    <div class="tour-modal-content">
-        <!-- الهيدر -->
-        <div class="tour-header">
-            <div class="tour-header-left">
-                <i class="fas fa-route" style="color: gold;"></i>
-                <span>جولة التحدي - AI Transformation</span>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 جولة التحدي - AI Transformation | مباشر</title>
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a2a2a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* ===== زر فتح الجولة ===== */
+        .launch-btn {
+            background: linear-gradient(135deg, gold, #ffd700);
+            color: black;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 60px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 20px 40px rgba(255,215,0,0.3);
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            border: 3px solid white;
+        }
+
+        .launch-btn:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 30px 60px gold;
+        }
+
+        .launch-btn i {
+            font-size: 40px;
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== الجولة التفاعلية - شاشة مزدوجة ===== */
+        .tour-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(15px);
+        }
+
+        .tour-modal-content {
+            width: 98%;
+            max-width: 1600px;
+            height: 95vh;
+            background: linear-gradient(135deg, #0a1a15, #1a3a32);
+            border-radius: 40px;
+            border: 4px solid gold;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: tourSlideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 50px rgba(255,215,0,0.3);
+        }
+
+        @keyframes tourSlideIn {
+            from { transform: scale(0.8) rotate(-2deg); opacity: 0; }
+            to { transform: scale(1) rotate(0); opacity: 1; }
+        }
+
+        /* ===== الهيدر ===== */
+        .tour-header {
+            background: linear-gradient(90deg, #000000, #1a3a32, #000000);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid gold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tour-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.2), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .tour-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: gold;
+            text-shadow: 0 0 20px gold;
+        }
+
+        .tour-header-left i {
+            font-size: 35px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .tour-header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .tour-badge {
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 20px red;
+        }
+
+        .tour-viewers {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 18px;
+            border: 1px solid gold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tour-viewers i {
+            color: gold;
+        }
+
+        .tour-close {
+            background: none;
+            border: none;
+            color: gold;
+            font-size: 40px;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .tour-close:hover {
+            background: rgba(255,215,0,0.2);
+            transform: rotate(90deg) scale(1.2);
+            color: white;
+        }
+
+        /* ===== الشاشة المزدوجة ===== */
+        .tour-dual-screen {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            flex: 1;
+            overflow: hidden;
+            background: linear-gradient(90deg, gold, transparent, gold);
+        }
+
+        .tour-contestant {
+            padding: 25px;
+            overflow-y: auto;
+            position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: gold #1a3a32;
+        }
+
+        .tour-contestant::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tour-contestant::-webkit-scrollbar-track {
+            background: #1a3a32;
+        }
+
+        .tour-contestant::-webkit-scrollbar-thumb {
+            background: gold;
+            border-radius: 10px;
+        }
+
+        .contestant-1 {
+            background: linear-gradient(135deg, #2c0a0a, #4a1a1a, #2c0a0a);
+            border-left: 3px solid gold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contestant-1::before {
+            content: '👑';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 100px;
+            opacity: 0.1;
+            transform: rotate(-15deg);
+        }
+
+        .contestant-2 {
+            background: linear-gradient(135deg, #0a2c1a, #1a4a2a, #0a2c1a);
+            border-right: 3px solid gold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contestant-2::before {
+            content: '⚡';
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 100px;
+            opacity: 0.1;
+            transform: rotate(15deg);
+        }
+
+        /* ===== رأس المتسابق ===== */
+        .contestant-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 25px;
+            border: 2px solid gold;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .contestant-avatar {
+            position: relative;
+        }
+
+        .contestant-avatar img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid gold;
+            transition: all 0.3s;
+            animation: borderGlow 2s infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { border-color: gold; }
+            50% { border-color: white; }
+        }
+
+        .contestant-avatar::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: gold;
+            border-bottom-color: gold;
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .contestant-info h3 {
+            color: gold;
+            margin: 0;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 15px gold;
+        }
+
+        .verified-badge {
+            color: #1DA1F2;
+            font-size: 18px;
+            filter: drop-shadow(0 0 5px #1DA1F2);
+        }
+
+        .contestant-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .contestant-stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        /* ===== بطاقات التطور ===== */
+        .evolution-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 30px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 2px solid gold;
+            transition: all 0.4s;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .evolution-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, gold, transparent);
+        }
+
+        .evolution-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(255,215,0,0.4);
+            border-color: white;
+        }
+
+        .evolution-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .day-badge {
+            background: linear-gradient(45deg, gold, #ffd700);
+            color: black;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(255,215,0,0.3);
+        }
+
+        .live-badge {
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+
+        .trending-badge {
+            background: linear-gradient(45deg, orange, #ff8c00);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .hot-badge {
+            background: linear-gradient(45deg, #ff4444, #cc0000);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* ===== سحابة التعليقات ===== */
+        .comment-cloud {
+            background: rgba(0,0,0,0.6);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid gold;
+        }
+
+        .comment-item {
+            margin-bottom: 12px;
+            font-size: 16px;
+            animation: slideInRight 0.5s;
+            padding: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .comment-user {
+            color: gold;
+            font-weight: bold;
+            margin-left: 8px;
+            font-size: 15px;
+        }
+
+        .comment-text {
+            color: white;
+        }
+
+        /* ===== شريط التقدم ===== */
+        .evolution-progress {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 15px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: linear-gradient(90deg, gold, #ffd700);
+            border-radius: 5px;
+            transition: width 1s;
+            box-shadow: 0 0 15px gold;
+            flex: 1;
+        }
+
+        /* ===== عرض الإنجازات ===== */
+        .mastery-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .mastery-item {
+            background: rgba(255,215,0,0.15);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid gold;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+        }
+
+        .mastery-item:hover {
+            transform: scale(1.05);
+            background: rgba(255,215,0,0.3);
+        }
+
+        .mastery-item i {
+            color: gold;
+            font-size: 32px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 10px gold);
+        }
+
+        .mastery-item span {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* ===== أزرار التفاعل ===== */
+        .reaction-bar {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .reaction-btn {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid gold;
+            color: white;
+            padding: 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .reaction-btn:hover {
+            background: gold;
+            color: black;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px gold;
+        }
+
+        .reaction-btn i {
+            font-size: 18px;
+        }
+
+        /* ===== إعلان الفائز ===== */
+        .winner-announcement {
+            background: linear-gradient(135deg, gold, #ffd700, gold);
+            color: black;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 22px;
+            margin-top: 25px;
+            animation: winnerGlow 2s infinite;
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        @keyframes winnerGlow {
+            0%, 100% { box-shadow: 0 0 30px gold; }
+            50% { box-shadow: 0 0 60px gold; }
+        }
+
+        .winner-announcement i {
+            font-size: 35px;
+            color: #ff6b6b;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* ===== شريط التحدي ===== */
+        .challenge-bar {
+            margin-top: 25px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 20px;
+            border: 1px solid gold;
+        }
+
+        .challenge-progress {
+            height: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 1px solid gold;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, gold, #ffd700);
+            transition: width 1.5s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: progressShine 2s infinite;
+        }
+
+        @keyframes progressShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .challenge-bar span {
+            font-size: 18px;
+            color: gold;
+            font-weight: bold;
+        }
+
+        /* ===== الفوتر ===== */
+        .tour-footer {
+            background: linear-gradient(90deg, #000, #1a3a32, #000);
+            border-top: 3px solid gold;
+            padding: 20px 30px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .tour-chat {
+            background: rgba(0,0,0,0.5);
+            border-radius: 25px;
+            padding: 15px;
+            border: 1px solid gold;
+        }
+
+        .chat-messages {
+            height: 100px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            scrollbar-width: thin;
+            scrollbar-color: gold #1a3a32;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #1a3a32;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: gold;
+            border-radius: 10px;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            font-size: 14px;
+            animation: fadeIn 0.3s;
+            padding: 5px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-user {
+            color: gold;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 30px;
+            border: 2px solid gold;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            box-shadow: 0 0 20px gold;
+        }
+
+        .chat-input button {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: gold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 22px;
+            color: black;
+        }
+
+        .chat-input button:hover {
+            transform: scale(1.15) rotate(15deg);
+            box-shadow: 0 0 30px gold;
+        }
+
+        .tour-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .tour-action-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid gold;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .tour-action-btn:hover {
+            background: gold;
+            color: black;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px gold;
+        }
+
+        .tour-action-btn i {
+            font-size: 22px;
+        }
+
+        /* ===== تجاوب مع الجوال ===== */
+        @media (max-width: 968px) {
+            .tour-dual-screen {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+            
+            .tour-footer {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .tour-actions {
+                justify-content: center;
+            }
+            
+            .launch-btn {
+                font-size: 20px;
+                padding: 15px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contestant-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .reaction-bar {
+                flex-direction: column;
+            }
+            
+            .tour-action-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== زر فتح الجولة ===== -->
+    <button class="launch-btn" onclick="openTourModal()">
+        <i class="fas fa-route"></i>
+        اضغط لبدء الجولة
+        <i class="fas fa-video"></i>
+    </button>
+
+    <!-- ===== الجولة التفاعلية ===== -->
+    <div class="tour-modal" id="tourModal">
+        <div class="tour-modal-content">
+            <!-- الهيدر -->
+            <div class="tour-header">
+                <div class="tour-header-left">
+                    <i class="fas fa-route"></i>
+                    <span>جولة التحدي - AI Transformation</span>
+                </div>
+                <div class="tour-header-right">
+                    <span class="tour-badge">🔴 مباشر</span>
+                    <span class="tour-viewers">
+                        <i class="fas fa-eye"></i>
+                        <span id="viewerCount">2.5K</span>
+                    </span>
+                    <button class="tour-close" onclick="closeTourModal()">&times;</button>
+                </div>
             </div>
-            <div class="tour-header-right">
-                <span class="tour-badge">مباشر</span>
-                <span class="tour-viewers"><i class="fas fa-eye"></i> 2.5K</span>
-                <button class="tour-close" onclick="closeTourModal()">&times;</button>
+
+            <!-- الشاشة المزدوجة -->
+            <div class="tour-dual-screen">
+                <!-- المتسابق 1 (User1) - الفائز -->
+                <div class="tour-contestant contestant-1">
+                    <div class="contestant-header">
+                        <div class="contestant-avatar">
+                            <img src="https://via.placeholder.com/80/FF0000/ffffff?text=U1" alt="User1">
+                        </div>
+                        <div class="contestant-info">
+                            <h3>
+                                @User1 
+                                <span class="verified-badge"><i class="fas fa-check-circle"></i></span>
+                            </h3>
+                            <div class="contestant-stats">
+                                <span><i class="fas fa-calendar"></i> اليوم 30</span>
+                                <span><i class="fas fa-users"></i> 15.4K</span>
+                                <span><i class="fas fa-star"></i> المستوى 99</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة اليوم 1 -->
+                    <div class="evolution-card day1-card">
+                        <div class="evolution-header">
+                            <span class="day-badge">DAY 1 - AI BEGINNING</span>
+                            <span class="live-badge">مباشر</span>
+                        </div>
+                        <div class="evolution-content">
+                            <div class="comment-cloud">
+                                <div class="comment-item">
+                                    <span class="comment-user">@User1:</span>
+                                    <span class="comment-text">لا أصدق عيني ✨✨</span>
+                                </div>
+                                <div class="comment-item">
+                                    <span class="comment-user">@User2:</span>
+                                    <span class="comment-text">النمو رائعة 🔥🔥</span>
+                                </div>
+                                <div class="comment-item">
+                                    <span class="comment-user">@User1:</span>
+                                    <span class="comment-text">النمو رائعة 🌟🌟</span>
+                                </div>
+                                <div class="comment-item">
+                                    <span class="comment-user">@User3:</span>
+                                    <span class="comment-text">بداية قوية 💪</span>
+                                </div>
+                            </div>
+                            <div class="evolution-progress">
+                                <div class="progress-bar" style="width: 30%"></div>
+                                <span>30% تقدم</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة اليوم 30 -->
+                    <div class="evolution-card day30-card">
+                        <div class="evolution-header">
+                            <span class="day-badge">DAY 30 - AI MASTERY</span>
+                            <span class="trending-badge"><i class="fas fa-fire"></i> رائج 1</span>
+                        </div>
+                        <div class="evolution-content">
+                            <div class="mastery-showcase">
+                                <div class="mastery-item">
+                                    <i class="fas fa-robot"></i>
+                                    <span>AI Master</span>
+                                    <small>+1000% نمو</small>
+                                </div>
+                                <div class="mastery-item">
+                                    <i class="fas fa-brain"></i>
+                                    <span>Deep Learning</span>
+                                    <small>خبير</small>
+                                </div>
+                                <div class="mastery-item">
+                                    <i class="fas fa-code"></i>
+                                    <span>5000 ساعة</span>
+                                    <small>تطوير</small>
+                                </div>
+                                <div class="mastery-item">
+                                    <i class="fas fa-trophy"></i>
+                                    <span>10 مشاريع</span>
+                                    <small>مكتملة</small>
+                                </div>
+                            </div>
+                            <div class="reaction-bar">
+                                <button class="reaction-btn" onclick="likeContestant('user1')">
+                                    <i class="fas fa-heart"></i> 12.5K
+                                </button>
+                                <button class="reaction-btn" onclick="commentContestant('user1')">
+                                    <i class="fas fa-comment"></i> 3.2K
+                                </button>
+                                <button class="reaction-btn" onclick="shareContestant('user1')">
+                                    <i class="fas fa-share"></i> مشاركة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- إعلان الفائز -->
+                    <div class="winner-announcement">
+                        <i class="fas fa-crown"></i>
+                        <span>الفائز في التحدي: @User1</span>
+                        <i class="fas fa-crown"></i>
+                    </div>
+
+                    <!-- شريط التقدم الكلي -->
+                    <div class="challenge-bar">
+                        <div class="challenge-progress">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                        <span><i class="fas fa-check-circle"></i> تحدي 30 يوم - مكتمل 100%</span>
+                    </div>
+                </div>
+
+                <!-- المتسابق 2 (User2) -->
+                <div class="tour-contestant contestant-2">
+                    <div class="contestant-header">
+                        <div class="contestant-avatar">
+                            <img src="https://via.placeholder.com/80/00b894/ffffff?text=U2" alt="User2">
+                        </div>
+                        <div class="contestant-info">
+                            <h3>
+                                @User2 
+                                <span class="verified-badge"><i class="fas fa-check-circle"></i></span>
+                            </h3>
+                            <div class="contestant-stats">
+                                <span><i class="fas fa-calendar"></i> اليوم 28</span>
+                                <span><i class="fas fa-users"></i> 12.8K</span>
+                                <span><i class="fas fa-star"></i> المستوى 85</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة اليوم 1 -->
+                    <div class="evolution-card day1-card">
+                        <div class="evolution-header">
+                            <span class="day-badge">DAY 1 - AI BEGINNING</span>
+                            <span class="live-badge">مباشر</span>
+                        </div>
+                        <div class="evolution-content">
+                            <div class="comment-cloud">
+                                <div class="comment-item">
+                                    <span class="comment-user">@User2:</span>
+                                    <span class="comment-text">بداية قوية 💪</span>
+                                </div>
+                                <div class="comment-item">
+                                    <span class="comment-user">@User1:</span>
+                                    <span class="comment-text">موفق يارب</span>
+                                </div>
+                                <div class="comment-item">
+                                    <span class="comment-user">@User4:</span>
+                                    <span class="comment-text">نشوفك في القمة</span>
+                                </div>
+                            </div>
+                            <div class="evolution-progress">
+                                <div class="progress-bar" style="width: 25%"></div>
+                                <span>25% تقدم</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة اليوم 28 -->
+                    <div class="evolution-card day28-card">
+                        <div class="evolution-header">
+                            <span class="day-badge">DAY 28 - AI ADVANCED</span>
+                            <span class="hot-badge"><i class="fas fa-bolt"></i> متطور</span>
+                        </div>
+                        <div class="evolution-content">
+                            <div class="mastery-showcase">
+                                <div class="mastery-item">
+                                    <i class="fas fa-brain"></i>
+                                    <span>Deep Learning</span>
+                                    <small>متقدم</small>
+                                </div>
+                                <div class="mastery-item">
+                                    <i class="fas fa-code"></i>
+                                    <span>AI Developer</span>
+                                    <small>محترف</small>
+                                </div>
+                                <div class="mastery-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>نمو 850%</span>
+                                    <small>مستمر</small>
+                                </div>
+                                <div class="mastery-item">
+                                    <i class="fas fa-project-diagram"></i>
+                                    <span>8 مشاريع</span>
+                                    <small>قيد التطوير</small>
+                                </div>
+                            </div>
+                            <div class="reaction-bar">
+                                <button class="reaction-btn" onclick="likeContestant('user2')">
+                                    <i class="fas fa-heart"></i> 10.2K
+                                </button>
+                                <button class="reaction-btn" onclick="commentContestant('user2')">
+                                    <i class="fas fa-comment"></i> 2.8K
+                                </button>
+                                <button class="reaction-btn" onclick="shareContestant('user2')">
+                                    <i class="fas fa-share"></i> مشاركة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- شريط التحدي -->
+                    <div class="challenge-bar">
+                        <div class="challenge-progress">
+                            <div class="progress-fill" style="width: 93%"></div>
+                        </div>
+                        <span><i class="fas fa-clock"></i> تحدي 30 يوم - 93% مكتمل</span>
+                    </div>
+
+                    <!-- رسالة تشجيع -->
+                    <div class="winner-announcement" style="background: linear-gradient(135deg, #00b894, #008b6b); margin-top: 20px;">
+                        <i class="fas fa-rocket"></i>
+                        <span>قريباً ... المستوى القادم</span>
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- الشاشة المزدوجة -->
-        <div class="tour-dual-screen">
-            <!-- المتسابق 1 (User1) -->
-            <div class="tour-contestant contestant-1">
-                <div class="contestant-header">
-                    <div class="contestant-avatar">
-                        <img src="https://via.placeholder.com/60/FF0000/ffffff?text=U1" alt="User1">
-                    </div>
-                    <div class="contestant-info">
-                        <h3>@User1 <span class="verified-badge"><i class="fas fa-check-circle"></i></span></h3>
-                        <div class="contestant-stats">
-                            <span><i class="fas fa-calendar"></i> اليوم 30</span>
-                            <span><i class="fas fa-users"></i> 15.4K متابع</span>
+            <!-- الفوتر -->
+            <div class="tour-footer">
+                <div class="tour-chat">
+                    <div class="chat-messages" id="tourChatMessages">
+                        <div class="chat-message">
+                            <span class="chat-user">@متابع:</span>
+                            <span class="chat-text">مبروك الفوز @User1 🎉🎉</span>
+                        </div>
+                        <div class="chat-message">
+                            <span class="chat-user">@مشجع:</span>
+                            <span class="chat-text">تطور رهيب 🔥🔥</span>
+                        </div>
+                        <div class="chat-message">
+                            <span class="chat-user">@محلل:</span>
+                            <span class="chat-text">منافسة شرسة بين الاثنين</span>
+                        </div>
+                        <div class="chat-message">
+                            <span class="chat-user">@زائر:</span>
+                            <span class="chat-text">أول مرة أشوف شي زي كذا</span>
+                        </div>
+                        <div class="chat-message">
+                            <span class="chat-user">@مبدع:</span>
+                            <span class="chat-text">الإبداع مستمر @User2</span>
                         </div>
                     </div>
-                </div>
-
-                <!-- شاشة التطور - اليوم 1 -->
-                <div class="evolution-card day1-card">
-                    <div class="evolution-header">
-                        <span class="day-badge">DAY 1 - AI BEGINNING</span>
-                        <span class="live-badge">مباشر</span>
-                    </div>
-                    <div class="evolution-content">
-                        <div class="comment-cloud">
-                            <div class="comment-item">
-                                <span class="comment-user">@User1:</span>
-                                <span class="comment-text">لا أصدق عيني ✨</span>
-                            </div>
-                            <div class="comment-item">
-                                <span class="comment-user">@User2:</span>
-                                <span class="comment-text">النمو رائعة 🔥</span>
-                            </div>
-                            <div class="comment-item">
-                                <span class="comment-user">@User1:</span>
-                                <span class="comment-text">النمو رائعة 🌟</span>
-                            </div>
-                        </div>
-                        <div class="evolution-progress">
-                            <div class="progress-bar" style="width: 30%"></div>
-                            <span>30% تقدم</span>
-                        </div>
+                    <div class="chat-input">
+                        <input type="text" placeholder="أكتب تعليق..." id="tourChatInput" onkeypress="if(event.key==='Enter') sendTourMessage()">
+                        <button onclick="sendTourMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
-
-                <!-- شاشة التطور - اليوم 30 -->
-                <div class="evolution-card day30-card">
-                    <div class="evolution-header">
-                        <span class="day-badge">DAY 30 - AI MASTERY</span>
-                        <span class="trending-badge"><i class="fas fa-fire"></i> رائج</span>
-                    </div>
-                    <div class="evolution-content">
-                        <div class="mastery-showcase">
-                            <div class="mastery-item">
-                                <i class="fas fa-robot"></i>
-                                <span>AI Master</span>
-                            </div>
-                            <div class="mastery-item">
-                                <i class="fas fa-chart-line"></i>
-                                <span>نمو 1000%</span>
-                            </div>
-                        </div>
-                        <div class="reaction-bar">
-                            <button class="reaction-btn"><i class="fas fa-heart"></i> 12.5K</button>
-                            <button class="reaction-btn"><i class="fas fa-comment"></i> 3.2K</button>
-                            <button class="reaction-btn"><i class="fas fa-share"></i> مشاركة</button>
-                        </div>
-                    </div>
+                <div class="tour-actions">
+                    <button class="tour-action-btn" onclick="likeTour()">
+                        <i class="fas fa-heart"></i> 22.7K
+                    </button>
+                    <button class="tour-action-btn" onclick="shareTour()">
+                        <i class="fas fa-share-alt"></i> مشاركة
+                    </button>
+                    <button class="tour-action-btn" onclick="reportTour()">
+                        <i class="fas fa-flag"></i>
+                    </button>
                 </div>
-
-                <!-- إعلان الفائز -->
-                <div class="winner-announcement">
-                    <i class="fas fa-crown"></i>
-                    <span>الفائز في التحدي: @User1</span>
-                </div>
-            </div>
-
-            <!-- المتسابق 2 (User2) -->
-            <div class="tour-contestant contestant-2">
-                <div class="contestant-header">
-                    <div class="contestant-avatar">
-                        <img src="https://via.placeholder.com/60/00b894/ffffff?text=U2" alt="User2">
-                    </div>
-                    <div class="contestant-info">
-                        <h3>@User2 <span class="verified-badge"><i class="fas fa-check-circle"></i></span></h3>
-                        <div class="contestant-stats">
-                            <span><i class="fas fa-calendar"></i> اليوم 28</span>
-                            <span><i class="fas fa-users"></i> 12.8K متابع</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- شاشة التطور - اليوم 1 -->
-                <div class="evolution-card day1-card">
-                    <div class="evolution-header">
-                        <span class="day-badge">DAY 1 - AI BEGINNING</span>
-                        <span class="live-badge">مباشر</span>
-                    </div>
-                    <div class="evolution-content">
-                        <div class="comment-cloud">
-                            <div class="comment-item">
-                                <span class="comment-user">@User2:</span>
-                                <span class="comment-text">بداية قوية 💪</span>
-                            </div>
-                            <div class="comment-item">
-                                <span class="comment-user">@User1:</span>
-                                <span class="comment-text">موفق يارب</span>
-                            </div>
-                        </div>
-                        <div class="evolution-progress">
-                            <div class="progress-bar" style="width: 25%"></div>
-                            <span>25% تقدم</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- شاشة التطور - اليوم 28 -->
-                <div class="evolution-card day28-card">
-                    <div class="evolution-header">
-                        <span class="day-badge">DAY 28 - AI ADVANCED</span>
-                        <span class="hot-badge"><i class="fas fa-bolt"></i> متطور</span>
-                    </div>
-                    <div class="evolution-content">
-                        <div class="mastery-showcase">
-                            <div class="mastery-item">
-                                <i class="fas fa-brain"></i>
-                                <span>Deep Learning</span>
-                            </div>
-                            <div class="mastery-item">
-                                <i class="fas fa-code"></i>
-                                <span>AI Developer</span>
-                            </div>
-                        </div>
-                        <div class="reaction-bar">
-                            <button class="reaction-btn"><i class="fas fa-heart"></i> 10.2K</button>
-                            <button class="reaction-btn"><i class="fas fa-comment"></i> 2.8K</button>
-                            <button class="reaction-btn"><i class="fas fa-share"></i> مشاركة</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- شريط التحدي -->
-                <div class="challenge-bar">
-                    <div class="challenge-progress">
-                        <div class="progress-fill" style="width: 93%"></div>
-                    </div>
-                    <span>تحدي 30 يوم - 93% مكتمل</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- شريط التفاعل السفلي -->
-        <div class="tour-footer">
-            <div class="tour-chat">
-                <div class="chat-messages" id="tourChatMessages">
-                    <div class="chat-message">
-                        <span class="chat-user">@متابع:</span>
-                        <span class="chat-text">مبروك الفوز 🎉</span>
-                    </div>
-                    <div class="chat-message">
-                        <span class="chat-user">@مشجع:</span>
-                        <span class="chat-text">تطور رهيب 🔥</span>
-                    </div>
-                    <div class="chat-message">
-                        <span class="chat-user">@محلل:</span>
-                        <span class="chat-text">منافسة شرسة</span>
-                    </div>
-                </div>
-                <div class="chat-input">
-                    <input type="text" placeholder="أكتب تعليق..." id="tourChatInput">
-                    <button onclick="sendTourMessage()"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </div>
-            <div class="tour-actions">
-                <button class="tour-action-btn" onclick="likeTour()">
-                    <i class="fas fa-heart"></i> 22.7K
-                </button>
-                <button class="tour-action-btn" onclick="shareTour()">
-                    <i class="fas fa-share-alt"></i> مشاركة
-                </button>
-                <button class="tour-action-btn" onclick="reportTour()">
-                    <i class="fas fa-flag"></i>
-                </button>
             </div>
         </div>
     </div>
-</div>
 
-<style>
-/* ===== أنماط الجولة التفاعلية ===== */
-.tour-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 10000;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(10px);
-}
+    <script>
+        // ===== بيانات الجولة =====
+        let viewerInterval;
+        let chatInterval;
+        let currentViewers = 2500;
 
-.tour-modal-content {
-    width: 95%;
-    max-width: 1400px;
-    height: 90vh;
-    background: linear-gradient(135deg, #0a1a15, #1a3a32);
-    border-radius: 30px;
-    border: 3px solid gold;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    animation: tourSlideIn 0.5s ease;
-}
-
-@keyframes tourSlideIn {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-/* الهيدر */
-.tour-header {
-    background: linear-gradient(90deg, #000, #1a3a32);
-    padding: 15px 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid gold;
-}
-
-.tour-header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 20px;
-    font-weight: bold;
-    color: gold;
-}
-
-.tour-header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.tour-badge {
-    background: red;
-    color: white;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: bold;
-    animation: pulse 1.5s infinite;
-}
-
-.tour-viewers {
-    background: rgba(255,255,255,0.1);
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 14px;
-}
-
-.tour-close {
-    background: none;
-    border: none;
-    color: gold;
-    font-size: 30px;
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s;
-}
-
-.tour-close:hover {
-    background: rgba(255,215,0,0.2);
-    transform: rotate(90deg);
-}
-
-/* الشاشة المزدوجة */
-.tour-dual-screen {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    flex: 1;
-    overflow: hidden;
-}
-
-.tour-contestant {
-    padding: 20px;
-    overflow-y: auto;
-    position: relative;
-}
-
-.contestant-1 {
-    background: linear-gradient(135deg, #2c0a0a, #4a1a1a);
-    border-left: 2px solid gold;
-}
-
-.contestant-2 {
-    background: linear-gradient(135deg, #0a2c1a, #1a4a2a);
-    border-right: 2px solid gold;
-}
-
-/* رأس المتسابق */
-.contestant-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    padding: 10px;
-    background: rgba(0,0,0,0.3);
-    border-radius: 15px;
-    border: 1px solid gold;
-}
-
-.contestant-avatar img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid gold;
-}
-
-.contestant-info h3 {
-    color: gold;
-    margin: 0;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.verified-badge {
-    color: #1DA1F2;
-    font-size: 14px;
-}
-
-.contestant-stats {
-    display: flex;
-    gap: 10px;
-    margin-top: 5px;
-    font-size: 12px;
-    color: #888;
-}
-
-/* بطاقات التطور */
-.evolution-card {
-    background: rgba(255,255,255,0.05);
-    border-radius: 20px;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 2px solid gold;
-    transition: all 0.3s;
-}
-
-.evolution-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(255,215,0,0.3);
-}
-
-.evolution-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.day-badge {
-    background: gold;
-    color: black;
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.live-badge {
-    background: red;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-size: 10px;
-    animation: pulse 1s infinite;
-}
-
-.trending-badge {
-    background: orange;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-size: 10px;
-}
-
-.hot-badge {
-    background: #ff4444;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-size: 10px;
-}
-
-/* سحابة التعليقات */
-.comment-cloud {
-    background: rgba(0,0,0,0.5);
-    border-radius: 15px;
-    padding: 15px;
-    margin-bottom: 15px;
-}
-
-.comment-item {
-    margin-bottom: 8px;
-    font-size: 14px;
-    animation: fadeIn 0.5s;
-}
-
-.comment-user {
-    color: gold;
-    font-weight: bold;
-    margin-left: 5px;
-}
-
-.comment-text {
-    color: white;
-}
-
-/* شريط التقدم */
-.evolution-progress {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.progress-bar {
-    height: 8px;
-    background: gold;
-    border-radius: 4px;
-    transition: width 1s;
-}
-
-/* عرض الإنجازات */
-.mastery-showcase {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.mastery-item {
-    background: rgba(255,215,0,0.1);
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    border: 1px solid gold;
-}
-
-.mastery-item i {
-    color: gold;
-    font-size: 24px;
-    margin-bottom: 5px;
-}
-
-.mastery-item span {
-    display: block;
-    font-size: 12px;
-}
-
-/* أزرار التفاعل */
-.reaction-bar {
-    display: flex;
-    gap: 10px;
-}
-
-.reaction-btn {
-    flex: 1;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid gold;
-    color: white;
-    padding: 8px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-}
-
-.reaction-btn:hover {
-    background: gold;
-    color: black;
-}
-
-/* إعلان الفائز */
-.winner-announcement {
-    background: linear-gradient(90deg, gold, #ffd700);
-    color: black;
-    padding: 15px;
-    border-radius: 15px;
-    text-align: center;
-    font-weight: bold;
-    margin-top: 20px;
-    animation: glow 2s infinite;
-}
-
-.winner-announcement i {
-    margin-left: 10px;
-}
-
-/* شريط التحدي */
-.challenge-bar {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.challenge-progress {
-    height: 10px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 5px;
-    overflow: hidden;
-    margin-bottom: 5px;
-}
-
-.progress-fill {
-    height: 100%;
-    background: gold;
-    transition: width 1s;
-}
-
-/* الفوتر */
-.tour-footer {
-    background: #0a1a15;
-    border-top: 2px solid gold;
-    padding: 15px 25px;
-    display: flex;
-    gap: 20px;
-}
-
-.tour-chat {
-    flex: 2;
-}
-
-.chat-messages {
-    height: 80px;
-    overflow-y: auto;
-    background: rgba(0,0,0,0.3);
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-.chat-message {
-    margin-bottom: 5px;
-    font-size: 13px;
-}
-
-.chat-user {
-    color: gold;
-    font-weight: bold;
-    margin-left: 5px;
-}
-
-.chat-input {
-    display: flex;
-    gap: 10px;
-}
-
-.chat-input input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 20px;
-    border: 2px solid gold;
-    background: rgba(0,0,0,0.5);
-    color: white;
-}
-
-.chat-input button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: gold;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.chat-input button:hover {
-    transform: scale(1.1);
-}
-
-.tour-actions {
-    flex: 1;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.tour-action-btn {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid gold;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.tour-action-btn:hover {
-    background: gold;
-    color: black;
-}
-
-/* حركات */
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-@keyframes glow {
-    0%, 100% { box-shadow: 0 0 20px gold; }
-    50% { box-shadow: 0 0 40px gold; }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* تجاوب مع الجوال */
-@media (max-width: 768px) {
-    .tour-dual-screen {
-        grid-template-columns: 1fr;
-        overflow-y: auto;
-    }
-    
-    .tour-footer {
-        flex-direction: column;
-    }
-    
-    .tour-actions {
-        justify-content: center;
-    }
-}
-</style>
-
-<script>
-// ===== دوال الجولة التفاعلية =====
-function openTourModal() {
-    document.getElementById('tourModal').style.display = 'flex';
-    startTourSimulation();
-}
-
-function closeTourModal() {
-    document.getElementById('tourModal').style.display = 'none';
-    stopTourSimulation();
-}
-
-// محاكاة التفاعل المباشر
-let tourInterval;
-function startTourSimulation() {
-    const messages = [
-        '@متابع: تبارك الله 👏',
-        '@مشجع: استمر 🔥',
-        '@محلل: تحليل رائع',
-        '@زائر: أول مرة أشوف',
-        '@مبدع: الإبداع مستمر'
-    ];
-    
-    let messageIndex = 0;
-    tourInterval = setInterval(() => {
-        const chatDiv = document.getElementById('tourChatMessages');
-        const newMessage = document.createElement('div');
-        newMessage.className = 'chat-message';
-        newMessage.innerHTML = `<span class="chat-user">@user${Math.floor(Math.random()*1000)}:</span> <span class="chat-text">${messages[Math.floor(Math.random()*messages.length)]}</span>`;
-        chatDiv.appendChild(newMessage);
-        chatDiv.scrollTop = chatDiv.scrollHeight;
-        
-        if (chatDiv.children.length > 10) {
-            chatDiv.removeChild(chatDiv.children[0]);
+        // ===== فتح الجولة =====
+        function openTourModal() {
+            document.getElementById('tourModal').style.display = 'flex';
+            startSimulation();
+            playSound('open');
         }
-    }, 3000);
-}
 
-function stopTourSimulation() {
-    if (tourInterval) clearInterval(tourInterval);
-}
+        // ===== إغلاق الجولة =====
+        function closeTourModal() {
+            document.getElementById('tourModal').style.display = 'none';
+            stopSimulation();
+        }
 
-function sendTourMessage() {
-    const input = document.getElementById('tourChatInput');
-    const message = input.value.trim();
-    if (!message) return;
-    
-    const chatDiv = document.getElementById('tourChatMessages');
-    const newMessage = document.createElement('div');
-    newMessage.className = 'chat-message';
-    newMessage.innerHTML = `<span class="chat-user">@${currentUser?.name || 'زائر'}:</span> <span class="chat-text">${message}</span>`;
-    chatDiv.appendChild(newMessage);
-    chatDiv.scrollTop = chatDiv.scrollHeight;
-    
-    input.value = '';
-    
-    if (chatDiv.children.length > 10) {
-        chatDiv.removeChild(chatDiv.children[0]);
-    }
-}
+        // ===== بدء المحاكاة =====
+        function startSimulation() {
+            // محاكاة عدد المشاهدين
+            viewerInterval = setInterval(() => {
+                currentViewers += Math.floor(Math.random() * 10) - 3;
+                if (currentViewers < 2000) currentViewers = 2000;
+                if (currentViewers > 3000) currentViewers = 3000;
+                
+                let viewersText = currentViewers;
+                if (currentViewers >= 1000) {
+                    viewersText = (currentViewers / 1000).toFixed(1) + 'K';
+                }
+                document.getElementById('viewerCount').textContent = viewersText;
+            }, 3000);
 
-function likeTour() {
-    showNotification('✅ تم الإعجاب بالجولة', 'success');
-}
+            // محاكاة التعليقات
+            const comments = [
+                '@متابع: واااو 🔥',
+                '@مشجع: الله أكبر 👏',
+                '@محلل: تحليل رائع',
+                '@زائر: أول مرة أشوف',
+                '@مبدع: الإبداع مستمر',
+                '@خبير: مستوى عالي',
+                '@مدرب: استمر 💪',
+                '@مطور: رهيب بجد',
+                '@مصمم: إلهام حقيقي',
+                '@طالب: تعلمت الكثير'
+            ];
 
-function shareTour() {
-    const shareText = '🔥 جولة تحدي AI من البداية للاحتراف! شاهد التطور الرهيب';
-    if (navigator.share) {
-        navigator.share({ title: 'تحدي AI', text: shareText });
-    } else {
-        navigator.clipboard.writeText(shareText);
-        showNotification('✅ تم نسخ الرابط', 'success');
-    }
-}
+            chatInterval = setInterval(() => {
+                const chatDiv = document.getElementById('tourChatMessages');
+                const randomComment = comments[Math.floor(Math.random() * comments.length)];
+                const randomUser = Math.floor(Math.random() * 1000);
+                
+                const newMessage = document.createElement('div');
+                newMessage.className = 'chat-message';
+                newMessage.innerHTML = `<span class="chat-user">@user${randomUser}:</span> <span class="chat-text">${randomComment}</span>`;
+                chatDiv.appendChild(newMessage);
+                chatDiv.scrollTop = chatDiv.scrollHeight;
+                
+                if (chatDiv.children.length > 15) {
+                    chatDiv.removeChild(chatDiv.children[0]);
+                }
+            }, 2000);
+        }
 
-function reportTour() {
-    showNotification('📢 تم الإبلاغ، شكراً لك', 'info');
-}
+        // ===== إيقاف المحاكاة =====
+        function stopSimulation() {
+            if (viewerInterval) clearInterval(viewerInterval);
+            if (chatInterval) clearInterval(chatInterval);
+        }
 
-// ===== تعديل دالة addSelectedContent في العجلة =====
-// أضف هذا الجزء لدالة addSelectedContent الموجودة
-function addSelectedContent() {
-    const contentTypes = {
-        'reel': { name: 'Reel', icon: 'film', color: '#FF0000' },
-        'live': { name: 'بث مباشر', icon: 'video', color: '#ff4444' },
-        'tour': { name: 'جولة', icon: 'route', color: '#00b894' }
-    };
-    
-    const type = selectedOption;
-    const content = contentTypes[type];
-    
-    if (type === 'tour') {
-        openTourModal(); // فتح الجولة التفاعلية
-        showNotification('🎮 تم فتح جولة التحدي', 'success');
-        return;
-    }
-    
-    // باقي الكود للخيارات الأخرى...
-    const thumbprint = generateThumbprint(type);
-    
-    // تحديث العداد
-    const countElement = document.getElementById(`${type}Count`);
-    const currentCount = parseInt(countElement.textContent) || 0;
-    countElement.textContent = currentCount + 1;
-    
-    // تحديث آخر بصمة
-    const thumbprintElement = document.getElementById(`last${type.charAt(0).toUpperCase() + type.slice(1)}Thumbprint`);
-    thumbprintElement.textContent = thumbprint;
-    
-    // إنشاء بطاقة مؤقتة
-    const previewCard = document.createElement('div');
-    previewCard.className = 'preview-card';
-    previewCard.style.animation = 'slideIn 0.3s ease';
-    previewCard.innerHTML = `
-        <i class="fas fa-${content.icon}" style="color: ${content.color};"></i>
-        <h3>${content.name} (جديد)</h3>
-        <div class="thumbprint">${thumbprint}</div>
-    `;
-    
-    // إضافة للشاشة (مؤقت)
-    document.getElementById('previewGrid').prepend(previewCard);
-    
-    // إزالة البطاقة بعد 3 ثواني
-    setTimeout(() => {
-        previewCard.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => previewCard.remove(), 300);
-    }, 3000);
-    
-    // عرض إشعار
-    showNotification(`✅ تمت إضافة ${content.name} - البصمة: ${thumbprint}`);
-}
+        // ===== إرسال تعليق =====
+        function sendTourMessage() {
+            const input = document.getElementById('tourChatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const chatDiv = document.getElementById('tourChatMessages');
+            const newMessage = document.createElement('div');
+            newMessage.className = 'chat-message';
+            newMessage.innerHTML = `<span class="chat-user">@أنت:</span> <span class="chat-text">${message}</span>`;
+            chatDiv.appendChild(newMessage);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+            
+            input.value = '';
+            
+            if (chatDiv.children.length > 15) {
+                chatDiv.removeChild(chatDiv.children[0]);
+            }
+            
+            playSound('message');
+        }
 
-// إضافة الجولة إلى HTML عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-    // إضافة الجولة إلى نهاية body
-    const tourModalHTML = document.querySelector('.tour-modal')?.outerHTML;
-    if (!tourModalHTML) {
-        const tourDiv = document.createElement('div');
-        tourDiv.innerHTML = document.querySelector('style').innerHTML + document.querySelector('.tour-modal')?.outerHTML;
-        document.body.appendChild(tourDiv);
-    }
-});
-</script>
+        // ===== تفاعلات الجولة =====
+        function likeTour() {
+            showNotification('✅ تم الإعجاب بالجولة', 'success');
+            playSound('like');
+        }
+
+        function shareTour() {
+            const shareText = '🔥🔥 جولة تحدي AI من البداية للاحتراف! شاهد التطور الرهيب بين @User1 و @User2';
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'تحدي AI',
+                    text: shareText,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(shareText);
+                showNotification('✅ تم نسخ الرابط', 'success');
+            }
+        }
+
+        function reportTour() {
+            showNotification('📢 تم الإبلاغ، شكراً لك', 'info');
+        }
+
+        // ===== تفاعلات المتسابقين =====
+        function likeContestant(contestant) {
+            const name = contestant === 'user1' ? '@User1' : '@User2';
+            showNotification(`✅ تم الإعجاب بـ ${name}`, 'success');
+            playSound('like');
+        }
+
+        function commentContestant(contestant) {
+            document.getElementById('tourChatInput').focus();
+            showNotification('💬 اكتب تعليقك الآن', 'info');
+        }
+
+        function shareContestant(contestant) {
+            const name = contestant === 'user1' ? '@User1' : '@User2';
+            const shareText = `🔥 شاهد تطور ${name} في تحدي AI من اليوم 1 إلى 30!`;
+            navigator.clipboard.writeText(shareText);
+            showNotification('✅ تم نسخ الرابط', 'success');
+        }
+
+        // ===== نظام الإشعارات =====
+        function showNotification(message, type = 'info') {
+            // إنشاء عنصر الإشعار
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background: ${type === 'success' ? 'gold' : type === 'error' ? '#ff4444' : '#0088cc'};
+                color: ${type === 'success' ? 'black' : 'white'};
+                padding: 15px 30px;
+                border-radius: 50px;
+                font-weight: bold;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 20000;
+                animation: slideIn 0.3s ease;
+                border: 2px solid white;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // ===== تأثيرات صوتية (اختيارية) =====
+        function playSound(type) {
+            // يمكن إضافة أصوات هنا إذا أردت
+            console.log(`🔊 Sound: ${type}`);
+        }
+
+        // ===== إضافة حركات CSS إضافية =====
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ===== إغلاق بالضغط على ESC =====
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('tourModal');
+                if (modal.style.display === 'flex') {
+                    closeTourModal();
+                }
+            }
+        });
+
+        // ===== تهيئة عند تحميل الصفحة =====
+        window.onload = function() {
+            console.log('🎮 نظام الجولة جاهز - انقر على الزر لبدء التحدي');
+        };
+    </script>
+</body>
+</html>
