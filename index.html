@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Cloud UI - مع جولة المستخدمين</title>
+    <title>TikTok Cloud UI - مع جولة المستخدمين وخصائص سناب شات</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -44,6 +44,7 @@
             border-left: 1px solid #eee;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .logo {
@@ -116,6 +117,82 @@
             transition: width 0.3s;
         }
 
+        /* خصائص سناب شات - الشريط الجانبي */
+        .snap-features {
+            margin-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            padding-top: 20px;
+        }
+
+        .snap-camera-btn {
+            background: linear-gradient(135deg, #ff0050, #ff8a00);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .snap-camera-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(255,0,80,0.3);
+        }
+
+        .snap-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .filter-badge {
+            background: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .filter-badge:hover, .filter-badge.active {
+            background: #ff0050;
+            color: white;
+        }
+
+        .story-ring {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff0050, #ff8a00, #00cc66, #0066cc);
+            padding: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .story-ring:hover {
+            transform: scale(1.1);
+        }
+
+        .story-ring img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
         /* المحتوى الرئيسي */
         .main-content {
             padding: 20px;
@@ -124,7 +201,7 @@
             position: relative;
         }
 
-        /* مؤشر الجولة - نفس تصميم الصورة */
+        /* مؤشر الجولة */
         .tour-guide {
             background: linear-gradient(135deg, #ff0050, #ff8a00);
             color: white;
@@ -179,7 +256,77 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        /* شريط المستخدمين - نفس تصميم الصورة */
+        /* قصص سناب شات */
+        .stories-section {
+            margin-bottom: 25px;
+        }
+
+        .stories-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .stories-carousel {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 5px;
+            scrollbar-width: thin;
+            direction: ltr;
+        }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            min-width: 70px;
+            cursor: pointer;
+        }
+
+        .story-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff0050, #ff8a00);
+            padding: 3px;
+        }
+
+        .story-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
+        .story-avatar.has-story {
+            background: linear-gradient(45deg, #ff0050, #ff8a00);
+        }
+
+        .story-add {
+            background: #f0f0f0;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #ff0050;
+            border: 2px dashed #ff0050;
+            cursor: pointer;
+        }
+
+        .story-username {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* شريط المستخدمين */
         .users-carousel {
             display: flex;
             gap: 20px;
@@ -250,7 +397,7 @@
             gap: 3px;
         }
 
-        /* بروفايل المستخدم - نفس تصميم الصورة تماماً */
+        /* بروفايل المستخدم */
         .user-profile-header {
             background: linear-gradient(135deg, #ff0050, #ff8a00);
             color: white;
@@ -416,6 +563,223 @@
             color: #ff0050;
         }
 
+        /* كاميرا سناب شات */
+        .snap-camera-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 2000;
+            flex-direction: column;
+        }
+
+        .camera-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 2001;
+        }
+
+        .camera-footer {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+            color: white;
+            z-index: 2001;
+        }
+
+        .capture-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            border: 5px solid rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .capture-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .camera-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        /* خريطة سناب شات */
+        .snap-map-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            z-index: 2000;
+            flex-direction: column;
+        }
+
+        .map-header {
+            padding: 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 2001;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 100%;
+            background: url('https://via.placeholder.com/800x600/2a2a2a/666666?text=Snap+Map') center/cover;
+            position: relative;
+        }
+
+        .map-pin {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #ff0050;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: 3px solid white;
+            cursor: pointer;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* محادثة سناب شات */
+        .chat-modal {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 2000;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #ff0050, #ff8a00);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+
+        .message.sent {
+            margin-right: auto;
+        }
+
+        .message.received {
+            margin-left: auto;
+        }
+
+        .message-content {
+            padding: 10px 15px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .message.sent .message-content {
+            background: #ff0050;
+            color: white;
+        }
+
+        .chat-input {
+            padding: 15px;
+            background: white;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .chat-input button {
+            background: #ff0050;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-input button:hover {
+            transform: scale(1.1);
+        }
+
         /* لوحة السحابة */
         .cloud-panel {
             background: white;
@@ -535,6 +899,33 @@
             border-radius: 15px;
         }
 
+        /* إشعارات */
+        .snap-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideUp 0.3s ease;
+            z-index: 3000;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         /* تجاوب مع الشاشات */
         @media (max-width: 1000px) {
             .container {
@@ -589,6 +980,18 @@
                     <i class="fas fa-compass"></i>
                     <span>جولة المستخدمين</span>
                 </div>
+                <div class="nav-item" onclick="setActive(this); openSnapCamera()">
+                    <i class="fas fa-camera"></i>
+                    <span>الكاميرا</span>
+                </div>
+                <div class="nav-item" onclick="setActive(this); openSnapMap()">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>الخريطة</span>
+                </div>
+                <div class="nav-item" onclick="setActive(this); openChat()">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>المحادثة</span>
+                </div>
                 <div class="nav-item" onclick="setActive(this)">
                     <i class="fas fa-plus-circle"></i>
                     <span>إنشاء</span>
@@ -602,6 +1005,47 @@
                     <span>الملف الشخصي</span>
                 </div>
             </nav>
+
+            <!-- خصائص سناب شات في الشريط الجانبي -->
+            <div class="snap-features">
+                <button class="snap-camera-btn" onclick="openSnapCamera()">
+                    <i class="fas fa-camera"></i>
+                    <span>كاميرا سناب</span>
+                </button>
+
+                <div class="snap-filters">
+                    <div class="filter-badge active" onclick="applyFilter('normal', this)">
+                        <i class="fas fa-smile"></i> عادي
+                    </div>
+                    <div class="filter-badge" onclick="applyFilter('bw', this)">
+                        <i class="fas fa-moon"></i> B&W
+                    </div>
+                    <div class="filter-badge" onclick="applyFilter('beauty', this)">
+                        <i class="fas fa-star"></i> جمال
+                    </div>
+                    <div class="filter-badge" onclick="applyFilter('food', this)">
+                        <i class="fas fa-utensils"></i> طعام
+                    </div>
+                    <div class="filter-badge" onclick="applyFilter('travel', this)">
+                        <i class="fas fa-plane"></i> سفر
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                    <div class="story-ring" onclick="viewStory(1)">
+                        <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="story">
+                    </div>
+                    <div class="story-ring" onclick="viewStory(2)">
+                        <img src="https://randomuser.me/api/portraits/men/4.jpg" alt="story">
+                    </div>
+                    <div class="story-ring" onclick="viewStory(3)">
+                        <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="story">
+                    </div>
+                    <div class="story-ring" onclick="addStory()">
+                        <img src="https://via.placeholder.com/60/ff0050/ffffff?text=+" alt="add">
+                    </div>
+                </div>
+            </div>
             
             <div class="storage-info">
                 <i class="fas fa-cloud-upload-alt"></i>
@@ -640,7 +1084,47 @@
                 <button class="tour-btn" onclick="nextUserTour()" id="tourBtn">التالي</button>
             </div>
 
-            <!-- شريط المستخدمين للجولة - نفس تصميم الصورة -->
+            <!-- قصص سناب شات -->
+            <div class="stories-section">
+                <div class="stories-title">
+                    <h4><i class="fas fa-history" style="color: #ff0050;"></i> القصص</h4>
+                    <span style="color: #999; font-size: 13px;">حديثة</span>
+                </div>
+                <div class="stories-carousel" id="storiesCarousel">
+                    <div class="story-item" onclick="addStory()">
+                        <div class="story-add">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <span class="story-username">قصتي</span>
+                    </div>
+                    <div class="story-item" onclick="viewStory(1)">
+                        <div class="story-avatar has-story">
+                            <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="Sara">
+                        </div>
+                        <span class="story-username">sara_beauty</span>
+                    </div>
+                    <div class="story-item" onclick="viewStory(2)">
+                        <div class="story-avatar has-story">
+                            <img src="https://randomuser.me/api/portraits/men/4.jpg" alt="Khaled">
+                        </div>
+                        <span class="story-username">khaled_cooks</span>
+                    </div>
+                    <div class="story-item" onclick="viewStory(3)">
+                        <div class="story-avatar has-story">
+                            <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="Noor">
+                        </div>
+                        <span class="story-username">noor_dance</span>
+                    </div>
+                    <div class="story-item" onclick="viewStory(4)">
+                        <div class="story-avatar has-story">
+                            <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Layla">
+                        </div>
+                        <span class="story-username">layla_art</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- شريط المستخدمين للجولة -->
             <div class="users-carousel" id="usersCarousel">
                 <!-- ستتم إضافة المستخدمين هنا عبر JavaScript -->
             </div>
@@ -688,6 +1172,76 @@
         </div>
     </div>
 
+    <!-- كاميرا سناب شات -->
+    <div class="snap-camera-modal" id="snapCamera">
+        <div class="camera-header">
+            <i class="fas fa-times" onclick="closeSnapCamera()" style="cursor: pointer; font-size: 24px;"></i>
+            <i class="fas fa-flash" onclick="toggleFlash()" style="cursor: pointer; font-size: 24px;"></i>
+        </div>
+        
+        <video class="camera-preview" id="cameraPreview" autoplay playsinline></video>
+        <div class="camera-flash" id="cameraFlash"></div>
+        
+        <div class="camera-footer">
+            <i class="fas fa-images" style="font-size: 30px; cursor: pointer;" onclick="openGallery()"></i>
+            <div class="capture-btn" onclick="capturePhoto()"></div>
+            <i class="fas fa-sync-alt" style="font-size: 30px; cursor: pointer;" onclick="switchCamera()"></i>
+        </div>
+    </div>
+
+    <!-- خريطة سناب شات -->
+    <div class="snap-map-modal" id="snapMap">
+        <div class="map-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <i class="fas fa-arrow-left" onclick="closeSnapMap()" style="cursor: pointer; font-size: 24px;"></i>
+                <h3>خريطة الأصدقاء</h3>
+                <i class="fas fa-search" style="cursor: pointer; font-size: 24px;"></i>
+            </div>
+        </div>
+        
+        <div class="map-container">
+            <div class="map-pin" style="top: 30%; left: 20%;" onclick="showUserOnMap(1)">
+                <img src="https://randomuser.me/api/portraits/women/5.jpg" style="width: 44px; height: 44px; border-radius: 50%;" alt="user">
+            </div>
+            <div class="map-pin" style="top: 60%; left: 70%;" onclick="showUserOnMap(2)">
+                <img src="https://randomuser.me/api/portraits/men/4.jpg" style="width: 44px; height: 44px; border-radius: 50%;" alt="user">
+            </div>
+            <div class="map-pin" style="top: 45%; left: 40%;" onclick="showUserOnMap(3)">
+                <img src="https://randomuser.me/api/portraits/women/3.jpg" style="width: 44px; height: 44px; border-radius: 50%;" alt="user">
+            </div>
+        </div>
+    </div>
+
+    <!-- محادثة سناب شات -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="user">
+            <div>
+                <h4>Sara Mohamed</h4>
+                <small>نشط الآن</small>
+            </div>
+            <i class="fas fa-times" onclick="closeChat()" style="margin-right: auto; cursor: pointer;"></i>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="message received">
+                <div class="message-content">مرحباً! كيف حالك؟ 👋</div>
+                <small style="color: #999;">منذ دقيقة</small>
+            </div>
+            <div class="message sent">
+                <div class="message-content">الحمدلله، وأنت؟ 😊</div>
+                <small style="color: #999;">الآن</small>
+            </div>
+        </div>
+        
+        <div class="chat-input">
+            <input type="text" placeholder="أرسل رسالة..." id="chatInput">
+            <button onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- مشغل الفيديو المنبثق -->
     <div class="video-player-modal" id="videoPlayer">
         <div class="player-content">
@@ -700,12 +1254,15 @@
                 <button class="stat-btn" style="color: white;" onclick="shareToGitHub()">
                     <i class="fab fa-github"></i> شارك
                 </button>
+                <button class="stat-btn" style="color: white;" onclick="sendAsSnap()">
+                    <i class="fas fa-camera"></i> سناب
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // بيانات المستخدمين - نفس البيانات من الصورة
+        // بيانات المستخدمين
         const users = [
             { 
                 id: 1,
@@ -795,10 +1352,14 @@
 
         // متغيرات الجولة
         let currentTourIndex = 0;
-        let tourActive = true; // الجولة مفعلة تلقائياً
+        let tourActive = true;
         let currentFollowing = new Set();
+        let currentFilter = 'normal';
+        let currentCamera = 'user';
+        let stream = null;
+        let flashActive = false;
 
-        // تحميل المستخدمين في الكاروسيل - نفس تصميم الصورة
+        // تحميل المستخدمين في الكاروسيل
         function loadUsersCarousel() {
             const carousel = document.getElementById('usersCarousel');
             carousel.innerHTML = '';
@@ -850,7 +1411,6 @@
                     document.getElementById('tourBtn').textContent = 'إنهاء الجولة';
                 }
             } else {
-                // إنهاء الجولة والعودة للصفحة الرئيسية
                 tourActive = false;
                 document.getElementById('tourGuide').style.display = 'none';
                 loadAllVideos();
@@ -887,13 +1447,12 @@
             });
         }
 
-        // عرض فيديوهات مستخدم معين - نفس تصميم الصورة بالضبط
+        // عرض فيديوهات مستخدم معين
         function showUserVideos(userId) {
             const feed = document.getElementById('videosFeed');
             const user = users.find(u => u.id === userId);
             const videos = userVideos[userId] || [];
             
-            // بروفايل المستخدم - نفس التنسيق في الصورة
             let profileHTML = `
                 <div class="user-profile-header">
                     <div class="profile-main">
@@ -929,7 +1488,6 @@
                 </div>
             `;
             
-            // إضافة الفيديوهات
             let videosHTML = '';
             videos.forEach(video => {
                 videosHTML += `
@@ -956,6 +1514,9 @@
                                     </button>
                                     <button class="stat-btn" onclick="shareToCloud('${user.username}')">
                                         <i class="fas fa-cloud-upload-alt"></i>
+                                    </button>
+                                    <button class="stat-btn" onclick="sendAsSnap()">
+                                        <i class="fas fa-camera"></i>
                                     </button>
                                 </div>
                             </div>
@@ -1000,6 +1561,9 @@
                                         <button class="stat-btn" onclick="shareToCloud('${user.username}')">
                                             <i class="fas fa-cloud-upload-alt"></i>
                                         </button>
+                                        <button class="stat-btn" onclick="sendAsSnap()">
+                                            <i class="fas fa-camera"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -1011,7 +1575,7 @@
 
         // عرض الملف الشخصي الحالي
         function showCurrentUserProfile() {
-            showUserVideos(1); // عرض أول مستخدم
+            showUserVideos(1);
         }
 
         // متابعة/إلغاء متابعة
@@ -1074,7 +1638,7 @@
 
         // فتح التعليقات
         function openComments(username) {
-            alert(`💬 فتح التعليقات لـ ${username}`);
+            showNotification(`💬 فتح التعليقات لـ ${username}`);
         }
 
         // رفع فيديو
@@ -1097,7 +1661,7 @@
                 cloudFiles.appendChild(fileItem);
                 updateStorage();
                 
-                alert(`✅ تم رفع ${file.name} إلى السحابة بنجاح!`);
+                showNotification(`✅ تم رفع ${file.name} إلى السحابة بنجاح!`);
             }
         }
 
@@ -1117,12 +1681,155 @@
 
         // مشاركة على GitHub
         function shareToGitHub() {
-            alert('✅ تم الحفظ في GitHub!');
+            showNotification('✅ تم الحفظ في GitHub!');
         }
 
         function shareToCloud(username) {
-            alert(`📤 جاري رفع الفيديو من ${username} إلى السحابة`);
+            showNotification(`📤 جاري رفع الفيديو من ${username} إلى السحابة`);
             updateStorage();
+        }
+
+        // خصائص سناب شات
+        function openSnapCamera() {
+            document.getElementById('snapCamera').style.display = 'flex';
+            startCamera();
+        }
+
+        function closeSnapCamera() {
+            document.getElementById('snapCamera').style.display = 'none';
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        }
+
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: currentCamera }, 
+                    audio: true 
+                });
+                const videoPreview = document.getElementById('cameraPreview');
+                videoPreview.srcObject = stream;
+            } catch (err) {
+                showNotification('❌ لا يمكن الوصول إلى الكاميرا');
+            }
+        }
+
+        function switchCamera() {
+            currentCamera = currentCamera === 'user' ? 'environment' : 'user';
+            closeSnapCamera();
+            openSnapCamera();
+        }
+
+        function toggleFlash() {
+            flashActive = !flashActive;
+            const flash = document.getElementById('cameraFlash');
+            if (flashActive) {
+                flash.style.opacity = '0.3';
+                setTimeout(() => {
+                    flash.style.opacity = '0';
+                }, 200);
+            }
+            showNotification(flashActive ? '⚡ فلش نشط' : '💡 فلش غير نشط');
+        }
+
+        function capturePhoto() {
+            const flash = document.getElementById('cameraFlash');
+            flash.style.opacity = '0.8';
+            setTimeout(() => {
+                flash.style.opacity = '0';
+            }, 200);
+            
+            showNotification('📸 تم التقاط الصورة!');
+        }
+
+        function openGallery() {
+            showNotification('🖼️ فتح معرض الصور');
+        }
+
+        function applyFilter(filter, element) {
+            document.querySelectorAll('.filter-badge').forEach(el => {
+                el.classList.remove('active');
+            });
+            element.classList.add('active');
+            currentFilter = filter;
+            showNotification(`✨ فلتر ${filter} مفعل`);
+        }
+
+        function openSnapMap() {
+            document.getElementById('snapMap').style.display = 'flex';
+        }
+
+        function closeSnapMap() {
+            document.getElementById('snapMap').style.display = 'none';
+        }
+
+        function showUserOnMap(userId) {
+            const user = users.find(u => u.id === userId);
+            showNotification(`📍 ${user.name} موجود في القاهرة`);
+        }
+
+        function openChat() {
+            document.getElementById('chatModal').style.display = 'flex';
+        }
+
+        function closeChat() {
+            document.getElementById('chatModal').style.display = 'none';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                const messages = document.getElementById('chatMessages');
+                messages.innerHTML += `
+                    <div class="message sent">
+                        <div class="message-content">${message}</div>
+                        <small style="color: #999;">الآن</small>
+                    </div>
+                `;
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+                
+                // رد تلقائي
+                setTimeout(() => {
+                    messages.innerHTML += `
+                        <div class="message received">
+                            <div class="message-content">شكراً لرسالتك! 😊</div>
+                            <small style="color: #999;">الآن</small>
+                        </div>
+                    `;
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000);
+            }
+        }
+
+        function viewStory(userId) {
+            const user = users.find(u => u.id === userId);
+            showNotification(`📱 مشاهدة قصة ${user.name}`);
+        }
+
+        function addStory() {
+            showNotification('📸 إضافة قصة جديدة - التقط صورة أو فيديو');
+            openSnapCamera();
+        }
+
+        function sendAsSnap() {
+            showNotification('📤 تم إرسال كسناب شات!');
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'snap-notification';
+            notification.innerHTML = `
+                <i class="fas fa-camera" style="color: #ff0050;"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
         }
 
         // تفعيل العنصر النشط
@@ -1133,10 +1840,10 @@
             element.classList.add('active');
         }
 
-        // تهيئة الصفحة - تشغيل الجولة تلقائياً
+        // تهيئة الصفحة
         window.onload = function() {
             loadUsersCarousel();
-            startUserTour(); // بدء الجولة تلقائياً
+            startUserTour();
             
             // إضافة مستمع للسحب والإفلات
             const uploadArea = document.getElementById('uploadArea');
@@ -1157,6 +1864,13 @@
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
                     handleVideoUpload({ files: files });
+                }
+            });
+
+            // تنبيه عند أخذ لقطة شاشة (محاكاة)
+            document.addEventListener('keyup', (e) => {
+                if (e.key === 'PrintScreen') {
+                    showNotification('📸 تم أخذ لقطة شاشة!');
                 }
             });
         };
