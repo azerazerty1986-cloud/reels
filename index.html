@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رفع Reels - البصمة موجودة</title>
+    <title>الصورة الناطقة - البصمة الذهبية</title>
     
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -17,7 +17,7 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #0f2b23, #1e4a3f);
+            background: linear-gradient(135deg, #1a2f3f, #2c3e50);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -38,10 +38,10 @@
         }
 
         .header h1 {
-            color: gold;
+            color: #00ffff;
             font-size: 40px;
             margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(212,175,55,0.5);
+            text-shadow: 0 0 20px rgba(0,255,255,0.5);
         }
 
         .header p {
@@ -51,8 +51,8 @@
 
         /* معلومات المستخدم */
         .user-info-bar {
-            background: linear-gradient(135deg, #2c5e4f, #1a3a32);
-            border: 2px solid gold;
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border: 2px solid #00ffff;
             border-radius: 60px;
             padding: 15px 25px;
             margin-bottom: 30px;
@@ -61,7 +61,7 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,255,255,0.2);
         }
 
         .user-details {
@@ -73,18 +73,18 @@
         .user-avatar {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, gold, #ffd700);
+            background: linear-gradient(135deg, #00ffff, #0099ff);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 30px;
-            color: #1a3a32;
+            color: #2c3e50;
             border: 3px solid white;
         }
 
         .user-info h3 {
-            color: gold;
+            color: #00ffff;
             font-size: 20px;
             margin-bottom: 5px;
         }
@@ -92,11 +92,11 @@
         .user-info .user-role {
             display: inline-block;
             padding: 3px 12px;
-            background: rgba(255,215,0,0.2);
+            background: rgba(0,255,255,0.2);
             border-radius: 20px;
             font-size: 12px;
-            color: gold;
-            border: 1px solid gold;
+            color: #00ffff;
+            border: 1px solid #00ffff;
         }
 
         .user-stats {
@@ -111,7 +111,7 @@
         .stat-value {
             font-size: 24px;
             font-weight: bold;
-            color: gold;
+            color: #00ffff;
         }
 
         .stat-label {
@@ -123,7 +123,7 @@
         .fingerprint-card {
             background: rgba(255,255,255,0.05);
             backdrop-filter: blur(10px);
-            border: 3px solid gold;
+            border: 3px solid #00ffff;
             border-radius: 30px;
             padding: 30px;
             margin-bottom: 30px;
@@ -132,13 +132,13 @@
         }
 
         @keyframes glow {
-            from { box-shadow: 0 0 30px rgba(255,215,0,0.3); }
-            to { box-shadow: 0 0 60px rgba(255,215,0,0.6); }
+            from { box-shadow: 0 0 30px rgba(0,255,255,0.3); }
+            to { box-shadow: 0 0 60px rgba(0,255,255,0.6); }
         }
 
         .fingerprint-icon {
             font-size: 80px;
-            color: gold;
+            color: #00ffff;
             margin-bottom: 15px;
             animation: pulse 2s infinite;
         }
@@ -149,7 +149,7 @@
         }
 
         .fingerprint-title {
-            color: gold;
+            color: #00ffff;
             font-size: 18px;
             margin-bottom: 10px;
         }
@@ -162,7 +162,7 @@
             background: rgba(0,0,0,0.5);
             padding: 20px;
             border-radius: 15px;
-            border: 2px solid gold;
+            border: 2px solid #00ffff;
             margin: 20px 0;
             word-break: break-all;
             direction: ltr;
@@ -175,12 +175,12 @@
             gap: 10px;
             margin: 15px 0;
             padding: 10px;
-            background: rgba(255,215,0,0.1);
+            background: rgba(0,255,255,0.1);
             border-radius: 50px;
         }
 
         .fingerprint-user i {
-            color: gold;
+            color: #00ffff;
         }
 
         .fingerprint-user span {
@@ -190,8 +190,8 @@
 
         .copy-btn {
             background: none;
-            border: 2px solid gold;
-            color: gold;
+            border: 2px solid #00ffff;
+            color: #00ffff;
             padding: 12px 30px;
             border-radius: 50px;
             font-size: 16px;
@@ -204,10 +204,10 @@
         }
 
         .copy-btn:hover {
-            background: gold;
+            background: #00ffff;
             color: black;
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px gold;
+            box-shadow: 0 10px 30px #00ffff;
         }
 
         /* النافذة المنبثقة */
@@ -232,17 +232,17 @@
         }
 
         .modal-content {
-            background: linear-gradient(135deg, #1a3a32, #0a1a15);
-            border: 3px solid gold;
+            background: linear-gradient(135deg, #2c3e50, #1a2632);
+            border: 3px solid #00ffff;
             border-radius: 30px;
             padding: 40px;
             max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 90vh;
             overflow-y: auto;
             animation: slideUp 0.5s ease;
             position: relative;
-            box-shadow: 0 0 50px rgba(255,215,0,0.5);
+            box-shadow: 0 0 50px rgba(0,255,255,0.5);
         }
 
         @keyframes slideUp {
@@ -262,14 +262,14 @@
         }
 
         .modal-header h2 {
-            color: gold;
+            color: #00ffff;
             font-size: 32px;
             margin-bottom: 10px;
         }
 
         .modal-header i {
             font-size: 60px;
-            color: gold;
+            color: #00ffff;
             margin-bottom: 10px;
         }
 
@@ -279,7 +279,7 @@
             left: 20px;
             background: none;
             border: none;
-            color: gold;
+            color: #00ffff;
             font-size: 30px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -328,62 +328,63 @@
 
         .publish-option:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255,215,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,255,255,0.5);
         }
 
         .publish-option.active {
-            border: 3px solid gold;
+            border: 3px solid #00ffff;
             transform: scale(1.05);
         }
 
-        /* منطقة رفع الفيديو */
+        /* منطقة رفع الصورة */
         .upload-area {
-            border: 3px dashed gold;
+            border: 3px dashed #00ffff;
             border-radius: 20px;
             padding: 40px 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-bottom: 25px;
-            background: rgba(255,215,0,0.05);
+            background: rgba(0,255,255,0.05);
         }
 
         .upload-area:hover {
-            background: rgba(255,215,0,0.1);
+            background: rgba(0,255,255,0.1);
             transform: scale(1.02);
         }
 
         .upload-area i {
             font-size: 60px;
-            color: gold;
+            color: #00ffff;
             margin-bottom: 15px;
         }
 
         .upload-area h3 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: gold;
+            color: #00ffff;
         }
 
-        /* معاينة الفيديو */
-        .video-preview {
+        /* معاينة الصورة */
+        .image-preview {
             margin-bottom: 25px;
             display: none;
         }
 
-        .video-preview.show {
+        .image-preview.show {
             display: block;
         }
 
-        .video-preview video {
+        .image-preview img {
             width: 100%;
             max-height: 400px;
             border-radius: 15px;
-            border: 3px solid gold;
+            border: 3px solid #00ffff;
             background: black;
+            object-fit: contain;
         }
 
-        .video-info {
+        .image-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -393,15 +394,60 @@
             border-radius: 10px;
         }
 
-        .remove-video {
+        .remove-image {
             color: #f44336;
             cursor: pointer;
             font-size: 20px;
             transition: all 0.3s ease;
         }
 
-        .remove-video:hover {
+        .remove-image:hover {
             transform: scale(1.2);
+        }
+
+        /* حقل النص الناطق */
+        .speech-area {
+            background: rgba(0,255,255,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #00ffff;
+        }
+
+        .speech-area label {
+            display: block;
+            margin-bottom: 15px;
+            color: #00ffff;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .speech-area label i {
+            margin-left: 10px;
+        }
+
+        .speech-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            color: white;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .speech-input:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(0,255,255,0.5);
+        }
+
+        .char-counter {
+            text-align: left;
+            margin-top: 5px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
         }
 
         /* حقول النموذج */
@@ -412,7 +458,7 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: gold;
+            color: #00ffff;
             font-weight: bold;
         }
 
@@ -424,7 +470,7 @@
             width: 100%;
             padding: 15px;
             background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,215,0,0.3);
+            border: 2px solid rgba(0,255,255,0.3);
             border-radius: 10px;
             color: white;
             font-size: 16px;
@@ -433,20 +479,15 @@
 
         .form-control:focus {
             outline: none;
-            border-color: gold;
-            box-shadow: 0 0 20px rgba(255,215,0,0.5);
-        }
-
-        /* معلومات القناة - مخفية تماماً */
-        .channel-info {
-            display: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0,255,255,0.5);
         }
 
         /* زر الإرسال */
         .send-btn {
             width: 100%;
             padding: 18px;
-            background: linear-gradient(135deg, gold, #ffd700);
+            background: linear-gradient(135deg, #00ffff, #0099ff);
             border: none;
             border-radius: 50px;
             color: black;
@@ -464,7 +505,7 @@
 
         .send-btn:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px gold;
+            box-shadow: 0 15px 40px #00ffff;
         }
 
         .send-btn i {
@@ -477,12 +518,12 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: linear-gradient(135deg, gold, #ffd700);
+            background: linear-gradient(135deg, #00ffff, #0099ff);
             color: black;
             padding: 15px 25px;
             border-radius: 50px;
             font-weight: bold;
-            box-shadow: 0 10px 30px rgba(212,175,55,0.5);
+            box-shadow: 0 10px 30px rgba(0,255,255,0.5);
             z-index: 2000;
             animation: slideIn 0.3s ease;
         }
@@ -509,6 +550,26 @@
             text-align: center;
             font-weight: bold;
         }
+
+        /* زر البحث */
+        .search-btn {
+            background: linear-gradient(135deg, #2c3e50, #1a2632);
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            padding: 15px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .search-btn:hover {
+            background: #00ffff;
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -516,10 +577,10 @@
         <div class="header">
             <h1>
                 <i class="fas fa-fingerprint"></i>
-                رفع Reels
-                <i class="fas fa-paper-plane"></i>
+                الصورة الناطقة
+                <i class="fas fa-microphone-alt"></i>
             </h1>
-            <p>اضغط على الزر لفتح نافذة الرفع</p>
+            <p>ارفع صورة واجعلها تتكلم - البحث بالبصمة</p>
         </div>
 
         <!-- معلومات المستخدم -->
@@ -529,37 +590,44 @@
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="user-info">
-                    <h3 id="userName">أحمد التاجر</h3>
-                    <span class="user-role" id="userRole">تاجر معتمد</span>
+                    <h3 id="userName">أحمد المبدع</h3>
+                    <span class="user-role" id="userRole">مبدع معتمد</span>
                 </div>
             </div>
             <div class="user-stats">
                 <div class="stat-item">
-                    <div class="stat-value" id="userReelsCount">12</div>
-                    <div class="stat-label">Reels</div>
+                    <div class="stat-value" id="userImagesCount">8</div>
+                    <div class="stat-label">صور ناطقة</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value" id="userPoints">450</div>
+                    <div class="stat-value" id="userPoints">320</div>
                     <div class="stat-label">نقاط</div>
                 </div>
             </div>
         </div>
 
-        <!-- زر فتح النافذة -->
-        <button class="send-btn" onclick="openReelModal()" style="margin-bottom: 30px; background: linear-gradient(135deg, #2c5e4f, #1a3a32); color: gold; border: 2px solid gold;">
-            <i class="fas fa-plus-circle" style="color: gold;"></i>
-            رفع Reel جديد
-        </button>
+        <!-- أزرار التحكم -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
+            <button class="send-btn" onclick="openImageModal()" style="background: linear-gradient(135deg, #2c3e50, #1a2632); color: #00ffff; border: 2px solid #00ffff;">
+                <i class="fas fa-plus-circle" style="color: #00ffff;"></i>
+                صورة ناطقة جديدة
+            </button>
+            
+            <button class="search-btn" onclick="openSearchModal()">
+                <i class="fas fa-search"></i>
+                بحث بالبصمة
+            </button>
+        </div>
     </div>
 
-    <!-- النافذة المنبثقة -->
-    <div class="modal" id="reelModal">
+    <!-- نافذة إنشاء صورة ناطقة -->
+    <div class="modal" id="imageModal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <button class="close-modal" onclick="closeModal('imageModal')">&times;</button>
             
             <div class="modal-header">
-                <i class="fas fa-film"></i>
-                <h2>رفع Reel</h2>
+                <i class="fas fa-camera"></i>
+                <h2>صورة ناطقة جديدة</h2>
             </div>
 
             <!-- خيارات النشر -->
@@ -578,23 +646,33 @@
                 </div>
             </div>
 
-            <!-- منطقة رفع الفيديو -->
-            <div class="upload-area" onclick="document.getElementById('videoFile').click()">
+            <!-- منطقة رفع الصورة -->
+            <div class="upload-area" onclick="document.getElementById('imageFile').click()">
                 <i class="fas fa-cloud-upload-alt"></i>
-                <h3>اضغط لرفع فيديو</h3>
-                <p>MP4, MOV, AVI - الحد الأقصى 100MB</p>
+                <h3>اضغط لرفع صورة</h3>
+                <p>JPG, PNG, GIF - الحد الأقصى 20MB</p>
             </div>
 
-            <input type="file" id="videoFile" accept="video/*" style="display: none;" onchange="handleVideoUpload(this)">
+            <input type="file" id="imageFile" accept="image/*" style="display: none;" onchange="handleImageUpload(this)">
 
-            <!-- معاينة الفيديو -->
-            <div class="video-preview" id="videoPreview">
-                <video id="videoPlayer" controls>
-                    <source src="" id="videoSource">
-                </video>
-                <div class="video-info">
-                    <div class="video-name" id="videoName"></div>
-                    <i class="fas fa-times-circle remove-video" onclick="removeVideo()"></i>
+            <!-- معاينة الصورة -->
+            <div class="image-preview" id="imagePreview">
+                <img id="previewImage" src="" alt="معاينة الصورة">
+                <div class="image-info">
+                    <div class="image-name" id="imageName"></div>
+                    <i class="fas fa-times-circle remove-image" onclick="removeImage()"></i>
+                </div>
+            </div>
+
+            <!-- منطقة النص الناطق -->
+            <div class="speech-area">
+                <label>
+                    <i class="fas fa-microphone-alt"></i>
+                    ماذا تريد أن تقول الصورة؟
+                </label>
+                <textarea class="speech-input" id="speechText" placeholder="اكتب هنا الكلمات التي تريد أن تنطقها الصورة..." maxlength="500"></textarea>
+                <div class="char-counter">
+                    <span id="charCount">0</span>/500 حرف
                 </div>
             </div>
 
@@ -603,11 +681,11 @@
                 <div class="fingerprint-icon" style="font-size: 40px;">
                     <i class="fas fa-fingerprint"></i>
                 </div>
-                <div class="fingerprint-title">البصمة</div>
+                <div class="fingerprint-title">بصمة الصورة الناطقة</div>
                 <div class="fingerprint-value" id="modalThumbprint" style="font-size: 20px; padding: 10px;">---</div>
                 <div class="fingerprint-user">
                     <i class="fas fa-user-circle"></i>
-                    <span id="modalUser">أحمد التاجر</span>
+                    <span id="modalUser">أحمد المبدع</span>
                 </div>
                 <button class="copy-btn" onclick="copyThumbprint()" style="margin-top: 10px;">
                     <i class="fas fa-copy"></i>
@@ -615,19 +693,53 @@
                 </button>
             </div>
 
-            <!-- رسالة الخطأ (تظهر عند الحاجة) -->
+            <!-- رسالة الخطأ -->
             <div class="error-message" id="errorMessage" style="display: none;"></div>
 
-            <!-- حقول النشر -->
+            <!-- عنوان إضافي -->
             <div class="form-group">
-                <label><i class="fas fa-heading"></i> العنوان</label>
-                <input type="text" class="form-control" id="postTitle" placeholder="أدخل العنوان..." value="ريلز">
+                <label><i class="fas fa-heading"></i> عنوان إضافي (اختياري)</label>
+                <input type="text" class="form-control" id="postTitle" placeholder="أدخل عنواناً للصورة..." value="صورة ناطقة">
             </div>
 
-            <!-- زر الإرسال (بدون كلمة تلجرام) -->
+            <!-- زر الإرسال -->
             <button class="send-btn" onclick="sendToTelegram()">
                 <i class="fas fa-paper-plane"></i>
-                إرسال
+                إرسال الصورة الناطقة
+            </button>
+        </div>
+    </div>
+
+    <!-- نافذة البحث بالبصمة -->
+    <div class="modal" id="searchModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('searchModal')">&times;</button>
+            
+            <div class="modal-header">
+                <i class="fas fa-search"></i>
+                <h2>بحث بالبصمة</h2>
+            </div>
+
+            <!-- حقل البحث -->
+            <div class="form-group">
+                <label><i class="fas fa-fingerprint"></i> أدخل البصمة</label>
+                <input type="text" class="form-control" id="searchThumbprint" placeholder="مثال: IMG_1002_240315_143025">
+            </div>
+
+            <!-- قائمة آخر البصمات -->
+            <div style="margin-bottom: 20px;">
+                <label style="color: #00ffff; margin-bottom: 10px; display: block;">
+                    <i class="fas fa-history"></i> آخر البصمات
+                </label>
+                <div id="recentThumbprints" style="max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px;">
+                    <!-- سيتم تعبئتها بالجافاسكربت -->
+                </div>
+            </div>
+
+            <!-- زر البحث -->
+            <button class="search-btn" onclick="searchByThumbprint()">
+                <i class="fas fa-search"></i>
+                بحث في القناة
             </button>
         </div>
     </div>
@@ -642,33 +754,63 @@
         // ========== بيانات المستخدم ==========
         const currentUser = {
             id: 1002,
-            name: 'أحمد التاجر',
-            role: 'merchant_approved',
-            points: 450,
-            reelsCount: 12
+            name: 'أحمد المبدع',
+            role: 'creator_approved',
+            points: 320,
+            imagesCount: 8
         };
 
         // ========== قاعدة بيانات البصمات ==========
-        let thumbprintsDB = JSON.parse(localStorage.getItem('user_thumbprints')) || [];
+        let thumbprintsDB = JSON.parse(localStorage.getItem('speaking_images_db')) || [];
 
         // ========== متغيرات ==========
         let publishType = 'channel';
         let selectedFile = null;
         let currentThumbprint = '';
 
-        // ========== فتح النافذة ==========
-        function openReelModal() {
-            document.getElementById('reelModal').style.display = 'flex';
+        // ========== فتح نافذة الصورة ==========
+        function openImageModal() {
+            document.getElementById('imageModal').style.display = 'flex';
             document.getElementById('errorMessage').style.display = 'none';
             generateThumbprint();
             document.getElementById('modalUser').textContent = currentUser.name;
         }
 
+        // ========== فتح نافذة البحث ==========
+        function openSearchModal() {
+            document.getElementById('searchModal').style.display = 'flex';
+            updateRecentThumbprints();
+        }
+
+        // ========== تحديث آخر البصمات ==========
+        function updateRecentThumbprints() {
+            const container = document.getElementById('recentThumbprints');
+            if (thumbprintsDB.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: gray; padding: 20px;">لا توجد بصمات سابقة</div>';
+                return;
+            }
+
+            let html = '';
+            thumbprintsDB.slice(0, 10).forEach(item => {
+                html += `
+                    <div style="padding: 10px; border-bottom: 1px solid rgba(0,255,255,0.2); cursor: pointer;" onclick="document.getElementById('searchThumbprint').value = '${item.thumbprint}'">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #00ffff;">${item.thumbprint}</span>
+                            <span style="color: gray; font-size: 12px;">${new Date(item.timestamp).toLocaleString('ar-EG')}</span>
+                        </div>
+                        <div style="font-size: 12px; color: white;">${item.speechText.substring(0, 50)}${item.speechText.length > 50 ? '...' : ''}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
         // ========== إغلاق النافذة ==========
-        function closeModal() {
-            document.getElementById('reelModal').style.display = 'none';
-            removeVideo();
-            document.getElementById('errorMessage').style.display = 'none';
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'imageModal') {
+                removeImage();
+            }
         }
 
         // ========== توليد بصمة فريدة ==========
@@ -681,7 +823,7 @@
             const minutes = date.getMinutes().toString().padStart(2, '0');
             const seconds = date.getSeconds().toString().padStart(2, '0');
             
-            let prefix = 'REL';
+            let prefix = 'IMG';
             if (publishType === 'group') prefix = 'GRP';
             else if (publishType === 'story') prefix = 'STR';
             
@@ -691,7 +833,7 @@
             document.getElementById('modalThumbprint').textContent = currentThumbprint;
         }
 
-        // ========== تحديث البصمة ==========
+        // ========== تحديث البصمة كل ثانية ==========
         setInterval(generateThumbprint, 1000);
 
         // ========== اختيار نوع النشر ==========
@@ -706,33 +848,40 @@
             generateThumbprint();
         }
 
-        // ========== معالجة رفع الفيديو ==========
-        function handleVideoUpload(input) {
+        // ========== معالجة رفع الصورة ==========
+        function handleImageUpload(input) {
             if (input.files && input.files[0]) {
                 selectedFile = input.files[0];
                 
-                if (selectedFile.size > 100 * 1024 * 1024) {
-                    showNotification('❌ حجم الفيديو كبير جداً (الحد الأقصى 100MB)', 'error');
+                if (selectedFile.size > 20 * 1024 * 1024) {
+                    showNotification('❌ حجم الصورة كبير جداً (الحد الأقصى 20MB)', 'error');
                     return;
                 }
 
-                const videoURL = URL.createObjectURL(selectedFile);
-                document.getElementById('videoSource').src = videoURL;
-                document.getElementById('videoPlayer').load();
-                document.getElementById('videoPreview').classList.add('show');
-                document.getElementById('videoName').textContent = selectedFile.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImage').src = e.target.result;
+                    document.getElementById('imagePreview').classList.add('show');
+                    document.getElementById('imageName').textContent = selectedFile.name;
+                }
+                reader.readAsDataURL(selectedFile);
 
-                showNotification('✅ تم رفع الفيديو', 'success');
+                showNotification('✅ تم رفع الصورة', 'success');
             }
         }
 
-        // ========== إزالة الفيديو ==========
-        function removeVideo() {
+        // ========== إزالة الصورة ==========
+        function removeImage() {
             selectedFile = null;
-            document.getElementById('videoPreview').classList.remove('show');
-            document.getElementById('videoFile').value = '';
-            document.getElementById('videoSource').src = '';
+            document.getElementById('imagePreview').classList.remove('show');
+            document.getElementById('imageFile').value = '';
+            document.getElementById('previewImage').src = '';
         }
+
+        // ========== عدّاد الحروف ==========
+        document.getElementById('speechText').addEventListener('input', function() {
+            document.getElementById('charCount').textContent = this.value.length;
+        });
 
         // ========== نسخ البصمة ==========
         function copyThumbprint() {
@@ -743,34 +892,43 @@
 
         // ========== حفظ البصمة ==========
         function saveThumbprint() {
+            const speechText = document.getElementById('speechText').value || 'صورة ناطقة';
+            
             const newEntry = {
                 id: Date.now(),
                 thumbprint: currentThumbprint,
                 type: publishType,
-                title: document.getElementById('postTitle').value || 'ريلز',
+                title: document.getElementById('postTitle').value || 'صورة ناطقة',
+                speechText: speechText,
                 userId: currentUser.id,
                 userName: currentUser.name,
                 timestamp: new Date().toISOString(),
-                videoName: selectedFile ? selectedFile.name : 'بدون فيديو'
+                imageName: selectedFile ? selectedFile.name : 'بدون صورة'
             };
 
             thumbprintsDB.unshift(newEntry);
-            currentUser.reelsCount++;
-            currentUser.points += 10;
+            currentUser.imagesCount++;
+            currentUser.points += 15;
             
-            localStorage.setItem('user_thumbprints', JSON.stringify(thumbprintsDB));
+            localStorage.setItem('speaking_images_db', JSON.stringify(thumbprintsDB));
             
             // تحديث الواجهة
-            document.getElementById('userReelsCount').textContent = currentUser.reelsCount;
+            document.getElementById('userImagesCount').textContent = currentUser.imagesCount;
             document.getElementById('userPoints').textContent = currentUser.points;
             
             return newEntry;
         }
 
-        // ========== إرسال (بدون ذكر تلجرام) ==========
+        // ========== إرسال الصورة الناطقة ==========
         async function sendToTelegram() {
             if (!selectedFile) {
-                showNotification('❌ الرجاء رفع فيديو أولاً', 'error');
+                showNotification('❌ الرجاء رفع صورة أولاً', 'error');
+                return;
+            }
+
+            const speechText = document.getElementById('speechText').value;
+            if (!speechText) {
+                showNotification('❌ الرجاء كتابة ما تريد أن تقوله الصورة', 'error');
                 return;
             }
 
@@ -780,36 +938,59 @@
             // حفظ البصمة
             const savedEntry = saveThumbprint();
 
-            // رسالة عادية بدون تنسيق
-            const title = document.getElementById('postTitle').value || 'ريلز';
-            const message = `🎬 Reel جديد\n\n👤 المستخدم: ${currentUser.name}\n🔍 البصمة: ${currentThumbprint}\n📌 النوع: ${publishType === 'channel' ? 'قناة' : publishType === 'group' ? 'مجموعة' : 'ستوري'}\n📝 العنوان: ${title}\n📁 الملف: ${selectedFile.name}\n📅 التاريخ: ${new Date().toLocaleString('ar-EG')}\n\n✅ تم الإرسال`;
+            // تجهيز الرسالة
+            const title = document.getElementById('postTitle').value || 'صورة ناطقة';
+            const message = `🖼️ **صورة ناطقة جديدة**\n\n` +
+                           `👤 **المستخدم:** ${currentUser.name}\n` +
+                           `🔍 **البصمة:** \`${currentThumbprint}\`\n` +
+                           `📌 **النوع:** ${publishType === 'channel' ? 'قناة' : publishType === 'group' ? 'مجموعة' : 'ستوري'}\n` +
+                           `📝 **العنوان:** ${title}\n` +
+                           `💬 **تكلمت الصورة:**\n"${speechText}"\n\n` +
+                           `📁 **الملف:** ${selectedFile.name}\n` +
+                           `📅 **التاريخ:** ${new Date().toLocaleString('ar-EG')}\n\n` +
+                           `✅ تم الإنشاء بنجاح`;
 
             try {
-                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM.botToken}/sendMessage`, {
+                // محاولة إرسال الصورة أولاً
+                const formData = new FormData();
+                formData.append('chat_id', TELEGRAM.channelId);
+                formData.append('photo', selectedFile);
+                formData.append('caption', `🖼️ ${title}\n💬 ${speechText}\n🔍 ${currentThumbprint}`);
+
+                const response = await fetch(`https://api.tenor.googleapis.com/telegram.org/bot${TELEGRAM.botToken}/sendPhoto`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM.channelId,
-                        text: message,
-                        parse_mode: ''
-                    })
+                    body: formData
                 });
 
                 const data = await response.json();
 
                 if (data.ok) {
-                    showNotification(`✅ تم الإرسال - ${currentThumbprint}`, 'success');
+                    // إرسال تأكيد إضافي
+                    await fetch(`https://api.telegram.org/bot${TELEGRAM.botToken}/sendMessage`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            chat_id: TELEGRAM.channelId,
+                            text: message,
+                            parse_mode: 'Markdown'
+                        })
+                    });
+
+                    showNotification(`✅ تم إرسال الصورة الناطقة - ${currentThumbprint}`, 'success');
                     
-                    document.getElementById('postTitle').value = 'ريلز';
-                    removeVideo();
+                    // تنظيف الحقول
+                    document.getElementById('postTitle').value = 'صورة ناطقة';
+                    document.getElementById('speechText').value = '';
+                    document.getElementById('charCount').textContent = '0';
+                    removeImage();
                     
                     setTimeout(() => {
-                        closeModal();
+                        closeModal('imageModal');
                     }, 2000);
                 } else {
-                    const errorMsg = data.description || 'خطأ';
+                    const errorMsg = data.description || 'خطأ في الإرسال';
                     document.getElementById('errorMessage').innerHTML = `❌ ${errorMsg}`;
                     document.getElementById('errorMessage').style.display = 'block';
                     showNotification('❌ فشل الإرسال', 'error');
@@ -818,6 +999,62 @@
                 document.getElementById('errorMessage').innerHTML = `❌ خطأ: ${error.message}`;
                 document.getElementById('errorMessage').style.display = 'block';
                 showNotification('❌ فشل الاتصال', 'error');
+            }
+        }
+
+        // ========== البحث بالبصمة ==========
+        async function searchByThumbprint() {
+            const thumbprint = document.getElementById('searchThumbprint').value.trim();
+            
+            if (!thumbprint) {
+                showNotification('❌ الرجاء إدخال بصمة', 'error');
+                return;
+            }
+
+            showNotification('🔄 جاري البحث...', 'info');
+
+            try {
+                // البحث في قاعدة البيانات المحلية
+                const localResult = thumbprintsDB.find(item => item.thumbprint === thumbprint);
+                
+                let message = `🔍 **نتيجة البحث عن البصمة:** \`${thumbprint}\`\n\n`;
+                
+                if (localResult) {
+                    message += `✅ **موجود في السجلات المحلية**\n\n` +
+                              `👤 **المستخدم:** ${localResult.userName}\n` +
+                              `💬 **النص الناطق:** "${localResult.speechText}"\n` +
+                              `📌 **النوع:** ${localResult.type === 'channel' ? 'قناة' : localResult.type === 'group' ? 'مجموعة' : 'ستوري'}\n` +
+                              `📝 **العنوان:** ${localResult.title}\n` +
+                              `📅 **التاريخ:** ${new Date(localResult.timestamp).toLocaleString('ar-EG')}\n` +
+                              `📁 **الملف:** ${localResult.imageName}`;
+                } else {
+                    message += `❌ **غير موجود في السجلات المحلية**\n\n` +
+                              `قد تكون الصورة في القناة ولكن لم يتم تسجيلها محلياً.`;
+                }
+
+                // إرسال نتيجة البحث إلى التلجرام
+                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM.botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM.channelId,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.ok) {
+                    showNotification('✅ تم إرسال نتيجة البحث', 'success');
+                    closeModal('searchModal');
+                } else {
+                    showNotification('❌ فشل إرسال نتيجة البحث', 'error');
+                }
+            } catch (error) {
+                showNotification('❌ خطأ في البحث', 'error');
             }
         }
 
@@ -839,18 +1076,17 @@
             }, 3000);
         }
 
-        // ========== إغلاق النافذة عند الضغط خارجها ==========
+        // ========== إغلاق النوافذ عند الضغط خارجها ==========
         window.onclick = function(event) {
-            const modal = document.getElementById('reelModal');
-            if (event.target === modal) {
-                closeModal();
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
             }
         };
 
         // ========== تهيئة الصفحة ==========
         document.getElementById('userName').textContent = currentUser.name;
-        document.getElementById('userRole').textContent = 'تاجر معتمد';
-        document.getElementById('userReelsCount').textContent = currentUser.reelsCount;
+        document.getElementById('userRole').textContent = 'مبدع معتمد';
+        document.getElementById('userImagesCount').textContent = currentUser.imagesCount;
         document.getElementById('userPoints').textContent = currentUser.points;
     </script>
 </body>
