@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lip Sync - صورتك تتكلم</title>
+    <title>Lip Sync - حدد مكان الفم</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -25,7 +25,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
         }
 
@@ -50,54 +50,33 @@
         }
 
         /* منطقة الصورة */
-        .image-area {
+        .image-container {
             position: relative;
-            width: 300px;
-            height: 300px;
-            margin: 0 auto 30px;
-            border-radius: 50%;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
             overflow: hidden;
             border: 4px solid #00ffaa;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            cursor: pointer;
         }
 
         #uploadedImage {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
+            display: block;
         }
 
-        .upload-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,255,170,0.1);
-            color: #00ffaa;
-        }
-
-        .upload-placeholder i {
-            font-size: 80px;
-            margin-bottom: 15px;
-        }
-
-        /* قناع الفم (متحرك) */
+        /* قناع الفم المتحرك */
         .mouth-mask {
             position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 40px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 20px;
+            width: 80px;
+            height: 30px;
+            background: rgba(255,107,107,0.7);
+            border-radius: 15px;
             overflow: hidden;
-            border: 2px solid #00ffaa;
-            display: none;
+            border: 2px solid #ffd700;
+            cursor: move;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(255,215,0,0.5);
         }
 
         .mouth-animation {
@@ -106,6 +85,52 @@
             background: linear-gradient(180deg, #ff6b6b, #ff4757);
             transform-origin: top;
             transition: transform 0.05s;
+        }
+
+        /* أداة التحديد */
+        .position-controls {
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            padding: 15px;
+            margin: 20px 0;
+            border: 2px solid #00ffaa;
+        }
+
+        .slider-group {
+            margin: 15px 0;
+        }
+
+        .slider-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ffaa;
+        }
+
+        input[type=range] {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #00ffaa;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .coord-value {
+            display: inline-block;
+            background: #00ffaa;
+            color: black;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-right: 10px;
+            font-weight: bold;
         }
 
         /* منطقة النص */
@@ -124,11 +149,6 @@
             resize: vertical;
             min-height: 100px;
             font-family: 'Cairo', sans-serif;
-        }
-
-        textarea:focus {
-            outline: none;
-            box-shadow: 0 0 20px #00ffaa;
         }
 
         /* أزرار التحكم */
@@ -176,11 +196,6 @@
             color: black;
         }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
         /* البصمة */
         .fingerprint {
             background: rgba(0,255,170,0.1);
@@ -204,12 +219,6 @@
             cursor: pointer;
         }
 
-        .copy-btn:hover {
-            background: #00ffaa;
-            color: black;
-        }
-
-        /* مؤشر التسجيل */
         .status {
             text-align: center;
             margin: 15px 0;
@@ -234,30 +243,70 @@
         <div class="header">
             <h1>
                 <i class="fas fa-face-smile"></i>
-                صورتك تتكلم
+                حدد مكان الفم ثم تحدث
             </h1>
         </div>
 
         <div class="card">
-            <!-- منطقة الصورة -->
-            <div class="image-area" onclick="document.getElementById('imageInput').click()">
-                <img id="uploadedImage" src="" alt="صورتك">
-                <div class="upload-placeholder" id="uploadPlaceholder">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <span>اضغط لرفع الصورة</span>
+            <!-- الصورة مع الفم المتحرك -->
+            <div class="image-container" id="imageContainer">
+                <img id="uploadedImage" src="" alt="صورتك" style="display: none;">
+                <div id="uploadPlaceholder" style="text-align: center; padding: 50px; background: rgba(0,255,170,0.1); border-radius: 20px;" onclick="document.getElementById('imageInput').click()">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 80px; color: #00ffaa;"></i>
+                    <p style="margin-top: 20px;">اضغط لرفع الصورة</p>
                 </div>
                 
-                <!-- قناع الفم المتحرك -->
-                <div class="mouth-mask" id="mouthMask">
+                <!-- الفم المتحرك (قابل للتحريك) -->
+                <div class="mouth-mask" id="mouthMask" style="display: none;">
                     <div class="mouth-animation" id="mouthAnimation"></div>
                 </div>
             </div>
 
             <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(this)">
 
+            <!-- أدوات تحديد مكان الفم -->
+            <div class="position-controls" id="positionControls" style="display: none;">
+                <h3 style="color: #00ffaa; margin-bottom: 15px;">
+                    <i class="fas fa-arrows-alt"></i>
+                    حدد مكان الفم
+                </h3>
+                
+                <div class="slider-group">
+                    <label>
+                        <i class="fas fa-arrow-left"></i>
+                        الوضع الأفقي (X):
+                        <span class="coord-value" id="xValue">50%</span>
+                    </label>
+                    <input type="range" id="xSlider" min="0" max="100" value="50" step="1" oninput="updateMouthPosition()">
+                </div>
+                
+                <div class="slider-group">
+                    <label>
+                        <i class="fas fa-arrow-down"></i>
+                        الوضع الرأسي (Y):
+                        <span class="coord-value" id="yValue">50%</span>
+                    </label>
+                    <input type="range" id="ySlider" min="0" max="100" value="50" step="1" oninput="updateMouthPosition()">
+                </div>
+                
+                <div class="slider-group">
+                    <label>
+                        <i class="fas fa-expand"></i>
+                        حجم الفم:
+                        <span class="coord-value" id="sizeValue">80px</span>
+                    </label>
+                    <input type="range" id="sizeSlider" min="40" max="150" value="80" step="5" oninput="updateMouthSize()">
+                </div>
+                
+                <p style="color: #aaa; font-size: 14px; margin-top: 10px;">
+                    <i class="fas fa-info-circle"></i>
+                    حرك المؤشرات حتى يصبح الفم الأحمر على فم الصورة
+                </p>
+            </div>
+
             <!-- منطقة النص -->
             <div class="text-area">
-                <textarea id="speechText" placeholder="اكتب هنا النص الذي تريد أن تنطقه الصورة..." maxlength="300"></textarea>
+                <textarea id="speechText" placeholder="اكتب هنا النص الذي تريد أن تنطقه الصورة..." maxlength="300">السلام عليكم</textarea>
             </div>
 
             <!-- أزرار التحكم -->
@@ -281,10 +330,10 @@
                 </button>
             </div>
 
-            <!-- حالة التسجيل -->
+            <!-- حالة التشغيل -->
             <div class="status" id="status">
                 <i class="fas fa-microphone"></i>
-                جاهز للتحدث
+                1. ارفع صورة - 2. حدد مكان الفم - 3. تحدث
             </div>
         </div>
     </div>
@@ -300,7 +349,6 @@
         let selectedImage = null;
         let isSpeaking = false;
         let currentThumbprint = '';
-        let speechSynthesisUtterance = null;
 
         // ========== توليد بصمة ==========
         function generateThumbprint() {
@@ -326,20 +374,43 @@
                     
                     document.getElementById('uploadPlaceholder').style.display = 'none';
                     
-                    // إظهار قناع الفم
+                    // إظهار الفم وأدوات التحكم
                     document.getElementById('mouthMask').style.display = 'block';
+                    document.getElementById('positionControls').style.display = 'block';
                     
-                    // تحديد مكان الفم بناء على الصورة (افتراضي)
-                    positionMouth();
+                    // وضع الفم في منتصف الصورة تقريباً
+                    setTimeout(() => {
+                        updateMouthPosition();
+                    }, 100);
+                    
+                    document.getElementById('status').innerHTML = '<i class="fas fa-arrows-alt"></i> حرك المؤشرات لتحديد مكان الفم';
                 };
                 reader.readAsDataURL(selectedImage);
             }
         }
 
-        // ========== تحديد مكان الفم ==========
-        function positionMouth() {
-            // هنا يمكن تعديل مكان الفم بناء على الصورة
-            // حالياً يبقى في الوضع الافتراضي
+        // ========== تحديث مكان الفم ==========
+        function updateMouthPosition() {
+            const x = document.getElementById('xSlider').value;
+            const y = document.getElementById('ySlider').value;
+            
+            document.getElementById('xValue').textContent = x + '%';
+            document.getElementById('yValue').textContent = y + '%';
+            
+            const mouth = document.getElementById('mouthMask');
+            mouth.style.left = x + '%';
+            mouth.style.top = y + '%';
+        }
+
+        // ========== تحديث حجم الفم ==========
+        function updateMouthSize() {
+            const size = document.getElementById('sizeSlider').value;
+            document.getElementById('sizeValue').textContent = size + 'px';
+            
+            const mouth = document.getElementById('mouthMask');
+            mouth.style.width = size + 'px';
+            mouth.style.height = (size * 0.4) + 'px';
+            mouth.style.borderRadius = (size * 0.2) + 'px';
         }
 
         // ========== تحريك الشفاه مع الكلام ==========
@@ -357,84 +428,58 @@
             }
 
             // إيقاف أي كلام سابق
-            if (speechSynthesis.speaking) {
-                speechSynthesis.cancel();
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
             }
 
             // بدء كلام جديد
-            speechSynthesisUtterance = new SpeechSynthesisUtterance(text);
+            const utterance = new SpeechSynthesisUtterance(text);
             
             // اختيار صوت عربي
-            const voices = speechSynthesis.getVoices();
-            const arabicVoice = voices.find(voice => voice.lang.includes('ar'));
+            const voices = window.speechSynthesis.getVoices();
+            const arabicVoice = voices.find(voice => voice.lang.includes('ar-'));
             if (arabicVoice) {
-                speechSynthesisUtterance.voice = arabicVoice;
+                utterance.voice = arabicVoice;
             }
             
-            speechSynthesisUtterance.lang = 'ar-SA';
-            speechSynthesisUtterance.rate = 0.9;
-            speechSynthesisUtterance.pitch = 1;
+            utterance.lang = 'ar-SA';
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
 
             // بدء تحريك الشفاه
-            speechSynthesisUtterance.onstart = () => {
+            utterance.onstart = () => {
                 isSpeaking = true;
                 document.getElementById('status').innerHTML = '<i class="fas fa-microphone-alt recording"></i> تتحدث...';
                 document.getElementById('speakBtn').innerHTML = '<i class="fas fa-stop"></i> إيقاف';
             };
 
             // تحريك الشفاه أثناء الكلام
-            speechSynthesisUtterance.onboundary = (event) => {
+            utterance.onboundary = (event) => {
                 if (event.name === 'word') {
-                    // فتح الفم عند بداية الكلمة
-                    animateMouth(true);
+                    // فتح الفم بشكل عشوائي
+                    const openAmount = 0.3 + Math.random() * 0.5;
+                    document.getElementById('mouthAnimation').style.transform = `scaleY(${openAmount})`;
                     
                     // إغلاق الفم بعد فترة قصيرة
                     setTimeout(() => {
-                        animateMouth(false);
-                    }, 150);
+                        document.getElementById('mouthAnimation').style.transform = 'scaleY(1)';
+                    }, 100);
                 }
             };
 
             // نهاية الكلام
-            speechSynthesisUtterance.onend = () => {
+            utterance.onend = () => {
                 isSpeaking = false;
-                document.getElementById('status').innerHTML = '<i class="fas fa-microphone"></i> جاهز للتحدث';
+                document.getElementById('status').innerHTML = '<i class="fas fa-check"></i> انتهى الكلام';
                 document.getElementById('speakBtn').innerHTML = '<i class="fas fa-play"></i> تحدث الآن';
-                resetMouth();
+                document.getElementById('mouthAnimation').style.transform = 'scaleY(1)';
+                
+                setTimeout(() => {
+                    document.getElementById('status').innerHTML = '<i class="fas fa-microphone"></i> جاهز للتحدث';
+                }, 2000);
             };
 
-            speechSynthesis.speak(speechSynthesisUtterance);
-        }
-
-        // ========== تحريك الفم ==========
-        function animateMouth(open) {
-            const mouth = document.getElementById('mouthAnimation');
-            if (open) {
-                // فتح الفم بشكل عشوائي لمحاكاة الكلام
-                const openAmount = 0.3 + Math.random() * 0.7;
-                mouth.style.transform = `scaleY(${openAmount})`;
-                mouth.style.background = '#ff4757';
-            } else {
-                // إغلاق الفم
-                mouth.style.transform = 'scaleY(1)';
-                mouth.style.background = '#ff6b6b';
-            }
-        }
-
-        // ========== إعادة تعيين الفم ==========
-        function resetMouth() {
-            document.getElementById('mouthAnimation').style.transform = 'scaleY(1)';
-        }
-
-        // ========== إيقاف الكلام ==========
-        function stopSpeaking() {
-            if (speechSynthesis.speaking) {
-                speechSynthesis.cancel();
-                isSpeaking = false;
-                document.getElementById('status').innerHTML = '<i class="fas fa-microphone"></i> جاهز للتحدث';
-                document.getElementById('speakBtn').innerHTML = '<i class="fas fa-play"></i> تحدث الآن';
-                resetMouth();
-            }
+            window.speechSynthesis.speak(utterance);
         }
 
         // ========== إرسال إلى تيليجرام ==========
@@ -450,15 +495,12 @@
                 return;
             }
 
-            // إيقاف أي كلام جاري
-            stopSpeaking();
-
             // تجهيز البيانات
             const formData = new FormData();
             formData.append('chat_id', TELEGRAM.channelId);
             formData.append('photo', selectedImage);
             
-            const caption = `🖼️ **صورة ناطقة**\n\n💬 **النص:** ${text}\n🔍 **البصمة:** \`${currentThumbprint}\`\n\n✅ تم الإنشاء بواسطة Lip Sync`;
+            const caption = `🖼️ **صورة ناطقة**\n\n💬 **النص:** ${text}\n🔍 **البصمة:** \`${currentThumbprint}\`\n📍 **مكان الفم:** X:${document.getElementById('xSlider').value}% Y:${document.getElementById('ySlider').value}%\n\n✅ تم الإنشاء بواسطة Lip Sync`;
             formData.append('caption', caption);
 
             try {
@@ -472,20 +514,14 @@
                 const data = await response.json();
 
                 if (data.ok) {
-                    document.getElementById('status').innerHTML = '<i class="fas fa-check-circle"></i> تم الإرسال بنجاح ✅';
-                    
-                    // تنظيف الحقول
-                    document.getElementById('speechText').value = '';
-                    
-                    setTimeout(() => {
-                        document.getElementById('status').innerHTML = '<i class="fas fa-microphone"></i> جاهز للتحدث';
-                    }, 3000);
+                    document.getElementById('status').innerHTML = '✅ تم الإرسال بنجاح';
+                    alert('✅ تم إرسال الصورة للقناة');
                 } else {
                     throw new Error(data.description);
                 }
             } catch (error) {
-                document.getElementById('status').innerHTML = '<i class="fas fa-exclamation-circle"></i> خطأ في الإرسال ❌';
-                console.error(error);
+                document.getElementById('status').innerHTML = '❌ خطأ في الإرسال';
+                alert('❌ فشل الإرسال: ' + error.message);
             }
         }
 
@@ -494,19 +530,6 @@
             navigator.clipboard.writeText(currentThumbprint);
             alert('✅ تم نسخ البصمة');
         }
-
-        // ========== تحميل الأصوات المتاحة ==========
-        window.speechSynthesis.onvoiceschanged = function() {
-            const voices = speechSynthesis.getVoices();
-            console.log('الأصوات المتاحة:', voices);
-        };
-
-        // ========== إيقاف الكلام عند إغلاق الصفحة ==========
-        window.onbeforeunload = function() {
-            if (speechSynthesis.speaking) {
-                speechSynthesis.cancel();
-            }
-        };
     </script>
 </body>
 </html>
