@@ -1,1322 +1,812 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏆 تحدي التجار - سحور</title>
+<!-- ===== نظام الجولة التفاعلية - شاشة مزدوجة ===== -->
+<div class="tour-modal" id="tourModal">
+    <div class="tour-modal-content">
+        <!-- الهيدر -->
+        <div class="tour-header">
+            <div class="tour-header-left">
+                <i class="fas fa-route" style="color: gold;"></i>
+                <span>جولة التحدي - AI Transformation</span>
+            </div>
+            <div class="tour-header-right">
+                <span class="tour-badge">مباشر</span>
+                <span class="tour-viewers"><i class="fas fa-eye"></i> 2.5K</span>
+                <button class="tour-close" onclick="closeTourModal()">&times;</button>
+            </div>
+        </div>
+
+        <!-- الشاشة المزدوجة -->
+        <div class="tour-dual-screen">
+            <!-- المتسابق 1 (User1) -->
+            <div class="tour-contestant contestant-1">
+                <div class="contestant-header">
+                    <div class="contestant-avatar">
+                        <img src="https://via.placeholder.com/60/FF0000/ffffff?text=U1" alt="User1">
+                    </div>
+                    <div class="contestant-info">
+                        <h3>@User1 <span class="verified-badge"><i class="fas fa-check-circle"></i></span></h3>
+                        <div class="contestant-stats">
+                            <span><i class="fas fa-calendar"></i> اليوم 30</span>
+                            <span><i class="fas fa-users"></i> 15.4K متابع</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- شاشة التطور - اليوم 1 -->
+                <div class="evolution-card day1-card">
+                    <div class="evolution-header">
+                        <span class="day-badge">DAY 1 - AI BEGINNING</span>
+                        <span class="live-badge">مباشر</span>
+                    </div>
+                    <div class="evolution-content">
+                        <div class="comment-cloud">
+                            <div class="comment-item">
+                                <span class="comment-user">@User1:</span>
+                                <span class="comment-text">لا أصدق عيني ✨</span>
+                            </div>
+                            <div class="comment-item">
+                                <span class="comment-user">@User2:</span>
+                                <span class="comment-text">النمو رائعة 🔥</span>
+                            </div>
+                            <div class="comment-item">
+                                <span class="comment-user">@User1:</span>
+                                <span class="comment-text">النمو رائعة 🌟</span>
+                            </div>
+                        </div>
+                        <div class="evolution-progress">
+                            <div class="progress-bar" style="width: 30%"></div>
+                            <span>30% تقدم</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- شاشة التطور - اليوم 30 -->
+                <div class="evolution-card day30-card">
+                    <div class="evolution-header">
+                        <span class="day-badge">DAY 30 - AI MASTERY</span>
+                        <span class="trending-badge"><i class="fas fa-fire"></i> رائج</span>
+                    </div>
+                    <div class="evolution-content">
+                        <div class="mastery-showcase">
+                            <div class="mastery-item">
+                                <i class="fas fa-robot"></i>
+                                <span>AI Master</span>
+                            </div>
+                            <div class="mastery-item">
+                                <i class="fas fa-chart-line"></i>
+                                <span>نمو 1000%</span>
+                            </div>
+                        </div>
+                        <div class="reaction-bar">
+                            <button class="reaction-btn"><i class="fas fa-heart"></i> 12.5K</button>
+                            <button class="reaction-btn"><i class="fas fa-comment"></i> 3.2K</button>
+                            <button class="reaction-btn"><i class="fas fa-share"></i> مشاركة</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- إعلان الفائز -->
+                <div class="winner-announcement">
+                    <i class="fas fa-crown"></i>
+                    <span>الفائز في التحدي: @User1</span>
+                </div>
+            </div>
+
+            <!-- المتسابق 2 (User2) -->
+            <div class="tour-contestant contestant-2">
+                <div class="contestant-header">
+                    <div class="contestant-avatar">
+                        <img src="https://via.placeholder.com/60/00b894/ffffff?text=U2" alt="User2">
+                    </div>
+                    <div class="contestant-info">
+                        <h3>@User2 <span class="verified-badge"><i class="fas fa-check-circle"></i></span></h3>
+                        <div class="contestant-stats">
+                            <span><i class="fas fa-calendar"></i> اليوم 28</span>
+                            <span><i class="fas fa-users"></i> 12.8K متابع</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- شاشة التطور - اليوم 1 -->
+                <div class="evolution-card day1-card">
+                    <div class="evolution-header">
+                        <span class="day-badge">DAY 1 - AI BEGINNING</span>
+                        <span class="live-badge">مباشر</span>
+                    </div>
+                    <div class="evolution-content">
+                        <div class="comment-cloud">
+                            <div class="comment-item">
+                                <span class="comment-user">@User2:</span>
+                                <span class="comment-text">بداية قوية 💪</span>
+                            </div>
+                            <div class="comment-item">
+                                <span class="comment-user">@User1:</span>
+                                <span class="comment-text">موفق يارب</span>
+                            </div>
+                        </div>
+                        <div class="evolution-progress">
+                            <div class="progress-bar" style="width: 25%"></div>
+                            <span>25% تقدم</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- شاشة التطور - اليوم 28 -->
+                <div class="evolution-card day28-card">
+                    <div class="evolution-header">
+                        <span class="day-badge">DAY 28 - AI ADVANCED</span>
+                        <span class="hot-badge"><i class="fas fa-bolt"></i> متطور</span>
+                    </div>
+                    <div class="evolution-content">
+                        <div class="mastery-showcase">
+                            <div class="mastery-item">
+                                <i class="fas fa-brain"></i>
+                                <span>Deep Learning</span>
+                            </div>
+                            <div class="mastery-item">
+                                <i class="fas fa-code"></i>
+                                <span>AI Developer</span>
+                            </div>
+                        </div>
+                        <div class="reaction-bar">
+                            <button class="reaction-btn"><i class="fas fa-heart"></i> 10.2K</button>
+                            <button class="reaction-btn"><i class="fas fa-comment"></i> 2.8K</button>
+                            <button class="reaction-btn"><i class="fas fa-share"></i> مشاركة</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- شريط التحدي -->
+                <div class="challenge-bar">
+                    <div class="challenge-progress">
+                        <div class="progress-fill" style="width: 93%"></div>
+                    </div>
+                    <span>تحدي 30 يوم - 93% مكتمل</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- شريط التفاعل السفلي -->
+        <div class="tour-footer">
+            <div class="tour-chat">
+                <div class="chat-messages" id="tourChatMessages">
+                    <div class="chat-message">
+                        <span class="chat-user">@متابع:</span>
+                        <span class="chat-text">مبروك الفوز 🎉</span>
+                    </div>
+                    <div class="chat-message">
+                        <span class="chat-user">@مشجع:</span>
+                        <span class="chat-text">تطور رهيب 🔥</span>
+                    </div>
+                    <div class="chat-message">
+                        <span class="chat-user">@محلل:</span>
+                        <span class="chat-text">منافسة شرسة</span>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" placeholder="أكتب تعليق..." id="tourChatInput">
+                    <button onclick="sendTourMessage()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+            <div class="tour-actions">
+                <button class="tour-action-btn" onclick="likeTour()">
+                    <i class="fas fa-heart"></i> 22.7K
+                </button>
+                <button class="tour-action-btn" onclick="shareTour()">
+                    <i class="fas fa-share-alt"></i> مشاركة
+                </button>
+                <button class="tour-action-btn" onclick="reportTour()">
+                    <i class="fas fa-flag"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ===== أنماط الجولة التفاعلية ===== */
+.tour-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+}
+
+.tour-modal-content {
+    width: 95%;
+    max-width: 1400px;
+    height: 90vh;
+    background: linear-gradient(135deg, #0a1a15, #1a3a32);
+    border-radius: 30px;
+    border: 3px solid gold;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: tourSlideIn 0.5s ease;
+}
+
+@keyframes tourSlideIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* الهيدر */
+.tour-header {
+    background: linear-gradient(90deg, #000, #1a3a32);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid gold;
+}
+
+.tour-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: gold;
+}
+
+.tour-header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.tour-badge {
+    background: red;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    animation: pulse 1.5s infinite;
+}
+
+.tour-viewers {
+    background: rgba(255,255,255,0.1);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.tour-close {
+    background: none;
+    border: none;
+    color: gold;
+    font-size: 30px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.tour-close:hover {
+    background: rgba(255,215,0,0.2);
+    transform: rotate(90deg);
+}
+
+/* الشاشة المزدوجة */
+.tour-dual-screen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.tour-contestant {
+    padding: 20px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.contestant-1 {
+    background: linear-gradient(135deg, #2c0a0a, #4a1a1a);
+    border-left: 2px solid gold;
+}
+
+.contestant-2 {
+    background: linear-gradient(135deg, #0a2c1a, #1a4a2a);
+    border-right: 2px solid gold;
+}
+
+/* رأس المتسابق */
+.contestant-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 15px;
+    border: 1px solid gold;
+}
+
+.contestant-avatar img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid gold;
+}
+
+.contestant-info h3 {
+    color: gold;
+    margin: 0;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.verified-badge {
+    color: #1DA1F2;
+    font-size: 14px;
+}
+
+.contestant-stats {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #888;
+}
+
+/* بطاقات التطور */
+.evolution-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 2px solid gold;
+    transition: all 0.3s;
+}
+
+.evolution-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+}
+
+.evolution-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.day-badge {
+    background: gold;
+    color: black;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.live-badge {
+    background: red;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    animation: pulse 1s infinite;
+}
+
+.trending-badge {
+    background: orange;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+}
+
+.hot-badge {
+    background: #ff4444;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+}
+
+/* سحابة التعليقات */
+.comment-cloud {
+    background: rgba(0,0,0,0.5);
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.comment-item {
+    margin-bottom: 8px;
+    font-size: 14px;
+    animation: fadeIn 0.5s;
+}
+
+.comment-user {
+    color: gold;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.comment-text {
+    color: white;
+}
+
+/* شريط التقدم */
+.evolution-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-bar {
+    height: 8px;
+    background: gold;
+    border-radius: 4px;
+    transition: width 1s;
+}
+
+/* عرض الإنجازات */
+.mastery-showcase {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.mastery-item {
+    background: rgba(255,215,0,0.1);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid gold;
+}
+
+.mastery-item i {
+    color: gold;
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.mastery-item span {
+    display: block;
+    font-size: 12px;
+}
+
+/* أزرار التفاعل */
+.reaction-bar {
+    display: flex;
+    gap: 10px;
+}
+
+.reaction-btn {
+    flex: 1;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid gold;
+    color: white;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.reaction-btn:hover {
+    background: gold;
+    color: black;
+}
+
+/* إعلان الفائز */
+.winner-announcement {
+    background: linear-gradient(90deg, gold, #ffd700);
+    color: black;
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+    animation: glow 2s infinite;
+}
+
+.winner-announcement i {
+    margin-left: 10px;
+}
+
+/* شريط التحدي */
+.challenge-bar {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.challenge-progress {
+    height: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: gold;
+    transition: width 1s;
+}
+
+/* الفوتر */
+.tour-footer {
+    background: #0a1a15;
+    border-top: 2px solid gold;
+    padding: 15px 25px;
+    display: flex;
+    gap: 20px;
+}
+
+.tour-chat {
+    flex: 2;
+}
+
+.chat-messages {
+    height: 80px;
+    overflow-y: auto;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.chat-message {
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+.chat-user {
+    color: gold;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px solid gold;
+    background: rgba(0,0,0,0.5);
+    color: white;
+}
+
+.chat-input button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: gold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.chat-input button:hover {
+    transform: scale(1.1);
+}
+
+.tour-actions {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.tour-action-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid gold;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tour-action-btn:hover {
+    background: gold;
+    color: black;
+}
+
+/* حركات */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px gold; }
+    50% { box-shadow: 0 0 40px gold; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* تجاوب مع الجوال */
+@media (max-width: 768px) {
+    .tour-dual-screen {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+    }
     
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    .tour-footer {
+        flex-direction: column;
+    }
     
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
-            color: white;
-            min-height: 100vh;
-        }
-
-        /* ===== شريط التنقل ===== */
-        .navbar {
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #ffd700;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #ffd700;
-            text-shadow: 0 0 20px rgba(255,215,0,0.3);
-        }
-
-        .logo i {
-            margin-left: 10px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            transition: 0.3s;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .nav-link:hover {
-            background: #ffd700;
-            color: black;
-        }
-
-        .nav-link.active {
-            background: #ffd700;
-            color: black;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-badge {
-            background: #ffd700;
-            color: black;
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .user-badge i {
-            font-size: 16px;
-        }
-
-        /* ===== المحتوى الرئيسي ===== */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 30px 20px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #ffd700;
-            font-size: 2.5em;
-            margin-bottom: 40px;
-            text-shadow: 0 0 20px rgba(255,215,0,0.3);
-        }
-
-        /* ===== بطاقات التحدي ===== */
-        .challenge-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin: 40px 0;
-        }
-
-        .challenge-card {
-            background: rgba(30, 30, 30, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 2px solid #ffd700;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .challenge-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(255,215,0,0.3);
-        }
-
-        .challenge-header {
-            position: relative;
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .challenge-header img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: 0.5s;
-        }
-
-        .challenge-card:hover .challenge-header img {
-            transform: scale(1.1);
-        }
-
-        .challenge-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #ffd700;
-            color: black;
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 1.1em;
-            z-index: 10;
-        }
-
-        .merchant-badge {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9em;
-            z-index: 10;
-        }
-
-        .merchant-badge i {
-            color: #ffd700;
-        }
-
-        .challenge-body {
-            padding: 20px;
-        }
-
-        .challenge-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #ffd700;
-            margin-bottom: 10px;
-        }
-
-        .challenge-desc {
-            color: #aaa;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
-        .challenge-stats {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            border-top: 1px solid #333;
-            border-bottom: 1px solid #333;
-            margin-bottom: 15px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #ffd700;
-        }
-
-        .stat-label {
-            font-size: 0.8em;
-            color: #888;
-        }
-
-        .challenge-footer {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 1em;
-        }
-
-        .btn-gold {
-            background: #ffd700;
-            color: black;
-        }
-
-        .btn-gold:hover {
-            background: #ffed4a;
-            transform: translateY(-2px);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #ffd700;
-            color: #ffd700;
-        }
-
-        .btn-outline:hover {
-            background: #ffd700;
-            color: black;
-        }
-
-        /* ===== لوحة المتصدرين ===== */
-        .leaderboard-section {
-            background: rgba(20, 20, 20, 0.95);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 50px 0;
-            border: 2px solid #ffd700;
-        }
-
-        .section-title {
-            color: #ffd700;
-            font-size: 1.8em;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .leaderboard-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .leaderboard-table th {
-            text-align: right;
-            padding: 15px;
-            background: rgba(255,215,0,0.2);
-            color: #ffd700;
-            font-size: 1.1em;
-        }
-
-        .leaderboard-table td {
-            padding: 15px;
-            border-bottom: 1px solid #333;
-        }
-
-        .leaderboard-table tr:hover td {
-            background: rgba(255,215,0,0.1);
-        }
-
-        .rank-1 {
-            color: #ffd700;
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        .rank-2 {
-            color: #C0C0C0;
-            font-weight: bold;
-        }
-
-        .rank-3 {
-            color: #CD7F32;
-            font-weight: bold;
-        }
-
-        .merchant-name {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .merchant-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 20px;
-            background: #ffd700;
-            color: black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        /* ===== نموذج إضافة تحدي ===== */
-        .add-challenge-section {
-            background: rgba(20, 20, 20, 0.95);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 30px 0;
-            border: 2px dashed #ffd700;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #ffd700;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 2px solid #ffd700;
-            background: rgba(0,0,0,0.3);
-            color: white;
-            font-size: 1em;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #ffed4a;
-        }
-
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .file-upload {
-            border: 2px dashed #ffd700;
-            padding: 30px;
-            text-align: center;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .file-upload:hover {
-            background: rgba(255,215,0,0.1);
-        }
-
-        .file-upload i {
-            font-size: 40px;
-            color: #ffd700;
-            margin-bottom: 10px;
-        }
-
-        .image-preview {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .image-preview img {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            border: 2px solid #ffd700;
-            object-fit: cover;
-        }
-
-        /* ===== النوافذ المنبثقة ===== */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .modal-content {
-            background: rgba(30,30,30,0.95);
-            backdrop-filter: blur(10px);
-            border: 3px solid #ffd700;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h2 {
-            color: #ffd700;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 28px;
-            cursor: pointer;
-        }
-
-        .close-btn:hover {
-            color: #ffd700;
-        }
-
-        /* ===== الإشعارات ===== */
-        .toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 3000;
-        }
-
-        .toast {
-            background: #ffd700;
-            color: black;
-            padding: 15px 25px;
-            border-radius: 10px;
-            margin-top: 10px;
-            animation: slideIn 0.3s ease;
-            font-weight: 500;
-        }
-
-        .toast.error {
-            background: #f44336;
-            color: white;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* ===== أزرار ثابتة ===== */
-        .fixed-add-btn {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 30px;
-            background: #ffd700;
-            color: black;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(255,215,0,0.3);
-            z-index: 1000;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-
-        .fixed-add-btn:hover {
-            transform: scale(1.1) rotate(90deg);
-        }
-
-        .quick-top-btn {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            border-radius: 25px;
-            background: #ffd700;
-            color: black;
-            border: none;
-            cursor: pointer;
-            display: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            z-index: 1000;
-            font-size: 20px;
-        }
-
-        .quick-top-btn.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* ===== تجاوب ===== */
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 15px;
-            }
-            
-            .logo {
-                font-size: 20px;
-            }
-            
-            .nav-links {
-                gap: 10px;
-            }
-            
-            .nav-link span {
-                display: none;
-            }
-            
-            .nav-link i {
-                font-size: 20px;
-            }
-            
-            .challenge-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- ===== شريط التنقل ===== -->
-    <nav class="navbar">
-        <div class="logo">
-            <i class="fas fa-trophy"></i>
-            تحدي التجار
-        </div>
-        <div class="nav-links">
-            <a class="nav-link active" onclick="showSection('home')">
-                <i class="fas fa-home"></i>
-                <span>الرئيسية</span>
-            </a>
-            <a class="nav-link" onclick="showSection('challenges')">
-                <i class="fas fa-fire"></i>
-                <span>التحديات</span>
-            </a>
-            <a class="nav-link" onclick="showSection('leaderboard')">
-                <i class="fas fa-chart-line"></i>
-                <span>المتصدرين</span>
-            </a>
-            <a class="nav-link" onclick="showSection('merchants')">
-                <i class="fas fa-store"></i>
-                <span>التجار</span>
-            </a>
-        </div>
-        <div class="user-info">
-            <div class="user-badge" id="userBtn" onclick="openLoginModal()">
-                <i class="fas fa-user"></i>
-                <span>دخول</span>
-            </div>
-        </div>
-    </nav>
-
-    <!-- ===== المحتوى الرئيسي ===== -->
-    <div class="container">
-        <h1>
-            <i class="fas fa-crown"></i>
-            منصة تحدي التجار
-            <i class="fas fa-crown"></i>
-        </h1>
-
-        <!-- ===== قسم الإضافة السريعة (للتجار) ===== -->
-        <div class="add-challenge-section" id="addChallengeSection" style="display: none;">
-            <h2 style="color: #ffd700; margin-bottom: 20px;">
-                <i class="fas fa-plus-circle"></i>
-                أضف تحدي جديد
-            </h2>
-            
-            <form onsubmit="event.preventDefault(); saveChallenge()">
-                <div class="form-group">
-                    <label>عنوان التحدي</label>
-                    <input type="text" class="form-control" id="challengeTitle" placeholder="مثال: تحدي أفضل منتج" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>وصف التحدي</label>
-                    <textarea class="form-control" id="challengeDesc" placeholder="شرح التحدي بالتفصيل..." required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>جائزة التحدي</label>
-                    <input type="text" class="form-control" id="challengePrize" placeholder="مثال: 1000 نقطة + شهادة" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>مدة التحدي (أيام)</label>
-                    <input type="number" class="form-control" id="challengeDuration" value="30" min="1" max="365" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>صورة التحدي</label>
-                    <div class="file-upload" onclick="document.getElementById('challengeImage').click()">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <p>اضغط لرفع صورة التحدي</p>
-                    </div>
-                    <input type="file" id="challengeImage" accept="image/*" style="display:none;" onchange="previewChallengeImage(this)">
-                    <div class="image-preview" id="challengeImagePreview"></div>
-                </div>
-                
-                <button type="submit" class="btn btn-gold" style="width: 100%; padding: 15px;">
-                    <i class="fas fa-check"></i>
-                    نشر التحدي
-                </button>
-            </form>
-        </div>
-
-        <!-- ===== شبكة التحديات ===== -->
-        <div class="challenge-grid" id="challengeGrid">
-            <!-- يتم التعبئة عبر JavaScript -->
-        </div>
-
-        <!-- ===== لوحة المتصدرين ===== -->
-        <div class="leaderboard-section">
-            <h2 class="section-title">
-                <i class="fas fa-ranking-star"></i>
-                أفضل التجار هذا الشهر
-            </h2>
-            
-            <table class="leaderboard-table">
-                <thead>
-                    <tr>
-                        <th>الترتيب</th>
-                        <th>التاجر</th>
-                        <th>النقاط</th>
-                        <th>التحديات</th>
-                        <th>التقييم</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboardBody">
-                    <!-- يتم التعبئة عبر JavaScript -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- ===== أزرار ثابتة ===== -->
-    <button class="fixed-add-btn" onclick="showAddChallenge()" title="إضافة تحدي جديد">
-        <i class="fas fa-plus"></i>
-    </button>
-
-    <button class="quick-top-btn" onclick="scrollToTop()" id="quickTopBtn" title="العودة للأعلى">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <!-- ===== نافذة تسجيل الدخول ===== -->
-    <div class="modal" id="loginModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</h2>
-                <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <i class="fas fa-user-circle" style="font-size: 80px; color: #ffd700;"></i>
-                </div>
-                
-                <div class="form-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" class="form-control" id="loginEmail" placeholder="admin@example.com">
-                </div>
-                
-                <div class="form-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" class="form-control" id="loginPassword" placeholder="******">
-                </div>
-                
-                <button class="btn btn-gold" style="width: 100%; margin-bottom: 10px;" onclick="handleLogin()">
-                    دخول
-                </button>
-                
-                <button class="btn btn-outline" style="width: 100%;" onclick="switchToRegister()">
-                    تسجيل تاجر جديد
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== نافذة تسجيل تاجر ===== -->
-    <div class="modal" id="registerModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-store"></i> تسجيل تاجر</h2>
-                <button class="close-btn" onclick="closeModal('registerModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>اسم المتجر</label>
-                    <input type="text" class="form-control" id="regStoreName" placeholder="متجر التحديات">
-                </div>
-                
-                <div class="form-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" class="form-control" id="regEmail" placeholder="merchant@example.com">
-                </div>
-                
-                <div class="form-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" class="form-control" id="regPassword" placeholder="******">
-                </div>
-                
-                <div class="form-group">
-                    <label>رقم الهاتف</label>
-                    <input type="tel" class="form-control" id="regPhone" placeholder="05XXXXXXXX">
-                </div>
-                
-                <div class="form-group">
-                    <label>تخصص المتجر</label>
-                    <select class="form-control" id="regCategory">
-                        <option value="tech">تقنية</option>
-                        <option value="food">أطعمة</option>
-                        <option value="fashion">أزياء</option>
-                        <option value="beauty">تجميل</option>
-                        <option value="other">أخرى</option>
-                    </select>
-                </div>
-                
-                <button class="btn btn-gold" style="width: 100%;" onclick="handleRegister()">
-                    تسجيل
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== نافذة تفاصيل التحدي ===== -->
-    <div class="modal" id="challengeModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalChallengeTitle">تفاصيل التحدي</h2>
-                <button class="close-btn" onclick="closeModal('challengeModal')">&times;</button>
-            </div>
-            <div class="modal-body" id="challengeModalContent">
-                <!-- يتم التعبئة عبر JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== الإشعارات ===== -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <script>
-        // ========== البيانات ==========
-        let currentUser = null;
-        let merchants = [];
-        let challenges = [];
+    .tour-actions {
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+// ===== دوال الجولة التفاعلية =====
+function openTourModal() {
+    document.getElementById('tourModal').style.display = 'flex';
+    startTourSimulation();
+}
+
+function closeTourModal() {
+    document.getElementById('tourModal').style.display = 'none';
+    stopTourSimulation();
+}
+
+// محاكاة التفاعل المباشر
+let tourInterval;
+function startTourSimulation() {
+    const messages = [
+        '@متابع: تبارك الله 👏',
+        '@مشجع: استمر 🔥',
+        '@محلل: تحليل رائع',
+        '@زائر: أول مرة أشوف',
+        '@مبدع: الإبداع مستمر'
+    ];
+    
+    let messageIndex = 0;
+    tourInterval = setInterval(() => {
+        const chatDiv = document.getElementById('tourChatMessages');
+        const newMessage = document.createElement('div');
+        newMessage.className = 'chat-message';
+        newMessage.innerHTML = `<span class="chat-user">@user${Math.floor(Math.random()*1000)}:</span> <span class="chat-text">${messages[Math.floor(Math.random()*messages.length)]}</span>`;
+        chatDiv.appendChild(newMessage);
+        chatDiv.scrollTop = chatDiv.scrollHeight;
         
-        // ========== تحميل البيانات ==========
-        function loadData() {
-            merchants = JSON.parse(localStorage.getItem('challenge_merchants')) || [];
-            challenges = JSON.parse(localStorage.getItem('challenge_list')) || [];
-            currentUser = JSON.parse(localStorage.getItem('challenge_user'));
-            
-            if (merchants.length === 0) {
-                // بيانات افتراضية
-                merchants = [
-                    {
-                        id: 1,
-                        storeName: 'متجر التقنية',
-                        email: 'tech@example.com',
-                        phone: '0555000000',
-                        category: 'tech',
-                        points: 1250,
-                        challenges: 8,
-                        rating: 4.9,
-                        avatar: 'T'
-                    },
-                    {
-                        id: 2,
-                        storeName: 'مطبخ الذواقة',
-                        email: 'food@example.com',
-                        phone: '0555111111',
-                        category: 'food',
-                        points: 980,
-                        challenges: 6,
-                        rating: 4.8,
-                        avatar: 'م'
-                    },
-                    {
-                        id: 3,
-                        storeName: 'دار الأزياء',
-                        email: 'fashion@example.com',
-                        phone: '0555222222',
-                        category: 'fashion',
-                        points: 750,
-                        challenges: 4,
-                        rating: 4.7,
-                        avatar: 'أ'
-                    }
-                ];
-                
-                challenges = [
-                    {
-                        id: 1,
-                        title: 'أفضل ابتكار تقني',
-                        description: 'قدّم أفضل ابتكار تقني خلال 30 يوم',
-                        prize: '5000 نقطة + جائزة خاصة',
-                        duration: 30,
-                        merchantId: 1,
-                        merchantName: 'متجر التقنية',
-                        image: 'https://via.placeholder.com/600x400/ffd700/000000?text=تحدي+تقني',
-                        participants: 45,
-                        rating: 4.8,
-                        status: 'active',
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        id: 2,
-                        title: 'تحدي الطبخ العربي',
-                        description: 'أفضل وصفة عربية تقليدية',
-                        prize: '3000 نقطة',
-                        duration: 20,
-                        merchantId: 2,
-                        merchantName: 'مطبخ الذواقة',
-                        image: 'https://via.placeholder.com/600x400/ffd700/000000?text=تحدي+طبخ',
-                        participants: 32,
-                        rating: 4.7,
-                        status: 'active',
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        id: 3,
-                        title: 'تصميم أزياء صيفية',
-                        description: 'أفضل تصميم أزياء لموسم الصيف',
-                        prize: '2000 نقطة',
-                        duration: 25,
-                        merchantId: 3,
-                        merchantName: 'دار الأزياء',
-                        image: 'https://via.placeholder.com/600x400/ffd700/000000?text=تحدي+أزياء',
-                        participants: 28,
-                        rating: 4.6,
-                        status: 'active',
-                        createdAt: new Date().toISOString()
-                    }
-                ];
-                
-                localStorage.setItem('challenge_merchants', JSON.stringify(merchants));
-                localStorage.setItem('challenge_list', JSON.stringify(challenges));
-            }
-            
-            updateUI();
+        if (chatDiv.children.length > 10) {
+            chatDiv.removeChild(chatDiv.children[0]);
         }
-        
-        // ========== تحديث الواجهة ==========
-        function updateUI() {
-            updateUserInfo();
-            displayChallenges();
-            displayLeaderboard();
-            
-            // إظهار/إخفاء قسم الإضافة
-            const addSection = document.getElementById('addChallengeSection');
-            if (addSection) {
-                addSection.style.display = currentUser ? 'block' : 'none';
-            }
-        }
-        
-        // ========== تحديث معلومات المستخدم ==========
-        function updateUserInfo() {
-            const userBtn = document.getElementById('userBtn');
-            if (!userBtn) return;
-            
-            if (currentUser) {
-                userBtn.innerHTML = `
-                    <i class="fas fa-store"></i>
-                    <span>${currentUser.storeName}</span>
-                `;
-            } else {
-                userBtn.innerHTML = `
-                    <i class="fas fa-user"></i>
-                    <span>دخول</span>
-                `;
-            }
-        }
-        
-        // ========== عرض التحديات ==========
-        function displayChallenges() {
-            const grid = document.getElementById('challengeGrid');
-            if (!grid) return;
-            
-            grid.innerHTML = challenges.map(challenge => `
-                <div class="challenge-card" onclick="viewChallenge(${challenge.id})">
-                    <div class="challenge-header">
-                        <img src="${challenge.image}" alt="${challenge.title}">
-                        <div class="challenge-badge">
-                            <i class="fas fa-clock"></i> ${challenge.duration} يوم
-                        </div>
-                        <div class="merchant-badge">
-                            <i class="fas fa-store"></i>
-                            ${challenge.merchantName}
-                        </div>
-                    </div>
-                    <div class="challenge-body">
-                        <div class="challenge-title">${challenge.title}</div>
-                        <div class="challenge-desc">${challenge.description.substring(0, 60)}...</div>
-                        
-                        <div class="challenge-stats">
-                            <div class="stat-item">
-                                <div class="stat-value">${challenge.participants}</div>
-                                <div class="stat-label">مشارك</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">${challenge.rating}</div>
-                                <div class="stat-label">تقييم</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">🏆</div>
-                                <div class="stat-label">جائزة</div>
-                            </div>
-                        </div>
-                        
-                        <div class="challenge-footer" onclick="event.stopPropagation()">
-                            <button class="btn btn-gold" onclick="joinChallenge(${challenge.id})">
-                                <i class="fas fa-play"></i> شارك
-                            </button>
-                            <button class="btn btn-outline" onclick="viewMerchant(${challenge.merchantId})">
-                                <i class="fas fa-store"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        // ========== عرض لوحة المتصدرين ==========
-        function displayLeaderboard() {
-            const tbody = document.getElementById('leaderboardBody');
-            if (!tbody) return;
-            
-            const sortedMerchants = [...merchants].sort((a, b) => b.points - a.points);
-            
-            tbody.innerHTML = sortedMerchants.map((merchant, index) => `
-                <tr>
-                    <td>
-                        <span class="${index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : ''}">
-                            ${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
-                        </span>
-                    </td>
-                    <td>
-                        <div class="merchant-name">
-                            <div class="merchant-avatar">${merchant.avatar}</div>
-                            ${merchant.storeName}
-                        </div>
-                    </td>
-                    <td><strong style="color: #ffd700;">${merchant.points}</strong></td>
-                    <td>${merchant.challenges}</td>
-                    <td>⭐ ${merchant.rating}</td>
-                </tr>
-            `).join('');
-        }
-        
-        // ========== عرض تفاصيل التحدي ==========
-        function viewChallenge(challengeId) {
-            const challenge = challenges.find(c => c.id === challengeId);
-            if (!challenge) return;
-            
-            const modal = document.getElementById('challengeModal');
-            const title = document.getElementById('modalChallengeTitle');
-            const content = document.getElementById('challengeModalContent');
-            
-            title.textContent = challenge.title;
-            
-            content.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <img src="${challenge.image}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 15px; border: 3px solid #ffd700;">
-                </div>
-                
-                <div style="margin-bottom: 30px;">
-                    <p style="color: #aaa; line-height: 1.6;">${challenge.description}</p>
-                </div>
-                
-                <div style="background: rgba(255,215,0,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                    <h3 style="color: #ffd700; margin-bottom: 15px;">
-                        <i class="fas fa-gift"></i> الجائزة
-                    </h3>
-                    <p style="font-size: 1.2em;">${challenge.prize}</p>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
-                    <div style="text-align: center;">
-                        <i class="fas fa-clock" style="color: #ffd700; font-size: 24px;"></i>
-                        <div style="margin-top: 5px;">${challenge.duration} يوم</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <i class="fas fa-users" style="color: #ffd700; font-size: 24px;"></i>
-                        <div style="margin-top: 5px;">${challenge.participants} مشارك</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <i class="fas fa-star" style="color: #ffd700; font-size: 24px;"></i>
-                        <div style="margin-top: 5px;">${challenge.rating} تقييم</div>
-                    </div>
-                </div>
-                
-                <div style="display: flex; gap: 15px;">
-                    <button class="btn btn-gold" style="flex: 1;" onclick="joinChallenge(${challenge.id}); closeModal('challengeModal')">
-                        <i class="fas fa-play"></i> شارك الآن
-                    </button>
-                    <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('challengeModal')">
-                        إغلاق
-                    </button>
-                </div>
-            `;
-            
-            modal.style.display = 'flex';
-        }
-        
-        // ========== الانضمام لتحدي ==========
-        function joinChallenge(challengeId) {
-            if (!currentUser) {
-                showNotification('❌ سجل دخول أولاً', 'error');
-                openLoginModal();
-                return;
-            }
-            
-            const challenge = challenges.find(c => c.id === challengeId);
-            if (challenge) {
-                challenge.participants++;
-                localStorage.setItem('challenge_list', JSON.stringify(challenges));
-                showNotification(`✅ انضممت إلى ${challenge.title}`);
-                displayChallenges();
-            }
-        }
-        
-        // ========== عرض التاجر ==========
-        function viewMerchant(merchantId) {
-            const merchant = merchants.find(m => m.id === merchantId);
-            if (!merchant) return;
-            
-            const merchantChallenges = challenges.filter(c => c.merchantId === merchantId);
-            
-            const modal = document.getElementById('challengeModal');
-            const title = document.getElementById('modalChallengeTitle');
-            const content = document.getElementById('challengeModalContent');
-            
-            title.textContent = merchant.storeName;
-            
-            content.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="width: 100px; height: 100px; border-radius: 50px; background: #ffd700; color: black; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: bold; margin: 0 auto;">
-                        ${merchant.avatar}
-                    </div>
-                </div>
-                
-                <div style="margin-bottom: 30px;">
-                    <p><i class="fas fa-phone"></i> ${merchant.phone}</p>
-                    <p><i class="fas fa-tag"></i> التخصص: ${merchant.category}</p>
-                    <p><i class="fas fa-star" style="color: #ffd700;"></i> التقييم: ${merchant.rating}</p>
-                    <p><i class="fas fa-trophy" style="color: #ffd700;"></i> النقاط: ${merchant.points}</p>
-                </div>
-                
-                <h3 style="color: #ffd700; margin-bottom: 15px;">تحديات التاجر (${merchantChallenges.length})</h3>
-                
-                ${merchantChallenges.map(c => `
-                    <div style="background: rgba(255,215,0,0.1); padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer;" onclick="viewChallenge(${c.id})">
-                        <strong style="color: #ffd700;">${c.title}</strong>
-                        <p style="color: #aaa; font-size: 0.9em;">${c.description.substring(0, 50)}...</p>
-                    </div>
-                `).join('')}
-            `;
-            
-            modal.style.display = 'flex';
-        }
-        
-        // ========== حفظ تحدي جديد ==========
-        function saveChallenge() {
-            if (!currentUser) {
-                showNotification('❌ سجل دخول كتاجر', 'error');
-                return;
-            }
-            
-            const title = document.getElementById('challengeTitle').value;
-            const desc = document.getElementById('challengeDesc').value;
-            const prize = document.getElementById('challengePrize').value;
-            const duration = document.getElementById('challengeDuration').value;
-            const imageFile = document.getElementById('challengeImage').files[0];
-            
-            if (!title || !desc || !prize) {
-                showNotification('❌ املأ جميع الحقول', 'error');
-                return;
-            }
-            
-            const newChallenge = {
-                id: challenges.length + 1,
-                title: title,
-                description: desc,
-                prize: prize,
-                duration: parseInt(duration),
-                merchantId: currentUser.id,
-                merchantName: currentUser.storeName,
-                image: imageFile ? URL.createObjectURL(imageFile) : 'https://via.placeholder.com/600x400/ffd700/000000?text=تحدي+جديد',
-                participants: 0,
-                rating: 5.0,
-                status: 'active',
-                createdAt: new Date().toISOString()
-            };
-            
-            challenges.unshift(newChallenge);
-            localStorage.setItem('challenge_list', JSON.stringify(challenges));
-            
-            // تحديث نقاط التاجر
-            currentUser.challenges = (currentUser.challenges || 0) + 1;
-            currentUser.points = (currentUser.points || 0) + 100;
-            
-            const merchantIndex = merchants.findIndex(m => m.id === currentUser.id);
-            if (merchantIndex !== -1) {
-                merchants[merchantIndex].challenges = currentUser.challenges;
-                merchants[merchantIndex].points = currentUser.points;
-                localStorage.setItem('challenge_merchants', JSON.stringify(merchants));
-            }
-            
-            // مسح الحقول
-            document.getElementById('challengeTitle').value = '';
-            document.getElementById('challengeDesc').value = '';
-            document.getElementById('challengePrize').value = '';
-            document.getElementById('challengeImagePreview').innerHTML = '';
-            
-            showNotification('✅ تم إضافة التحدي بنجاح');
-            updateUI();
-        }
-        
-        // ========== معاينة صورة التحدي ==========
-        function previewChallengeImage(input) {
-            const preview = document.getElementById('challengeImagePreview');
-            preview.innerHTML = '';
-            
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-        
-        // ========== إظهار قسم الإضافة ==========
-        function showAddChallenge() {
-            if (!currentUser) {
-                showNotification('❌ سجل دخول كتاجر أولاً', 'error');
-                openLoginModal();
-                return;
-            }
-            
-            document.getElementById('addChallengeSection').scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // ========== نظام المستخدمين ==========
-        function openLoginModal() {
-            document.getElementById('loginModal').style.display = 'flex';
-        }
-        
-        function switchToRegister() {
-            closeModal('loginModal');
-            document.getElementById('registerModal').style.display = 'flex';
-        }
-        
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-        
-        function handleLogin() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            // حساب مدير تجريبي
-            if (email === 'admin@example.com' && password === 'admin') {
-                currentUser = {
-                    id: 999,
-                    storeName: 'مدير المنصة',
-                    email: email,
-                    points: 9999,
-                    challenges: 50,
-                    avatar: 'م'
-                };
-                
-                localStorage.setItem('challenge_user', JSON.stringify(currentUser));
-                closeModal('loginModal');
-                showNotification('👋 مرحباً مدير المنصة');
-                updateUI();
-                return;
-            }
-            
-            // البحث عن تاجر
-            const merchant = merchants.find(m => m.email === email);
-            if (merchant) {
-                currentUser = merchant;
-                localStorage.setItem('challenge_user', JSON.stringify(currentUser));
-                closeModal('loginModal');
-                showNotification(`👋 مرحباً ${merchant.storeName}`);
-                updateUI();
-                return;
-            }
-            
-            showNotification('❌ بيانات غير صحيحة', 'error');
-        }
-        
-        function handleRegister() {
-            const storeName = document.getElementById('regStoreName').value;
-            const email = document.getElementById('regEmail').value;
-            const phone = document.getElementById('regPhone').value;
-            const category = document.getElementById('regCategory').value;
-            
-            if (!storeName || !email || !phone) {
-                showNotification('❌ املأ جميع الحقول', 'error');
-                return;
-            }
-            
-            const newMerchant = {
-                id: merchants.length + 1,
-                storeName: storeName,
-                email: email,
-                phone: phone,
-                category: category,
-                points: 0,
-                challenges: 0,
-                rating: 5.0,
-                avatar: storeName.charAt(0)
-            };
-            
-            merchants.push(newMerchant);
-            localStorage.setItem('challenge_merchants', JSON.stringify(merchants));
-            
-            currentUser = newMerchant;
-            localStorage.setItem('challenge_user', JSON.stringify(currentUser));
-            
-            closeModal('registerModal');
-            showNotification(`✅ مرحباً ${storeName}`);
-            updateUI();
-        }
-        
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('challenge_user');
-            showNotification('👋 تم تسجيل الخروج');
-            updateUI();
-        }
-        
-        // ========== الإشعارات ==========
-        function showNotification(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
-            
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            container.appendChild(toast);
-            
-            setTimeout(() => toast.remove(), 3000);
-        }
-        
-        // ========== التمرير ==========
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        function scrollToBottom() {
-            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-        }
-        
-        // ========== إظهار الأزرار عند التمرير ==========
-        window.addEventListener('scroll', () => {
-            const quickTopBtn = document.getElementById('quickTopBtn');
-            if (quickTopBtn) {
-                quickTopBtn.classList.toggle('show', window.scrollY > 300);
-            }
-        });
-        
-        // ========== التبديل بين الأقسام ==========
-        function showSection(section) {
-            showNotification(`📱 قسم ${section}`, 'info');
-        }
-        
-        // ========== التهيئة ==========
-        loadData();
-    </script>
-</body>
-</html>
+    }, 3000);
+}
+
+function stopTourSimulation() {
+    if (tourInterval) clearInterval(tourInterval);
+}
+
+function sendTourMessage() {
+    const input = document.getElementById('tourChatInput');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    const chatDiv = document.getElementById('tourChatMessages');
+    const newMessage = document.createElement('div');
+    newMessage.className = 'chat-message';
+    newMessage.innerHTML = `<span class="chat-user">@${currentUser?.name || 'زائر'}:</span> <span class="chat-text">${message}</span>`;
+    chatDiv.appendChild(newMessage);
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+    
+    input.value = '';
+    
+    if (chatDiv.children.length > 10) {
+        chatDiv.removeChild(chatDiv.children[0]);
+    }
+}
+
+function likeTour() {
+    showNotification('✅ تم الإعجاب بالجولة', 'success');
+}
+
+function shareTour() {
+    const shareText = '🔥 جولة تحدي AI من البداية للاحتراف! شاهد التطور الرهيب';
+    if (navigator.share) {
+        navigator.share({ title: 'تحدي AI', text: shareText });
+    } else {
+        navigator.clipboard.writeText(shareText);
+        showNotification('✅ تم نسخ الرابط', 'success');
+    }
+}
+
+function reportTour() {
+    showNotification('📢 تم الإبلاغ، شكراً لك', 'info');
+}
+
+// ===== تعديل دالة addSelectedContent في العجلة =====
+// أضف هذا الجزء لدالة addSelectedContent الموجودة
+function addSelectedContent() {
+    const contentTypes = {
+        'reel': { name: 'Reel', icon: 'film', color: '#FF0000' },
+        'live': { name: 'بث مباشر', icon: 'video', color: '#ff4444' },
+        'tour': { name: 'جولة', icon: 'route', color: '#00b894' }
+    };
+    
+    const type = selectedOption;
+    const content = contentTypes[type];
+    
+    if (type === 'tour') {
+        openTourModal(); // فتح الجولة التفاعلية
+        showNotification('🎮 تم فتح جولة التحدي', 'success');
+        return;
+    }
+    
+    // باقي الكود للخيارات الأخرى...
+    const thumbprint = generateThumbprint(type);
+    
+    // تحديث العداد
+    const countElement = document.getElementById(`${type}Count`);
+    const currentCount = parseInt(countElement.textContent) || 0;
+    countElement.textContent = currentCount + 1;
+    
+    // تحديث آخر بصمة
+    const thumbprintElement = document.getElementById(`last${type.charAt(0).toUpperCase() + type.slice(1)}Thumbprint`);
+    thumbprintElement.textContent = thumbprint;
+    
+    // إنشاء بطاقة مؤقتة
+    const previewCard = document.createElement('div');
+    previewCard.className = 'preview-card';
+    previewCard.style.animation = 'slideIn 0.3s ease';
+    previewCard.innerHTML = `
+        <i class="fas fa-${content.icon}" style="color: ${content.color};"></i>
+        <h3>${content.name} (جديد)</h3>
+        <div class="thumbprint">${thumbprint}</div>
+    `;
+    
+    // إضافة للشاشة (مؤقت)
+    document.getElementById('previewGrid').prepend(previewCard);
+    
+    // إزالة البطاقة بعد 3 ثواني
+    setTimeout(() => {
+        previewCard.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => previewCard.remove(), 300);
+    }, 3000);
+    
+    // عرض إشعار
+    showNotification(`✅ تمت إضافة ${content.name} - البصمة: ${thumbprint}`);
+}
+
+// إضافة الجولة إلى HTML عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    // إضافة الجولة إلى نهاية body
+    const tourModalHTML = document.querySelector('.tour-modal')?.outerHTML;
+    if (!tourModalHTML) {
+        const tourDiv = document.createElement('div');
+        tourDiv.innerHTML = document.querySelector('style').innerHTML + document.querySelector('.tour-modal')?.outerHTML;
+        document.body.appendChild(tourDiv);
+    }
+});
+</script>
