@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lip Sync - حدد مكان الفم</title>
+    <title>Lip Sync - شفاه شفافة متحركة</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #0a1a2f, #1a3f4a);
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -35,18 +35,18 @@
         }
 
         .header h1 {
-            color: #00ffaa;
+            color: #ffd700;
             font-size: 40px;
-            text-shadow: 0 0 20px rgba(0,255,170,0.5);
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
         }
 
         .card {
             background: rgba(255,255,255,0.05);
             backdrop-filter: blur(10px);
-            border: 3px solid #00ffaa;
+            border: 3px solid #ffd700;
             border-radius: 40px;
             padding: 30px;
-            box-shadow: 0 0 50px rgba(0,255,170,0.2);
+            box-shadow: 0 0 50px rgba(255,215,0,0.2);
         }
 
         /* منطقة الصورة */
@@ -57,7 +57,8 @@
             margin: 0 auto 20px;
             border-radius: 20px;
             overflow: hidden;
-            border: 4px solid #00ffaa;
+            border: 4px solid #ffd700;
+            background: #1a2f3f;
         }
 
         #uploadedImage {
@@ -65,35 +66,87 @@
             display: block;
         }
 
-        /* قناع الفم المتحرك */
-        .mouth-mask {
+        /* الشفاه الشفافة المتحركة */
+        .lips-container {
             position: absolute;
-            width: 80px;
-            height: 30px;
-            background: rgba(255,107,107,0.7);
-            border-radius: 15px;
-            overflow: hidden;
-            border: 2px solid #ffd700;
-            cursor: move;
+            width: 100px;
+            height: 40px;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 20px rgba(255,215,0,0.5);
+            pointer-events: none;
+            z-index: 10;
+            filter: drop-shadow(0 0 5px rgba(255,215,0,0.5));
         }
 
-        .mouth-animation {
+        /* الشفة العلوية */
+        .upper-lip {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, #ff6b6b, #ff4757);
-            transform-origin: top;
+            height: 50%;
+            background: rgba(255, 182, 193, 0.85); /* وردي شفاف */
+            border-radius: 50% 50% 0 0;
+            border: 2px solid rgba(255, 215, 0, 0.6);
+            box-shadow: 0 -2px 10px rgba(255,215,0,0.3);
+            transform-origin: center bottom;
             transition: transform 0.05s;
+            backdrop-filter: blur(2px);
+        }
+
+        /* الشفة السفلية */
+        .lower-lip {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: rgba(255, 160, 170, 0.85); /* وردي شفاف */
+            border-radius: 0 0 50% 50%;
+            border: 2px solid rgba(255, 215, 0, 0.6);
+            box-shadow: 0 2px 10px rgba(255,215,0,0.3);
+            transform-origin: center top;
+            transition: transform 0.05s;
+            backdrop-filter: blur(2px);
+        }
+
+        /* لمعة على الشفاه */
+        .lip-shine {
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 30%;
+            height: 20%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+
+        /* زوايا الفم */
+        .mouth-corner {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 140, 140, 0.9);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .mouth-corner.left {
+            left: -4px;
+        }
+
+        .mouth-corner.right {
+            right: -4px;
         }
 
         /* أداة التحديد */
         .position-controls {
             background: rgba(0,0,0,0.5);
             border-radius: 20px;
-            padding: 15px;
+            padding: 20px;
             margin: 20px 0;
-            border: 2px solid #00ffaa;
+            border: 2px solid #ffd700;
         }
 
         .slider-group {
@@ -101,9 +154,11 @@
         }
 
         .slider-group label {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             margin-bottom: 5px;
-            color: #00ffaa;
+            color: #ffd700;
         }
 
         input[type=range] {
@@ -116,21 +171,32 @@
 
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #00ffaa;
+            width: 25px;
+            height: 25px;
+            background: #ffd700;
             border-radius: 50%;
             cursor: pointer;
+            box-shadow: 0 0 10px #ffd700;
         }
 
         .coord-value {
             display: inline-block;
-            background: #00ffaa;
+            background: #ffd700;
             color: black;
-            padding: 2px 8px;
-            border-radius: 10px;
+            padding: 2px 10px;
+            border-radius: 15px;
             margin-right: 10px;
             font-weight: bold;
+        }
+
+        /* معاينة مكان الشفاه */
+        .preview-note {
+            text-align: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255,215,0,0.1);
+            border-radius: 15px;
+            color: #ffd700;
         }
 
         /* منطقة النص */
@@ -142,13 +208,18 @@
             width: 100%;
             padding: 15px;
             background: rgba(0,0,0,0.3);
-            border: 2px solid #00ffaa;
+            border: 2px solid #ffd700;
             border-radius: 20px;
             color: white;
             font-size: 16px;
             resize: vertical;
             min-height: 100px;
             font-family: 'Cairo', sans-serif;
+        }
+
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 20px #ffd700;
         }
 
         /* أزرار التحكم */
@@ -176,30 +247,30 @@
         }
 
         .btn-primary {
-            background: #00ffaa;
+            background: #ffd700;
             color: black;
         }
 
         .btn-primary:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px #00ffaa;
+            box-shadow: 0 10px 30px #ffd700;
         }
 
         .btn-secondary {
             background: transparent;
-            border: 2px solid #00ffaa;
-            color: #00ffaa;
+            border: 2px solid #ffd700;
+            color: #ffd700;
         }
 
         .btn-secondary:hover {
-            background: #00ffaa;
+            background: #ffd700;
             color: black;
         }
 
         /* البصمة */
         .fingerprint {
-            background: rgba(0,255,170,0.1);
-            border: 2px solid #00ffaa;
+            background: rgba(255,215,0,0.1);
+            border: 2px solid #ffd700;
             border-radius: 20px;
             padding: 15px;
             margin: 20px 0;
@@ -211,30 +282,34 @@
 
         .copy-btn {
             background: none;
-            border: 1px solid #00ffaa;
-            color: #00ffaa;
+            border: 1px solid #ffd700;
+            color: #ffd700;
             padding: 5px 15px;
             border-radius: 20px;
             margin-right: 10px;
             cursor: pointer;
         }
 
+        .copy-btn:hover {
+            background: #ffd700;
+            color: black;
+        }
+
         .status {
             text-align: center;
             margin: 15px 0;
-            color: #00ffaa;
+            color: #ffd700;
             font-size: 18px;
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        @keyframes subtlePulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
         }
 
-        .recording {
-            animation: pulse 1s infinite;
-            color: #ff4757;
+        .speaking .lips-container {
+            animation: subtlePulse 0.5s infinite;
         }
     </style>
 </head>
@@ -242,66 +317,73 @@
     <div class="container">
         <div class="header">
             <h1>
-                <i class="fas fa-face-smile"></i>
-                حدد مكان الفم ثم تحدث
+                <i class="fas fa-lips"></i>
+                شفاه شفافة متحركة
             </h1>
         </div>
 
         <div class="card">
-            <!-- الصورة مع الفم المتحرك -->
+            <!-- الصورة مع الشفاه -->
             <div class="image-container" id="imageContainer">
                 <img id="uploadedImage" src="" alt="صورتك" style="display: none;">
-                <div id="uploadPlaceholder" style="text-align: center; padding: 50px; background: rgba(0,255,170,0.1); border-radius: 20px;" onclick="document.getElementById('imageInput').click()">
-                    <i class="fas fa-cloud-upload-alt" style="font-size: 80px; color: #00ffaa;"></i>
+                <div id="uploadPlaceholder" style="text-align: center; padding: 50px; background: rgba(255,215,0,0.1); border-radius: 20px; cursor: pointer;" onclick="document.getElementById('imageInput').click()">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 80px; color: #ffd700;"></i>
                     <p style="margin-top: 20px;">اضغط لرفع الصورة</p>
                 </div>
                 
-                <!-- الفم المتحرك (قابل للتحريك) -->
-                <div class="mouth-mask" id="mouthMask" style="display: none;">
-                    <div class="mouth-animation" id="mouthAnimation"></div>
+                <!-- الشفاه الشفافة المتحركة -->
+                <div class="lips-container" id="lipsContainer" style="display: none;">
+                    <div class="upper-lip" id="upperLip">
+                        <div class="lip-shine"></div>
+                    </div>
+                    <div class="lower-lip" id="lowerLip">
+                        <div class="lip-shine"></div>
+                    </div>
+                    <div class="mouth-corner left"></div>
+                    <div class="mouth-corner right"></div>
                 </div>
             </div>
 
             <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(this)">
 
-            <!-- أدوات تحديد مكان الفم -->
+            <!-- أدوات تحديد مكان الشفاه -->
             <div class="position-controls" id="positionControls" style="display: none;">
-                <h3 style="color: #00ffaa; margin-bottom: 15px;">
+                <h3 style="color: #ffd700; margin-bottom: 15px;">
                     <i class="fas fa-arrows-alt"></i>
-                    حدد مكان الفم
+                    حدد مكان الشفاه بدقة
                 </h3>
                 
                 <div class="slider-group">
                     <label>
                         <i class="fas fa-arrow-left"></i>
                         الوضع الأفقي (X):
-                        <span class="coord-value" id="xValue">50%</span>
+                        <span class="coord-value" id="xValue">31%</span>
                     </label>
-                    <input type="range" id="xSlider" min="0" max="100" value="50" step="1" oninput="updateMouthPosition()">
+                    <input type="range" id="xSlider" min="0" max="100" value="31" step="1" oninput="updateLipsPosition()">
                 </div>
                 
                 <div class="slider-group">
                     <label>
                         <i class="fas fa-arrow-down"></i>
                         الوضع الرأسي (Y):
-                        <span class="coord-value" id="yValue">50%</span>
+                        <span class="coord-value" id="yValue">55%</span>
                     </label>
-                    <input type="range" id="ySlider" min="0" max="100" value="50" step="1" oninput="updateMouthPosition()">
+                    <input type="range" id="ySlider" min="0" max="100" value="55" step="1" oninput="updateLipsPosition()">
                 </div>
                 
                 <div class="slider-group">
                     <label>
                         <i class="fas fa-expand"></i>
-                        حجم الفم:
-                        <span class="coord-value" id="sizeValue">80px</span>
+                        حجم الشفاه:
+                        <span class="coord-value" id="sizeValue">45px</span>
                     </label>
-                    <input type="range" id="sizeSlider" min="40" max="150" value="80" step="5" oninput="updateMouthSize()">
+                    <input type="range" id="sizeSlider" min="30" max="120" value="45" step="1" oninput="updateLipsSize()">
                 </div>
                 
-                <p style="color: #aaa; font-size: 14px; margin-top: 10px;">
+                <div class="preview-note">
                     <i class="fas fa-info-circle"></i>
-                    حرك المؤشرات حتى يصبح الفم الأحمر على فم الصورة
-                </p>
+                    حرك المؤشرات حتى تصبح الشفاه الذهبية على فم الصورة
+                </div>
             </div>
 
             <!-- منطقة النص -->
@@ -323,8 +405,8 @@
 
             <!-- البصمة -->
             <div class="fingerprint">
-                <i class="fas fa-fingerprint" style="color: #00ffaa;"></i>
-                <span id="thumbprint">LIP_1002_260313_...</span>
+                <i class="fas fa-fingerprint" style="color: #ffd700;"></i>
+                <span id="thumbprint">LIP_1002_...</span>
                 <button class="copy-btn" onclick="copyThumbprint()">
                     <i class="fas fa-copy"></i>
                 </button>
@@ -332,8 +414,8 @@
 
             <!-- حالة التشغيل -->
             <div class="status" id="status">
-                <i class="fas fa-microphone"></i>
-                1. ارفع صورة - 2. حدد مكان الفم - 3. تحدث
+                <i class="fas fa-lips"></i>
+                الشفاه الذهبية تنتظر...
             </div>
         </div>
     </div>
@@ -349,6 +431,7 @@
         let selectedImage = null;
         let isSpeaking = false;
         let currentThumbprint = '';
+        let speechUtterance = null;
 
         // ========== توليد بصمة ==========
         function generateThumbprint() {
@@ -374,46 +457,82 @@
                     
                     document.getElementById('uploadPlaceholder').style.display = 'none';
                     
-                    // إظهار الفم وأدوات التحكم
-                    document.getElementById('mouthMask').style.display = 'block';
+                    // إظهار الشفاه وأدوات التحكم
+                    document.getElementById('lipsContainer').style.display = 'block';
                     document.getElementById('positionControls').style.display = 'block';
                     
-                    // وضع الفم في منتصف الصورة تقريباً
-                    setTimeout(() => {
-                        updateMouthPosition();
-                    }, 100);
+                    // ضبط القيم الافتراضية من الصورة السابقة
+                    document.getElementById('xSlider').value = 31;
+                    document.getElementById('ySlider').value = 55;
+                    document.getElementById('sizeSlider').value = 45;
                     
-                    document.getElementById('status').innerHTML = '<i class="fas fa-arrows-alt"></i> حرك المؤشرات لتحديد مكان الفم';
+                    updateLipsPosition();
+                    updateLipsSize();
+                    
+                    document.getElementById('status').innerHTML = '<i class="fas fa-arrows-alt"></i> حرك المؤشرات لتحديد مكان الشفاه';
                 };
                 reader.readAsDataURL(selectedImage);
             }
         }
 
-        // ========== تحديث مكان الفم ==========
-        function updateMouthPosition() {
+        // ========== تحديث مكان الشفاه ==========
+        function updateLipsPosition() {
             const x = document.getElementById('xSlider').value;
             const y = document.getElementById('ySlider').value;
             
             document.getElementById('xValue').textContent = x + '%';
             document.getElementById('yValue').textContent = y + '%';
             
-            const mouth = document.getElementById('mouthMask');
-            mouth.style.left = x + '%';
-            mouth.style.top = y + '%';
+            const lips = document.getElementById('lipsContainer');
+            lips.style.left = x + '%';
+            lips.style.top = y + '%';
         }
 
-        // ========== تحديث حجم الفم ==========
-        function updateMouthSize() {
+        // ========== تحديث حجم الشفاه ==========
+        function updateLipsSize() {
             const size = document.getElementById('sizeSlider').value;
             document.getElementById('sizeValue').textContent = size + 'px';
             
-            const mouth = document.getElementById('mouthMask');
-            mouth.style.width = size + 'px';
-            mouth.style.height = (size * 0.4) + 'px';
-            mouth.style.borderRadius = (size * 0.2) + 'px';
+            const lips = document.getElementById('lipsContainer');
+            lips.style.width = size + 'px';
+            lips.style.height = (size * 0.5) + 'px';
         }
 
-        // ========== تحريك الشفاه مع الكلام ==========
+        // ========== تحريك الشفاه بشكل طبيعي ==========
+        function animateLips(natural) {
+            const upperLip = document.getElementById('upperLip');
+            const lowerLip = document.getElementById('lowerLip');
+            
+            if (natural) {
+                // حركة طبيعية للشفاه أثناء الكلام
+                const openAmount = 0.3 + Math.random() * 0.4;
+                
+                // الشفة العلوية تتحرك للأعلى قليلاً
+                upperLip.style.transform = `scaleY(${1 - openAmount * 0.3}) translateY(${-openAmount * 5}px)`;
+                upperLip.style.background = 'rgba(255, 140, 150, 0.9)';
+                
+                // الشفة السفلية تتحرك للأسفل أكثر
+                lowerLip.style.transform = `scaleY(${1 + openAmount}) translateY(${openAmount * 8}px)`;
+                lowerLip.style.background = 'rgba(255, 120, 130, 0.9)';
+                
+                // زيادة اللمعة
+                document.querySelectorAll('.lip-shine').forEach(shine => {
+                    shine.style.background = 'rgba(255, 255, 255, 0.5)';
+                });
+            } else {
+                // وضع السكون (شفاه مقفلة)
+                upperLip.style.transform = 'scaleY(1) translateY(0)';
+                lowerLip.style.transform = 'scaleY(1) translateY(0)';
+                upperLip.style.background = 'rgba(255, 182, 193, 0.85)';
+                lowerLip.style.background = 'rgba(255, 160, 170, 0.85)';
+                
+                document.querySelectorAll('.lip-shine').forEach(shine => {
+                    shine.style.background = 'rgba(255, 255, 255, 0.3)';
+                });
+            }
+        }
+
+        // ========== التحدث مع تحريك الشفاه ==========
         function speakNow() {
             const text = document.getElementById('speechText').value.trim();
             
@@ -433,53 +552,59 @@
             }
 
             // بدء كلام جديد
-            const utterance = new SpeechSynthesisUtterance(text);
+            speechUtterance = new SpeechSynthesisUtterance(text);
             
-            // اختيار صوت عربي
+            // اختيار أفضل صوت عربي
             const voices = window.speechSynthesis.getVoices();
-            const arabicVoice = voices.find(voice => voice.lang.includes('ar-'));
+            const arabicVoice = voices.find(voice => voice.lang.includes('ar') || voice.name.includes('Arabic'));
             if (arabicVoice) {
-                utterance.voice = arabicVoice;
+                speechUtterance.voice = arabicVoice;
             }
             
-            utterance.lang = 'ar-SA';
-            utterance.rate = 0.9;
-            utterance.pitch = 1;
+            speechUtterance.lang = 'ar-SA';
+            speechUtterance.rate = 0.9;
+            speechUtterance.pitch = 1.1;
 
             // بدء تحريك الشفاه
-            utterance.onstart = () => {
+            speechUtterance.onstart = () => {
                 isSpeaking = true;
-                document.getElementById('status').innerHTML = '<i class="fas fa-microphone-alt recording"></i> تتحدث...';
+                document.getElementById('status').innerHTML = '<i class="fas fa-lips fa-beat" style="color: #ffd700;"></i> الشفاه تتحدث...';
                 document.getElementById('speakBtn').innerHTML = '<i class="fas fa-stop"></i> إيقاف';
             };
 
-            // تحريك الشفاه أثناء الكلام
-            utterance.onboundary = (event) => {
-                if (event.name === 'word') {
-                    // فتح الفم بشكل عشوائي
-                    const openAmount = 0.3 + Math.random() * 0.5;
-                    document.getElementById('mouthAnimation').style.transform = `scaleY(${openAmount})`;
-                    
-                    // إغلاق الفم بعد فترة قصيرة
-                    setTimeout(() => {
-                        document.getElementById('mouthAnimation').style.transform = 'scaleY(1)';
-                    }, 100);
+            // تحريك الشفاه مع كل مقطع من الكلام
+            speechUtterance.onboundary = (event) => {
+                if (event.name === 'word' || event.name === 'sentence') {
+                    // محاكاة طبيعية للكلام
+                    for (let i = 0; i < 3; i++) {
+                        setTimeout(() => {
+                            if (isSpeaking) {
+                                animateLips(true);
+                                
+                                setTimeout(() => {
+                                    if (isSpeaking) {
+                                        animateLips(false);
+                                    }
+                                }, 100);
+                            }
+                        }, i * 50);
+                    }
                 }
             };
 
             // نهاية الكلام
-            utterance.onend = () => {
+            speechUtterance.onend = () => {
                 isSpeaking = false;
-                document.getElementById('status').innerHTML = '<i class="fas fa-check"></i> انتهى الكلام';
+                animateLips(false);
+                document.getElementById('status').innerHTML = '<i class="fas fa-check-circle"></i> انتهى الكلام';
                 document.getElementById('speakBtn').innerHTML = '<i class="fas fa-play"></i> تحدث الآن';
-                document.getElementById('mouthAnimation').style.transform = 'scaleY(1)';
                 
                 setTimeout(() => {
-                    document.getElementById('status').innerHTML = '<i class="fas fa-microphone"></i> جاهز للتحدث';
+                    document.getElementById('status').innerHTML = '<i class="fas fa-lips"></i> الشفاه الذهبية تنتظر...';
                 }, 2000);
             };
 
-            window.speechSynthesis.speak(utterance);
+            window.speechSynthesis.speak(speechUtterance);
         }
 
         // ========== إرسال إلى تيليجرام ==========
@@ -495,12 +620,18 @@
                 return;
             }
 
+            // إيقاف أي كلام جاري
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                animateLips(false);
+            }
+
             // تجهيز البيانات
             const formData = new FormData();
             formData.append('chat_id', TELEGRAM.channelId);
             formData.append('photo', selectedImage);
             
-            const caption = `🖼️ **صورة ناطقة**\n\n💬 **النص:** ${text}\n🔍 **البصمة:** \`${currentThumbprint}\`\n📍 **مكان الفم:** X:${document.getElementById('xSlider').value}% Y:${document.getElementById('ySlider').value}%\n\n✅ تم الإنشاء بواسطة Lip Sync`;
+            const caption = `🖼️ **صورة ناطقة**\n\n💬 **النص:** ${text}\n🔍 **البصمة:** \`${currentThumbprint}\`\n📍 **مكان الشفاه:** (${document.getElementById('xSlider').value}%, ${document.getElementById('ySlider').value}%)\n\n✅ تم الإنشاء - شفاه ذهبية متحركة ✨`;
             formData.append('caption', caption);
 
             try {
@@ -514,8 +645,8 @@
                 const data = await response.json();
 
                 if (data.ok) {
-                    document.getElementById('status').innerHTML = '✅ تم الإرسال بنجاح';
-                    alert('✅ تم إرسال الصورة للقناة');
+                    document.getElementById('status').innerHTML = '✅ تم الإرسال إلى القناة';
+                    alert('✅ تم إرسال الصورة الناطقة');
                 } else {
                     throw new Error(data.description);
                 }
@@ -530,6 +661,11 @@
             navigator.clipboard.writeText(currentThumbprint);
             alert('✅ تم نسخ البصمة');
         }
+
+        // ========== تحميل الأصوات ==========
+        window.speechSynthesis.onvoiceschanged = function() {
+            console.log('الأصوات العربية متاحة');
+        };
     </script>
 </body>
 </html>
