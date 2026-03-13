@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منتج ناطق - طماطم</title>
+    <title>منتج ناطق - مع تحميل فيديو</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #ff4d4d, #cc0000, #990000);
+            background: linear-gradient(135deg, #ff6b6b, #ff4757, #ff0000);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -78,131 +78,204 @@
             z-index: 20;
         }
 
-        /* العيون - شكل بسيط ولطيف */
+        /* العيون الكبيرة مع الرموش */
         .eyes {
             position: absolute;
-            width: 120px;
-            height: 50px;
+            width: 200px;
+            height: 90px;
             transform: translate(-50%, -50%);
             z-index: 30;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             left: 50%;
         }
 
         .eye {
-            width: 35px;
-            height: 35px;
-            background: white;
-            border-radius: 50%;
             position: relative;
-            border: 3px solid #000;
-            box-shadow: 0 0 15px rgba(255,255,0,0.5);
+            width: 80px;
+            height: 80px;
         }
 
+        /* بياض العين */
+        .eye-white {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 60% 40% 50% 50%;
+            position: relative;
+            border: 3px solid #000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        /* القزحية */
+        .iris {
+            width: 45px;
+            height: 45px;
+            background: radial-gradient(circle at 30% 30%, #8B4513, #5D3A1A);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        /* بؤبؤ العين */
         .pupil {
-            width: 15px;
-            height: 15px;
+            width: 22px;
+            height: 22px;
             background: #000;
             border-radius: 50%;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            transition: all 0.1s ease;
+            box-shadow: inset 0 0 5px #333;
         }
 
-        /* الفم - عبارة عن خط بسيط وشفاف */
+        /* لمعة العين */
+        .eye-shine {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            opacity: 0.9;
+            box-shadow: 0 0 5px white;
+        }
+
+        /* الرموش العلوية */
+        .lashes-top {
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .lash {
+            width: 8px;
+            height: 25px;
+            background: #000;
+            border-radius: 40% 40% 0 0;
+            transform: rotate(-5deg);
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.3);
+        }
+
+        .lash:nth-child(even) {
+            transform: rotate(5deg);
+            height: 28px;
+        }
+
+        .lash:nth-child(3) {
+            height: 30px;
+        }
+
+        /* الرموش السفلية */
+        .lashes-bottom {
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .lash-bottom {
+            width: 6px;
+            height: 15px;
+            background: #000;
+            border-radius: 0 0 40% 40%;
+            transform: rotate(5deg);
+            opacity: 0.8;
+        }
+
+        .lash-bottom:nth-child(even) {
+            transform: rotate(-5deg);
+        }
+
+        /* الفم - نصف دائرة */
         .mouth-container {
             position: absolute;
-            width: 100px;
-            height: 20px;
+            width: 120px;
+            height: 60px;
             transform: translate(-50%, -50%);
             z-index: 30;
             left: 50%;
         }
 
-        .mouth-line {
+        .mouth-svg {
             width: 100%;
             height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
         }
 
-        /* الخط الأساسي - شفاف مع حدود */
-        .mouth-base {
-            width: 80%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            position: relative;
-            backdrop-filter: blur(2px);
-            border: 1px solid rgba(255, 255, 0, 0.3);
-            box-shadow: 0 0 10px rgba(255, 255, 0, 0.2);
+        /* الفم المبتسم (نصف دائرة) */
+        .mouth-smile {
+            fill: url(#mouthGradient);
+            stroke: #ff3388;
+            stroke-width: 3;
             transition: all 0.1s ease;
         }
 
-        /* عند الكلام - يصبح الخط مزدوج */
-        .mouth-base.speaking {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.5);
-            border: 2px solid rgba(255, 255, 0, 0.5);
-            box-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+        /* الفم المفتوح للكلام */
+        .mouth-open {
+            fill: url(#mouthGradient);
+            stroke: #ff1493;
+            stroke-width: 3;
+            transform: scale(1.2, 1.5);
         }
 
-        /* تأثير النبض عند الكلام */
-        @keyframes mouthPulse {
-            0% { 
-                width: 80%;
-                height: 4px;
-                background: rgba(255, 255, 255, 0.3);
-            }
-            25% { 
-                width: 90%;
-                height: 8px;
-                background: rgba(255, 255, 255, 0.6);
-            }
-            50% { 
-                width: 85%;
-                height: 12px;
-                background: rgba(255, 255, 255, 0.5);
-            }
-            75% { 
-                width: 95%;
-                height: 6px;
-                background: rgba(255, 255, 255, 0.7);
-            }
-            100% { 
-                width: 80%;
-                height: 4px;
-                background: rgba(255, 255, 255, 0.3);
-            }
-        }
+        /* تدرج لوني للفم */
+        .mouth-gradient-start { stop-color: #ff6b9d; }
+        .mouth-gradient-end { stop-color: #ff1493; }
 
-        .mouth-base.animated {
-            animation: mouthPulse 0.2s infinite;
-        }
-
-        /* الأنف - نقطة صغيرة */
+        /* الأنف الصغير */
         .nose {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 25px;
+            height: 25px;
             transform: translate(-50%, -50%);
             z-index: 30;
             left: 50%;
         }
 
-        .nose-dot {
+        .nose-shape {
             width: 100%;
             height: 100%;
-            background: rgba(255, 150, 150, 0.4);
-            border-radius: 50%;
-            border: 1px solid rgba(255, 255, 0, 0.3);
-            backdrop-filter: blur(2px);
-            box-shadow: 0 0 10px rgba(255, 255, 0, 0.2);
+            background: radial-gradient(circle at 30% 30%, #ff9a9e, #ff6b6b);
+            border-radius: 50% 50% 40% 40%;
+            border: 2px solid #ff3388;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+        /* أنيميشن الفم عند الكلام */
+        @keyframes speakAnimation {
+            0% { transform: scale(1, 1); }
+            25% { transform: scale(1.3, 1.6); }
+            50% { transform: scale(1.1, 1.3); }
+            75% { transform: scale(1.4, 1.8); }
+            100% { transform: scale(1, 1); }
+        }
+
+        .speaking .mouth-smile {
+            animation: speakAnimation 0.15s infinite;
+            fill: url(#mouthGradient);
+        }
+
+        /* أنيميشن العيون */
+        @keyframes blinkAnimation {
+            0%, 95%, 100% { transform: scaleY(1); }
+            97.5% { transform: scaleY(0.1); }
+        }
+
+        .eye-white {
+            animation: blinkAnimation 4s infinite;
         }
 
         /* أدوات التحكم */
@@ -321,17 +394,76 @@
             color: black;
         }
 
+        .btn-success {
+            background: #00ff00;
+            color: black;
+            border: 2px solid #ffff00;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px #00ff00;
+        }
+
+        /* البصمة */
+        .fingerprint-section {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid #ffff00;
+            border-radius: 20px;
+            padding: 15px;
+            margin: 20px 0;
+            direction: ltr;
+        }
+
+        .fingerprint-title {
+            color: #ffff00;
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .fingerprint-display {
+            background: rgba(0,0,0,0.5);
+            border-radius: 15px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 20px;
+            color: #ffff00;
+            text-align: center;
+            border: 1px solid #ffff00;
+            box-shadow: inset 0 0 10px rgba(255,255,0,0.2);
+            word-break: break-all;
+        }
+
+        .fingerprint-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+
+        .fingerprint-btn {
+            background: transparent;
+            border: 1px solid #ffff00;
+            color: #ffff00;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .fingerprint-btn:hover {
+            background: #ffff00;
+            color: black;
+        }
+
+        /* حالة التشغيل */
         .status {
             text-align: center;
             margin: 15px 0;
             color: #ffff00;
             font-size: 18px;
-        }
-
-        /* تنسيق الوجه المتحرك */
-        .highlight {
-            border: 2px solid #ffff00;
-            box-shadow: 0 0 20px #ffff00;
         }
 
         /* رسالة المساعدة */
@@ -341,14 +473,28 @@
             font-size: 14px;
             margin-top: 10px;
         }
+
+        /* فيديو مسجل */
+        .recorded-video {
+            margin-top: 20px;
+            border-top: 2px solid #ffff00;
+            padding-top: 20px;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 15px;
+            border: 2px solid #ffff00;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>
-                <i class="fas fa-smile"></i>
-                طماطم ناطقة
+                <i class="fas fa-star"></i>
+                منتج ناطق - مع تحميل فيديو
             </h1>
         </div>
 
@@ -362,33 +508,105 @@
                     <p style="font-size: 14px; color: rgba(255,255,255,0.7);">مثال: طماطم، تفاحة، برتقال</p>
                 </div>
                 
-                <!-- طبقة الوجه -->
+                <!-- طبقة الوجه مع SVG -->
                 <div class="face-overlay" id="faceOverlay">
                     <!-- العيون -->
                     <div class="eyes" id="eyes">
+                        <!-- العين اليسرى -->
                         <div class="eye" id="leftEye">
-                            <div class="pupil" id="leftPupil"></div>
+                            <div class="eye-white">
+                                <div class="iris">
+                                    <div class="pupil"></div>
+                                </div>
+                                <div class="eye-shine"></div>
+                                <!-- الرموش العلوية -->
+                                <div class="lashes-top">
+                                    <div class="lash"></div>
+                                    <div class="lash"></div>
+                                    <div class="lash"></div>
+                                    <div class="lash"></div>
+                                </div>
+                                <!-- الرموش السفلية -->
+                                <div class="lashes-bottom">
+                                    <div class="lash-bottom"></div>
+                                    <div class="lash-bottom"></div>
+                                    <div class="lash-bottom"></div>
+                                </div>
+                            </div>
                         </div>
+                        
+                        <!-- العين اليمنى -->
                         <div class="eye" id="rightEye">
-                            <div class="pupil" id="rightPupil"></div>
+                            <div class="eye-white">
+                                <div class="iris">
+                                    <div class="pupil"></div>
+                                </div>
+                                <div class="eye-shine"></div>
+                                <!-- الرموش العلوية -->
+                                <div class="lashes-top">
+                                    <div class="lash"></div>
+                                    <div class="lash"></div>
+                                    <div class="lash"></div>
+                                    <div class="lash"></div>
+                                </div>
+                                <!-- الرموش السفلية -->
+                                <div class="lashes-bottom">
+                                    <div class="lash-bottom"></div>
+                                    <div class="lash-bottom"></div>
+                                    <div class="lash-bottom"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- الفم - خط شفاف -->
+                    <!-- الفم - نصف دائرة -->
                     <div class="mouth-container" id="mouthContainer">
-                        <div class="mouth-line">
-                            <div class="mouth-base" id="mouthBase"></div>
-                        </div>
+                        <svg class="mouth-svg" viewBox="0 0 120 60">
+                            <defs>
+                                <linearGradient id="mouthGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#ff6b9d;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#ff1493;stop-opacity:1" />
+                                </linearGradient>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <!-- الفم على شكل نصف دائرة (ابتسامة) -->
+                            <path id="mouthPath" class="mouth-smile" d="M 20,20 Q 60,40 100,20" filter="url(#glow)"/>
+                        </svg>
                     </div>
                     
                     <!-- الأنف -->
                     <div class="nose" id="nose">
-                        <div class="nose-dot"></div>
+                        <div class="nose-shape"></div>
                     </div>
                 </div>
             </div>
 
             <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(this)">
+
+            <!-- البصمة -->
+            <div class="fingerprint-section">
+                <div class="fingerprint-title">
+                    <i class="fas fa-fingerprint"></i>
+                    بصمة الفيديو
+                </div>
+                <div class="fingerprint-display" id="fingerprintDisplay">
+                    PROD_2024_001
+                </div>
+                <div class="fingerprint-actions">
+                    <button class="fingerprint-btn" onclick="copyFingerprint()">
+                        <i class="fas fa-copy"></i> نسخ البصمة
+                    </button>
+                    <button class="fingerprint-btn" onclick="generateNewFingerprint()">
+                        <i class="fas fa-sync-alt"></i> توليد جديد
+                    </button>
+                </div>
+            </div>
 
             <!-- أدوات تحديد مكان ملامح الوجه -->
             <div class="position-controls" id="positionControls" style="display: none;">
@@ -407,9 +625,9 @@
                     <label>
                         <i class="fas fa-arrow-down"></i>
                         العيون (الوضع الرأسي):
-                        <span class="coord-value" id="eyesYValue">40%</span>
+                        <span class="coord-value" id="eyesYValue">35%</span>
                     </label>
-                    <input type="range" id="eyesYSlider" min="20" max="70" value="40" step="1" oninput="updateEyesPosition()">
+                    <input type="range" id="eyesYSlider" min="20" max="60" value="35" step="1" oninput="updateEyesPosition()">
                 </div>
                 
                 <div class="slider-group">
@@ -422,9 +640,24 @@
                     <label>
                         <i class="fas fa-arrow-down"></i>
                         الفم (الوضع الرأسي):
-                        <span class="coord-value" id="mouthYValue">60%</span>
+                        <span class="coord-value" id="mouthYValue">65%</span>
                     </label>
-                    <input type="range" id="mouthYSlider" min="40" max="80" value="60" step="1" oninput="updateMouthPosition()">
+                    <input type="range" id="mouthYSlider" min="50" max="85" value="65" step="1" oninput="updateMouthPosition()">
+                </div>
+                
+                <div class="slider-group">
+                    <label>
+                        <i class="fas fa-arrow-left"></i>
+                        الأنف (الوضع الأفقي):
+                        <span class="coord-value" id="noseXValue">50%</span>
+                    </label>
+                    <input type="range" id="noseXSlider" min="20" max="80" value="50" step="1" oninput="updateNosePosition()">
+                    <label>
+                        <i class="fas fa-arrow-down"></i>
+                        الأنف (الوضع الرأسي):
+                        <span class="coord-value" id="noseYValue">50%</span>
+                    </label>
+                    <input type="range" id="noseYSlider" min="35" max="70" value="50" step="1" oninput="updateNosePosition()">
                 </div>
                 
                 <div class="slider-group">
@@ -439,7 +672,7 @@
 
             <!-- منطقة النص -->
             <div class="text-area">
-                <textarea id="speechText" placeholder="اكتب هنا ما تريد أن يقوله المنتج..." maxlength="300">أنا طماطم طازجة وصحية!</textarea>
+                <textarea id="speechText" placeholder="اكتب هنا ما تريد أن يقوله المنتج..." maxlength="300">أنا طماطم طازجة وصحية! أحب أن أكون جزءاً من وجبتك 🍅</textarea>
             </div>
 
             <!-- أزرار التحكم -->
@@ -452,6 +685,10 @@
                     <i class="fas fa-undo"></i>
                     إعادة ضبط
                 </button>
+                <button class="btn btn-success" onclick="downloadVideo()" id="downloadBtn">
+                    <i class="fas fa-download"></i>
+                    تحميل فيديو
+                </button>
             </div>
 
             <!-- حالة التشغيل -->
@@ -460,9 +697,18 @@
                 حرك الملامح على الصورة ثم اضغط تحدث
             </div>
             
+            <!-- الفيديو المسجل -->
+            <div class="recorded-video" id="recordedVideo" style="display: none;">
+                <h3 style="color: #ffff00; margin-bottom: 10px;">
+                    <i class="fas fa-video"></i>
+                    الفيديو المُسجل
+                </h3>
+                <video id="recordedVideoPlayer" controls></video>
+            </div>
+            
             <div class="help-text">
                 <i class="fas fa-info-circle"></i>
-                الفم عبارة عن خط شفاف - يتحرك ويتغير عند الكلام
+                عيون برموش جميلة وفم على شكل نصف دائرة - البصمة تضاف تلقائياً للفيديو
             </div>
         </div>
     </div>
@@ -473,9 +719,46 @@
         let isSpeaking = false;
         let speechInterval = null;
         let currentUtterance = null;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let animationFrame = null;
+        let canvas = null;
+        let ctx = null;
+        let videoStream = null;
+        
+        // البصمة
+        let currentFingerprint = 'PROD_' + new Date().getFullYear() + '_' + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        document.getElementById('fingerprintDisplay').textContent = currentFingerprint;
         
         // مقاسات افتراضية
         let currentSize = 100;
+
+        // توليد بصمة جديدة
+        function generateNewFingerprint() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+            
+            currentFingerprint = `PROD_${year}${month}${day}_${random}`;
+            document.getElementById('fingerprintDisplay').textContent = currentFingerprint;
+            updateStatus('تم توليد بصمة جديدة: ' + currentFingerprint);
+        }
+
+        // نسخ البصمة
+        function copyFingerprint() {
+            navigator.clipboard.writeText(currentFingerprint);
+            updateStatus('✅ تم نسخ البصمة: ' + currentFingerprint);
+            
+            // تأثير مؤقت
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 2000);
+        }
 
         // رفع الصورة
         function handleImageUpload(input) {
@@ -496,9 +779,21 @@
                     
                     // ضبط القيم الافتراضية
                     resetFeatures();
+                    
+                    // إنشاء canvas للتسجيل
+                    setupCanvas();
                 };
                 reader.readAsDataURL(selectedImage);
             }
+        }
+
+        // تجهيز Canvas للتسجيل
+        function setupCanvas() {
+            const container = document.getElementById('imageContainer');
+            canvas = document.createElement('canvas');
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+            ctx = canvas.getContext('2d');
         }
 
         // تحديث موقع العيون
@@ -512,9 +807,6 @@
             const eyes = document.getElementById('eyes');
             eyes.style.left = x + '%';
             eyes.style.top = y + '%';
-            
-            // تحريك بؤبؤ العين مع الماوس (تأثير لطيف)
-            movePupils();
         }
 
         // تحديث موقع الفم
@@ -528,6 +820,19 @@
             const mouth = document.getElementById('mouthContainer');
             mouth.style.left = x + '%';
             mouth.style.top = y + '%';
+        }
+
+        // تحديث موقع الأنف
+        function updateNosePosition() {
+            const x = document.getElementById('noseXSlider').value;
+            const y = document.getElementById('noseYSlider').value;
+            
+            document.getElementById('noseXValue').textContent = x + '%';
+            document.getElementById('noseYValue').textContent = y + '%';
+            
+            const nose = document.getElementById('nose');
+            nose.style.left = x + '%';
+            nose.style.top = y + '%';
         }
 
         // تحديث حجم جميع الملامح
@@ -546,38 +851,40 @@
             document.getElementById('nose').style.transform = `translate(-50%, -50%) scale(${size/100})`;
         }
 
-        // تحريك بؤبؤ العين (تأثير لطيف)
-        function movePupils() {
-            const pupils = document.querySelectorAll('.pupil');
-            pupils.forEach(pupil => {
-                const randomX = Math.random() * 10 - 5;
-                const randomY = Math.random() * 10 - 5;
-                pupil.style.transform = `translate(calc(-50% + ${randomX}px), calc(-50% + ${randomY}px))`;
-            });
-        }
-
         // إعادة ضبط الملامح
         function resetFeatures() {
             document.getElementById('eyesXSlider').value = 50;
-            document.getElementById('eyesYSlider').value = 40;
+            document.getElementById('eyesYSlider').value = 35;
             document.getElementById('mouthXSlider').value = 50;
-            document.getElementById('mouthYSlider').value = 60;
+            document.getElementById('mouthYSlider').value = 65;
+            document.getElementById('noseXSlider').value = 50;
+            document.getElementById('noseYSlider').value = 50;
             document.getElementById('sizeSlider').value = 100;
             
             updateEyesPosition();
             updateMouthPosition();
+            updateNosePosition();
             updateFeaturesSize();
         }
 
         // تحريك الفم عند الكلام
-        function animateMouth(isOpen) {
-            const mouthBase = document.getElementById('mouthBase');
+        function animateMouth(speaking) {
+            const mouthPath = document.getElementById('mouthPath');
             
-            if (isOpen) {
-                mouthBase.classList.add('animated');
+            if (speaking) {
+                // فتح الفم بشكل أكبر عند الكلام
+                mouthPath.setAttribute('d', "M 15,30 Q 60,50 105,30");
+                mouthPath.classList.add('mouth-open');
             } else {
-                mouthBase.classList.remove('animated');
+                // العودة للابتسامة الطبيعية
+                mouthPath.setAttribute('d', "M 20,20 Q 60,40 100,20");
+                mouthPath.classList.remove('mouth-open');
             }
+        }
+
+        // تحديث الحالة
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML = message;
         }
 
         // بدء الكلام
@@ -603,18 +910,17 @@
             
             currentUtterance.onstart = () => {
                 isSpeaking = true;
-                document.getElementById('status').innerHTML = '<i class="fas fa-volume-up fa-beat"></i> يتحدث...';
+                updateStatus('<i class="fas fa-volume-up fa-beat"></i> يتحدث...');
                 document.getElementById('speakBtn').innerHTML = '<i class="fas fa-stop"></i> إيقاف';
                 
                 // بدء حركة الفم
-                animateMouth(true);
-                
-                // حركة العيون (تحديث كل 200 مللي)
+                let mouthState = false;
                 speechInterval = setInterval(() => {
                     if (isSpeaking) {
-                        movePupils();
+                        mouthState = !mouthState;
+                        animateMouth(mouthState);
                     }
-                }, 200);
+                }, 120);
             };
             
             currentUtterance.onend = () => {
@@ -637,19 +943,14 @@
                 speechInterval = null;
             }
             
-            // إيقاف حركة الفم
+            // إغلاق الفم
             animateMouth(false);
             
-            // إعادة بؤبؤ العين للمنتصف
-            document.querySelectorAll('.pupil').forEach(pupil => {
-                pupil.style.transform = 'translate(-50%, -50%)';
-            });
-            
-            document.getElementById('status').innerHTML = '<i class="fas fa-check-circle"></i> توقف الكلام';
+            updateStatus('<i class="fas fa-check-circle"></i> توقف الكلام');
             document.getElementById('speakBtn').innerHTML = '<i class="fas fa-play"></i> تحدث الآن';
             
             setTimeout(() => {
-                document.getElementById('status').innerHTML = '<i class="fas fa-smile"></i> حرك الملامح على الصورة';
+                updateStatus('<i class="fas fa-smile"></i> حرك الملامح على الصورة');
             }, 2000);
         }
 
@@ -674,10 +975,137 @@
             }
         }
 
+        // تسجيل الفيديو
+        async function startRecording() {
+            const container = document.getElementById('imageContainer');
+            
+            // إنشاء stream من canvas
+            const stream = canvas.captureStream(30);
+            videoStream = stream;
+            
+            mediaRecorder = new MediaRecorder(stream, {
+                mimeType: 'video/webm;codecs=vp9'
+            });
+            
+            recordedChunks = [];
+            
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+            
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, {
+                    type: 'video/webm'
+                });
+                
+                const url = URL.createObjectURL(blob);
+                const video = document.getElementById('recordedVideoPlayer');
+                video.src = url;
+                document.getElementById('recordedVideo').style.display = 'block';
+                
+                // تحميل الفيديو تلقائياً
+                downloadBlob(blob);
+            };
+            
+            mediaRecorder.start();
+            
+            // بدء رسم الإطارات
+            drawFrame();
+        }
+
+        // رسم الإطار الحالي على canvas
+        function drawFrame() {
+            if (!canvas || !ctx) return;
+            
+            const img = document.getElementById('uploadedImage');
+            const eyes = document.getElementById('eyes');
+            const mouth = document.getElementById('mouthContainer');
+            const nose = document.getElementById('nose');
+            
+            // رسم الصورة
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            // إضافة البصمة
+            ctx.font = 'bold 20px "Cairo", sans-serif';
+            ctx.fillStyle = '#ffff00';
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.shadowColor = '#000';
+            ctx.shadowBlur = 5;
+            
+            const fingerprintText = '🔍 ' + currentFingerprint;
+            ctx.strokeText(fingerprintText, 20, 40);
+            ctx.fillText(fingerprintText, 20, 40);
+            
+            // رسم العيون
+            const eyesRect = eyes.getBoundingClientRect();
+            const containerRect = document.getElementById('imageContainer').getBoundingClientRect();
+            
+            // متابعة الرسم
+            if (isSpeaking) {
+                requestAnimationFrame(drawFrame);
+            }
+        }
+
+        // تحميل الفيديو
+        function downloadVideo() {
+            if (!selectedImage) {
+                alert('الرجاء رفع صورة أولاً');
+                return;
+            }
+            
+            const text = document.getElementById('speechText').value.trim();
+            if (!text) {
+                alert('الرجاء كتابة نص للتحدث');
+                return;
+            }
+            
+            updateStatus('جاري تسجيل الفيديو...');
+            
+            // بدء التسجيل مع الكلام
+            startSpeaking(text);
+            
+            // بدء تسجيل الفيديو بعد قليل
+            setTimeout(() => {
+                startRecording();
+            }, 500);
+            
+            // إيقاف التسجيل بعد انتهاء الكلام
+            currentUtterance.onend = () => {
+                setTimeout(() => {
+                    if (mediaRecorder && mediaRecorder.state === 'recording') {
+                        mediaRecorder.stop();
+                        if (videoStream) {
+                            videoStream.getTracks().forEach(track => track.stop());
+                        }
+                    }
+                    stopSpeaking();
+                    updateStatus('✅ تم تسجيل الفيديو مع البصمة');
+                }, 500);
+            };
+        }
+
+        // تحميل blob كملف
+        function downloadBlob(blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `product_${currentFingerprint}.webm`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
         // تحميل الأصوات المتاحة
         window.speechSynthesis.onvoiceschanged = function() {
             window.speechSynthesis.getVoices();
         };
+        
+        // توليد بصمة أولية
+        generateNewFingerprint();
     </script>
 </body>
 </html>
