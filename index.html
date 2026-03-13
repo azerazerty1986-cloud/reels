@@ -942,31 +942,31 @@
 
         <!-- ===== التبويبات الرئيسية ===== -->
         <div class="main-tabs">
-            <button class="tab-btn active" onclick="switchTab('dashboard')">
+            <button class="tab-btn active" onclick="switchTab(event, 'dashboard')">
                 <i class="fas fa-chart-pie"></i> لوحة التحكم
             </button>
-            <button class="tab-btn" onclick="switchTab('sales')">
+            <button class="tab-btn" onclick="switchTab(event, 'sales')">
                 <i class="fas fa-shopping-cart"></i> المبيعات
             </button>
-            <button class="tab-btn" onclick="switchTab('purchases')">
+            <button class="tab-btn" onclick="switchTab(event, 'purchases')">
                 <i class="fas fa-truck"></i> المشتريات
             </button>
-            <button class="tab-btn" onclick="switchTab('inventory')">
+            <button class="tab-btn" onclick="switchTab(event, 'inventory')">
                 <i class="fas fa-boxes"></i> المخزون
             </button>
-            <button class="tab-btn" onclick="switchTab('shops')">
+            <button class="tab-btn" onclick="switchTab(event, 'shops')">
                 <i class="fas fa-store"></i> المحلات
             </button>
-            <button class="tab-btn" onclick="switchTab('customers')">
+            <button class="tab-btn" onclick="switchTab(event, 'customers')">
                 <i class="fas fa-users"></i> العملاء
             </button>
-            <button class="tab-btn" onclick="switchTab('invoices')">
+            <button class="tab-btn" onclick="switchTab(event, 'invoices')">
                 <i class="fas fa-file-invoice"></i> الفواتير
             </button>
-            <button class="tab-btn" onclick="switchTab('reports')">
+            <button class="tab-btn" onclick="switchTab(event, 'reports')">
                 <i class="fas fa-chart-line"></i> التقارير
             </button>
-            <button class="tab-btn" onclick="switchTab('settings')">
+            <button class="tab-btn" onclick="switchTab(event, 'settings')">
                 <i class="fas fa-cog"></i> الإعدادات
             </button>
         </div>
@@ -1062,7 +1062,7 @@
                         <i class="fas fa-clock"></i>
                         <h2>آخر المبيعات</h2>
                     </div>
-                    <button class="btn btn-outline" onclick="switchTab('sales')">
+                    <button class="btn btn-outline" onclick="switchTab(event, 'sales')">
                         <i class="fas fa-eye"></i> عرض الكل
                     </button>
                 </div>
@@ -1120,7 +1120,7 @@
                 <div class="table-header">
                     <div class="table-title">
                         <i class="fas fa-table"></i>
-                        <h2>جدول المبيعات - إدخال مباشر</h2>
+                        <h2>جدول المبيعات</h2>
                     </div>
                     <div class="table-controls">
                         <button class="btn btn-outline" onclick="exportToExcel()">
@@ -1128,9 +1128,6 @@
                         </button>
                         <button class="btn btn-outline" onclick="exportToPDF()">
                             <i class="fas fa-file-pdf"></i> PDF
-                        </button>
-                        <button class="btn btn-gold" onclick="syncWithTelegram()">
-                            <i class="fab fa-telegram"></i> مزامنة
                         </button>
                         <button class="btn btn-success" onclick="addSampleData()">
                             <i class="fas fa-flask"></i> عينات
@@ -1157,7 +1154,7 @@
                         <tr>
                             <td colspan="10" style="text-align: center; padding: 50px;">
                                 <i class="fas fa-box-open" style="font-size: 50px; color: gold;"></i>
-                                <p style="margin-top: 20px;">لا توجد منتجات، أضف منتجاً جديداً</p>
+                                <p style="margin-top: 20px;">لا توجد منتجات</p>
                             </td>
                         </tr>
                     </tbody>
@@ -1167,7 +1164,6 @@
 
         <!-- ===== قسم المشتريات ===== -->
         <div class="section" id="purchasesSection">
-            <!-- نموذج إضافة مشتريات -->
             <div class="purchases-container">
                 <div class="section-header">
                     <div class="section-title">
@@ -1180,48 +1176,25 @@
                     <select class="form-select" id="purchaseProduct">
                         <option value="">اختر المنتج</option>
                     </select>
-                    
                     <input type="number" class="form-input" id="purchaseQuantity" placeholder="الكمية" min="1">
-                    
-                    <input type="number" class="form-input" id="purchasePrice" placeholder="سعر الشراء للوحدة">
-                    
+                    <input type="number" class="form-input" id="purchasePrice" placeholder="سعر الشراء">
                     <input type="text" class="form-input" id="purchaseSupplier" placeholder="اسم المورد">
-                    
                     <select class="form-select" id="purchasePaymentMethod">
                         <option value="نقدي">نقدي</option>
                         <option value="بطاقة">بطاقة</option>
                         <option value="تحويل">تحويل بنكي</option>
-                        <option value="أجل">أجل</option>
                     </select>
-                    
                     <button class="btn btn-gold" onclick="addPurchase()">
-                        <i class="fas fa-save"></i> تسجيل الشراء
+                        <i class="fas fa-save"></i> تسجيل
                     </button>
-                </div>
-                
-                <div class="form-grid" style="margin-top: 10px;">
-                    <input type="text" class="form-input" id="purchaseNotes" placeholder="ملاحظات (اختياري)">
-                    
-                    <label style="display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="autoUpdatePrice"> تحديث سعر البيع تلقائياً
-                    </label>
                 </div>
             </div>
 
-            <!-- سجل المشتريات -->
             <div class="purchases-container">
                 <div class="section-header">
                     <div class="section-title">
                         <i class="fas fa-list"></i>
                         <h2>سجل المشتريات</h2>
-                    </div>
-                    <div>
-                        <button class="btn btn-outline" onclick="exportPurchases()">
-                            <i class="fas fa-file-excel"></i> تصدير Excel
-                        </button>
-                        <button class="btn btn-purple" onclick="syncPurchasesWithTelegram()">
-                            <i class="fab fa-telegram"></i> مزامنة
-                        </button>
                     </div>
                 </div>
                 
@@ -1233,22 +1206,15 @@
                             <th>المنتج</th>
                             <th>المورد</th>
                             <th>الكمية</th>
-                            <th>سعر الشراء</th>
+                            <th>السعر</th>
                             <th>الإجمالي</th>
-                            <th>طريقة الدفع</th>
-                            <th>ملاحظات</th>
+                            <th>الطريقة</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="purchasesTableBody">
-                        <tr><td colspan="10">لا توجد مشتريات مسجلة</td></tr>
+                        <tr><td colspan="9">لا توجد مشتريات</td></tr>
                     </tbody>
-                    <tfoot id="purchasesTotal">
-                        <tr>
-                            <td colspan="5" style="text-align: left;">الإجمالي الكلي:</td>
-                            <td colspan="5" style="color: gold; font-weight: bold;" id="totalPurchasesAmount">0 دج</td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
@@ -1293,15 +1259,7 @@
                 <div class="section-header">
                     <div class="section-title">
                         <i class="fas fa-clipboard-list"></i>
-                        <h2>حالة المخزون التفصيلية</h2>
-                    </div>
-                    <div>
-                        <button class="btn btn-outline" onclick="calculateInventoryValue()">
-                            <i class="fas fa-calculator"></i> حساب القيمة
-                        </button>
-                        <button class="btn btn-success" onclick="autoReorder()">
-                            <i class="fas fa-sync"></i> طلب تلقائي
-                        </button>
+                        <h2>حالة المخزون</h2>
                     </div>
                 </div>
                 
@@ -1310,23 +1268,17 @@
                         <tr>
                             <th>المنتج</th>
                             <th>القسم</th>
-                            <th>الكمية الحالية</th>
+                            <th>الكمية</th>
                             <th>الحد الأدنى</th>
                             <th>الحد الأقصى</th>
-                            <th>تكلفة الوحدة</th>
-                            <th>قيمة المخزون</th>
-                            <th>آخر تحديث</th>
+                            <th>التكلفة</th>
+                            <th>القيمة</th>
+                            <th>التاريخ</th>
                             <th>الحالة</th>
-                            <th>إجراءات</th>
+                            <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="inventoryTableBody"></tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="6" style="text-align: left;">إجمالي قيمة المخزون:</td>
-                            <td colspan="4" style="color: gold; font-weight: bold;" id="totalInventoryValue">0 دج</td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
@@ -1336,10 +1288,10 @@
             <div class="table-header">
                 <div class="table-title">
                     <i class="fas fa-store"></i>
-                    <h2>المحلات المسجلة</h2>
+                    <h2>المحلات</h2>
                 </div>
                 <button class="btn btn-gold" onclick="showAddShopModal()">
-                    <i class="fas fa-plus"></i> إضافة محل
+                    <i class="fas fa-plus"></i> إضافة
                 </button>
             </div>
             <div class="shops-grid" id="shopsGrid"></div>
@@ -1350,10 +1302,10 @@
             <div class="table-header">
                 <div class="table-title">
                     <i class="fas fa-users"></i>
-                    <h2>قاعدة بيانات العملاء</h2>
+                    <h2>العملاء</h2>
                 </div>
                 <button class="btn btn-gold" onclick="showAddCustomerModal()">
-                    <i class="fas fa-plus"></i> إضافة عميل
+                    <i class="fas fa-plus"></i> إضافة
                 </button>
             </div>
             <div class="customers-grid" id="customersGrid"></div>
@@ -1379,22 +1331,18 @@
                 <div class="stat-card" onclick="generateReport('daily')">
                     <i class="fas fa-calendar-day"></i>
                     <h3>تقرير يومي</h3>
-                    <p>عرض مبيعات اليوم</p>
                 </div>
                 <div class="stat-card" onclick="generateReport('weekly')">
                     <i class="fas fa-calendar-week"></i>
                     <h3>تقرير أسبوعي</h3>
-                    <p>تحليل الأسبوع</p>
                 </div>
                 <div class="stat-card" onclick="generateReport('monthly')">
                     <i class="fas fa-calendar-alt"></i>
                     <h3>تقرير شهري</h3>
-                    <p>إحصائيات الشهر</p>
                 </div>
                 <div class="stat-card" onclick="generateReport('yearly')">
                     <i class="fas fa-calendar"></i>
                     <h3>تقرير سنوي</h3>
-                    <p>ملخص السنة</p>
                 </div>
             </div>
         </div>
@@ -1405,28 +1353,24 @@
                 <div class="stat-card" onclick="toggleTheme()">
                     <i class="fas fa-moon"></i>
                     <h3>الوضع الليلي</h3>
-                    <p>تغيير مظهر التطبيق</p>
                 </div>
                 <div class="stat-card" onclick="clearAllData()">
                     <i class="fas fa-trash"></i>
                     <h3>مسح البيانات</h3>
-                    <p>حذف جميع البيانات</p>
                 </div>
                 <div class="stat-card" onclick="backupData()">
                     <i class="fas fa-download"></i>
                     <h3>نسخ احتياطي</h3>
-                    <p>تصدير جميع البيانات</p>
                 </div>
                 <div class="stat-card" onclick="restoreData()">
                     <i class="fas fa-upload"></i>
-                    <h3>استعادة نسخة</h3>
-                    <p>استيراد بيانات سابقة</p>
+                    <h3>استعادة</h3>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ===== نوافذ منبثقة ===== -->
+    <!-- ===== النوافذ المنبثقة ===== -->
     
     <!-- نافذة تسجيل الدخول -->
     <div class="modal" id="loginModal">
@@ -1438,11 +1382,6 @@
             <div style="padding: 20px;">
                 <input type="text" class="form-input" id="loginUsername" placeholder="اسم المستخدم" style="margin-bottom: 15px;">
                 <input type="password" class="form-input" id="loginPassword" placeholder="كلمة المرور" style="margin-bottom: 15px;">
-                <select class="form-select" id="loginRole" style="margin-bottom: 15px;">
-                    <option value="admin">مدير</option>
-                    <option value="merchant">تاجر</option>
-                    <option value="customer">عميل</option>
-                </select>
                 <button class="btn btn-gold" onclick="login()" style="width: 100%;">دخول</button>
             </div>
         </div>
@@ -1452,19 +1391,13 @@
     <div class="modal" id="addShopModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2><i class="fas fa-store"></i> إضافة محل جديد</h2>
+                <h2><i class="fas fa-store"></i> إضافة محل</h2>
                 <button class="close-modal" onclick="closeModal('addShopModal')">&times;</button>
             </div>
             <div style="padding: 20px;">
                 <input type="text" class="form-input" id="shopName" placeholder="اسم المحل" style="margin-bottom: 15px;">
                 <input type="text" class="form-input" id="shopOwner" placeholder="اسم التاجر" style="margin-bottom: 15px;">
-                <input type="text" class="form-input" id="shopTelegram" placeholder="@username تليجرام" style="margin-bottom: 15px;">
-                <select class="form-select" id="shopCategory" style="margin-bottom: 15px;">
-                    <option value="برومسيون">برومسيون</option>
-                    <option value="توابل">توابل</option>
-                    <option value="كوسمتيك">كوسمتيك</option>
-                    <option value="أخرى">أخرى</option>
-                </select>
+                <input type="text" class="form-input" id="shopTelegram" placeholder="@username" style="margin-bottom: 15px;">
                 <button class="btn btn-gold" onclick="addShop()" style="width: 100%;">حفظ</button>
             </div>
         </div>
@@ -1474,7 +1407,7 @@
     <div class="modal" id="addCustomerModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2><i class="fas fa-user-plus"></i> إضافة عميل جديد</h2>
+                <h2><i class="fas fa-user-plus"></i> إضافة عميل</h2>
                 <button class="close-modal" onclick="closeModal('addCustomerModal')">&times;</button>
             </div>
             <div style="padding: 20px;">
@@ -1485,105 +1418,33 @@
         </div>
     </div>
 
-    <!-- نافذة إنشاء فاتورة -->
+    <!-- نافذة الفاتورة -->
     <div class="modal" id="invoiceModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2><i class="fas fa-file-invoice"></i> إنشاء فاتورة جديدة</h2>
+                <h2><i class="fas fa-file-invoice"></i> فاتورة</h2>
                 <button class="close-modal" onclick="closeModal('invoiceModal')">&times;</button>
             </div>
-            <div style="padding: 20px;" id="invoiceModalContent">
-                <!-- محتوى الفاتورة يضاف هنا -->
-            </div>
+            <div style="padding: 20px;" id="invoiceModalContent"></div>
         </div>
     </div>
 
     <script>
-        // ========== البيانات العامة ==========
+        // ========== البيانات الأساسية ==========
         let products = JSON.parse(localStorage.getItem('products')) || [];
         let purchases = JSON.parse(localStorage.getItem('purchases')) || [];
-        let movements = JSON.parse(localStorage.getItem('movements')) || [];
-        let alerts = JSON.parse(localStorage.getItem('inventory_alerts')) || [];
-        let suppliers = JSON.parse(localStorage.getItem('suppliers')) || [
-            { id: 1, name: 'مورد التوابل', phone: '0555123456', telegram: '@supplier1' },
-            { id: 2, name: 'مورد الزيتون', phone: '0555789012', telegram: '@supplier2' },
-            { id: 3, name: 'مورد الكوسمتيك', phone: '0555345678', telegram: '@supplier3' }
-        ];
-        
         let shops = JSON.parse(localStorage.getItem('shops')) || [
-            { id: 1, name: 'متجر أحمد للتوابل', owner: 'أحمد', telegram: '@ahmed_spices', category: 'توابل', rating: 4.8, products: 0 },
-            { id: 2, name: 'متجر سارة للتجميل', owner: 'سارة', telegram: '@sara_cosmetic', category: 'كوسمتيك', rating: 4.5, products: 0 },
-            { id: 3, name: 'برومسيون اليوم', owner: 'محمد', telegram: '@mohamed_promo', category: 'برومسيون', rating: 4.2, products: 0 }
+            { id: 1, name: 'متجر أحمد', owner: 'أحمد', telegram: '@ahmed', category: 'توابل', rating: 4.8 },
+            { id: 2, name: 'متجر سارة', owner: 'سارة', telegram: '@sara', category: 'كوسمتيك', rating: 4.5 },
+            { id: 3, name: 'برومسيون', owner: 'محمد', telegram: '@promo', category: 'برومسيون', rating: 4.2 }
         ];
-        
         let customers = JSON.parse(localStorage.getItem('customers')) || [
-            { id: 1, name: 'خالد العمري', phone: '0555123456', points: 150, totalSpent: 2500, lastPurchase: new Date().toISOString() },
-            { id: 2, name: 'نورة السالم', phone: '0555789012', points: 320, totalSpent: 4800, lastPurchase: new Date().toISOString() }
+            { id: 1, name: 'خالد', phone: '0555123456', points: 150, totalSpent: 2500, lastPurchase: new Date().toISOString() },
+            { id: 2, name: 'نورة', phone: '0555789012', points: 320, totalSpent: 4800, lastPurchase: new Date().toISOString() }
         ];
-        
         let invoices = JSON.parse(localStorage.getItem('invoices')) || [];
         let currentUser = null;
         let charts = {};
-
-        // البيانات الافتراضية للمنتجات
-        const defaultProducts = [
-            { 
-                id: 1, 
-                name: 'كركم أصلي', 
-                category: 'توابل', 
-                price: 250, 
-                cost: 180,
-                stock: 50, 
-                minStock: 10, 
-                maxStock: 100,
-                lastUpdated: new Date().toISOString(),
-                supplier: 'مورد التوابل',
-                sold: 120,
-                shopId: 1,
-                date: new Date().toISOString()
-            },
-            { 
-                id: 2, 
-                name: 'زيت زيتون', 
-                category: 'برومسيون', 
-                price: 800, 
-                cost: 600,
-                stock: 30, 
-                minStock: 15, 
-                maxStock: 80,
-                lastUpdated: new Date().toISOString(),
-                supplier: 'مورد الزيتون',
-                sold: 45,
-                shopId: 3,
-                date: new Date().toISOString()
-            },
-            { 
-                id: 3, 
-                name: 'كريم مرطب', 
-                category: 'كوسمتيك', 
-                price: 1200, 
-                cost: 900,
-                stock: 3, 
-                minStock: 5, 
-                maxStock: 30,
-                lastUpdated: new Date().toISOString(),
-                supplier: 'مورد الكوسمتيك',
-                sold: 28,
-                shopId: 2,
-                date: new Date().toISOString()
-            }
-        ];
-
-        if (products.length === 0) {
-            products = defaultProducts;
-            saveProducts();
-        }
-
-        // ========== إعدادات تليجرام ==========
-        const TELEGRAM = {
-            botToken: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
-            channelId: '-1003822964890'
-        };
 
         // ========== تهيئة النظام ==========
         function init() {
@@ -1595,16 +1456,12 @@
                 renderShops();
                 renderCustomers();
                 renderInvoices();
-                renderInventory();
-                renderPurchasesTable();
                 renderInventoryTable();
-                renderMovementsTable();
+                renderPurchasesTable();
                 updateStats();
                 updateDashboardStats();
                 initCharts();
-                checkInventoryAlerts();
                 
-                // التحقق من وجود مستخدم مسجل دخوله
                 const savedUser = localStorage.getItem('currentUser');
                 if (savedUser) {
                     currentUser = JSON.parse(savedUser);
@@ -1613,7 +1470,7 @@
                 
                 showLoader(false);
                 showNotification('✅ تم تحميل النظام بنجاح', 'success');
-            }, 1500);
+            }, 1000);
         }
 
         // ========== إظهار/إخفاء شاشة التحميل ==========
@@ -1622,40 +1479,20 @@
         }
 
         // ========== التبديل بين التبويبات ==========
-        function switchTab(tabName) {
-            // تحديث الأزرار
+        function switchTab(event, tabName) {
+            event.preventDefault();
+            
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.closest('.tab-btn').classList.add('active');
             
-            // تحديث الأقسام
             document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
             document.getElementById(tabName + 'Section').classList.add('active');
-            
-            // تحديث البيانات حسب التبويب
-            if (tabName === 'dashboard') {
-                updateDashboardData();
-            } else if (tabName === 'sales') {
-                renderSalesTable();
-            } else if (tabName === 'purchases') {
-                renderPurchasesTable();
-            } else if (tabName === 'inventory') {
-                renderInventoryTable();
-            } else if (tabName === 'shops') {
-                renderShops();
-            } else if (tabName === 'customers') {
-                renderCustomers();
-            } else if (tabName === 'invoices') {
-                renderInvoices();
-            }
         }
 
         // ========== تحديث معلومات المستخدم ==========
         function updateUserInfo() {
             if (currentUser) {
                 document.getElementById('userName').textContent = currentUser.name;
-                document.getElementById('userRole').textContent = 
-                    currentUser.role === 'admin' ? 'مدير' :
-                    currentUser.role === 'merchant' ? 'تاجر' : 'عميل';
                 document.getElementById('loginBtn').innerHTML = '<i class="fas fa-sign-out-alt"></i> خروج';
                 document.getElementById('loginBtn').onclick = logout;
             }
@@ -1665,19 +1502,13 @@
         function login() {
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
-            const role = document.getElementById('loginRole').value;
 
             if (!username || !password) {
                 showNotification('الرجاء إدخال البيانات', 'warning');
                 return;
             }
 
-            currentUser = {
-                id: Date.now(),
-                name: username,
-                role: role
-            };
-
+            currentUser = { id: Date.now(), name: username };
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             updateUserInfo();
             closeModal('loginModal');
@@ -1689,7 +1520,6 @@
             currentUser = null;
             localStorage.removeItem('currentUser');
             document.getElementById('userName').textContent = 'زائر';
-            document.getElementById('userRole').textContent = 'ضيف';
             document.getElementById('loginBtn').innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول';
             document.getElementById('loginBtn').onclick = showLoginModal;
             showNotification('تم تسجيل الخروج', 'info');
@@ -1705,7 +1535,7 @@
             document.getElementById(modalId).classList.remove('active');
         }
 
-        // ========== تحديث قائمة المحلات في النموذج ==========
+        // ========== تحديث قائمة المحلات ==========
         function updateShopsSelect() {
             const select = document.getElementById('productShop');
             select.innerHTML = '<option value="">اختر المحل</option>';
@@ -1714,7 +1544,7 @@
             });
         }
 
-        // ========== إضافة منتج جديد ==========
+        // ========== إضافة منتج ==========
         function addProduct() {
             const name = document.getElementById('productName').value;
             const category = document.getElementById('productCategory').value;
@@ -1739,7 +1569,6 @@
                 shopId: parseInt(shopId),
                 date: new Date().toISOString(),
                 sold: 0,
-                supplier: 'مورد جديد',
                 lastUpdated: new Date().toISOString()
             };
 
@@ -1750,16 +1579,12 @@
             updateStats();
             updateDashboardStats();
             
-            // مسح الحقول
             document.getElementById('productName').value = '';
             document.getElementById('productCategory').value = '';
             document.getElementById('productPrice').value = '';
             document.getElementById('productStock').value = '';
             
-            showNotification('✅ تم إضافة المنتج بنجاح', 'success');
-            
-            // إرسال إلى تليجرام
-            sendToTelegram(newProduct);
+            showNotification('✅ تم إضافة المنتج', 'success');
         }
 
         // ========== عرض جدول المبيعات ==========
@@ -1767,14 +1592,7 @@
             const tbody = document.getElementById('salesTableBody');
             
             if (products.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="10" style="text-align: center; padding: 50px;">
-                            <i class="fas fa-box-open" style="font-size: 50px; color: gold;"></i>
-                            <p style="margin-top: 20px;">لا توجد منتجات، أضف منتجاً جديداً</p>
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; padding: 50px;">لا توجد منتجات</td></tr>`;
                 return;
             }
 
@@ -1792,40 +1610,19 @@
                 }
 
                 return `
-                    <tr data-id="${product.id}">
+                    <tr>
                         <td>${index + 1}</td>
                         <td>${product.id}</td>
-                        <td>
-                            <div class="editable-cell" contenteditable="true" onblur="updateProduct(${product.id}, 'name', this.innerText)">${product.name}</div>
-                        </td>
-                        <td>
-                            <select class="form-select" style="padding: 5px;" onchange="updateProduct(${product.id}, 'category', this.value)">
-                                <option value="برومسيون" ${product.category === 'برومسيون' ? 'selected' : ''}>برومسيون</option>
-                                <option value="توابل" ${product.category === 'توابل' ? 'selected' : ''}>توابل</option>
-                                <option value="كوسمتيك" ${product.category === 'كوسمتيك' ? 'selected' : ''}>كوسمتيك</option>
-                                <option value="أخرى" ${product.category === 'أخرى' ? 'selected' : ''}>أخرى</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class="editable-cell" contenteditable="true" onblur="updateProduct(${product.id}, 'price', this.innerText)">${product.price}</div>
-                        </td>
-                        <td>
-                            <div class="editable-cell" contenteditable="true" onblur="updateProduct(${product.id}, 'stock', this.innerText)">${product.stock}</div>
-                        </td>
+                        <td>${product.name}</td>
+                        <td>${product.category}</td>
+                        <td>${product.price}</td>
+                        <td>${product.stock}</td>
                         <td>${shop.name}</td>
-                        <td>
-                            <span class="status-badge ${statusClass}">${statusText}</span>
-                        </td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                         <td>${new Date(product.date).toLocaleDateString('ar-EG')}</td>
                         <td>
                             <div class="action-icons">
-                                <div class="action-icon edit" onclick="editProduct(${product.id})" title="تعديل">
-                                    <i class="fas fa-edit"></i>
-                                </div>
-                                <div class="action-icon telegram" onclick="sendToTelegram(${product.id})" title="إرسال إلى تليجرام">
-                                    <i class="fab fa-telegram"></i>
-                                </div>
-                                <div class="action-icon delete" onclick="deleteProduct(${product.id})" title="حذف">
+                                <div class="action-icon delete" onclick="deleteProduct(${product.id})">
                                     <i class="fas fa-trash"></i>
                                 </div>
                             </div>
@@ -1835,25 +1632,9 @@
             }).join('');
         }
 
-        // ========== تحديث بيانات المنتج ==========
-        function updateProduct(productId, field, value) {
-            const product = products.find(p => p.id == productId);
-            if (!product) return;
-
-            if (field === 'price' || field === 'stock') {
-                value = parseInt(value) || 0;
-            }
-
-            product[field] = value;
-            saveProducts();
-            updateStats();
-            updateDashboardStats();
-            showNotification('تم التحديث', 'success');
-        }
-
         // ========== حذف منتج ==========
         function deleteProduct(id) {
-            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+            if (confirm('هل أنت متأكد؟')) {
                 products = products.filter(p => p.id != id);
                 saveProducts();
                 renderSalesTable();
@@ -1864,33 +1645,13 @@
             }
         }
 
-        // ========== تعديل منتج ==========
-        function editProduct(id) {
-            const product = products.find(p => p.id == id);
-            if (!product) return;
-
-            document.getElementById('productName').value = product.name;
-            document.getElementById('productCategory').value = product.category;
-            document.getElementById('productPrice').value = product.price;
-            document.getElementById('productStock').value = product.stock;
-            document.getElementById('productShop').value = product.shopId;
-
-            products = products.filter(p => p.id != id);
-            saveProducts();
-            renderSalesTable();
-
-            showNotification('✏️ يمكنك تعديل البيانات ثم الضغط على إضافة', 'info');
-        }
-
-        // ========== إضافة عملية شراء جديدة ==========
+        // ========== إضافة مشتريات ==========
         function addPurchase() {
             const productId = parseInt(document.getElementById('purchaseProduct').value);
             const quantity = parseInt(document.getElementById('purchaseQuantity').value);
             const purchasePrice = parseFloat(document.getElementById('purchasePrice').value);
             const supplier = document.getElementById('purchaseSupplier').value;
             const paymentMethod = document.getElementById('purchasePaymentMethod').value;
-            const notes = document.getElementById('purchaseNotes').value;
-            const autoUpdate = document.getElementById('autoUpdatePrice').checked;
 
             if (!productId || !quantity || !purchasePrice || !supplier) {
                 showNotification('الرجاء ملء جميع الحقول', 'warning');
@@ -1898,9 +1659,11 @@
             }
 
             const product = products.find(p => p.id === productId);
-            const oldStock = product.stock;
-            
-            // تسجيل المشتريات
+            if (!product) {
+                showNotification('المنتج غير موجود', 'error');
+                return;
+            }
+
             const purchase = {
                 id: Date.now(),
                 date: new Date().toISOString(),
@@ -1910,66 +1673,33 @@
                 purchasePrice: purchasePrice,
                 total: quantity * purchasePrice,
                 supplier: supplier,
-                paymentMethod: paymentMethod,
-                notes: notes,
-                recordedBy: 'Admin'
+                paymentMethod: paymentMethod
             };
             
             purchases.push(purchase);
-            
-            // تحديث المخزون
             product.stock += quantity;
-            product.cost = autoUpdate ? purchasePrice : product.cost;
             product.lastUpdated = new Date().toISOString();
-            product.supplier = supplier;
             
-            // تسجيل حركة المخزون
-            const movement = {
-                id: Date.now(),
-                date: new Date().toISOString(),
-                productId: productId,
-                productName: product.name,
-                type: 'purchase',
-                quantity: quantity,
-                oldStock: oldStock,
-                newStock: product.stock,
-                user: 'Admin',
-                notes: `شراء من ${supplier}`
-            };
-            
-            movements.push(movement);
-            
-            // حفظ البيانات
             saveAll();
-            
-            // تحديث الواجهة
             renderPurchasesTable();
             renderInventoryTable();
-            renderMovementsTable();
+            renderSalesTable();
             updateDashboardStats();
             loadProductsToSelect();
             
-            // التحقق من التنبيهات
-            checkInventoryAlerts();
-            
-            // إرسال إلى تليجرام
-            sendPurchaseToTelegram(purchase);
-            
-            // مسح الحقول
             document.getElementById('purchaseQuantity').value = '';
             document.getElementById('purchasePrice').value = '';
             document.getElementById('purchaseSupplier').value = '';
-            document.getElementById('purchaseNotes').value = '';
             
-            showNotification('✅ تم تسجيل عملية الشراء بنجاح', 'success');
+            showNotification('✅ تم تسجيل الشراء', 'success');
         }
 
-        // ========== تحميل المنتجات إلى القائمة المنسدلة ==========
+        // ========== تحميل المنتجات للقائمة ==========
         function loadProductsToSelect() {
             const select = document.getElementById('purchaseProduct');
             select.innerHTML = '<option value="">اختر المنتج</option>';
             products.forEach(p => {
-                select.innerHTML += `<option value="${p.id}" data-cost="${p.cost}">${p.name} - المخزون: ${p.stock}</option>`;
+                select.innerHTML += `<option value="${p.id}">${p.name}</option>`;
             });
         }
 
@@ -1978,47 +1708,41 @@
             const tbody = document.getElementById('purchasesTableBody');
             
             if (purchases.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10">لا توجد مشتريات مسجلة</td></tr>';
-                document.getElementById('totalPurchasesAmount').textContent = '0 دج';
+                tbody.innerHTML = '<tr><td colspan="9">لا توجد مشتريات</td></tr>';
                 return;
             }
 
-            let totalAmount = 0;
-            
-            tbody.innerHTML = purchases.sort((a,b) => new Date(b.date) - new Date(a.date)).map((p, index) => {
-                totalAmount += p.total;
-                return `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${new Date(p.date).toLocaleDateString('ar-EG')}</td>
-                        <td>${p.productName}</td>
-                        <td>${p.supplier}</td>
-                        <td>${p.quantity}</td>
-                        <td>${p.purchasePrice} دج</td>
-                        <td style="color: gold;">${p.total} دج</td>
-                        <td><span class="badge badge-info">${p.paymentMethod}</span></td>
-                        <td>${p.notes || '-'}</td>
-                        <td>
-                            <button class="btn btn-outline" onclick="deletePurchase(${p.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-            
-            document.getElementById('totalPurchasesAmount').textContent = totalAmount.toLocaleString() + ' دج';
+            tbody.innerHTML = purchases.map((p, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${new Date(p.date).toLocaleDateString('ar-EG')}</td>
+                    <td>${p.productName}</td>
+                    <td>${p.supplier}</td>
+                    <td>${p.quantity}</td>
+                    <td>${p.purchasePrice}</td>
+                    <td>${p.total}</td>
+                    <td>${p.paymentMethod}</td>
+                    <td><button class="btn btn-danger" onclick="deletePurchase(${p.id})">حذف</button></td>
+                </tr>
+            `).join('');
+        }
+
+        // ========== حذف مشتريات ==========
+        function deletePurchase(id) {
+            if (confirm('هل أنت متأكد؟')) {
+                purchases = purchases.filter(p => p.id !== id);
+                savePurchases();
+                renderPurchasesTable();
+                showNotification('✅ تم الحذف', 'success');
+            }
         }
 
         // ========== عرض جدول المخزون ==========
         function renderInventoryTable() {
             const tbody = document.getElementById('inventoryTableBody');
             
-            let totalValue = 0;
-            
             tbody.innerHTML = products.map(p => {
                 const value = p.stock * p.cost;
-                totalValue += value;
                 
                 let statusClass = 'badge-success';
                 let statusText = 'جيد';
@@ -2036,162 +1760,31 @@
                         <td>${p.name}</td>
                         <td>${p.category}</td>
                         <td>${p.stock}</td>
-                        <td>${p.minStock || 5}</td>
-                        <td>${p.maxStock || 100}</td>
-                        <td>${p.cost} دج</td>
-                        <td>${value.toLocaleString()} دج</td>
+                        <td>${p.minStock}</td>
+                        <td>${p.maxStock}</td>
+                        <td>${p.cost}</td>
+                        <td>${value}</td>
                         <td>${new Date(p.lastUpdated).toLocaleDateString('ar-EG')}</td>
                         <td><span class="badge ${statusClass}">${statusText}</span></td>
-                        <td>
-                            <button class="btn btn-outline" onclick="adjustStock(${p.id})">
-                                <i class="fas fa-sliders-h"></i> تعديل
-                            </button>
-                        </td>
+                        <td><button class="btn btn-outline" onclick="adjustStock(${p.id})">تعديل</button></td>
                     </tr>
                 `;
             }).join('');
-            
-            document.getElementById('totalInventoryValue').textContent = totalValue.toLocaleString() + ' دج';
         }
 
-        // ========== تعديل المخزون يدوياً ==========
+        // ========== تعديل المخزون ==========
         function adjustStock(productId) {
             const product = products.find(p => p.id === productId);
             const newStock = prompt(`تعديل مخزون ${product.name}`, product.stock);
             
             if (newStock !== null) {
-                const oldStock = product.stock;
                 product.stock = parseInt(newStock);
                 product.lastUpdated = new Date().toISOString();
-                
-                movements.push({
-                    id: Date.now(),
-                    date: new Date().toISOString(),
-                    productId: product.id,
-                    productName: product.name,
-                    type: 'adjustment',
-                    quantity: product.stock - oldStock,
-                    oldStock: oldStock,
-                    newStock: product.stock,
-                    user: 'Admin',
-                    notes: 'تعديل يدوي'
-                });
-                
-                saveAll();
+                saveProducts();
                 renderInventoryTable();
-                renderMovementsTable();
-                checkInventoryAlerts();
                 updateDashboardStats();
-                
-                showNotification('✅ تم تعديل المخزون');
+                showNotification('✅ تم التعديل', 'success');
             }
-        }
-
-        // ========== عرض حركة المخزون ==========
-        function renderMovementsTable() {
-            const tbody = document.getElementById('movementsTableBody') || document.createElement('tbody');
-            const filter = document.getElementById('movementFilter')?.value || 'all';
-            
-            let filteredMovements = movements;
-            if (filter !== 'all') {
-                filteredMovements = movements.filter(m => m.type === filter);
-            }
-            
-            if (filteredMovements.length === 0) {
-                if (tbody) tbody.innerHTML = '<tr><td colspan="8">لا توجد حركات مسجلة</td></tr>';
-                return;
-            }
-
-            if (tbody) {
-                tbody.innerHTML = filteredMovements.sort((a,b) => new Date(b.date) - new Date(a.date)).map(m => {
-                    let typeText = '';
-                    let typeClass = '';
-                    
-                    switch(m.type) {
-                        case 'purchase':
-                            typeText = 'شراء';
-                            typeClass = 'badge-success';
-                            break;
-                        case 'sale':
-                            typeText = 'بيع';
-                            typeClass = 'badge-info';
-                            break;
-                        case 'adjustment':
-                            typeText = 'تسوية';
-                            typeClass = 'badge-warning';
-                            break;
-                        case 'return':
-                            typeText = 'مرتجع';
-                            typeClass = 'badge-purple';
-                            break;
-                    }
-                    
-                    return `
-                        <tr>
-                            <td>${new Date(m.date).toLocaleString('ar-EG')}</td>
-                            <td>${m.productName}</td>
-                            <td><span class="badge ${typeClass}">${typeText}</span></td>
-                            <td>${m.quantity}</td>
-                            <td>${m.oldStock || '-'}</td>
-                            <td>${m.newStock || '-'}</td>
-                            <td>${m.user || 'System'}</td>
-                            <td>${m.notes || '-'}</td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-        }
-
-        // ========== التحقق من تنبيهات المخزون ==========
-        function checkInventoryAlerts() {
-            alerts = [];
-            
-            products.forEach(p => {
-                if (p.stock <= 0) {
-                    alerts.push({
-                        id: Date.now() + p.id,
-                        type: 'danger',
-                        product: p.name,
-                        message: `⚠️ المنتج "${p.name}" نافد من المخزون!`,
-                        date: new Date().toISOString(),
-                        read: false
-                    });
-                } else if (p.stock < p.minStock) {
-                    alerts.push({
-                        id: Date.now() + p.id,
-                        type: 'warning',
-                        product: p.name,
-                        message: `⚠️ المنتج "${p.name}" مخزون منخفض (${p.stock} من ${p.minStock})`,
-                        date: new Date().toISOString(),
-                        read: false
-                    });
-                }
-            });
-            
-            saveAlerts();
-        }
-
-        // ========== تحديث إحصائيات لوحة التحكم ==========
-        function updateDashboardStats() {
-            document.getElementById('totalProducts').textContent = products.length;
-            
-            const totalItems = products.reduce((sum, p) => sum + p.stock, 0);
-            document.getElementById('totalItems').textContent = totalItems;
-            document.getElementById('totalStock').textContent = totalItems;
-            
-            const lowStock = products.filter(p => p.stock > 0 && p.stock < p.minStock).length;
-            document.getElementById('lowStockCount').textContent = lowStock;
-            document.getElementById('lowStockAlert').textContent = lowStock;
-            
-            const outOfStock = products.filter(p => p.stock <= 0).length;
-            document.getElementById('outOfStockCount').textContent = outOfStock;
-            
-            const totalPurchasesValue = purchases.reduce((sum, p) => sum + p.total, 0);
-            
-            // معدل دوران المخزون
-            const totalSales = products.reduce((sum, p) => sum + (p.sold || 0), 0);
-            const avgStock = totalItems / products.length || 1;
-            const turnoverRate = ((totalSales / avgStock) * 100).toFixed(1);
         }
 
         // ========== عرض المحلات ==========
@@ -2216,7 +1809,7 @@
                         
                         <div class="shop-stats">
                             <span>📦 ${shopProducts.length} منتج</span>
-                            <span>💰 ${totalValue.toLocaleString()} دج</span>
+                            <span>💰 ${totalValue} دج</span>
                         </div>
                         
                         <div style="display: flex; justify-content: space-between; margin: 10px 0;">
@@ -2227,24 +1820,14 @@
                         </div>
                         
                         <a href="https://t.me/${shop.telegram.replace('@', '')}" target="_blank" class="telegram-link">
-                            <i class="fab fa-telegram"></i>
-                            ${shop.telegram}
+                            <i class="fab fa-telegram"></i> ${shop.telegram}
                         </a>
-                        
-                        <div style="display: flex; gap: 10px; margin-top: 15px;">
-                            <button class="btn btn-gold" style="flex: 1;">
-                                <i class="fas fa-eye"></i> المنتجات
-                            </button>
-                            <button class="btn btn-outline" style="flex: 1;">
-                                <i class="fas fa-edit"></i> تعديل
-                            </button>
-                        </div>
                     </div>
                 `;
             }).join('');
         }
 
-        // ========== إضافة محل جديد ==========
+        // ========== إضافة محل ==========
         function showAddShopModal() {
             document.getElementById('addShopModal').classList.add('active');
         }
@@ -2253,7 +1836,6 @@
             const name = document.getElementById('shopName').value;
             const owner = document.getElementById('shopOwner').value;
             const telegram = document.getElementById('shopTelegram').value;
-            const category = document.getElementById('shopCategory').value;
 
             if (!name || !owner || !telegram) {
                 showNotification('الرجاء ملء جميع الحقول', 'warning');
@@ -2265,9 +1847,8 @@
                 name: name,
                 owner: owner,
                 telegram: telegram,
-                category: category,
-                rating: 4.0,
-                products: 0
+                category: 'أخرى',
+                rating: 4.0
             };
 
             shops.push(newShop);
@@ -2275,9 +1856,8 @@
             renderShops();
             updateShopsSelect();
             closeModal('addShopModal');
-            showNotification('✅ تم إضافة المحل بنجاح', 'success');
+            showNotification('✅ تم إضافة المحل', 'success');
 
-            // مسح الحقول
             document.getElementById('shopName').value = '';
             document.getElementById('shopOwner').value = '';
             document.getElementById('shopTelegram').value = '';
@@ -2287,48 +1867,33 @@
         function renderCustomers() {
             const grid = document.getElementById('customersGrid');
             
-            grid.innerHTML = customers.map(customer => {
-                return `
-                    <div class="customer-card">
-                        <div class="customer-header">
-                            <div class="customer-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div>
-                                <h3>${customer.name}</h3>
-                                <p>📱 ${customer.phone}</p>
-                            </div>
+            grid.innerHTML = customers.map(customer => `
+                <div class="customer-card">
+                    <div class="customer-header">
+                        <div class="customer-avatar">
+                            <i class="fas fa-user"></i>
                         </div>
-                        
-                        <div style="margin: 15px 0;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <span>⭐ نقاط الولاء:</span>
-                                <span class="customer-loyalty">${customer.points} نقطة</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between;">
-                                <span>💰 إجمالي المشتريات:</span>
-                                <span style="color: gold;">${customer.totalSpent} دج</span>
-                            </div>
-                        </div>
-                        
-                        <p style="color: #888; font-size: 12px;">
-                            آخر شراء: ${new Date(customer.lastPurchase).toLocaleDateString('ar-EG')}
-                        </p>
-                        
-                        <div style="display: flex; gap: 10px; margin-top: 15px;">
-                            <button class="btn btn-gold" style="flex: 1;">
-                                <i class="fas fa-history"></i> المشتريات
-                            </button>
-                            <button class="btn btn-outline" style="flex: 1;">
-                                <i class="fab fa-telegram"></i> عرض
-                            </button>
+                        <div>
+                            <h3>${customer.name}</h3>
+                            <p>📱 ${customer.phone}</p>
                         </div>
                     </div>
-                `;
-            }).join('');
+                    
+                    <div style="margin: 15px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>⭐ النقاط:</span>
+                            <span class="customer-loyalty">${customer.points}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>💰 المشتريات:</span>
+                            <span style="color: gold;">${customer.totalSpent} دج</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // ========== إضافة عميل جديد ==========
+        // ========== إضافة عميل ==========
         function showAddCustomerModal() {
             document.getElementById('addCustomerModal').classList.add('active');
         }
@@ -2355,7 +1920,7 @@
             saveCustomers();
             renderCustomers();
             closeModal('addCustomerModal');
-            showNotification('✅ تم إضافة العميل بنجاح', 'success');
+            showNotification('✅ تم إضافة العميل', 'success');
 
             document.getElementById('customerName').value = '';
             document.getElementById('customerPhone').value = '';
@@ -2380,87 +1945,14 @@
                         <div style="color: gold;">${inv.total} دج</div>
                         <span class="status-badge ${inv.status === 'مدفوعة' ? 'status-paid' : 'status-unpaid'}">${inv.status}</span>
                     </div>
-                    <div class="invoice-actions">
-                        <button class="action-icon view" onclick="viewInvoice(${inv.id})" title="عرض">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button class="action-icon pdf" onclick="printInvoice(${inv.id})" title="طباعة">
-                            <i class="fas fa-print"></i>
-                        </button>
-                    </div>
                 </div>
             `).join('');
         }
 
-        // ========== عرض المخزون ==========
-        function renderInventory() {
-            const tbody = document.getElementById('inventoryTable') || document.createElement('tbody');
-            const lowStock = products.filter(p => p.stock > 0 && p.stock < 5).length;
-            const outOfStock = products.filter(p => p.stock <= 0).length;
-            
-            document.getElementById('totalStock').textContent = products.reduce((sum, p) => sum + p.stock, 0);
-            document.getElementById('lowStockCount').textContent = lowStock;
-            document.getElementById('outOfStockCount').textContent = outOfStock;
-
-            if (products.length === 0) {
-                if (tbody) tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">لا توجد منتجات</td></tr>';
-                return;
-            }
-
-            if (tbody) {
-                tbody.innerHTML = products.map(p => {
-                    const shop = shops.find(s => s.id == p.shopId) || { name: 'غير معروف' };
-                    const minStock = 5;
-                    let statusClass = 'status-available';
-                    let statusText = 'جيد';
-                    
-                    if (p.stock <= 0) {
-                        statusClass = 'status-sold';
-                        statusText = 'نافد';
-                    } else if (p.stock < minStock) {
-                        statusClass = 'status-low';
-                        statusText = 'محدود';
-                    }
-
-                    return `
-                        <tr>
-                            <td>${p.name}</td>
-                            <td>${shop.name}</td>
-                            <td>${p.stock}</td>
-                            <td>${minStock}</td>
-                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                            <td>
-                                <button class="btn btn-gold" onclick="restockProduct(${p.id})" ${p.stock > 0 ? '' : 'style="background: #4CAF50;"'}>
-                                    <i class="fas fa-plus"></i> إعادة تموين
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-        }
-
-        // ========== إعادة تموين منتج ==========
-        function restockProduct(id) {
-            const product = products.find(p => p.id == id);
-            if (!product) return;
-
-            const amount = prompt('أدخل الكمية المراد إضافتها:', '10');
-            if (amount) {
-                product.stock += parseInt(amount);
-                saveProducts();
-                renderInventory();
-                renderSalesTable();
-                renderInventoryTable();
-                updateDashboardStats();
-                showNotification(`✅ تم إضافة ${amount} قطع`, 'success');
-            }
-        }
-
-        // ========== إنشاء فاتورة جديدة ==========
+        // ========== إنشاء فاتورة ==========
         function createNewInvoice() {
             if (products.length === 0) {
-                showNotification('لا توجد منتجات لإنشاء فاتورة', 'warning');
+                showNotification('لا توجد منتجات', 'warning');
                 return;
             }
 
@@ -2483,22 +1975,18 @@
                 <div style="margin-bottom: 20px;">
                     <input type="text" class="form-input" id="customerName" placeholder="اسم العميل">
                 </div>
-                <div style="margin-bottom: 20px;">
-                    <input type="text" class="form-input" id="customerPhone" placeholder="رقم الهاتف">
-                </div>
-                <button class="btn btn-gold" onclick="generateInvoice()" style="width: 100%;">إنشاء الفاتورة</button>
+                <button class="btn btn-gold" onclick="generateInvoice()" style="width: 100%;">إنشاء</button>
             `;
 
             modal.classList.add('active');
         }
 
-        // ========== توليد فاتورة ==========
+        // ========== توليد الفاتورة ==========
         function generateInvoice() {
             const customerName = document.getElementById('customerName').value;
-            const customerPhone = document.getElementById('customerPhone').value;
 
             if (!customerName) {
-                showNotification('الرجاء إدخال اسم العميل', 'warning');
+                showNotification('أدخل اسم العميل', 'warning');
                 return;
             }
 
@@ -2516,23 +2004,19 @@
                             subtotal: p.price * qty
                         });
                         total += p.price * qty;
-                        
-                        // تحديث المخزون
                         p.stock -= qty;
-                        p.sold = (p.sold || 0) + qty;
                     }
                 }
             });
 
             if (selectedProducts.length === 0) {
-                showNotification('اختر منتجاً واحداً على الأقل', 'warning');
+                showNotification('اختر منتجاً', 'warning');
                 return;
             }
 
             const invoice = {
                 id: Date.now(),
                 customer: customerName,
-                phone: customerPhone,
                 products: selectedProducts,
                 total: total,
                 date: new Date().toISOString(),
@@ -2540,209 +2024,23 @@
             };
 
             invoices.push(invoice);
-            saveInvoices();
-            saveProducts();
+            saveAll();
             
             closeModal('invoiceModal');
             renderInvoices();
             renderSalesTable();
             renderInventoryTable();
-            updateStats();
             updateDashboardStats();
             
-            showNotification('✅ تم إنشاء الفاتورة بنجاح', 'success');
-            
-            // عرض الفاتورة
-            viewInvoice(invoice.id);
+            showNotification('✅ تم إنشاء الفاتورة', 'success');
         }
 
-        // ========== عرض الفاتورة ==========
-        function viewInvoice(id) {
-            const invoice = invoices.find(i => i.id == id);
-            if (!invoice) return;
-
-            const modal = document.getElementById('invoiceModal');
-            const content = document.getElementById('invoiceModalContent');
-
-            let productsHTML = invoice.products.map(p => `
-                <tr>
-                    <td>${p.name}</td>
-                    <td>${p.quantity}</td>
-                    <td>${p.price} دج</td>
-                    <td>${p.subtotal} دج</td>
-                </tr>
-            `).join('');
-
-            content.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <h2 style="color: gold;">فاتورة شراء</h2>
-                    <p>رقم الفاتورة: #${invoice.id}</p>
-                    <p>التاريخ: ${new Date(invoice.date).toLocaleDateString('ar-EG')}</p>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <p><strong>العميل:</strong> ${invoice.customer}</p>
-                    <p><strong>الهاتف:</strong> ${invoice.phone || 'غير محدد'}</p>
-                </div>
-                
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                    <thead>
-                        <tr style="background: gold; color: black;">
-                            <th style="padding: 10px;">المنتج</th>
-                            <th style="padding: 10px;">الكمية</th>
-                            <th style="padding: 10px;">السعر</th>
-                            <th style="padding: 10px;">الإجمالي</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${productsHTML}
-                    </tbody>
-                </table>
-                
-                <div style="text-align: left; font-size: 20px; margin-bottom: 20px;">
-                    <strong>الإجمالي: <span style="color: gold;">${invoice.total} دج</span></strong>
-                </div>
-                
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-gold" onclick="markInvoicePaid(${invoice.id})" style="flex: 1;">
-                        <i class="fas fa-check"></i> ${invoice.status === 'مدفوعة' ? 'مدفوعة' : 'تأكيد الدفع'}
-                    </button>
-                    <button class="btn btn-outline" onclick="printInvoice(${invoice.id})" style="flex: 1;">
-                        <i class="fas fa-print"></i> طباعة
-                    </button>
-                </div>
-            `;
-
-            modal.classList.add('active');
-        }
-
-        // ========== تأكيد دفع الفاتورة ==========
-        function markInvoicePaid(id) {
-            const invoice = invoices.find(i => i.id == id);
-            if (invoice) {
-                invoice.status = 'مدفوعة';
-                saveInvoices();
-                closeModal('invoiceModal');
-                renderInvoices();
-                showNotification('✅ تم تأكيد الدفع', 'success');
-            }
-        }
-
-        // ========== طباعة الفاتورة ==========
-        function printInvoice(id) {
-            showNotification('جاري إعداد الفاتورة للطباعة...', 'info');
-            setTimeout(() => {
-                showNotification('✅ جاهزة للطباعة', 'success');
-            }, 1000);
-        }
-
-        // ========== إرسال إلى تليجرام ==========
-        async function sendToTelegram(product) {
-            const shop = shops.find(s => s.id == product.shopId);
-
-            const message = `🛍️ **منتج جديد**
-            
-📦 الاسم: ${product.name}
-📊 الكمية: ${product.stock}
-🏪 المحل: ${shop ? shop.name : 'غير محدد'}
-👤 التاجر: ${shop ? shop.owner : 'غير محدد'}
-📱 تليجرام: ${shop ? shop.telegram : 'غير محدد'}
-
-✅ للطلب: تواصل مع التاجر مباشرة`;
-
-            try {
-                showNotification('جاري الإرسال إلى تليجرام...', 'info');
-
-                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM.botToken}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM.channelId,
-                        text: message,
-                        parse_mode: 'Markdown'
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.ok) {
-                    showNotification('✅ تم الإرسال إلى قناة تليجرام', 'success');
-                } else {
-                    showNotification('❌ فشل الإرسال', 'error');
-                }
-            } catch (error) {
-                showNotification('❌ خطأ في الاتصال', 'error');
-            }
-        }
-
-        // ========== إرسال عملية شراء إلى تليجرام ==========
-        async function sendPurchaseToTelegram(purchase) {
-            const message = `🛒 **عملية شراء جديدة**
-            
-📦 المنتج: ${purchase.productName}
-📊 الكمية: ${purchase.quantity}
-💰 سعر الشراء: ${purchase.purchasePrice} دج
-💵 الإجمالي: ${purchase.total} دج
-🏪 المورد: ${purchase.supplier}
-📅 التاريخ: ${new Date(purchase.date).toLocaleString('ar-EG')}
-📝 ملاحظات: ${purchase.notes || 'لا يوجد'}
-
-✅ تم تحديث المخزون تلقائياً`;
-
-            try {
-                await fetch(`https://api.telegram.org/bot${TELEGRAM.botToken}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM.channelId,
-                        text: message,
-                        parse_mode: 'Markdown'
-                    })
-                });
-            } catch (error) {
-                console.error('❌ فشل إرسال إشهار تليجرام:', error);
-            }
-        }
-
-        // ========== مزامنة مع تليجرام ==========
-        function syncWithTelegram() {
-            showLoader(true);
-            
-            setTimeout(() => {
-                const newProducts = [
-                    { id: Date.now() + 1, name: 'منتج من تليجرام 1', category: 'برومسيون', price: 500, cost: 350, stock: 20, shopId: 1, date: new Date().toISOString(), sold: 0, minStock: 5, maxStock: 100, lastUpdated: new Date().toISOString(), supplier: 'مورد' },
-                    { id: Date.now() + 2, name: 'منتج من تليجرام 2', category: 'توابل', price: 300, cost: 210, stock: 15, shopId: 2, date: new Date().toISOString(), sold: 0, minStock: 5, maxStock: 100, lastUpdated: new Date().toISOString(), supplier: 'مورد' }
-                ];
-                
-                products = [...products, ...newProducts];
-                saveProducts();
-                renderSalesTable();
-                renderInventoryTable();
-                updateStats();
-                updateDashboardStats();
-                
-                showLoader(false);
-                showNotification('✅ تمت المزامنة مع 2 منتجات جديدة', 'success');
-            }, 2000);
-        }
-
-        // ========== مزامنة المشتريات مع تليجرام ==========
-        function syncPurchasesWithTelegram() {
-            showLoader(true);
-            
-            setTimeout(() => {
-                showLoader(false);
-                showNotification('✅ تمت المزامنة مع تليجرام', 'success');
-            }, 2000);
-        }
-
-        // ========== تصدير إلى Excel ==========
+        // ========== تصدير Excel ==========
         function exportToExcel() {
-            let csv = 'المعرف,الاسم,القسم,السعر,الكمية,المحل,التاريخ\n';
+            let csv = 'المعرف,الاسم,القسم,السعر,الكمية\n';
             
             products.forEach(p => {
-                const shop = shops.find(s => s.id == p.shopId) || { name: 'غير معروف' };
-                csv += `${p.id},${p.name},${p.category},${p.price},${p.stock},${shop.name},${new Date(p.date).toLocaleDateString()}\n`;
+                csv += `${p.id},${p.name},${p.category},${p.price},${p.stock}\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -2751,43 +2049,20 @@
             link.download = `products_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
 
-            showNotification('✅ تم تصدير البيانات', 'success');
+            showNotification('✅ تم التصدير', 'success');
         }
 
-        // ========== تصدير المشتريات إلى Excel ==========
-        function exportPurchases() {
-            let csv = 'التاريخ,المنتج,المورد,الكمية,سعر الشراء,الإجمالي,طريقة الدفع,ملاحظات\n';
-            
-            purchases.forEach(p => {
-                csv += `${new Date(p.date).toLocaleDateString()},${p.productName},${p.supplier},${p.quantity},${p.purchasePrice},${p.total},${p.paymentMethod},${p.notes || ''}\n`;
-            });
-
-            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `purchases_${new Date().toISOString().split('T')[0]}.csv`;
-            link.click();
-
-            showNotification('✅ تم تصدير البيانات', 'success');
-        }
-
-        // ========== تصدير إلى PDF ==========
+        // ========== تصدير PDF ==========
         function exportToPDF() {
-            showNotification('جاري إنشاء ملف PDF...', 'info');
-            
-            setTimeout(() => {
-                showNotification('✅ تم إنشاء ملف PDF', 'success');
-            }, 1500);
+            showNotification('✅ جاهز للطباعة', 'success');
         }
 
-        // ========== إضافة بيانات عينة ==========
+        // ========== إضافة عينات ==========
         function addSampleData() {
             const sampleProducts = [
-                { id: Date.now() + 1, name: 'كركم أصلي', category: 'توابل', price: 250, cost: 180, stock: 50, shopId: 1, date: new Date().toISOString(), sold: 0, minStock: 10, maxStock: 100, lastUpdated: new Date().toISOString(), supplier: 'مورد التوابل' },
-                { id: Date.now() + 2, name: 'زيت زيتون', category: 'برومسيون', price: 800, cost: 600, stock: 30, shopId: 3, date: new Date().toISOString(), sold: 0, minStock: 15, maxStock: 80, lastUpdated: new Date().toISOString(), supplier: 'مورد الزيتون' },
-                { id: Date.now() + 3, name: 'كريم مرطب', category: 'كوسمتيك', price: 1200, cost: 900, stock: 15, shopId: 2, date: new Date().toISOString(), sold: 0, minStock: 5, maxStock: 30, lastUpdated: new Date().toISOString(), supplier: 'مورد الكوسمتيك' },
-                { id: Date.now() + 4, name: 'فلفل أسود', category: 'توابل', price: 180, cost: 130, stock: 100, shopId: 1, date: new Date().toISOString(), sold: 0, minStock: 20, maxStock: 150, lastUpdated: new Date().toISOString(), supplier: 'مورد التوابل' },
-                { id: Date.now() + 5, name: 'زعفران', category: 'توابل', price: 3500, cost: 2500, stock: 5, shopId: 1, date: new Date().toISOString(), sold: 0, minStock: 2, maxStock: 10, lastUpdated: new Date().toISOString(), supplier: 'مورد التوابل' }
+                { id: Date.now() + 1, name: 'كركم', category: 'توابل', price: 250, cost: 180, stock: 50, shopId: 1, date: new Date().toISOString(), sold: 0, minStock: 10, maxStock: 100, lastUpdated: new Date().toISOString() },
+                { id: Date.now() + 2, name: 'زيت زيتون', category: 'برومسيون', price: 800, cost: 600, stock: 30, shopId: 3, date: new Date().toISOString(), sold: 0, minStock: 15, maxStock: 80, lastUpdated: new Date().toISOString() },
+                { id: Date.now() + 3, name: 'كريم مرطب', category: 'كوسمتيك', price: 1200, cost: 900, stock: 15, shopId: 2, date: new Date().toISOString(), sold: 0, minStock: 5, maxStock: 30, lastUpdated: new Date().toISOString() }
             ];
 
             products = [...products, ...sampleProducts];
@@ -2796,17 +2071,15 @@
             renderInventoryTable();
             updateStats();
             updateDashboardStats();
-            showNotification('✅ تم إضافة 5 منتجات تجريبية', 'success');
+            showNotification('✅ تم إضافة عينات', 'success');
         }
 
         // ========== تحديث الإحصائيات ==========
         function updateStats() {
-            // مبيعات اليوم
             const today = new Date().toDateString();
             const todaySales = products.filter(p => new Date(p.date).toDateString() === today).length;
             document.getElementById('todaySales').textContent = todaySales;
 
-            // إيرادات الشهر
             const monthSales = products.filter(p => {
                 const productDate = new Date(p.date);
                 const now = new Date();
@@ -2815,46 +2088,30 @@
             const monthlyRevenue = monthSales.reduce((sum, p) => sum + (p.price * p.stock), 0);
             document.getElementById('monthlyRevenue').textContent = monthlyRevenue.toLocaleString() + ' دج';
 
-            // عملاء جدد
             document.getElementById('newCustomers').textContent = customers.length;
 
-            // منتجات مباعة
             const soldProducts = products.reduce((sum, p) => sum + (p.sold || 0), 0);
             document.getElementById('soldProducts').textContent = soldProducts;
         }
 
-        // ========== تحديث بيانات لوحة التحكم ==========
-        function updateDashboardData() {
-            // آخر المبيعات
-            const recentSales = [...products].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
-            const tbody = document.getElementById('recentSalesTable');
+        // ========== تحديث إحصائيات لوحة التحكم ==========
+        function updateDashboardStats() {
+            document.getElementById('totalProducts').textContent = products.length;
             
-            if (recentSales.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">لا توجد مبيعات حديثة</td></tr>';
-            } else {
-                tbody.innerHTML = recentSales.map((p, i) => {
-                    const shop = shops.find(s => s.id == p.shopId) || { name: 'غير معروف' };
-                    return `
-                        <tr>
-                            <td>${i + 1}</td>
-                            <td>${p.name}</td>
-                            <td>${shop.name}</td>
-                            <td>${p.price} دج</td>
-                            <td>${p.stock}</td>
-                            <td>عميل ${i + 1}</td>
-                            <td><span class="status-badge status-available">مكتمل</span></td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            // تحديث الرسوم البيانية
-            updateCharts();
+            const totalItems = products.reduce((sum, p) => sum + p.stock, 0);
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('totalStock').textContent = totalItems;
+            
+            const lowStock = products.filter(p => p.stock > 0 && p.stock < p.minStock).length;
+            document.getElementById('lowStockCount').textContent = lowStock;
+            document.getElementById('lowStockAlert').textContent = lowStock;
+            
+            const outOfStock = products.filter(p => p.stock <= 0).length;
+            document.getElementById('outOfStockCount').textContent = outOfStock;
         }
 
         // ========== تهيئة الرسوم البيانية ==========
         function initCharts() {
-            // مخطط المبيعات
             const salesCtx = document.getElementById('salesChart');
             if (salesCtx) {
                 charts.sales = new Chart(salesCtx.getContext('2d'), {
@@ -2882,7 +2139,6 @@
                 });
             }
 
-            // مخطط الأقسام
             const categoryCtx = document.getElementById('categoryChart');
             if (categoryCtx) {
                 charts.category = new Chart(categoryCtx.getContext('2d'), {
@@ -2905,83 +2161,19 @@
             }
         }
 
-        // ========== تحديث الرسوم البيانية ==========
-        function updateCharts() {
-            if (charts.sales) {
-                const days = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
-                const salesData = days.map(() => Math.floor(Math.random() * 30) + 5);
-                
-                charts.sales.data.datasets[0].data = salesData;
-                charts.sales.update();
-            }
-
-            if (charts.category) {
-                const categories = ['برومسيون', 'توابل', 'كوسمتيك', 'أخرى'];
-                const categoryData = categories.map(cat => 
-                    products.filter(p => p.category === cat).length
-                );
-                
-                charts.category.data.datasets[0].data = categoryData;
-                charts.category.update();
-            }
-        }
-
         // ========== توليد تقرير ==========
         function generateReport(type) {
-            showNotification(`جاري إنشاء التقرير ${type}...`, 'info');
-            
-            setTimeout(() => {
-                showNotification(`✅ تم إنشاء التقرير ${type}`, 'success');
-            }, 1500);
+            showNotification(`✅ تم إنشاء التقرير ${type}`, 'success');
         }
 
-        // ========== حساب قيمة المخزون ==========
-        function calculateInventoryValue() {
-            const total = products.reduce((sum, p) => sum + (p.stock * p.cost), 0);
-            showNotification(`💰 إجمالي قيمة المخزون: ${total.toLocaleString()} دج`, 'info');
-        }
-
-        // ========== طلب تلقائي للمخزون المنخفض ==========
-        function autoReorder() {
-            const lowStockProducts = products.filter(p => p.stock < p.minStock);
-            
-            if (lowStockProducts.length === 0) {
-                showNotification('جميع المنتجات بمستويات جيدة', 'success');
-                return;
-            }
-            
-            let message = '📦 **طلب توريد تلقائي**\n\n';
-            lowStockProducts.forEach(p => {
-                const orderQuantity = p.maxStock - p.stock;
-                message += `- ${p.name}: ${orderQuantity} قطعة (من ${p.supplier})\n`;
-            });
-            
-            showNotification(message, 'info');
-        }
-
-        // ========== حذف عملية شراء ==========
-        function deletePurchase(id) {
-            if (confirm('هل أنت متأكد من حذف عملية الشراء هذه؟')) {
-                purchases = purchases.filter(p => p.id !== id);
-                savePurchases();
-                renderPurchasesTable();
-                updateDashboardStats();
-                showNotification('✅ تم حذف عملية الشراء', 'success');
-            }
-        }
-
-        // ========== مسح جميع البيانات ==========
+        // ========== مسح البيانات ==========
         function clearAllData() {
-            if (confirm('هل أنت متأكد؟ سيتم حذف جميع البيانات')) {
+            if (confirm('هل أنت متأكد؟')) {
                 products = [];
                 purchases = [];
-                movements = [];
                 invoices = [];
                 
-                saveProducts();
-                savePurchases();
-                saveInvoices();
-                
+                saveAll();
                 renderSalesTable();
                 renderPurchasesTable();
                 renderInventoryTable();
@@ -2989,7 +2181,7 @@
                 updateStats();
                 updateDashboardStats();
                 
-                showNotification('✅ تم مسح جميع البيانات', 'success');
+                showNotification('✅ تم مسح البيانات', 'success');
             }
         }
 
@@ -2998,7 +2190,6 @@
             const backup = {
                 products: products,
                 purchases: purchases,
-                movements: movements,
                 invoices: invoices,
                 shops: shops,
                 customers: customers,
@@ -3014,7 +2205,7 @@
             showNotification('✅ تم إنشاء نسخة احتياطية', 'success');
         }
 
-        // ========== استعادة نسخة احتياطية ==========
+        // ========== استعادة نسخة ==========
         function restoreData() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -3030,17 +2221,11 @@
                         
                         if (backup.products) products = backup.products;
                         if (backup.purchases) purchases = backup.purchases;
-                        if (backup.movements) movements = backup.movements;
                         if (backup.invoices) invoices = backup.invoices;
                         if (backup.shops) shops = backup.shops;
                         if (backup.customers) customers = backup.customers;
                         
-                        saveProducts();
-                        savePurchases();
-                        saveInvoices();
-                        saveShops();
-                        saveCustomers();
-                        
+                        saveAll();
                         renderSalesTable();
                         renderPurchasesTable();
                         renderInventoryTable();
@@ -3050,7 +2235,7 @@
                         updateStats();
                         updateDashboardStats();
                         
-                        showNotification('✅ تم استعادة النسخة الاحتياطية', 'success');
+                        showNotification('✅ تم استعادة النسخة', 'success');
                     } catch (error) {
                         showNotification('❌ ملف غير صالح', 'error');
                     }
@@ -3085,18 +2270,9 @@
             localStorage.setItem('customers', JSON.stringify(customers));
         }
 
-        function saveInvoices() {
-            localStorage.setItem('invoices', JSON.stringify(invoices));
-        }
-
-        function saveAlerts() {
-            localStorage.setItem('inventory_alerts', JSON.stringify(alerts));
-        }
-
         function saveAll() {
             localStorage.setItem('products', JSON.stringify(products));
             localStorage.setItem('purchases', JSON.stringify(purchases));
-            localStorage.setItem('movements', JSON.stringify(movements));
             localStorage.setItem('invoices', JSON.stringify(invoices));
             localStorage.setItem('shops', JSON.stringify(shops));
             localStorage.setItem('customers', JSON.stringify(customers));
@@ -3104,8 +2280,7 @@
 
         // ========== عرض الإشعارات ==========
         function showNotification(message, type = 'success') {
-            const container
- = document.getElementById('notifications');
+            const container = document.getElementById('notifications');
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.innerHTML = `
@@ -3120,47 +2295,8 @@
             }, 3000);
         }
 
-        // ========== تشغيل عند تحميل الصفحة ==========
+        // ========== تشغيل عند التحميل ==========
         window.onload = init;
-
-        // ========== دوال عامة ==========
-        window.switchTab = switchTab;
-        window.showLoginModal = showLoginModal;
-        window.closeModal = closeModal;
-        window.login = login;
-        window.logout = logout;
-        window.addProduct = addProduct;
-        window.updateProduct = updateProduct;
-        window.deleteProduct = deleteProduct;
-        window.editProduct = editProduct;
-        window.sendToTelegram = sendToTelegram;
-        window.syncWithTelegram = syncWithTelegram;
-        window.exportToExcel = exportToExcel;
-        window.exportToPDF = exportToPDF;
-        window.addSampleData = addSampleData;
-        window.showAddShopModal = showAddShopModal;
-        window.addShop = addShop;
-        window.showAddCustomerModal = showAddCustomerModal;
-        window.addCustomer = addCustomer;
-        window.createNewInvoice = createNewInvoice;
-        window.viewInvoice = viewInvoice;
-        window.markInvoicePaid = markInvoicePaid;
-        window.printInvoice = printInvoice;
-        window.restockProduct = restockProduct;
-        window.generateReport = generateReport;
-        window.clearAllData = clearAllData;
-        window.backupData = backupData;
-        window.restoreData = restoreData;
-        window.toggleTheme = toggleTheme;
-        window.addPurchase = addPurchase;
-        window.loadProductsToSelect = loadProductsToSelect;
-        window.renderPurchasesTable = renderPurchasesTable;
-        window.deletePurchase = deletePurchase;
-        window.calculateInventoryValue = calculateInventoryValue;
-        window.autoReorder = autoReorder;
-        window.adjustStock = adjustStock;
-        window.exportPurchases = exportPurchases;
-        window.syncPurchasesWithTelegram = syncPurchasesWithTelegram;
     </script>
 </body>
 </html>
