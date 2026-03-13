@@ -124,38 +124,33 @@
             position: relative;
         }
 
-        /* مؤشر الجولة */
+        /* مؤشر الجولة - نفس تصميم الصورة */
         .tour-guide {
             background: linear-gradient(135deg, #ff0050, #ff8a00);
             color: white;
-            padding: 15px;
-            border-radius: 15px;
+            padding: 20px;
+            border-radius: 20px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 5px 20px rgba(255,0,80,0.3);
+            box-shadow: 0 10px 30px rgba(255,0,80,0.3);
             animation: slideDown 0.5s ease;
         }
 
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        .tour-guide i {
+            font-size: 24px;
+            margin-left: 10px;
         }
 
         .tour-progress {
             display: flex;
-            gap: 5px;
+            gap: 8px;
+            margin: 10px 0;
         }
 
         .tour-dot {
-            width: 30px;
+            width: 40px;
             height: 4px;
             background: rgba(255,255,255,0.3);
             border-radius: 2px;
@@ -164,18 +159,19 @@
 
         .tour-dot.active {
             background: white;
-            width: 50px;
+            width: 60px;
         }
 
         .tour-btn {
             background: white;
             color: #ff0050;
             border: none;
-            padding: 8px 20px;
-            border-radius: 20px;
+            padding: 10px 25px;
+            border-radius: 25px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 14px;
         }
 
         .tour-btn:hover {
@@ -183,15 +179,16 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        /* قائمة المستخدمين للجولة */
+        /* شريط المستخدمين - نفس تصميم الصورة */
         .users-carousel {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             overflow-x: auto;
-            padding: 15px 0;
-            margin-bottom: 20px;
+            padding: 15px 5px 20px 5px;
+            margin-bottom: 25px;
             scrollbar-width: thin;
             scrollbar-color: #ff0050 #f0f0f0;
+            direction: ltr;
         }
 
         .users-carousel::-webkit-scrollbar {
@@ -207,10 +204,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
+            min-width: 80px;
         }
 
         .user-tour-item:hover {
@@ -220,7 +218,7 @@
         .user-tour-item.active::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: -10px;
             width: 100%;
             height: 3px;
             background: #ff0050;
@@ -228,14 +226,9 @@
             animation: slideIn 0.3s ease;
         }
 
-        @keyframes slideIn {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
         .user-avatar-large {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             padding: 3px;
             background: linear-gradient(45deg, #ff0050, #ff8a00);
@@ -257,6 +250,94 @@
             gap: 3px;
         }
 
+        /* بروفايل المستخدم - نفس تصميم الصورة تماماً */
+        .user-profile-header {
+            background: linear-gradient(135deg, #ff0050, #ff8a00);
+            color: white;
+            padding: 25px;
+            border-radius: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(255,0,80,0.2);
+        }
+
+        .profile-main {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-main img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 4px solid white;
+            object-fit: cover;
+        }
+
+        .profile-name h2 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .profile-name p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .verified-badge {
+            color: #00cc66;
+            margin-right: 5px;
+        }
+
+        .profile-bio {
+            font-size: 15px;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-item .number {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .stat-item .label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .follow-btn {
+            background: white;
+            color: #ff0050;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .follow-btn.following {
+            background: #00cc66;
+            color: white;
+        }
+
         /* الفيديوهات */
         .videos-feed {
             display: flex;
@@ -270,18 +351,17 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: all 0.3s;
-            border: 2px solid transparent;
         }
 
         .video-card.tour-highlight {
-            border: 2px solid #ff0050;
-            transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(255,0,80,0.3);
+            border: 3px solid #ff0050;
+            transform: scale(1.01);
+            box-shadow: 0 15px 40px rgba(255,0,80,0.3);
         }
 
         .video-wrapper {
             position: relative;
-            height: 400px;
+            height: 450px;
         }
 
         .video-wrapper video {
@@ -296,37 +376,22 @@
             right: 0;
             left: 0;
             padding: 20px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
             color: white;
         }
 
-        .user-info {
+        .video-user-info {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
         }
 
-        .user-info img {
+        .video-user-info img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             border: 2px solid white;
-        }
-
-        .follow-btn {
-            background: #ff0050;
-            color: white;
-            border: none;
-            padding: 5px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background 0.3s;
-        }
-
-        .follow-btn.following {
-            background: #00cc66;
         }
 
         .video-stats {
@@ -444,7 +509,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -453,7 +518,7 @@
         .player-content {
             position: relative;
             width: 90%;
-            max-width: 800px;
+            max-width: 400px;
         }
 
         .close-player {
@@ -468,82 +533,6 @@
         #mainVideo {
             width: 100%;
             border-radius: 15px;
-        }
-
-        /* نافذة معلومات المستخدم */
-        .user-info-modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            z-index: 1001;
-            display: none;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .user-info-modal.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -60%);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%);
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .modal-header img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-        }
-
-        .modal-stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .modal-stats div {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-stats span:first-child {
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .modal-stats span:last-child {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
         }
 
         /* تجاوب مع الشاشات */
@@ -564,6 +553,22 @@
                 display: none;
             }
         }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from { width: 0; }
+            to { width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -576,7 +581,7 @@
             </div>
             
             <nav class="nav-menu">
-                <div class="nav-item active" onclick="setActive(this); loadUserTour('all')">
+                <div class="nav-item active" onclick="setActive(this); loadAllVideos()">
                     <i class="fas fa-home"></i>
                     <span>الرئيسية</span>
                 </div>
@@ -592,7 +597,7 @@
                     <i class="fas fa-inbox"></i>
                     <span>صندوق الوارد</span>
                 </div>
-                <div class="nav-item" onclick="setActive(this); showUserProfile('current')">
+                <div class="nav-item" onclick="setActive(this); showCurrentUserProfile()">
                     <i class="fas fa-user"></i>
                     <span>الملف الشخصي</span>
                 </div>
@@ -618,22 +623,24 @@
         <!-- المحتوى الرئيسي -->
         <main class="main-content">
             <!-- دليل الجولة -->
-            <div class="tour-guide" id="tourGuide" style="display: none;">
-                <div>
+            <div class="tour-guide" id="tourGuide">
+                <div style="display: flex; align-items: center; gap: 10px;">
                     <i class="fas fa-route"></i>
-                    <strong id="tourStepText">اكتشف مستخدمين جدد</strong>
-                </div>
-                <div class="tour-progress" id="tourProgress">
-                    <span class="tour-dot active"></span>
-                    <span class="tour-dot"></span>
-                    <span class="tour-dot"></span>
-                    <span class="tour-dot"></span>
-                    <span class="tour-dot"></span>
+                    <div>
+                        <strong id="tourStepText">اكتشف Sara Mohamed</strong>
+                        <div class="tour-progress" id="tourProgress">
+                            <span class="tour-dot active"></span>
+                            <span class="tour-dot"></span>
+                            <span class="tour-dot"></span>
+                            <span class="tour-dot"></span>
+                            <span class="tour-dot"></span>
+                        </div>
+                    </div>
                 </div>
                 <button class="tour-btn" onclick="nextUserTour()" id="tourBtn">التالي</button>
             </div>
 
-            <!-- شريط المستخدمين للجولة -->
+            <!-- شريط المستخدمين للجولة - نفس تصميم الصورة -->
             <div class="users-carousel" id="usersCarousel">
                 <!-- ستتم إضافة المستخدمين هنا عبر JavaScript -->
             </div>
@@ -656,7 +663,22 @@
             </div>
 
             <div class="cloud-files" id="cloudFiles">
-                <!-- الملفات المرفوعة ستظهر هنا -->
+                <div class="cloud-file-item">
+                    <i class="fas fa-video"></i>
+                    <div class="file-info">
+                        <strong>فيديو 1.mp4</strong>
+                        <small>12.5 MB</small>
+                    </div>
+                    <i class="fas fa-check-circle" style="color: #00cc66;"></i>
+                </div>
+                <div class="cloud-file-item">
+                    <i class="fas fa-video"></i>
+                    <div class="file-info">
+                        <strong>فيديو 2.mp4</strong>
+                        <small>8.3 MB</small>
+                    </div>
+                    <i class="fas fa-cloud-upload-alt" style="color: #ff0050;"></i>
+                </div>
             </div>
 
             <div class="sync-status">
@@ -676,129 +698,107 @@
                     <i class="fas fa-heart"></i> <span id="likeCount">12.5K</span>
                 </button>
                 <button class="stat-btn" style="color: white;" onclick="shareToGitHub()">
-                    <i class="fab fa-github"></i> شارك على GitHub
+                    <i class="fab fa-github"></i> شارك
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- نافذة معلومات المستخدم -->
-    <div class="user-info-modal" id="userInfoModal">
-        <span class="close-modal" onclick="closeUserModal()">&times;</span>
-        <div class="modal-header" id="modalHeader">
-            <!-- محتوى ديناميكي -->
-        </div>
-        <div class="modal-stats" id="modalStats">
-            <!-- محتوى ديناميكي -->
-        </div>
-        <button class="follow-btn" style="width: 100%; padding: 12px;" onclick="followFromModal()" id="modalFollowBtn">متابعة</button>
-    </div>
-
     <script>
-        // بيانات المستخدمين
+        // بيانات المستخدمين - نفس البيانات من الصورة
         const users = [
             { 
                 id: 1,
-                name: 'Layla Ahmed', 
-                username: '@layla_art', 
-                avatar: 'https://randomuser.me/api/portraits/women/1.jpg',
-                bio: 'فنانة تشكيلية 🎨 | محتوى فني يومي',
-                followers: '1.2M',
-                following: '850',
-                videos: '342',
-                verified: true
+                name: 'Sara Mohamed', 
+                username: 'sara_beauty@', 
+                avatar: 'https://randomuser.me/api/portraits/women/5.jpg',
+                bio: 'مكياج وعناية | نصائح جمالية',
+                followers: '4.2M',
+                following: '890',
+                videos: '2.1K',
+                verified: true,
+                status: 'نشط الآن'
             },
             { 
                 id: 2,
-                name: 'Omar Hassan', 
-                username: '@omar_tech', 
-                avatar: 'https://randomuser.me/api/portraits/men/2.jpg',
-                bio: 'تقنية وبرمجة 💻 | شروحات يومية',
-                followers: '890K',
-                following: '234',
-                videos: '567',
-                verified: false
-            },
-            { 
-                id: 3,
-                name: 'Noor Ali', 
-                username: '@noor_dance', 
-                avatar: 'https://randomuser.me/api/portraits/women/3.jpg',
-                bio: 'راقصة محترفة 💃 | تحديات الرقص',
-                followers: '2.5M',
-                following: '1.2K',
-                videos: '891',
-                verified: true
-            },
-            { 
-                id: 4,
                 name: 'Khaled Saleh', 
-                username: '@khaled_cooks', 
+                username: 'khaled_cooks@', 
                 avatar: 'https://randomuser.me/api/portraits/men/4.jpg',
                 bio: 'طبخ وحلويات 🍳 | وصفات سهلة',
                 followers: '3.1M',
                 following: '567',
                 videos: '1.2K',
-                verified: true
+                verified: true,
+                status: 'نشط الآن'
+            },
+            { 
+                id: 3,
+                name: 'Noor Ali', 
+                username: 'noor_dance@', 
+                avatar: 'https://randomuser.me/api/portraits/women/3.jpg',
+                bio: 'راقصة محترفة 💃 | تحديات الرقص',
+                followers: '2.5M',
+                following: '1.2K',
+                videos: '891',
+                verified: true,
+                status: 'نشط الآن'
+            },
+            { 
+                id: 4,
+                name: 'Layla Ahmed', 
+                username: 'layla_art@', 
+                avatar: 'https://randomuser.me/api/portraits/women/1.jpg',
+                bio: 'فنانة تشكيلية 🎨 | محتوى فني يومي',
+                followers: '1.2M',
+                following: '850',
+                videos: '342',
+                verified: true,
+                status: 'نشط الآن'
             },
             { 
                 id: 5,
-                name: 'Sara Mohamed', 
-                username: '@sara_beauty', 
-                avatar: 'https://randomuser.me/api/portraits/women/5.jpg',
-                bio: 'مكياج وعناية 💄 | نصائح جمالية',
-                followers: '4.2M',
-                following: '890',
-                videos: '2.1K',
-                verified: true
-            },
-            { 
-                id: 6,
-                name: 'Ahmed Fathy', 
-                username: '@ahmed_fitness', 
-                avatar: 'https://randomuser.me/api/portraits/men/6.jpg',
-                bio: 'رياضة وكمال أجسام 💪 | تمارين منزلية',
-                followers: '1.8M',
-                following: '456',
-                videos: '723',
-                verified: false
+                name: 'Omar Hassan', 
+                username: 'omar_tech@', 
+                avatar: 'https://randomuser.me/api/portraits/men/2.jpg',
+                bio: 'تقنية وبرمجة 💻 | شروحات يومية',
+                followers: '890K',
+                following: '234',
+                videos: '567',
+                verified: false,
+                status: 'نشط الآن'
             }
         ];
 
         // فيديوهات المستخدمين
         const userVideos = {
             1: [
-                { id: 101, desc: 'رسمة اليوم 🎨 #فن', likes: '45.2K', comments: '1.2K', music: 'صوت إبداعي' },
-                { id: 102, desc: 'تقنية جديدة في الرسم ✨', likes: '32.1K', comments: '890', music: 'موسيقى هادئة' }
+                { id: 101, desc: 'روتين العناية بالبشرة 💄 #مكياج', likes: '234.5K', comments: '8.9K', music: 'صوت تجميل' },
+                { id: 102, desc: 'مكياج مناسبات السهرة ✨', likes: '187.6K', comments: '7.2K', music: 'إيقاعات عصرية' }
             ],
             2: [
-                { id: 201, desc: 'شرح لغة JavaScript 💻', likes: '67.8K', comments: '2.3K', music: 'الصوت الأصلي' },
-                { id: 202, desc: 'نصائح للمبرمجين المبتدئين', likes: '54.3K', comments: '1.8K', music: 'تيك توك ريمكس' }
+                { id: 201, desc: 'وصفة الكنافة بالقشطة 🍰', likes: '123.4K', comments: '5.6K', music: 'طبخ وحلويات' },
+                { id: 202, desc: 'طريقة عمل البيتزا المنزلية', likes: '98.7K', comments: '4.3K', music: 'موسيقى هادئة' }
             ],
             3: [
                 { id: 301, desc: 'تحدي الرقص الجديد 💃', likes: '89.1K', comments: '3.4K', music: 'رقص شرقي' },
-                { id: 302, desc: 'تعلم حركة سهلة', likes: '76.5K', comments: '2.9K', music: 'إيقاعات سريعة' }
+                { id: 302, desc: 'تعلم حركة سهلة للمبتدئين', likes: '76.5K', comments: '2.9K', music: 'إيقاعات سريعة' }
             ],
             4: [
-                { id: 401, desc: 'وصفة الكنافة 🍰', likes: '123.4K', comments: '5.6K', music: 'طبخ وحلويات' },
-                { id: 402, desc: 'طريقة عمل البيتزا', likes: '98.7K', comments: '4.3K', music: 'موسيقى هادئة' }
+                { id: 401, desc: 'رسمة اليوم 🎨 #فن', likes: '45.2K', comments: '1.2K', music: 'صوت إبداعي' },
+                { id: 402, desc: 'تقنية جديدة في الرسم ✨', likes: '32.1K', comments: '890', music: 'موسيقى هادئة' }
             ],
             5: [
-                { id: 501, desc: 'روتين العناية بالبشرة 💄', likes: '234.5K', comments: '8.9K', music: 'بيوتي تيوب' },
-                { id: 502, desc: 'مكياج مناسبات السهرة', likes: '187.6K', comments: '7.2K', music: 'إيقاعات عصرية' }
-            ],
-            6: [
-                { id: 601, desc: 'تمارين البطن في 5 دقائق 💪', likes: '156.7K', comments: '6.7K', music: 'رياضة وحماس' },
-                { id: 602, desc: 'نصائح غذائية للرياضيين', likes: '143.2K', comments: '5.4K', music: 'تحفيز رياضي' }
+                { id: 501, desc: 'شرح JavaScript للمبتدئين 💻', likes: '67.8K', comments: '2.3K', music: 'الصوت الأصلي' },
+                { id: 502, desc: 'نصائح للمبرمجين', likes: '54.3K', comments: '1.8K', music: 'تيك توك ريمكس' }
             ]
         };
 
         // متغيرات الجولة
         let currentTourIndex = 0;
-        let tourActive = false;
+        let tourActive = true; // الجولة مفعلة تلقائياً
         let currentFollowing = new Set();
 
-        // تحميل المستخدمين في الكاروسيل
+        // تحميل المستخدمين في الكاروسيل - نفس تصميم الصورة
         function loadUsersCarousel() {
             const carousel = document.getElementById('usersCarousel');
             carousel.innerHTML = '';
@@ -806,6 +806,7 @@
             users.forEach((user, index) => {
                 const userItem = document.createElement('div');
                 userItem.className = 'user-tour-item';
+                if (index === 0) userItem.classList.add('active');
                 userItem.setAttribute('data-user-id', user.id);
                 userItem.setAttribute('onclick', `showUserVideos(${user.id})`);
                 
@@ -813,10 +814,10 @@
                     <div class="user-avatar-large">
                         <img src="${user.avatar}" alt="${user.name}">
                     </div>
-                    <span>${user.username}</span>
+                    <span style="font-size: 13px;">${user.username}</span>
                     <span class="user-status">
                         <i class="fas fa-circle" style="font-size: 8px;"></i>
-                        نشط الآن
+                        ${user.status}
                     </span>
                 `;
                 
@@ -849,12 +850,11 @@
                     document.getElementById('tourBtn').textContent = 'إنهاء الجولة';
                 }
             } else {
-                // إنهاء الجولة
+                // إنهاء الجولة والعودة للصفحة الرئيسية
                 tourActive = false;
                 document.getElementById('tourGuide').style.display = 'none';
                 loadAllVideos();
                 
-                // إزالة التحديد من الكاروسيل
                 document.querySelectorAll('.user-tour-item').forEach(item => {
                     item.classList.remove('active');
                 });
@@ -873,7 +873,7 @@
             });
             
             document.getElementById('tourStepText').textContent = 
-                `اكتشف ${users[currentTourIndex].username}`;
+                `اكتشف ${users[currentTourIndex].name}`;
         }
 
         // تحديد المستخدم الحالي في الكاروسيل
@@ -882,106 +882,67 @@
                 item.classList.remove('active');
                 if (item.getAttribute('data-user-id') == users[currentTourIndex].id) {
                     item.classList.add('active');
-                    
-                    // تمرير تلقائي للمستخدم الحالي
                     item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                 }
             });
         }
 
-        // عرض فيديوهات مستخدم معين
+        // عرض فيديوهات مستخدم معين - نفس تصميم الصورة بالضبط
         function showUserVideos(userId) {
             const feed = document.getElementById('videosFeed');
             const user = users.find(u => u.id === userId);
             const videos = userVideos[userId] || [];
             
-            feed.innerHTML = `
-                <div class="user-profile-header" style="background: linear-gradient(135deg, #ff0050, #ff8a00); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                    <div style="display: flex; align-items: center; gap: 20px;">
-                        <img src="${user.avatar}" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid white;">
-                        <div>
-                            <h2>${user.name} ${user.verified ? '<i class="fas fa-check-circle" style="color: #00cc66;"></i>' : ''}</h2>
+            // بروفايل المستخدم - نفس التنسيق في الصورة
+            let profileHTML = `
+                <div class="user-profile-header">
+                    <div class="profile-main">
+                        <img src="${user.avatar}" alt="${user.name}">
+                        <div class="profile-name">
+                            <h2>${user.name} ${user.verified ? '<i class="fas fa-check-circle verified-badge"></i>' : ''}</h2>
                             <p>${user.username}</p>
-                            <p style="font-size: 14px; margin-top: 5px;">${user.bio}</p>
                         </div>
                     </div>
-                    <div style="display: flex; gap: 30px; margin-top: 15px; text-align: center;">
-                        <div><strong>${user.followers}</strong><br><small>متابعين</small></div>
-                        <div><strong>${user.following}</strong><br><small>يتابع</small></div>
-                        <div><strong>${user.videos}</strong><br><small>فيديوهات</small></div>
+                    
+                    <div class="profile-bio">
+                        ${user.bio}
                     </div>
-                    <button class="follow-btn" style="width: 100%; margin-top: 15px; background: white; color: #ff0050;" 
-                            onclick="toggleFollow(this, '${user.username}')" id="followBtn-${user.id}">
-                        ${currentFollowing.has(user.username) ? '✅ متابَع' : '➕ متابعة'}
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="number">${user.videos}</span>
+                            <span class="label">فيديوهات</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="number">${user.following}</span>
+                            <span class="label">يتابع</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="number">${user.followers}</span>
+                            <span class="label">متابعين</span>
+                        </div>
+                    </div>
+                    
+                    <button class="follow-btn" onclick="toggleFollow(this, '${user.username}')" id="followBtn-${user.id}">
+                        ${currentFollowing.has(user.username) ? 'متابَع' : 'متابع'}
                     </button>
                 </div>
             `;
             
+            // إضافة الفيديوهات
+            let videosHTML = '';
             videos.forEach(video => {
-                const videoCard = document.createElement('div');
-                videoCard.className = 'video-card';
-                if (tourActive && user.id === users[currentTourIndex].id) {
-                    videoCard.classList.add('tour-highlight');
-                }
-                
-                videoCard.innerHTML = `
-                    <div class="video-wrapper">
-                        <video src="#" poster="https://via.placeholder.com/400x600/ff0050/ffffff?text=${user.username}" 
-                               onclick="playVideo(this, '${user.username}', '${video.desc}')"></video>
-                        <div class="video-overlay">
-                            <div class="user-info">
-                                <img src="${user.avatar}" alt="${user.username}">
-                                <strong>${user.username}</strong>
-                                <button class="follow-btn" onclick="toggleFollow(this, '${user.username}')">
-                                    ${currentFollowing.has(user.username) ? 'متابَع' : 'متابعة'}
-                                </button>
-                            </div>
-                            <p>${video.desc}</p>
-                            <div style="display: flex; align-items: center; gap: 5px; margin: 10px 0;">
-                                <i class="fas fa-music"></i>
-                                <span>${video.music}</span>
-                            </div>
-                            <div class="video-stats">
-                                <button class="stat-btn" onclick="likeCount(this)">
-                                    <i class="fas fa-heart"></i> ${video.likes}
-                                </button>
-                                <button class="stat-btn" onclick="openComments('${user.username}')">
-                                    <i class="fas fa-comment"></i> ${video.comments}
-                                </button>
-                                <button class="stat-btn" onclick="shareToCloud('${user.username}')">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                feed.appendChild(videoCard);
-            });
-        }
-
-        // تحميل كل الفيديوهات
-        function loadAllVideos() {
-            const feed = document.getElementById('videosFeed');
-            feed.innerHTML = '';
-            
-            users.forEach(user => {
-                const videos = userVideos[user.id] || [];
-                videos.forEach(video => {
-                    const videoCard = document.createElement('div');
-                    videoCard.className = 'video-card';
-                    videoCard.innerHTML = `
+                videosHTML += `
+                    <div class="video-card ${tourActive && user.id === users[currentTourIndex].id ? 'tour-highlight' : ''}">
                         <div class="video-wrapper">
-                            <video src="#" poster="https://via.placeholder.com/400x600/ff0050/ffffff?text=${user.username}" 
-                                   onclick="playVideo(this, '${user.username}', '${video.desc}')"></video>
+                            <video src="#" poster="https://via.placeholder.com/400x600/ff0050/ffffff?text=TikTok" 
+                                   onclick="playVideo(this, '${user.username}')"></video>
                             <div class="video-overlay">
-                                <div class="user-info">
+                                <div class="video-user-info">
                                     <img src="${user.avatar}" alt="${user.username}">
                                     <strong>${user.username}</strong>
-                                    <button class="follow-btn" onclick="toggleFollow(this, '${user.username}')">
-                                        ${currentFollowing.has(user.username) ? 'متابَع' : 'متابعة'}
-                                    </button>
                                 </div>
-                                <p>${video.desc}</p>
+                                <p style="margin: 10px 0;">${video.desc}</p>
                                 <div style="display: flex; align-items: center; gap: 5px; margin: 10px 0;">
                                     <i class="fas fa-music"></i>
                                     <span>${video.music}</span>
@@ -999,78 +960,81 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                `;
+            });
+            
+            feed.innerHTML = profileHTML + videosHTML;
+        }
+
+        // تحميل كل الفيديوهات
+        function loadAllVideos() {
+            const feed = document.getElementById('videosFeed');
+            feed.innerHTML = '';
+            
+            users.forEach(user => {
+                const videos = userVideos[user.id] || [];
+                videos.forEach(video => {
+                    feed.innerHTML += `
+                        <div class="video-card">
+                            <div class="video-wrapper">
+                                <video src="#" poster="https://via.placeholder.com/400x600/ff0050/ffffff?text=TikTok" 
+                                       onclick="playVideo(this, '${user.username}')"></video>
+                                <div class="video-overlay">
+                                    <div class="video-user-info">
+                                        <img src="${user.avatar}" alt="${user.username}">
+                                        <strong>${user.username}</strong>
+                                    </div>
+                                    <p style="margin: 10px 0;">${video.desc}</p>
+                                    <div style="display: flex; align-items: center; gap: 5px; margin: 10px 0;">
+                                        <i class="fas fa-music"></i>
+                                        <span>${video.music}</span>
+                                    </div>
+                                    <div class="video-stats">
+                                        <button class="stat-btn" onclick="likeCount(this)">
+                                            <i class="fas fa-heart"></i> ${video.likes}
+                                        </button>
+                                        <button class="stat-btn" onclick="openComments('${user.username}')">
+                                            <i class="fas fa-comment"></i> ${video.comments}
+                                        </button>
+                                        <button class="stat-btn" onclick="shareToCloud('${user.username}')">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     `;
-                    feed.appendChild(videoCard);
                 });
             });
         }
 
-        // عرض ملف المستخدم
-        function showUserProfile(username) {
-            const user = users.find(u => u.username === username || username === 'current');
-            if (!user) return;
-            
-            document.getElementById('modalHeader').innerHTML = `
-                <img src="${user.avatar}" alt="${user.name}">
-                <div>
-                    <h3>${user.name} ${user.verified ? '<i class="fas fa-check-circle" style="color: #00cc66;"></i>' : ''}</h3>
-                    <p style="color: #666;">${user.username}</p>
-                </div>
-            `;
-            
-            document.getElementById('modalStats').innerHTML = `
-                <div><span>${user.followers}</span><span>متابعين</span></div>
-                <div><span>${user.following}</span><span>يتابع</span></div>
-                <div><span>${user.videos}</span><span>فيديوهات</span></div>
-            `;
-            
-            document.getElementById('modalFollowBtn').textContent = 
-                currentFollowing.has(user.username) ? 'إلغاء المتابعة' : 'متابعة';
-            
-            document.getElementById('userInfoModal').classList.add('active');
-        }
-
-        // إغلاق نافذة المستخدم
-        function closeUserModal() {
-            document.getElementById('userInfoModal').classList.remove('active');
+        // عرض الملف الشخصي الحالي
+        function showCurrentUserProfile() {
+            showUserVideos(1); // عرض أول مستخدم
         }
 
         // متابعة/إلغاء متابعة
         function toggleFollow(btn, username) {
             if (currentFollowing.has(username)) {
                 currentFollowing.delete(username);
-                btn.textContent = 'متابعة';
+                btn.textContent = 'متابع';
                 btn.classList.remove('following');
             } else {
                 currentFollowing.add(username);
                 btn.textContent = 'متابَع';
                 btn.classList.add('following');
             }
-            
-            // تحديث زر المتابعة في النافذة المنبثقة
-            const modalBtn = document.getElementById('modalFollowBtn');
-            if (modalBtn) {
-                modalBtn.textContent = currentFollowing.has(username) ? 'إلغاء المتابعة' : 'متابعة';
-            }
-        }
-
-        function followFromModal() {
-            const username = document.querySelector('#modalHeader p').textContent;
-            const btn = document.getElementById('modalFollowBtn');
-            toggleFollow(btn, username);
         }
 
         // تشغيل الفيديو
-        function playVideo(videoElement, username, desc) {
+        function playVideo(videoElement, username) {
             const modal = document.getElementById('videoPlayer');
             const mainVideo = document.getElementById('mainVideo');
             
             mainVideo.src = 'https://www.w3schools.com/html/mov_bbb.mp4';
             modal.style.display = 'flex';
             mainVideo.play();
-            
-            // تحديث معلومات الفيديو
-            document.getElementById('likeCount').textContent = '12.5K';
         }
 
         function closePlayer() {
@@ -1110,7 +1074,7 @@
 
         // فتح التعليقات
         function openComments(username) {
-            alert(`💬 فتح التعليقات لـ ${username}\n(سيتم إضافة نظام التعليقات قريباً)`);
+            alert(`💬 فتح التعليقات لـ ${username}`);
         }
 
         // رفع فيديو
@@ -1127,7 +1091,7 @@
                         <strong>${file.name}</strong>
                         <small>${(file.size / (1024*1024)).toFixed(2)} MB</small>
                     </div>
-                    <i class="fas fa-cloud-upload-alt" style="color: #00cc66;"></i>
+                    <i class="fas fa-check-circle" style="color: #00cc66;"></i>
                 `;
                 
                 cloudFiles.appendChild(fileItem);
@@ -1153,11 +1117,11 @@
 
         // مشاركة على GitHub
         function shareToGitHub() {
-            alert('✅ تم حفظ الفيديو في مستودع GitHub!\nرابط المستودع: https://github.com/yourusername/tiktok-cloud-ui');
+            alert('✅ تم الحفظ في GitHub!');
         }
 
         function shareToCloud(username) {
-            alert(`📤 جاري رفع الفيديو إلى السحابة...\nتمت المشاركة من ${username}`);
+            alert(`📤 جاري رفع الفيديو من ${username} إلى السحابة`);
             updateStorage();
         }
 
@@ -1169,10 +1133,10 @@
             element.classList.add('active');
         }
 
-        // تهيئة الصفحة
+        // تهيئة الصفحة - تشغيل الجولة تلقائياً
         window.onload = function() {
             loadUsersCarousel();
-            loadAllVideos();
+            startUserTour(); // بدء الجولة تلقائياً
             
             // إضافة مستمع للسحب والإفلات
             const uploadArea = document.getElementById('uploadArea');
