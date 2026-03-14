@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المدير المتكامل</title>
+    <title>منصة التطبيقات المتكاملة - تشغيل احترافي</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -17,65 +18,51 @@
         }
 
         body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             min-height: 100vh;
             padding: 20px;
             position: relative;
-            overflow-x: hidden;
         }
 
-        /* ===== خلفية المدير ===== */
-        .manager-bg {
+        /* خلفية متحركة */
+        .animated-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -2;
-            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1f 100%);
+            z-index: -1;
             overflow: hidden;
         }
 
-        .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 3s infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.5); }
-            50% { opacity: 1; transform: scale(1); }
-        }
-
-        .golden-rays {
+        .animated-bg::before {
+            content: '';
             position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle at 30% 50%, rgba(255, 215, 0, 0.15), transparent 50%);
-            animation: rotate 60s linear infinite;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 215, 0, 0.03) 0px,
+                rgba(255, 215, 0, 0.03) 20px,
+                transparent 20px,
+                transparent 40px
+            );
+            animation: moveBg 20s linear infinite;
         }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        @keyframes moveBg {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(5%, 5%) rotate(5deg); }
         }
 
-        /* ===== الهيدر الرئيسي ===== */
+        /* الهيدر الرئيسي */
         .main-header {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             border-radius: 30px;
-            padding: 25px 35px;
+            padding: 20px 30px;
             margin-bottom: 40px;
             border: 2px solid rgba(255, 215, 0, 0.3);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
@@ -108,523 +95,395 @@
         }
 
         .logo-icon {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             background: linear-gradient(135deg, gold, #ffd700);
-            border-radius: 25px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 45px;
-            color: #0a0a0f;
+            font-size: 35px;
+            color: #1a1a2e;
             transform: rotate(10deg);
-            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.5);
-            border: 3px solid white;
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.4);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 15px 30px rgba(255, 215, 0, 0.4); }
+            to { box-shadow: 0 25px 50px rgba(255, 215, 0, 0.8); }
         }
 
         .logo-text h1 {
             color: white;
-            font-size: 42px;
+            font-size: 36px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
             font-weight: 900;
-            text-shadow: 0 0 20px gold;
         }
 
         .logo-text p {
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 500;
         }
 
-        .status-badge {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            padding: 12px 30px;
+        /* شريط التنقل العلوي */
+        .nav-bar {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            margin-bottom: 30px;
+            animation: slideUp 0.8s ease 0.2s both;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .nav-item {
+            flex: 1;
+            padding: 15px 25px;
             border-radius: 50px;
-            color: white;
             display: flex;
             align-items: center;
-            gap: 12px;
-            border: 2px solid gold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .status-badge:hover {
-            transform: scale(1.05);
-            background: rgba(255, 215, 0, 0.2);
-        }
-
-        .status-badge i {
-            color: #4caf50;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* ===== شبكة الأيقونات ===== */
-        .icons-grid {
-            display: flex;
             justify-content: center;
-            align-items: center;
-            gap: 80px;
-            flex-wrap: wrap;
-            margin: 50px 0 30px;
-            animation: fadeInUp 1s ease 0.3s both;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+            font-size: 18px;
+            border: none;
         }
 
-        @keyframes fadeInUp {
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .nav-item:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .nav-item i {
+            font-size: 24px;
+            transition: all 0.4s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-item span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, gold, #ffd700);
+            color: #1a1a2e;
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
+        }
+
+        .nav-item.active i {
+            transform: scale(1.2);
+            color: #1a1a2e;
+        }
+
+        /* حاوية التطبيق */
+        .app-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            overflow: hidden;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            height: 600px;
+            position: relative;
+            animation: fadeIn 1s ease 0.4s both;
+        }
+
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(50px);
+                transform: scale(0.9);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: scale(1);
             }
         }
 
-        .icon-card {
+        .app-header {
+            padding: 15px 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 25px;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
+            justify-content: space-between;
         }
 
-        .icon-card::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, rgba(255, 215, 0, 0.3), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: -1;
+        .app-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .icon-card:hover::before {
-            opacity: 1;
-        }
-
-        .icon-card:hover {
-            transform: translateY(-25px);
-        }
-
-        .icon-circle {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
+        .app-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 90px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            border: 6px solid white;
-            transition: all 0.5s ease;
+            font-size: 22px;
         }
 
-        .icon-card:hover .icon-circle {
-            transform: scale(1.15) rotate(5deg);
-            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.6);
-        }
-
-        .icon-circle.snap {
+        .app-icon.snap {
             background: linear-gradient(135deg, #fffc00, #ffd600);
             color: black;
         }
 
-        .icon-circle.tiktok {
+        .app-icon.tiktok {
             background: linear-gradient(135deg, #ff0050, #00f2ea);
             color: white;
         }
 
-        .icon-circle.reels {
+        .app-icon.reels {
             background: linear-gradient(135deg, #25D366, #128C7E);
             color: white;
         }
 
-        .icon-label {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(15px);
-            padding: 15px 35px;
-            border-radius: 60px;
+        .app-name {
             color: white;
-            font-size: 26px;
+            font-size: 20px;
             font-weight: 700;
-            border: 2px solid gold;
-            transition: all 0.3s ease;
         }
 
-        .icon-card:hover .icon-label {
+        .app-file {
+            color: gold;
+            font-size: 14px;
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 12px;
+            border-radius: 20px;
+            direction: ltr;
+        }
+
+        .app-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: 2px solid gold;
+            background: transparent;
+            color: gold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .action-btn:hover {
             background: gold;
             color: black;
             transform: scale(1.1);
         }
 
-        .icon-file {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 16px;
-            font-family: monospace;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 8px 20px;
-            border-radius: 30px;
-            direction: ltr;
-            border: 1px solid rgba(255, 215, 0, 0.3);
+        /* iframe */
+        .app-frame {
+            width: 100%;
+            height: calc(100% - 75px);
+            border: none;
+            background: white;
+            transition: all 0.5s ease;
         }
 
-        /* ===== شريط الإحصائيات ===== */
-        .stats-wrapper {
+        /* حالة عدم التشغيل */
+        .app-placeholder {
+            width: 100%;
+            height: calc(100% - 75px);
             display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            margin: 30px 0;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            gap: 20px;
+            text-align: center;
+            padding: 30px;
         }
 
-        .stats-container {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
-            border-radius: 70px;
+        .placeholder-icon {
+            font-size: 80px;
+            color: gold;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .placeholder-text {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .placeholder-desc {
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 400px;
+        }
+
+        /* مؤشر التحميل */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 215, 0, 0.3);
+            border-top: 5px solid gold;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* حالة عدم وجود ملف */
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(244, 67, 54, 0.2);
+            border: 2px solid #f44336;
+            border-radius: 20px;
+            padding: 30px;
+            color: #f44336;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        /* إشعارات */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, gold, #ffd700);
+            color: black;
             padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.4);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            border: 2px solid white;
             display: flex;
-            gap: 30px;
-            border: 2px solid gold;
-            flex-wrap: wrap;
-            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* إحصائيات سريعة */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
         }
 
         .stat-item {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             color: white;
-            font-size: 18px;
-            padding: 10px 20px;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .stat-item:hover {
-            background: rgba(255, 215, 0, 0.2);
-            transform: translateY(-3px);
         }
 
         .stat-item i {
             color: gold;
-            font-size: 24px;
         }
 
-        /* ===== نافذة التطبيق المكبرة ===== */
-        .fullscreen-app {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            z-index: 1000;
-            flex-direction: column;
-            animation: zoomIn 0.4s ease;
-        }
-
-        .fullscreen-app.show {
-            display: flex;
-        }
-
-        @keyframes zoomIn {
-            from {
-                transform: scale(0.5);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .fullscreen-header {
-            padding: 15px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: white;
-            border-bottom: 3px solid gold;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 1001;
-        }
-
-        .fullscreen-title {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .fullscreen-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            border: 2px solid white;
-        }
-
-        .fullscreen-name {
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .fullscreen-file {
-            font-family: monospace;
-            font-size: 18px;
-            padding: 8px 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 30px;
-            direction: ltr;
-        }
-
-        .fullscreen-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        /* ===== زر الإغلاق الدائري الصغير ===== */
-        .close-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 2px solid white;
-            background: rgba(255, 0, 0, 0.8);
-            color: white;
-            font-size: 22px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .close-btn:hover {
-            background: red;
-            transform: rotate(90deg) scale(1.1);
-            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.5);
-        }
-
-        .fullscreen-frame {
-            width: 100%;
-            flex: 1;
-            border: none;
-        }
-
-        /* ===== زر الرجوع الموجود داخل التطبيق ===== */
-        .app-back-button {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            z-index: 1100;
-            display: none;
-        }
-
-        .app-back-button.show {
-            display: block;
-        }
-
-        .app-back-btn {
-            background: linear-gradient(135deg, gold, #ffd700);
-            border: none;
-            border-radius: 60px;
-            padding: 18px 40px;
-            color: black;
-            font-weight: 700;
-            font-size: 22px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border: 3px solid white;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
-            animation: pulse 2s infinite;
-        }
-
-        .app-back-btn:hover {
-            transform: scale(1.1) translateX(-10px);
-            box-shadow: 0 25px 50px rgba(255, 215, 0, 0.6);
-        }
-
-        .app-back-btn i {
-            font-size: 28px;
-        }
-
-        /* ===== مؤشر التحميل ===== */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(15px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .loading-spinner {
-            width: 100px;
-            height: 100px;
-            border: 8px solid rgba(255, 215, 0, 0.2);
-            border-top: 8px solid gold;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        .loading-text {
-            color: gold;
-            font-size: 24px;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* ===== نافذة معلومات الملفات ===== */
-        .info-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(20px);
-            padding: 40px;
-            border-radius: 40px;
-            border: 3px solid gold;
-            z-index: 4000;
-            color: white;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-        }
-
-        .info-modal.show {
-            display: block;
-            animation: modalPop 0.4s ease;
-        }
-
-        @keyframes modalPop {
-            from {
-                transform: translate(-50%, -50%) scale(0.5);
-                opacity: 0;
-            }
-            to {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
-        }
-
-        .info-modal h2 {
-            color: gold;
-            font-size: 32px;
-            margin-bottom: 20px;
-        }
-
-        .info-modal p {
-            font-size: 18px;
-            margin: 15px 0;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-        }
-
-        .info-modal button {
-            background: gold;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 60px;
-            font-size: 20px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .info-modal button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 3500;
-        }
-
-        .modal-overlay.show {
-            display: block;
-        }
-
-        /* ===== تجاوب ===== */
+        /* تجاوب */
         @media (max-width: 768px) {
-            .logo-text h1 {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-item span {
+                display: none;
+            }
+            
+            .nav-item i {
                 font-size: 28px;
             }
             
-            .icon-circle {
-                width: 150px;
-                height: 150px;
-                font-size: 60px;
-            }
-            
-            .icon-label {
-                font-size: 20px;
-                padding: 10px 20px;
-            }
-            
-            .icons-grid {
-                gap: 40px;
-            }
-            
-            .fullscreen-name {
-                font-size: 20px;
-            }
-            
-            .fullscreen-file {
-                font-size: 14px;
-                padding: 5px 10px;
+            .app-container {
+                height: 500px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- خلفية المدير -->
-    <div class="manager-bg">
-        <div class="stars"></div>
-        <div class="golden-rays"></div>
-    </div>
+    <div class="animated-bg"></div>
     
     <!-- الهيدر الرئيسي -->
     <div class="main-header">
@@ -634,114 +493,85 @@
                     <i class="fas fa-crown"></i>
                 </div>
                 <div class="logo-text">
-                    <h1>المدير المتكامل</h1>
-                    <p>
-                        <i class="fas fa-circle" style="color: #4caf50;"></i>
-                        جميع الملفات جاهزة
-                    </p>
+                    <h1>منصة التطبيقات المتكاملة</h1>
+                    <p>اختر تطبيقاً واحداً للتشغيل - يغلق الآخر تلقائياً</p>
                 </div>
             </div>
-            <div class="status-badge" onclick="showInfoModal()">
-                <i class="fas fa-bolt"></i>
-                <span>جاهز للتشغيل</span>
-                <i class="fas fa-info-circle" style="margin-right: 10px;"></i>
+            
+            <div class="stat-item">
+                <i class="fas fa-circle" style="color: #4caf50;"></i>
+                <span>جميع الملفات جاهزة</span>
             </div>
         </div>
     </div>
 
-    <!-- شبكة الأيقونات -->
-    <div class="icons-grid">
-        <!-- سناب شات -->
-        <div class="icon-card" onclick="openFullscreen('snap')">
-            <div class="icon-circle snap">
-                <i class="fab fa-snapchat"></i>
-            </div>
-            <div class="icon-label">سناب شات</div>
-            <div class="icon-file">snam.html</div>
-        </div>
-
-        <!-- تيك توك -->
-        <div class="icon-card" onclick="openFullscreen('tiktok')">
-            <div class="icon-circle tiktok">
-                <i class="fab fa-tiktok"></i>
-            </div>
-            <div class="icon-label">تيك توك</div>
-            <div class="icon-file">tikm.html</div>
-        </div>
-
-        <!-- ريلز تلجرام -->
-        <div class="icon-card" onclick="openFullscreen('reels')">
-            <div class="icon-circle reels">
-                <i class="fas fa-film"></i>
-            </div>
-            <div class="icon-label">ريلز تلجرام</div>
-            <div class="icon-file">reels.html</div>
-        </div>
-    </div>
-
-    <!-- شريط الإحصائيات -->
-    <div class="stats-wrapper">
-        <div class="stats-container">
-            <div class="stat-item" onclick="showFileInfo('snam.html')">
-                <i class="fas fa-file-code"></i>
-                <span>snam.html</span>
-            </div>
-            <div class="stat-item" onclick="showFileInfo('tikm.html')">
-                <i class="fas fa-file-code"></i>
-                <span>tikm.html</span>
-            </div>
-            <div class="stat-item" onclick="showFileInfo('reels.html')">
-                <i class="fas fa-file-code"></i>
-                <span>reels.html</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة التطبيق المكبرة -->
-    <div class="fullscreen-app" id="fullscreenApp">
-        <div class="fullscreen-header" id="fullscreenHeader">
-            <div class="fullscreen-title">
-                <div class="fullscreen-icon" id="fullscreenIcon">
-                    <i class="fab fa-snapchat"></i>
-                </div>
-                <span class="fullscreen-name" id="fullscreenName">سناب شات</span>
-                <span class="fullscreen-file" id="fullscreenFile">snam.html</span>
-            </div>
-            <div class="fullscreen-actions">
-                <button class="close-btn" onclick="closeFullscreen()" title="إغلاق">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-        <iframe class="fullscreen-frame" id="fullscreenFrame" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
-    </div>
-
-    <!-- زر الرجوع داخل التطبيق (يظهر فقط عند فتح التطبيق) -->
-    <div class="app-back-button" id="appBackButton">
-        <button class="app-back-btn" onclick="closeFullscreen()">
-            <i class="fas fa-arrow-right"></i>
-            العودة للمدير
+    <!-- شريط التنقل العلوي -->
+    <div class="nav-bar">
+        <button class="nav-item active" onclick="switchApp('snap')" id="nav-snap">
+            <i class="fab fa-snapchat"></i>
+            <span>سناب شات</span>
+        </button>
+        <button class="nav-item" onclick="switchApp('tiktok')" id="nav-tiktok">
+            <i class="fab fa-tiktok"></i>
+            <span>تيك توك</span>
+        </button>
+        <button class="nav-item" onclick="switchApp('reels')" id="nav-reels">
+            <i class="fas fa-film"></i>
+            <span>ريلز تلجرام</span>
         </button>
     </div>
 
-    <!-- مؤشر التحميل -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">جاري التحميل...</div>
+    <!-- حاوية التطبيق -->
+    <div class="app-container" id="appContainer">
+        <div class="app-header" id="appHeader">
+            <div class="app-title">
+                <div class="app-icon snap" id="appIcon">
+                    <i class="fab fa-snapchat"></i>
+                </div>
+                <span class="app-name" id="appName">سناب شات</span>
+                <span class="app-file" id="appFile">snam.html</span>
+            </div>
+            <div class="app-actions">
+                <button class="action-btn" onclick="refreshApp()" title="تحديث">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="action-btn" onclick="toggleFullscreen()" title="عرض كامل">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- مكان عرض التطبيق -->
+        <div id="appContent">
+            <iframe class="app-frame" id="appFrame" src="snam.html" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
+        </div>
+        
+        <!-- مؤشر التحميل -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+        </div>
     </div>
 
-    <!-- نافذة معلومات الملفات -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeInfoModal()"></div>
-    <div class="info-modal" id="infoModal">
-        <h2><i class="fas fa-crown" style="color: gold;"></i> معلومات الملفات</h2>
-        <p>📁 <strong>snam.html</strong> - تطبيق سناب شات</p>
-        <p>📁 <strong>tikm.html</strong> - تطبيق تيك توك</p>
-        <p>📁 <strong>reels.html</strong> - تطبيق ريلز تلجرام</p>
-        <p>💡 جميع الملفات جاهزة للتشغيل</p>
-        <button onclick="closeInfoModal()">حسناً</button>
+    <!-- إحصائيات سريعة -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <i class="fas fa-file"></i>
+            <span>snam.html</span>
+        </div>
+        <div class="stat-item">
+            <i class="fas fa-file"></i>
+            <span>tikm.html</span>
+        </div>
+        <div class="stat-item">
+            <i class="fas fa-file"></i>
+            <span>reels.html</span>
+        </div>
     </div>
 
     <script>
+        // التطبيق الحالي
+        let currentApp = 'snap';
+        
         // معلومات التطبيقات
         const apps = {
             snap: {
@@ -749,145 +579,171 @@
                 file: 'snam.html',
                 icon: 'fab fa-snapchat',
                 iconClass: 'snap',
-                headerColor: 'linear-gradient(135deg, #fffc00, #ffd600)'
+                color: '#fffc00'
             },
             tiktok: {
                 name: 'تيك توك',
                 file: 'tikm.html',
                 icon: 'fab fa-tiktok',
                 iconClass: 'tiktok',
-                headerColor: 'linear-gradient(135deg, #ff0050, #00f2ea)'
+                color: '#ff0050'
             },
             reels: {
                 name: 'ريلز تلجرام',
                 file: 'reels.html',
                 icon: 'fas fa-film',
                 iconClass: 'reels',
-                headerColor: 'linear-gradient(135deg, #25D366, #128C7E)'
+                color: '#25D366'
             }
         };
 
-        let currentApp = '';
-
-        // فتح التطبيق بملء الشاشة - مع إغلاق النافذة الحالية أولاً
-        function openFullscreen(app) {
-            const fullscreenApp = document.getElementById('fullscreenApp');
+        // التبديل بين التطبيقات
+        function switchApp(app) {
+            if (currentApp === app) return; // نفس التطبيق
             
-            // إذا كانت هناك نافذة مفتوحة حالياً، أغلقها أولاً
-            if (fullscreenApp.classList.contains('show')) {
-                closeFullscreen(false); // false يعني لا تظهر رسالة
-            }
+            // إظهار مؤشر التحميل
+            document.getElementById('loadingOverlay').style.display = 'flex';
             
-            // تأخير بسيط لضمان إغلاق النافذة السابقة
+            // تحديث الأزرار النشطة
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById(`nav-${app}`).classList.add('active');
+            
+            // تحديث رأس التطبيق
+            const appInfo = apps[app];
+            document.getElementById('appName').textContent = appInfo.name;
+            document.getElementById('appFile').textContent = appInfo.file;
+            
+            // تحديث أيقونة التطبيق
+            const appIcon = document.getElementById('appIcon');
+            appIcon.className = `app-icon ${appInfo.iconClass}`;
+            appIcon.innerHTML = `<i class="${appInfo.icon}"></i>`;
+            
+            // تغيير التطبيق في iframe
+            const frame = document.getElementById('appFrame');
+            
+            // إخفاء التطبيق القديم
+            frame.style.opacity = '0';
+            
+            // تغيير المصدر (بدون مجلد reels)
             setTimeout(() => {
-                const appInfo = apps[app];
+                frame.src = `${appInfo.file}`;
                 currentApp = app;
                 
-                // إظهار مؤشر التحميل
-                document.getElementById('loadingOverlay').style.display = 'flex';
-                
-                // تحديث رأس النافذة
-                document.getElementById('fullscreenName').textContent = appInfo.name;
-                document.getElementById('fullscreenFile').textContent = appInfo.file;
-                
-                const fullscreenIcon = document.getElementById('fullscreenIcon');
-                fullscreenIcon.className = `fullscreen-icon ${appInfo.iconClass}`;
-                fullscreenIcon.innerHTML = `<i class="${appInfo.icon}"></i>`;
-                
-                const header = document.getElementById('fullscreenHeader');
-                header.style.background = appInfo.headerColor;
-                
-                // تحميل التطبيق
-                const frame = document.getElementById('fullscreenFrame');
-                frame.src = appInfo.file;
-                
+                // إظهار التطبيق الجديد بعد التحميل
                 frame.onload = function() {
+                    frame.style.opacity = '1';
                     document.getElementById('loadingOverlay').style.display = 'none';
-                    fullscreenApp.classList.add('show');
-                    document.getElementById('appBackButton').classList.add('show');
+                    showNotification(`✅ تم تشغيل ${appInfo.name}`);
                 };
                 
+                // في حالة خطأ في التحميل
                 frame.onerror = function() {
                     document.getElementById('loadingOverlay').style.display = 'none';
-                    alert(`خطأ في تحميل ${appInfo.file}`);
+                    showNotification(`❌ خطأ في تحميل ${appInfo.file}`, 'error');
                 };
-            }, 100);
+            }, 300);
         }
 
-        // إغلاق التطبيق المكبر
-        function closeFullscreen(showAlert = false) {
-            const fullscreenApp = document.getElementById('fullscreenApp');
-            const appBackButton = document.getElementById('appBackButton');
-            const fullscreenFrame = document.getElementById('fullscreenFrame');
+        // تحديث التطبيق الحالي
+        function refreshApp() {
+            const frame = document.getElementById('appFrame');
+            const appInfo = apps[currentApp];
             
-            // إخفاء النافذة أولاً
-            fullscreenApp.classList.remove('show');
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            frame.style.opacity = '0';
             
-            // إخفاء زر الرجوع
-            appBackButton.classList.remove('show');
-            
-            // تفريغ محتوى الإطار بعد إخفاء النافذة
             setTimeout(() => {
-                fullscreenFrame.src = '';
-                currentApp = '';
-            }, 100);
+                frame.src = `${appInfo.file}`;
+                frame.onload = function() {
+                    frame.style.opacity = '1';
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    showNotification(`🔄 تم تحديث ${appInfo.name}`);
+                };
+            }, 300);
         }
 
-        // عرض معلومات الملف
-        function showFileInfo(fileName) {
-            let appName = '';
-            if (fileName === 'snam.html') appName = 'سناب شات';
-            else if (fileName === 'tikm.html') appName = 'تيك توك';
-            else if (fileName === 'reels.html') appName = 'ريلز تلجرام';
+        // وضع ملء الشاشة
+        function toggleFullscreen() {
+            const container = document.getElementById('appContainer');
             
-            alert(`الملف: ${fileName}\nالتطبيق: ${appName}`);
+            if (!document.fullscreenElement) {
+                container.requestFullscreen();
+                showNotification('🔍 وضع ملء الشاشة');
+            } else {
+                document.exitFullscreen();
+            }
         }
 
-        // عرض نافذة المعلومات
-        function showInfoModal() {
-            document.getElementById('infoModal').classList.add('show');
-            document.getElementById('modalOverlay').classList.add('show');
+        // عرض الإشعارات
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            let icon = '✅';
+            if (type === 'error') icon = '❌';
+            else if (type === 'warning') icon = '⚠️';
+            
+            notification.innerHTML = `<i class="fas fa-bell"></i> ${icon} ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
         }
 
-        // إغلاق نافذة المعلومات
-        function closeInfoModal() {
-            document.getElementById('infoModal').classList.remove('show');
-            document.getElementById('modalOverlay').classList.remove('show');
+        // التحقق من وجود الملفات
+        function checkFiles() {
+            const files = ['snam.html', 'tikm.html', 'reels.html'];
+            
+            files.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        if (!response.ok) {
+                            showNotification(`⚠️ الملف ${file} غير موجود`, 'warning');
+                        }
+                    })
+                    .catch(() => {
+                        showNotification(`⚠️ الملف ${file} غير موجود`, 'warning');
+                    });
+            });
         }
 
-        // إغلاق بالضغط على ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const fullscreen = document.getElementById('fullscreenApp');
-                if (fullscreen.classList.contains('show')) {
-                    closeFullscreen();
+        // اختصار لوحة المفاتيح
+        document.addEventListener('keydown', (e) => {
+            if (e.altKey) {
+                switch(e.key) {
+                    case '1':
+                        switchApp('snap');
+                        break;
+                    case '2':
+                        switchApp('tiktok');
+                        break;
+                    case '3':
+                        switchApp('reels');
+                        break;
+                    case 'r':
+                        refreshApp();
+                        break;
+                    case 'f':
+                        toggleFullscreen();
+                        break;
                 }
-                
-                // إغلاق نافذة المعلومات إذا كانت مفتوحة
-                if (document.getElementById('infoModal').classList.contains('show')) {
-                    closeInfoModal();
-                }
+            }
+            
+            // ESC للخروج من ملء الشاشة
+            if (e.key === 'Escape' && document.fullscreenElement) {
+                document.exitFullscreen();
             }
         });
 
-        // إنشاء النجوم
-        function createStars() {
-            const starsContainer = document.querySelector('.stars');
-            for (let i = 0; i < 100; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = Math.random() * 3 + 'px';
-                star.style.height = star.style.width;
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                starsContainer.appendChild(star);
-            }
-        }
-
         // تهيئة الصفحة
         window.onload = function() {
-            createStars();
+            checkFiles();
+            showNotification('✨ مرحباً بك - استخدم الأزرار العلوية للتبديل بين التطبيقات');
+            
+            // تحميل التطبيق الأول
             setTimeout(() => {
                 document.getElementById('loadingOverlay').style.display = 'none';
             }, 1000);
@@ -895,3 +751,4 @@
     </script>
 </body>
 </html>
+
