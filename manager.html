@@ -542,7 +542,7 @@
         
         <!-- مكان عرض التطبيق -->
         <div id="appContent">
-            <iframe class="app-frame" id="appFrame" src="reels/snam.html" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
+            <iframe class="app-frame" id="appFrame" src="snam.html" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
         </div>
         
         <!-- مؤشر التحميل -->
@@ -625,9 +625,9 @@
             // إخفاء التطبيق القديم
             frame.style.opacity = '0';
             
-            // تغيير المصدر
+            // تغيير المصدر (بدون مجلد reels)
             setTimeout(() => {
-                frame.src = `reels/${appInfo.file}`;
+                frame.src = `${appInfo.file}`;
                 currentApp = app;
                 
                 // إظهار التطبيق الجديد بعد التحميل
@@ -635,6 +635,12 @@
                     frame.style.opacity = '1';
                     document.getElementById('loadingOverlay').style.display = 'none';
                     showNotification(`✅ تم تشغيل ${appInfo.name}`);
+                };
+                
+                // في حالة خطأ في التحميل
+                frame.onerror = function() {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    showNotification(`❌ خطأ في تحميل ${appInfo.file}`, 'error');
                 };
             }, 300);
         }
@@ -648,7 +654,7 @@
             frame.style.opacity = '0';
             
             setTimeout(() => {
-                frame.src = `reels/${appInfo.file}`;
+                frame.src = `${appInfo.file}`;
                 frame.onload = function() {
                     frame.style.opacity = '1';
                     document.getElementById('loadingOverlay').style.display = 'none';
@@ -670,10 +676,15 @@
         }
 
         // عرض الإشعارات
-        function showNotification(message) {
+        function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
             notification.className = 'notification';
-            notification.innerHTML = `<i class="fas fa-bell"></i> ${message}`;
+            
+            let icon = '✅';
+            if (type === 'error') icon = '❌';
+            else if (type === 'warning') icon = '⚠️';
+            
+            notification.innerHTML = `<i class="fas fa-bell"></i> ${icon} ${message}`;
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -683,13 +694,13 @@
 
         // التحقق من وجود الملفات
         function checkFiles() {
-            const apps = ['snam.html', 'tikm.html', 'reels.html'];
+            const files = ['snam.html', 'tikm.html', 'reels.html'];
             
-            apps.forEach(file => {
-                fetch(`reels/${file}`)
+            files.forEach(file => {
+                fetch(file)
                     .then(response => {
                         if (!response.ok) {
-                            showNotification(`⚠️ الملف ${file} غير موجود في مجلد reels/`, 'warning');
+                            showNotification(`⚠️ الملف ${file} غير موجود`, 'warning');
                         }
                     })
                     .catch(() => {
