@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المدير المتكامل - واجهة احترافية</title>
+    <title>المدير المتكامل - النسخة المطورة</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -147,6 +147,13 @@
             align-items: center;
             gap: 12px;
             border: 2px solid gold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .status-badge:hover {
+            transform: scale(1.05);
+            background: rgba(255, 215, 0, 0.2);
         }
 
         .status-badge i {
@@ -188,6 +195,25 @@
             gap: 25px;
             cursor: pointer;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .icon-card::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255, 215, 0, 0.3), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .icon-card:hover::before {
+            opacity: 1;
         }
 
         .icon-card:hover {
@@ -236,11 +262,13 @@
             font-size: 26px;
             font-weight: 700;
             border: 2px solid gold;
+            transition: all 0.3s ease;
         }
 
         .icon-card:hover .icon-label {
             background: gold;
             color: black;
+            transform: scale(1.1);
         }
 
         .icon-file {
@@ -281,6 +309,13 @@
             font-size: 18px;
             padding: 10px 20px;
             border-radius: 50px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateY(-3px);
         }
 
         .stat-item i {
@@ -348,11 +383,15 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .close-message:hover {
             background: rgba(255, 0, 0, 0.2);
             color: red;
+            transform: rotate(90deg);
         }
 
         .message-content {
@@ -379,6 +418,10 @@
             animation: zoomIn 0.4s ease;
         }
 
+        .fullscreen-app.show {
+            display: flex;
+        }
+
         @keyframes zoomIn {
             from {
                 transform: scale(0.5);
@@ -388,10 +431,6 @@
                 transform: scale(1);
                 opacity: 1;
             }
-        }
-
-        .fullscreen-app.show {
-            display: flex;
         }
 
         .fullscreen-header {
@@ -460,12 +499,14 @@
         .fullscreen-btn:hover {
             background: white;
             color: black;
+            transform: scale(1.1);
         }
 
         .fullscreen-btn.close:hover {
             background: red;
             border-color: red;
             color: white;
+            transform: rotate(90deg);
         }
 
         .fullscreen-frame {
@@ -506,7 +547,7 @@
         }
 
         .app-back-btn:hover {
-            transform: scale(1.1);
+            transform: scale(1.1) translateX(-10px);
             box-shadow: 0 25px 50px rgba(255, 215, 0, 0.6);
         }
 
@@ -571,15 +612,97 @@
             gap: 15px;
         }
 
-        @keyframes slideDown {
+        .notification.fade-out {
+            animation: fadeOut 0.5s ease forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+        }
+
+        /* ===== نافذة معلومات الملفات ===== */
+        .info-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 40px;
+            border: 3px solid gold;
+            z-index: 4000;
+            color: white;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .info-modal.show {
+            display: block;
+            animation: modalPop 0.4s ease;
+        }
+
+        @keyframes modalPop {
             from {
-                transform: translate(-50%, -100px);
+                transform: translate(-50%, -50%) scale(0.5);
                 opacity: 0;
             }
             to {
-                transform: translate(-50%, 0);
+                transform: translate(-50%, -50%) scale(1);
                 opacity: 1;
             }
+        }
+
+        .info-modal h2 {
+            color: gold;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .info-modal p {
+            font-size: 18px;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+        }
+
+        .info-modal button {
+            background: gold;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 60px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .info-modal button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 3500;
+        }
+
+        .modal-overlay.show {
+            display: block;
         }
 
         /* ===== تجاوب ===== */
@@ -601,6 +724,15 @@
             
             .icons-grid {
                 gap: 40px;
+            }
+            
+            .fullscreen-name {
+                font-size: 20px;
+            }
+            
+            .fullscreen-file {
+                font-size: 14px;
+                padding: 5px 10px;
             }
         }
     </style>
@@ -627,9 +759,10 @@
                     </p>
                 </div>
             </div>
-            <div class="status-badge">
+            <div class="status-badge" onclick="showInfoModal()">
                 <i class="fas fa-bolt"></i>
                 <span>جاهز للتشغيل</span>
+                <i class="fas fa-info-circle" style="margin-right: 10px;"></i>
             </div>
         </div>
     </div>
@@ -667,15 +800,15 @@
     <!-- شريط الإحصائيات -->
     <div class="stats-wrapper">
         <div class="stats-container">
-            <div class="stat-item">
+            <div class="stat-item" onclick="showFileInfo('snam.html')">
                 <i class="fas fa-file-code"></i>
                 <span>snam.html</span>
             </div>
-            <div class="stat-item">
+            <div class="stat-item" onclick="showFileInfo('tikm.html')">
                 <i class="fas fa-file-code"></i>
                 <span>tikm.html</span>
             </div>
-            <div class="stat-item">
+            <div class="stat-item" onclick="showFileInfo('reels.html')">
                 <i class="fas fa-file-code"></i>
                 <span>reels.html</span>
             </div>
@@ -717,6 +850,9 @@
                 <button class="fullscreen-btn" onclick="refreshApp()">
                     <i class="fas fa-sync-alt"></i>
                 </button>
+                <button class="fullscreen-btn" onclick="minimizeApp()">
+                    <i class="fas fa-window-minimize"></i>
+                </button>
                 <button class="fullscreen-btn close" onclick="closeFullscreen()">
                     <i class="fas fa-times"></i>
                 </button>
@@ -737,6 +873,17 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
         <div class="loading-text">جاري التحميل...</div>
+    </div>
+
+    <!-- نافذة معلومات الملفات -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeInfoModal()"></div>
+    <div class="info-modal" id="infoModal">
+        <h2><i class="fas fa-crown" style="color: gold;"></i> معلومات الملفات</h2>
+        <p>📁 <strong>snam.html</strong> - تطبيق سناب شات</p>
+        <p>📁 <strong>tikm.html</strong> - تطبيق تيك توك</p>
+        <p>📁 <strong>reels.html</strong> - تطبيق ريلز تلجرام</p>
+        <p>💡 جميع الملفات جاهزة للتشغيل</p>
+        <button onclick="closeInfoModal()">حسناً</button>
     </div>
 
     <script>
@@ -766,6 +913,8 @@
         };
 
         let currentApp = '';
+        let isMinimized = false;
+        let previousAppState = null;
 
         // فتح التطبيق بملء الشاشة
         function openFullscreen(app) {
@@ -793,7 +942,7 @@
             frame.onload = function() {
                 document.getElementById('loadingOverlay').style.display = 'none';
                 document.getElementById('fullscreenApp').classList.add('show');
-                document.getElementById('appBackButton').classList.add('show'); // إظهار زر الرجوع
+                document.getElementById('appBackButton').classList.add('show');
                 showNotification(`✅ تم تشغيل ${appInfo.name}`);
             };
             
@@ -803,13 +952,46 @@
             };
         }
 
-        // إغلاق التطبيق المكبر
+        // إغلاق التطبيق المكبر - تم إصلاح المشكلة
         function closeFullscreen() {
-            document.getElementById('fullscreenApp').classList.remove('show');
-            document.getElementById('fullscreenFrame').src = '';
-            document.getElementById('appBackButton').classList.remove('show'); // إخفاء زر الرجوع
-            currentApp = '';
-            showNotification('↩️ تم العودة للمدير');
+            const fullscreenApp = document.getElementById('fullscreenApp');
+            const appBackButton = document.getElementById('appBackButton');
+            const fullscreenFrame = document.getElementById('fullscreenFrame');
+            
+            // إخفاء النافذة أولاً
+            fullscreenApp.classList.remove('show');
+            
+            // إخفاء زر الرجوع
+            appBackButton.classList.remove('show');
+            
+            // تفريغ محتوى الإطار بعد إخفاء النافذة
+            setTimeout(() => {
+                fullscreenFrame.src = '';
+                currentApp = '';
+                showNotification('↩️ تم العودة للمدير');
+            }, 100);
+        }
+
+        // تصغير التطبيق
+        function minimizeApp() {
+            const fullscreenApp = document.getElementById('fullscreenApp');
+            const appBackButton = document.getElementById('appBackButton');
+            
+            if (!isMinimized) {
+                fullscreenApp.style.transform = 'scale(0.1)';
+                fullscreenApp.style.opacity = '0';
+                fullscreenApp.style.pointerEvents = 'none';
+                appBackButton.style.display = 'none';
+                isMinimized = true;
+                showNotification('🔽 تم تصغير التطبيق');
+            } else {
+                fullscreenApp.style.transform = 'scale(1)';
+                fullscreenApp.style.opacity = '1';
+                fullscreenApp.style.pointerEvents = 'auto';
+                appBackButton.style.display = 'block';
+                isMinimized = false;
+                showNotification('🔼 تم تكبير التطبيق');
+            }
         }
 
         // تحديث التطبيق الحالي
@@ -828,8 +1010,34 @@
 
         // إغلاق رسالة الترحيب
         function closeMessage() {
-            document.getElementById('welcomeMessage').classList.add('closed');
+            const messageBox = document.getElementById('welcomeMessage');
+            messageBox.classList.add('closed');
             showNotification('✖️ تم إغلاق الرسالة');
+            
+            // حفظ حالة الإغلاق في localStorage
+            localStorage.setItem('messageClosed', 'true');
+        }
+
+        // عرض معلومات الملف
+        function showFileInfo(fileName) {
+            let appName = '';
+            if (fileName === 'snam.html') appName = 'سناب شات';
+            else if (fileName === 'tikm.html') appName = 'تيك توك';
+            else if (fileName === 'reels.html') appName = 'ريلز تلجرام';
+            
+            showNotification(`📄 ${fileName} - ${appName}`);
+        }
+
+        // عرض نافذة المعلومات
+        function showInfoModal() {
+            document.getElementById('infoModal').classList.add('show');
+            document.getElementById('modalOverlay').classList.add('show');
+        }
+
+        // إغلاق نافذة المعلومات
+        function closeInfoModal() {
+            document.getElementById('infoModal').classList.remove('show');
+            document.getElementById('modalOverlay').classList.remove('show');
         }
 
         // عرض الإشعارات
@@ -844,8 +1052,12 @@
             notification.innerHTML = `<i class="fas fa-bell"></i> ${icon} ${message}`;
             document.body.appendChild(notification);
             
+            // إضافة تأثير الاختفاء
             setTimeout(() => {
-                notification.remove();
+                notification.classList.add('fade-out');
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
             }, 2500);
         }
 
@@ -856,6 +1068,24 @@
                 if (fullscreen.classList.contains('show')) {
                     closeFullscreen();
                 }
+                
+                // إغلاق نافذة المعلومات إذا كانت مفتوحة
+                if (document.getElementById('infoModal').classList.contains('show')) {
+                    closeInfoModal();
+                }
+            }
+        });
+
+        // منع إغلاق النافذة عند الضغط على زر الإغلاق في الإطار
+        document.getElementById('fullscreenFrame').addEventListener('load', function() {
+            try {
+                // محاولة منع الأحداث من الإطار
+                const iframe = this;
+                iframe.contentWindow.document.addEventListener('keydown', function(e) {
+                    e.stopPropagation();
+                }, true);
+            } catch (e) {
+                // تجاهل أخطاء cross-origin
             }
         });
 
@@ -874,14 +1104,35 @@
             }
         }
 
+        // التحقق من حالة الرسالة المحفوظة
+        function checkMessageState() {
+            const messageClosed = localStorage.getItem('messageClosed');
+            if (messageClosed === 'true') {
+                document.getElementById('welcomeMessage').classList.add('closed');
+            }
+        }
+
+        // إضافة تأثير النقر المزدوج على الشعار
+        document.querySelector('.logo-icon').addEventListener('dblclick', function() {
+            showNotification('👑 المدير المتكامل - الإصدار 2.0');
+        });
+
         // تهيئة الصفحة
         window.onload = function() {
             createStars();
+            checkMessageState();
+            
             setTimeout(() => {
                 document.getElementById('loadingOverlay').style.display = 'none';
             }, 1000);
+            
             showNotification('✨ مرحباً بك في المدير المتكامل');
         };
+
+        // منع إغلاق النافذة عند النقر على خلفية النافذة المنبثقة
+        document.getElementById('infoModal').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
     </script>
 </body>
 </html>
