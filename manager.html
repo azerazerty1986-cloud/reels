@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-88">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المدير المتكامل - نوافذ منفصلة</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #141e30, #243b55);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* الهيدر الرئيسي */
+        .main-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #1a1a2e;
+            transform: rotate(10deg);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .logo-text h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .logo-text p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        /* زر تشغيل الكل */
+        .launch-all-btn {
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 40px;
+            color: #1a1a2e;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: 2px solid white;
+        }
+
+        .launch-all-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+        }
+
+        /* شبكة النوافذ */
+        .windows-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        /* كل نافذة على حدة */
+        .window-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 800px;
+        }
+
+        .window-card:hover {
+            transform: translateY(-10px);
+            border-color: #ffd700;
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        /* رأس النافذة */
+        .window-header {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .window-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .window-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .window-icon.snap {
+            background: linear-gradient(135deg, #fffc00, #ffd600);
+            color: black;
+        }
+
+        .window-icon.tiktok {
+            background: linear-gradient(135deg, #ff0050, #00f2ea);
+            color: white;
+        }
+
+        .window-icon.reels {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+        }
+
+        .window-title h3 {
+            color: white;
+            font-size: 18px;
+        }
+
+        .window-title small {
+            color: #ffd700;
+            font-size: 12px;
+            font-family: monospace;
+            direction: ltr;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            border: 1px solid #ffd700;
+            background: transparent;
+            color: #ffd700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .window-btn:hover {
+            background: #ffd700;
+            color: black;
+        }
+
+        /* محتوى النافذة - iframe */
+        .window-content {
+            flex: 1;
+            background: white;
+            overflow: hidden;
+        }
+
+        .app-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* شريط حالة النافذة */
+        .window-footer {
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+
+        .window-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4caf50;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* نافذة منبثقة للتكبير */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 30px;
+        }
+
+        .modal.show {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ffd700;
+        }
+
+        .modal-header h2 {
+            color: #ffd700;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: 2px solid #f44336;
+            color: #f44336;
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #f44336;
+            color: white;
+        }
+
+        .modal-content {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .modal-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* إشعارات */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            color: black;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* شاشات التحميل */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* تجاوب */
+        @media (max-width: 1200px) {
+            .windows-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .windows-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .window-card {
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-header">
+        <div class="header-content">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fas fa-window-maximize"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>المدير المتكامل</h1>
+                    <p>3 نوافذ منفصلة - كل نافذة تطبيق مستقل</p>
+                </div>
+            </div>
+            
+            <button class="launch-all-btn" onclick="launchAllWindows()">
+                <i class="fas fa-play"></i>
+                تشغيل الكل
+            </button>
+        </div>
+    </div>
+
+    <!-- شبكة النوافذ -->
+    <div class="windows-grid">
+        <!-- نافذة سناب شات -->
+        <div class="window-card" id="window-snap">
+            <div class="window-header">
+                <div class="window-title">
+                    <div class="window-icon snap">
+                        <i class="fab fa-snapchat"></i>
+                    </div>
+                    <div>
+                        <h3>سناب شات</h3>
+                        <small>snam.html</small>
+                    </div>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn" onclick="maximizeWindow('snap')" title="تكبير">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="window-btn" onclick="reloadWindow('snap')" title="تحديث">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="window-content" id="snap-container">
+                <iframe class="app-frame" id="snap-frame" src="snam.html" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
+            </div>
+            <div class="window-footer">
+                <div class="window-status">
+                    <span class="status-dot"></span>
+                    <span>نشط</span>
+                </div>
+                <span><i class="fas fa-eye"></i> 3 قصص جديدة</span>
+            </div>
+        </div>
+
+        <!-- نافذة تيك توك -->
+        <div class="window-card" id="window-tiktok">
+            <div class="window-header">
+                <div class="window-title">
+                    <div class="window-icon tiktok">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <div>
+                        <h3>تيك توك</h3>
+                        <small>tikm.html</small>
+                    </div>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn" onclick="maximizeWindow('tiktok')" title="تكبير">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="window-btn" onclick="reloadWindow('tiktok')" title="تحديث">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="window-content" id="tiktok-container">
+                <iframe class="app-frame" id="tiktok-frame" src="tikm.html" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
+            </div>
+            <div class="window-footer">
+                <div class="window-status">
+                    <span class="status-dot"></span>
+                    <span>نشط</span>
+                </div>
+                <span><i class="fas fa-users"></i> 5 مستخدمين</span>
+            </div>
+        </div>
+
+        <!-- نافذة ريلز تلجرام -->
+        <div class="window-card" id="window-reels">
+            <div class="window-header">
+                <div class="window-title">
+                    <div class="window-icon reels">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <div>
+                        <h3>ريلز تلجرام</h3>
+                        <small>reels.html</small>
+                    </div>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn" onclick="maximizeWindow('reels')" title="تكبير">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="window-btn" onclick="reloadWindow('reels')" title="تحديث">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="window-content" id="reels-container">
+                <iframe class="app-frame" id="reels-frame" src="reels.html" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
+            </div>
+            <div class="window-footer">
+                <div class="window-status">
+                    <span class="status-dot"></span>
+                    <span>نشط</span>
+                </div>
+                <span><i class="fas fa-fingerprint"></i> بصمة نشطة</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة التكبير (Modal) -->
+    <div class="modal" id="maximizeModal">
+        <div class="modal-header">
+            <h2 id="modalTitle">
+                <i class="fas fa-window-maximize"></i>
+                <span>تكبير النافذة</span>
+            </h2>
+            <button class="modal-close" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-content" id="modalContent">
+            <iframe class="modal-frame" id="modalFrame" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // ========== تكبير النافذة ==========
+        function maximizeWindow(app) {
+            const modal = document.getElementById('maximizeModal');
+            const modalFrame = document.getElementById('modalFrame');
+            const modalTitle = document.getElementById('modalTitle');
+            
+            // تحديد المصدر حسب التطبيق
+            let src = '';
+            let title = '';
+            
+            switch(app) {
+                case 'snap':
+                    src = 'snam.html';
+                    title = 'سناب شات - snam.html';
+                    break;
+                case 'tiktok':
+                    src = 'tikm.html';
+                    title = 'تيك توك - tikm.html';
+                    break;
+                case 'reels':
+                    src = 'reels.html';
+                    title = 'ريلز تلجرام - reels.html';
+                    break;
+            }
+            
+            modalTitle.innerHTML = `
+                <i class="fas fa-window-maximize"></i>
+                <span>${title}</span>
+            `;
+            
+            modalFrame.src = src;
+            modal.classList.add('show');
+        }
+        
+        // ========== إغلاق نافذة التكبير ==========
+        function closeModal() {
+            const modal = document.getElementById('maximizeModal');
+            const modalFrame = document.getElementById('modalFrame');
+            
+            modal.classList.remove('show');
+            modalFrame.src = ''; // تفريغ المصدر
+        }
+        
+        // ========== تحديث نافذة ==========
+        function reloadWindow(app) {
+            const frame = document.getElementById(`${app}-frame`);
+            
+            // إظهار تأثير التحديث
+            frame.style.opacity = '0.5';
+            
+            // إعادة تحميل الصفحة
+            frame.src = frame.src;
+            
+            // إعادة opacity بعد التحميل
+            setTimeout(() => {
+                frame.style.opacity = '1';
+            }, 500);
+            
+            showNotification(`🔄 تم تحديث نافذة ${getAppName(app)}`);
+        }
+        
+        // ========== تشغيل كل النوافذ ==========
+        function launchAllWindows() {
+            // إعادة تحميل كل الإطارات
+            const apps = ['snap', 'tiktok', 'reels'];
+            
+            apps.forEach(app => {
+                const frame = document.getElementById(`${app}-frame`);
+                frame.src = frame.src; // إعادة تحميل
+            });
+            
+            showNotification('🚀 تم تشغيل جميع التطبيقات');
+        }
+        
+        // ========== الحصول على اسم التطبيق ==========
+        function getAppName(app) {
+            const names = {
+                snap: 'سناب شات',
+                tiktok: 'تيك توك',
+                reels: 'ريلز تلجرام'
+            };
+            return names[app] || app;
+        }
+        
+        // ========== التحقق من وجود الملفات ==========
+        function checkFiles() {
+            const files = [
+                { name: 'snam.html', app: 'سناب شات' },
+                { name: 'tikm.html', app: 'تيك توك' },
+                { name: 'reels.html', app: 'ريلز تلجرام' }
+            ];
+            
+            files.forEach(file => {
+                fetch(file.name)
+                    .then(response => {
+                        if (!response.ok) {
+                            showNotification(`⚠️ الملف ${file.name} غير موجود`, 'warning');
+                        }
+                    })
+                    .catch(() => {
+                        showNotification(`⚠️ الملف ${file.name} غير موجود`, 'warning');
+                    });
+            });
+        }
+        
+        // ========== عرض الإشعارات ==========
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            let icon = 'ℹ️';
+            if (type === 'success') icon = '✅';
+            else if (type === 'error') icon = '❌';
+            else if (type === 'warning') icon = '⚠️';
+            else if (type === 'info') icon = '🔄';
+            
+            notification.innerHTML = `${icon} ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // ========== إغلاق النافذة المنبثقة بالضغط على ESC ==========
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+        // ========== تهيئة الصفحة ==========
+        window.onload = function() {
+            checkFiles();
+            showNotification('✨ مرحباً بك في المدير المتكامل - 3 نوافذ منفصلة');
+            
+            // إضافة مستمعين للأخطاء في الإطارات
+            const frames = ['snap-frame', 'tiktok-frame', 'reels-frame'];
+            frames.forEach(frameId => {
+                document.getElementById(frameId).onerror = function() {
+                    showNotification(`⚠️ خطأ في تحميل ${frameId}`, 'error');
+                };
+            });
+        };
+    </script>
+</body>
+</html>
