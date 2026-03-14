@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المدير المتكامل - خلفيات مميزة</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>ناردو برو | واجهة مثل فيسبوك مع صور التجار وتكنولوجيا تلجرام</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -17,889 +17,1466 @@
         }
 
         body {
+            background: #0a1a15;
+            color: #fff;
             min-height: 100vh;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
         }
 
-        /* خلفية المدير فقط - خلفية فاخرة */
-        .manager-bg {
-            position: fixed;
+        /* ===== شريط علوي مثل فيسبوك ===== */
+        .top-bar {
+            background: #1a3a32;
+            border-bottom: 2px solid #D4AF37;
+            padding: 8px 20px;
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            overflow: hidden;
-        }
-
-        /* تأثيرات خلفية المدير */
-        .manager-bg::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
-            animation: rotate 30s linear infinite;
-        }
-
-        .manager-bg::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path d="M10 50 Q 30 30, 50 50 T 90 50" stroke="gold" fill="none" stroke-width="2"/><circle cx="20" cy="20" r="3" fill="gold"/><circle cx="80" cy="80" r="3" fill="gold"/></svg>');
-            background-size: 100px 100px;
-            animation: moveBubbles 20s linear infinite;
-        }
-
-        /* خلفية سناب شات */
-        .snap-bg {
-            background: linear-gradient(135deg, #fffc00 0%, #ffd600 100%);
-            position: relative;
-        }
-
-        .snap-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><text x="10" y="50" font-family="Arial" font-size="40" fill="black">👻</text><text x="60" y="30" font-family="Arial" font-size="30" fill="black">✨</text></svg>');
-            background-size: 200px 200px;
-            animation: float 10s ease-in-out infinite;
-        }
-
-        /* خلفية تيك توك */
-        .tiktok-bg {
-            background: linear-gradient(135deg, #ff0050 0%, #00f2ea 100%);
-            position: relative;
-        }
-
-        .tiktok-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><text x="20" y="30" font-family="Arial" font-size="40" fill="white">🎵</text><text x="60" y="70" font-family="Arial" font-size="40" fill="white">🎶</text></svg>');
-            background-size: 200px 200px;
-            animation: spin 20s linear infinite;
-        }
-
-        /* خلفية ريلز تلجرام */
-        .reels-bg {
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            position: relative;
-        }
-
-        .reels-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><text x="10" y="30" font-family="Arial" font-size="40" fill="white">🎬</text><text x="50" y="70" font-family="Arial" font-size="40" fill="white">🎥</text></svg>');
-            background-size: 200px 200px;
-            animation: bounce 15s ease-in-out infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes moveBubbles {
-            0% { background-position: 0 0; }
-            100% { background-position: 100px 100px; }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* الهيدر الرئيسي */
-        .main-header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 20px 30px;
-            margin-bottom: 40px;
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            animation: slideDown 0.8s ease;
-            position: relative;
-            z-index: 10;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .header-content {
+            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
         }
 
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 10px;
         }
 
         .logo-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, gold, #ffd700);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-            color: #1a1a2e;
-            transform: rotate(10deg);
-            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.4);
-            animation: glow 2s infinite alternate;
-        }
-
-        @keyframes glow {
-            from { box-shadow: 0 15px 30px rgba(255, 215, 0, 0.4); }
-            to { box-shadow: 0 25px 50px rgba(255, 215, 0, 0.8); }
-        }
-
-        .logo-text h1 {
-            color: white;
-            font-size: 36px;
-            margin-bottom: 5px;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            font-weight: 900;
-        }
-
-        .logo-text p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        /* شريط التنقل العلوي */
-        .nav-bar {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 60px;
-            padding: 10px;
-            display: flex;
-            gap: 10px;
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            margin-bottom: 30px;
-            animation: slideUp 0.8s ease 0.2s both;
-            position: relative;
-            z-index: 10;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .nav-item {
-            flex: 1;
-            padding: 15px 25px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 600;
-            font-size: 18px;
-            border: none;
-        }
-
-        .nav-item::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .nav-item:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .nav-item i {
-            font-size: 24px;
-            transition: all 0.4s;
-            position: relative;
-            z-index: 1;
-        }
-
-        .nav-item span {
-            position: relative;
-            z-index: 1;
-        }
-
-        .nav-item.active {
-            background: linear-gradient(135deg, gold, #ffd700);
-            color: #1a1a2e;
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
-        }
-
-        .nav-item.active i {
-            transform: scale(1.2);
-            color: #1a1a2e;
-        }
-
-        /* حاوية التطبيق */
-        .app-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 40px;
-            overflow: hidden;
-            border: 3px solid rgba(255, 215, 0, 0.3);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-            height: 600px;
-            position: relative;
-            animation: fadeIn 1s ease 0.4s both;
-            transition: all 0.3s ease;
-        }
-
-        /* وضع ملء الشاشة */
-        .app-container.fullscreen-mode {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            border-radius: 0;
-            z-index: 1000;
-            margin: 0;
-            border: none;
-        }
-
-        .app-container.fullscreen-mode .app-frame {
-            height: calc(100vh - 75px);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .app-header {
-            padding: 15px 25px;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        /* زر الإغلاق الدائري */
-        .close-btn {
-            position: absolute;
-            top: -15px;
-            right: -15px;
-            width: 45px;
-            height: 45px;
+            background: #D4AF37;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #ff4d4d, #f44336);
-            border: 4px solid white;
-            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            color: #0a1a15;
             font-size: 22px;
-            font-weight: bold;
-            box-shadow: 0 5px 20px rgba(244, 67, 54, 0.6);
-            transition: all 0.3s ease;
-            z-index: 1001;
-            opacity: 1;
-            transform: scale(1);
+            font-weight: 800;
         }
 
-        .close-btn:hover {
-            background: linear-gradient(135deg, #f44336, #d32f2f);
-            transform: scale(1.15) rotate(90deg);
-            box-shadow: 0 8px 25px rgba(244, 67, 54, 0.9);
-        }
-
-        .app-title {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .app-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .logo-text {
             font-size: 22px;
-        }
-
-        .app-icon.snap {
-            background: linear-gradient(135deg, #fffc00, #ffd600);
-            color: black;
-        }
-
-        .app-icon.tiktok {
-            background: linear-gradient(135deg, #ff0050, #00f2ea);
-            color: white;
-        }
-
-        .app-icon.reels {
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: white;
-        }
-
-        .app-name {
-            color: white;
-            font-size: 20px;
             font-weight: 700;
+            color: #D4AF37;
         }
 
-        .app-file {
-            color: gold;
-            font-size: 14px;
-            font-family: monospace;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 5px 12px;
-            border-radius: 20px;
-            direction: ltr;
-        }
-
-        .app-actions {
+        .search-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 8px 20px;
             display: flex;
-            gap: 10px;
+            align-items: center;
+            width: 350px;
+            border: 1px solid #D4AF37;
+        }
+
+        .search-bar i {
+            color: gold;
+            margin-left: 10px;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
 
         .action-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
             width: 40px;
             height: 40px;
-            border-radius: 12px;
-            border: 2px solid gold;
-            background: transparent;
-            color: gold;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
         }
 
         .action-btn:hover {
-            background: gold;
-            color: black;
-            transform: scale(1.1);
+            background: #D4AF37;
+            color: #0a1a15;
         }
 
-        /* iframe */
-        .app-frame {
-            width: 100%;
-            height: calc(100% - 75px);
-            border: none;
-            background: white;
-            transition: all 0.5s ease;
-        }
-
-        /* مؤشر التحميل */
-        .loading-overlay {
+        .cart-badge {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            display: none;
+            top: -5px;
+            right: -5px;
+            background: #D4AF37;
+            color: #0a1a15;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 100;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid rgba(255, 215, 0, 0.3);
-            border-top: 5px solid gold;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* إشعارات */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, gold, #ffd700);
-            color: black;
-            padding: 15px 30px;
-            border-radius: 50px;
             font-weight: bold;
-            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.4);
-            z-index: 2000;
-            animation: slideIn 0.3s ease;
-            border: 2px solid white;
+        }
+
+        .user-btn {
+            background: #D4AF37;
+            color: #0a1a15;
+            font-weight: bold;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid white;
+        }
+
+        /* ===== القائمة الرئيسية ===== */
+        .main-nav {
+            background: #1a3a32;
+            padding: 10px 20px;
+            display: flex;
+            gap: 25px;
+            border-bottom: 1px solid #D4AF37;
+            overflow-x: auto;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: #D4AF37;
+            color: #0a1a15;
+        }
+
+        .nav-link i {
+            font-size: 18px;
+        }
+
+        /* ===== العجلة الدوارة ===== */
+        .wheel-section {
+            background: #1a3a32;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px solid #D4AF37;
+        }
+
+        .wheel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .wheel-3d {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            transform-style: preserve-3d;
+            cursor: grab;
+            margin: 20px auto;
+        }
+
+        .wheel-option {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotateY(0deg) translateZ(180px);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: 4px solid gold;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .wheel-option[data-option="reel"] {
+            background: linear-gradient(145deg, #FF0000, #cc0000);
+        }
+
+        .wheel-option[data-option="live"] {
+            background: linear-gradient(145deg, #ff4444, #cc0000);
+        }
+
+        .wheel-option[data-option="tour"] {
+            background: linear-gradient(145deg, #00b894, #008b6b);
+        }
+
+        .wheel-option.active {
+            transform: translate(-50%, -50%) rotateY(0deg) translateZ(220px) scale(1.15);
+            box-shadow: 0 0 80px gold;
+        }
+
+        .wheel-center {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, gold, transparent 80%);
+            border-radius: 50%;
+            filter: blur(15px);
+        }
+
+        .wheel-arrow {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: gold;
+            font-size: 40px;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, gold, #ffd700);
+            color: black;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
             gap: 10px;
+            margin: 15px 0;
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        /* ===== قسم Reels ===== */
+        .reels-section {
+            background: #1a3a32;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px solid #D4AF37;
         }
 
-        /* إحصائيات سريعة */
-        .stats-bar {
+        .reels-header {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
-            padding: 15px 25px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .reels-track {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+        }
+
+        .reel-card {
+            min-width: 200px;
+            background: #0a1a15;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid gold;
+            cursor: pointer;
+        }
+
+        .reel-thumbnail {
             position: relative;
-            z-index: 10;
+            height: 300px;
+        }
+
+        .reel-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .platform-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: gold;
+            color: black;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        /* ===== شبكة المنتجات (مثل فيسبوك) ===== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* ===== بطاقة المنتج مع صورة التاجر الدائرية ===== */
+        .product-card {
+            background: #1a3a32;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid #D4AF37;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px gold;
+        }
+
+        /* رأس البطاقة مثل فيسبوك */
+        .product-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        /* صورة التاجر الدائرية (مثل فيسبوك) */
+        .merchant-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #D4AF37;
+            object-fit: cover;
+            background: #0a1a15;
+        }
+
+        .merchant-info {
+            flex: 1;
+        }
+
+        .merchant-name {
+            font-weight: bold;
+            color: gold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .merchant-name i {
+            color: #0088cc;
+            font-size: 14px;
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* صورة المنتج */
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        /* محتوى المنتج */
+        .product-content {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: gold;
+        }
+
+        .product-description {
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        /* إحصائيات المنتج */
+        .product-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            margin-bottom: 15px;
         }
 
         .stat-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: white;
+            gap: 5px;
+            font-size: 14px;
         }
 
         .stat-item i {
             color: gold;
         }
 
-        /* خلفيات التطبيقات */
-        .app-bg-snap {
-            background: linear-gradient(135deg, #fffc00, #ffd600);
+        /* أزرار التفاعل */
+        .product-actions {
+            display: flex;
+            gap: 10px;
         }
 
-        .app-bg-tiktok {
-            background: linear-gradient(135deg, #ff0050, #00f2ea);
+        .action-button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.3s;
         }
 
-        .app-bg-reels {
-            background: linear-gradient(135deg, #25D366, #128C7E);
+        .btn-gold {
+            background: gold;
+            color: black;
         }
 
-        /* تجاوب */
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .nav-item span {
-                display: none;
-            }
-            
-            .nav-item i {
-                font-size: 28px;
-            }
-            
-            .app-container {
-                height: 500px;
-            }
-            
-            .close-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-                top: -12px;
-                right: -12px;
-            }
+        .btn-gold:hover {
+            background: #ffd700;
+            transform: scale(1.02);
+        }
+
+        .btn-telegram {
+            background: #0088cc;
+            color: white;
+        }
+
+        .btn-telegram:hover {
+            background: #006699;
+        }
+
+        /* بصمة المنتج */
+        .product-thumbprint {
+            font-family: monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 11px;
+            color: gold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* ===== مودالات ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a3a32;
+            border: 3px solid gold;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: gold;
+            color: black;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: black;
+        }
+
+        /* ===== السلة الجانبية ===== */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            left: -400px;
+            width: 350px;
+            height: 100%;
+            background: #1a3a32;
+            border-right: 3px solid gold;
+            z-index: 1500;
+            transition: left 0.3s;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .cart-sidebar.open {
+            left: 0;
+        }
+
+        /* ===== إشعارات ===== */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: gold;
+            color: black;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            z-index: 3000;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <!-- خلفية المدير فقط -->
-    <div class="manager-bg"></div>
-    
-    <!-- الهيدر الرئيسي -->
-    <div class="main-header">
-        <div class="header-content">
-            <div class="logo-area">
-                <div class="logo-icon">
-                    <i class="fas fa-crown"></i>
-                </div>
-                <div class="logo-text">
-                    <h1>المدير المتكامل</h1>
-                    <p>خلفية ذهبية للمدير - خلفيات ملونة لكل تطبيق</p>
-                </div>
-            </div>
-            
-            <div class="stat-item">
-                <i class="fas fa-circle" style="color: #4caf50;"></i>
-                <span>جميع الملفات جاهزة</span>
+    <!-- ===== شريط علوي مثل فيسبوك ===== -->
+    <div class="top-bar">
+        <div class="logo-area">
+            <div class="logo-icon">ن</div>
+            <div class="logo-text">ناردو برو</div>
+        </div>
+
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="بحث في ناردو..." onkeyup="searchProducts()">
+        </div>
+
+        <div class="header-actions">
+            <button class="action-btn" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-badge" id="cartCounter">0</span>
+            </button>
+            <button class="action-btn" id="themeToggle" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="action-btn" onclick="openLoginModal()">
+                <i class="fas fa-sign-in-alt"></i>
+            </button>
+            <div class="user-btn" id="userBtn" style="display: none;">
+                <i class="fas fa-user"></i>
             </div>
         </div>
     </div>
 
-    <!-- شريط التنقل العلوي -->
-    <div class="nav-bar">
-        <button class="nav-item active" onclick="switchApp('snap')" id="nav-snap">
-            <i class="fab fa-snapchat"></i>
-            <span>سناب شات</span>
-        </button>
-        <button class="nav-item" onclick="switchApp('tiktok')" id="nav-tiktok">
-            <i class="fab fa-tiktok"></i>
-            <span>تيك توك</span>
-        </button>
-        <button class="nav-item" onclick="switchApp('reels')" id="nav-reels">
-            <i class="fas fa-film"></i>
-            <span>ريلز تلجرام</span>
-        </button>
+    <!-- ===== القائمة الرئيسية ===== -->
+    <div class="main-nav" id="mainNav">
+        <a class="nav-link" onclick="filterProducts('all')">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </a>
+        <a class="nav-link" onclick="filterProducts('promo')">
+            <i class="fas fa-tags"></i>
+            <span>برومسيون</span>
+        </a>
+        <a class="nav-link" onclick="filterProducts('spices')">
+            <i class="fas fa-seedling"></i>
+            <span>توابل</span>
+        </a>
+        <a class="nav-link" onclick="filterProducts('cosmetic')">
+            <i class="fas fa-spa"></i>
+            <span>كوسمتيك</span>
+        </a>
     </div>
 
-    <!-- حاوية التطبيق -->
-    <div class="app-container" id="appContainer">
-        <!-- زر الإغلاق الدائري -->
-        <div class="close-btn" onclick="closeApp()" title="إغلاق التطبيق">
-            <i class="fas fa-times"></i>
-        </div>
-        
-        <div class="app-header" id="appHeader">
-            <div class="app-title">
-                <div class="app-icon snap" id="appIcon">
-                    <i class="fab fa-snapchat"></i>
+    <!-- ===== العجلة الدوارة ===== -->
+    <div class="wheel-section">
+        <div class="wheel-container">
+            <div class="wheel-3d" id="wheel3D">
+                <div class="wheel-option" data-option="reel">
+                    <i class="fas fa-film"></i>
+                    <span class="option-title">Reel</span>
                 </div>
-                <span class="app-name" id="appName">سناب شات</span>
-                <span class="app-file" id="appFile">snam.html</span>
+                <div class="wheel-option" data-option="live">
+                    <i class="fas fa-video"></i>
+                    <span class="option-title">مباشر</span>
+                </div>
+                <div class="wheel-option" data-option="tour">
+                    <i class="fas fa-globe"></i>
+                    <span class="option-title">جولة</span>
+                </div>
+                <div class="wheel-center"></div>
+                <div class="wheel-arrow">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
             </div>
-            <div class="app-actions">
-                <button class="action-btn" onclick="refreshApp()" title="تحديث">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-                <button class="action-btn" onclick="toggleFullscreen()" title="عرض كامل">
-                    <i class="fas fa-expand"></i>
-                </button>
-            </div>
-        </div>
-        
-        <!-- مكان عرض التطبيق -->
-        <div id="appContent">
-            <iframe class="app-frame" id="appFrame" src="snam.html" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
-        </div>
-        
-        <!-- مؤشر التحميل -->
-        <div class="loading-overlay" id="loadingOverlay">
-            <div class="loading-spinner"></div>
+            <button class="add-btn" onclick="addSelectedContent()">
+                <i class="fas fa-plus-circle"></i>
+                <span id="addBtnText">إضافة Reel</span>
+            </button>
         </div>
     </div>
 
-    <!-- إحصائيات سريعة -->
-    <div class="stats-bar">
-        <div class="stat-item">
-            <i class="fas fa-file"></i>
-            <span>snam.html</span>
+    <!-- ===== Reels أفقي ===== -->
+    <div class="reels-section">
+        <div class="reels-header">
+            <h3><i class="fas fa-film" style="color: gold;"></i> Reels مقترحة</h3>
+            <button class="action-btn" onclick="showAddReelModal()">
+                <i class="fas fa-plus"></i>
+            </button>
         </div>
-        <div class="stat-item">
-            <i class="fas fa-file"></i>
-            <span>tikm.html</span>
-        </div>
-        <div class="stat-item">
-            <i class="fas fa-file"></i>
-            <span>reels.html</span>
+        <div class="reels-track" id="reelsTrack">
+            <!-- يتم التعبئة عبر JavaScript -->
         </div>
     </div>
+
+    <!-- ===== شبكة المنتجات (مثل فيسبوك) ===== -->
+    <div class="products-grid" id="productsContainer">
+        <!-- يتم التعبئة عبر JavaScript -->
+    </div>
+
+    <!-- ===== السلة الجانبية ===== -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <h3 style="color: gold; margin-bottom: 20px;">
+            <i class="fas fa-shopping-cart"></i> سلة التسوق
+        </h3>
+        <div id="cartItems"></div>
+        <div style="margin-top: 20px; border-top: 1px solid gold; padding-top: 20px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <span>الإجمالي:</span>
+                <span style="color: gold; font-size: 20px;" id="cartTotal">0 دج</span>
+            </div>
+            <button class="action-button btn-gold" onclick="checkoutCart()" style="width: 100%;">
+                <i class="fas fa-check"></i> إتمام الشراء
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== مودال تسجيل الدخول ===== -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>تسجيل الدخول</h2>
+                <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button class="action-button btn-gold" style="flex:1;" onclick="switchAuthTab('login')">تسجيل دخول</button>
+                    <button class="action-button" style="flex:1; background: transparent; border:1px solid gold;" onclick="switchAuthTab('register')">حساب جديد</button>
+                </div>
+                
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label>البريد الإلكتروني أو اسم المستخدم</label>
+                        <input type="text" id="loginEmail" class="search-bar" style="width:100%; margin-top:5px;">
+                    </div>
+                    <div class="form-group" style="margin-top:15px;">
+                        <label>كلمة المرور</label>
+                        <input type="password" id="loginPassword" class="search-bar" style="width:100%; margin-top:5px;">
+                    </div>
+                    <button class="action-button btn-gold" style="width:100%; margin-top:20px;" onclick="handleLogin()">
+                        <i class="fas fa-sign-in-alt"></i> دخول
+                    </button>
+                </div>
+
+                <div id="registerForm" style="display:none;">
+                    <div class="form-group">
+                        <label>الاسم الكامل</label>
+                        <input type="text" id="regName" class="search-bar" style="width:100%; margin-top:5px;">
+                    </div>
+                    <div class="form-group" style="margin-top:15px;">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" id="regEmail" class="search-bar" style="width:100%; margin-top:5px;">
+                    </div>
+                    <div class="form-group" style="margin-top:15px;">
+                        <label>كلمة المرور</label>
+                        <input type="password" id="regPassword" class="search-bar" style="width:100%; margin-top:5px;">
+                    </div>
+                    <div class="form-group" style="margin-top:15px;">
+                        <label>رقم الهاتف</label>
+                        <input type="text" id="regPhone" class="search-bar" style="width:100%; margin-top:5px;">
+                    </div>
+                    <div class="form-group" style="margin-top:15px;">
+                        <label>معرف تليجرام</label>
+                        <input type="text" id="regTelegram" class="search-bar" style="width:100%; margin-top:5px;" placeholder="@username">
+                    </div>
+                    <div style="margin-top:15px;">
+                        <label>
+                            <input type="checkbox" id="isMerchant" onchange="toggleMerchantFields()"> تسجيل كتاجر
+                        </label>
+                    </div>
+                    <div id="merchantFields" style="display:none; margin-top:15px;">
+                        <div class="form-group">
+                            <label>اسم المتجر</label>
+                            <input type="text" id="storeName" class="search-bar" style="width:100%;">
+                        </div>
+                        <div class="form-group" style="margin-top:15px;">
+                            <label>مستوى التاجر</label>
+                            <select id="merchantLevel" class="search-bar" style="width:100%;">
+                                <option value="1">مستوى 1</option>
+                                <option value="2">مستوى 2</option>
+                                <option value="3">مستوى 3</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-top:15px;">
+                            <label>القسم</label>
+                            <select id="merchantCategory" class="search-bar" style="width:100%;">
+                                <option value="promo">برومسيون</option>
+                                <option value="spices">توابل</option>
+                                <option value="cosmetic">كوسمتيك</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="action-button btn-gold" style="width:100%; margin-top:20px;" onclick="handleRegister()">
+                        <i class="fas fa-user-plus"></i> تسجيل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== مودال إضافة منتج ===== -->
+    <div class="modal" id="productModal">
+        <!-- يتم التعبئة عبر JavaScript -->
+    </div>
+
+    <!-- ===== مودال عرض المنتج ===== -->
+    <div class="modal" id="productDetailModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>تفاصيل المنتج</h2>
+                <button class="close-btn" onclick="closeModal('productDetailModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="productDetailContent">
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== إشعارات ===== -->
+    <div id="toastContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 3000;"></div>
 
     <script>
-        // التطبيق الحالي
-        let currentApp = 'snap';
-        
-        // معلومات التطبيقات
-        const apps = {
-            snap: {
-                name: 'سناب شات',
-                file: 'snam.html',
-                icon: 'fab fa-snapchat',
-                iconClass: 'snap',
-                color: '#fffc00',
-                bgClass: 'app-bg-snap'
-            },
-            tiktok: {
-                name: 'تيك توك',
-                file: 'tikm.html',
-                icon: 'fab fa-tiktok',
-                iconClass: 'tiktok',
-                color: '#ff0050',
-                bgClass: 'app-bg-tiktok'
-            },
-            reels: {
-                name: 'ريلز تلجرام',
-                file: 'reels.html',
-                icon: 'fas fa-film',
-                iconClass: 'reels',
-                color: '#25D366',
-                bgClass: 'app-bg-reels'
-            }
+        // ========== إعدادات تلجرام ==========
+        const TELEGRAM = {
+            botToken: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
+            channelId: '-1003822964890',
+            adminId: '7461896689'
         };
 
-        // التبديل بين التطبيقات
-        function switchApp(app) {
-            if (currentApp === app) return; // نفس التطبيق
-            
-            // إظهار مؤشر التحميل
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            
-            // تحديث الأزرار النشطة
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.getElementById(`nav-${app}`).classList.add('active');
-            
-            // تحديث رأس التطبيق
-            const appInfo = apps[app];
-            document.getElementById('appName').textContent = appInfo.name;
-            document.getElementById('appFile').textContent = appInfo.file;
-            
-            // تحديث أيقونة التطبيق
-            const appIcon = document.getElementById('appIcon');
-            appIcon.className = `app-icon ${appInfo.iconClass}`;
-            appIcon.innerHTML = `<i class="${appInfo.icon}"></i>`;
-            
-            // تغيير خلفية حاوية التطبيق
-            const appContainer = document.getElementById('appContainer');
-            // إزالة كل خلفيات التطبيقات
-            appContainer.classList.remove('app-bg-snap', 'app-bg-tiktok', 'app-bg-reels');
-            // إضافة الخلفية الجديدة
-            appContainer.classList.add(appInfo.bgClass);
-            
-            // تغيير التطبيق في iframe
-            const frame = document.getElementById('appFrame');
-            
-            // إخفاء التطبيق القديم
-            frame.style.opacity = '0';
-            
-            // تغيير المصدر
-            setTimeout(() => {
-                frame.src = `${appInfo.file}`;
-                currentApp = app;
-                
-                // إظهار التطبيق الجديد بعد التحميل
-                frame.onload = function() {
-                    frame.style.opacity = '1';
-                    document.getElementById('loadingOverlay').style.display = 'none';
-                    showNotification(`✅ تم تشغيل ${appInfo.name}`);
-                };
-                
-                // في حالة خطأ في التحميل
-                frame.onerror = function() {
-                    document.getElementById('loadingOverlay').style.display = 'none';
-                    showNotification(`❌ خطأ في تحميل ${appInfo.file}`, 'error');
-                    
-                    // عرض محتوى افتراضي
-                    frame.src = 'about:blank';
-                    frame.srcdoc = `
-                        <html>
-                        <body style="display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #1a1a2e; color: white; font-family: Arial; text-align: center; direction: rtl;">
-                            <div>
-                                <h2 style="color: gold;">${appInfo.name}</h2>
-                                <p>الملف ${appInfo.file} غير موجود</p>
-                                <p style="color: #888;">يرجى إنشاء الملف أولاً</p>
-                            </div>
-                        </body>
-                        </html>
-                    `;
-                };
-            }, 300);
-        }
+        // ========== المتغيرات العامة ==========
+        let products = [];
+        let currentUser = null;
+        let cart = [];
+        let isDarkMode = true;
+        let currentFilter = 'all';
+        let searchTerm = '';
+        let sortBy = 'newest';
+        let users = [];
+        let reelsDB = JSON.parse(localStorage.getItem('nardoo_reels') || '[]');
+        let currentRotation = 0;
+        let selectedOption = 'reel';
 
-        // تحديث التطبيق الحالي
-        function refreshApp() {
-            const frame = document.getElementById('appFrame');
-            const appInfo = apps[currentApp];
-            
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            frame.style.opacity = '0';
-            
-            setTimeout(() => {
-                frame.src = `${appInfo.file}`;
-                frame.onload = function() {
-                    frame.style.opacity = '1';
-                    document.getElementById('loadingOverlay').style.display = 'none';
-                    showNotification(`🔄 تم تحديث ${appInfo.name}`);
-                };
-            }, 300);
-        }
-
-        // إغلاق التطبيق
-        function closeApp() {
-            const frame = document.getElementById('appFrame');
-            const appInfo = apps[currentApp];
-            
-            if (confirm(`هل تريد إغلاق ${appInfo.name}؟`)) {
-                frame.src = 'about:blank';
-                showNotification(`🔴 تم إغلاق ${appInfo.name}`);
-            }
-        }
-
-        // وضع ملء الشاشة
-        function toggleFullscreen() {
-            const container = document.getElementById('appContainer');
-            
-            if (!container.classList.contains('fullscreen-mode')) {
-                container.classList.add('fullscreen-mode');
-                showNotification('🔍 وضع العرض الكامل');
+        // ========== تحميل المستخدمين ==========
+        function loadUsers() {
+            const saved = localStorage.getItem('nardoo_users');
+            if (saved) {
+                users = JSON.parse(saved);
             } else {
-                container.classList.remove('fullscreen-mode');
-                showNotification('🔍 الخروج من العرض الكامل');
+                users = [
+                    { 
+                        id: 1, 
+                        name: 'azer', 
+                        email: 'azer@admin.com', 
+                        password: '123456', 
+                        role: 'admin',
+                        phone: '0555000000',
+                        telegram: '@admin_nardoo',
+                        avatar: 'https://ui-avatars.com/api/?name=Azer+Admin&background=D4AF37&color=0a1a15&size=100',
+                        storeLogo: 'https://ui-avatars.com/api/?name=Admin+Store&background=D4AF37&color=0a1a15&size=100',
+                        createdAt: new Date().toISOString()
+                    },
+                    { 
+                        id: 2, 
+                        name: 'أحمد التاجر', 
+                        email: 'ahmed@merchant.com', 
+                        password: 'a123', 
+                        role: 'merchant_approved',
+                        phone: '0555111111',
+                        storeName: 'متجر أحمد للتوابل',
+                        storeLogo: 'https://ui-avatars.com/api/?name=احمد+التاجر&background=D4AF37&color=0a1a15&size=100',
+                        avatar: 'https://ui-avatars.com/api/?name=احمد+التاجر&background=D4AF37&color=0a1a15&size=100',
+                        telegram: '@ahmed_merchant',
+                        merchantLevel: '2',
+                        merchantCategory: 'spices',
+                        status: 'approved',
+                        approvedBy: 1,
+                        approvedAt: new Date().toISOString(),
+                        totalProducts: 0,
+                        rating: 4.8,
+                        createdAt: new Date().toISOString()
+                    },
+                    { 
+                        id: 3, 
+                        name: 'سارة للتجميل', 
+                        email: 'sara@merchant.com', 
+                        password: 's123', 
+                        role: 'merchant_pending',
+                        phone: '0555222222',
+                        storeName: 'متجر سارة للكوسمتيك',
+                        storeLogo: 'https://ui-avatars.com/api/?name=سارة+كوسمتيك&background=D4AF37&color=0a1a15&size=100',
+                        avatar: 'https://ui-avatars.com/api/?name=سارة+كوسمتيك&background=D4AF37&color=0a1a15&size=100',
+                        telegram: '@sara_cosmetic',
+                        merchantLevel: '1',
+                        merchantCategory: 'cosmetic',
+                        status: 'pending',
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                localStorage.setItem('nardoo_users', JSON.stringify(users));
             }
         }
+        loadUsers();
 
-        // عرض الإشعارات
-        function showNotification(message, type = 'success') {
+        // ========== منتجات تجريبية مع صور تجار دائرية ==========
+        function loadSampleProducts() {
+            const saved = localStorage.getItem('nardoo_products');
+            if (saved) {
+                products = JSON.parse(saved);
+            } else {
+                products = [
+                    {
+                        id: 101,
+                        name: 'زعتر نابلسي فاخر',
+                        price: 450,
+                        category: 'spices',
+                        stock: 50,
+                        merchantId: 2,
+                        merchantName: 'متجر أحمد للتوابل',
+                        merchantTelegram: '@ahmed_merchant',
+                        merchantAvatar: 'https://ui-avatars.com/api/?name=احمد+التاجر&background=D4AF37&color=0a1a15&size=100',
+                        description: 'زعتر نابلسي أصلي مع سمسم وزيت زيتون',
+                        rating: 4.8,
+                        images: ['https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400'],
+                        telegramLink: 'https://t.me/nardoo_channel/101',
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 102,
+                        name: 'كركم عضوي',
+                        price: 320,
+                        category: 'spices',
+                        stock: 30,
+                        merchantId: 2,
+                        merchantName: 'متجر أحمد للتوابل',
+                        merchantTelegram: '@ahmed_merchant',
+                        merchantAvatar: 'https://ui-avatars.com/api/?name=احمد+التاجر&background=D4AF37&color=0a1a15&size=100',
+                        description: 'كركم عضوي نقي 100%',
+                        rating: 4.7,
+                        images: ['https://images.unsplash.com/photo-1615485500704-8e990c9900f9?w=400'],
+                        telegramLink: 'https://t.me/nardoo_channel/102',
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 103,
+                        name: 'ماسك طبيعي للوجه',
+                        price: 650,
+                        category: 'cosmetic',
+                        stock: 20,
+                        merchantId: 3,
+                        merchantName: 'متجر سارة للكوسمتيك',
+                        merchantTelegram: '@sara_cosmetic',
+                        merchantAvatar: 'https://ui-avatars.com/api/?name=سارة+كوسمتيك&background=D4AF37&color=0a1a15&size=100',
+                        description: 'ماسك طبيعي بالعسل والشوفان للبشرة',
+                        rating: 4.9,
+                        images: ['https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400'],
+                        telegramLink: 'https://t.me/nardoo_channel/103',
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 104,
+                        name: 'زيت أركان عضوي',
+                        price: 890,
+                        category: 'cosmetic',
+                        stock: 15,
+                        merchantId: 3,
+                        merchantName: 'متجر سارة للكوسمتيك',
+                        merchantTelegram: '@sara_cosmetic',
+                        merchantAvatar: 'https://ui-avatars.com/api/?name=سارة+كوسمتيك&background=D4AF37&color=0a1a15&size=100',
+                        description: 'زيت أركان نقي للشعر والبشرة',
+                        rating: 4.8,
+                        images: ['https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=400'],
+                        telegramLink: 'https://t.me/nardoo_channel/104',
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                localStorage.setItem('nardoo_products', JSON.stringify(products));
+            }
+        }
+        loadSampleProducts();
+
+        // ========== دوال المساعدة والإشعارات ==========
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
             const notification = document.createElement('div');
             notification.className = 'notification';
-            
-            let icon = '✅';
-            if (type === 'error') icon = '❌';
-            else if (type === 'warning') icon = '⚠️';
-            
-            notification.innerHTML = `<i class="fas fa-bell"></i> ${icon} ${message}`;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 2000);
+            notification.textContent = message;
+            container.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
         }
 
-        // التحقق من وجود الملفات
-        function checkFiles() {
-            const files = ['snam.html', 'tikm.html', 'reels.html'];
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('light-mode', !isDarkMode);
+            const toggle = document.getElementById('themeToggle');
+            toggle.innerHTML = isDarkMode ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        }
+
+        // ========== دوال العجلة الدوارة ==========
+        function initWheel() {
+            const wheel = document.getElementById('wheel3D');
+            const options = document.querySelectorAll('.wheel-option');
             
-            files.forEach(file => {
-                fetch(file)
-                    .then(response => {
-                        if (!response.ok) {
-                            showNotification(`⚠️ الملف ${file} غير موجود`, 'warning');
-                        }
-                    })
-                    .catch(() => {
-                        showNotification(`⚠️ الملف ${file} غير موجود`, 'warning');
-                    });
+            // ترتيب الخيارات
+            const angles = [0, 120, 240];
+            options.forEach((opt, index) => {
+                opt.style.transform = `translate(-50%, -50%) rotateY(${angles[index]}deg) translateZ(180px)`;
+            });
+
+            // أحداث السحب
+            let isDragging = false;
+            let startX, lastX, velocity = 0;
+
+            wheel.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                lastX = e.clientX;
+                wheel.classList.add('dragging');
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const diff = e.clientX - lastX;
+                velocity = diff * 0.5;
+                currentRotation += diff * 0.3;
+                wheel.style.transform = `rotateY(${currentRotation}deg)`;
+                lastX = e.clientX;
+                updateActiveOption();
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+                wheel.classList.remove('dragging');
+                snapToNearestOption();
             });
         }
 
-        // اختصار لوحة المفاتيح
-        document.addEventListener('keydown', (e) => {
-            if (e.altKey) {
-                switch(e.key) {
-                    case '1':
-                        switchApp('snap');
-                        break;
-                    case '2':
-                        switchApp('tiktok');
-                        break;
-                    case '3':
-                        switchApp('reels');
-                        break;
-                    case 'r':
-                        refreshApp();
-                        break;
-                    case 'f':
-                        toggleFullscreen();
-                        break;
-                }
-            }
+        function updateActiveOption() {
+            const normalizedRotation = ((currentRotation % 360) + 360) % 360;
+            const angles = [0, 120, 240];
+            const optionIds = ['reel', 'live', 'tour'];
             
-            // ESC للخروج من وضع ملء الشاشة
-            if (e.key === 'Escape') {
-                const container = document.getElementById('appContainer');
-                if (container.classList.contains('fullscreen-mode')) {
-                    container.classList.remove('fullscreen-mode');
+            let minDiff = 360;
+            let activeIndex = 0;
+            
+            angles.forEach((angle, index) => {
+                let diff = Math.abs(normalizedRotation - angle);
+                diff = Math.min(diff, 360 - diff);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    activeIndex = index;
                 }
-            }
-        });
+            });
 
-        // تهيئة الصفحة
+            selectedOption = optionIds[activeIndex];
+            
+            document.querySelectorAll('.wheel-option').forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.dataset.option === selectedOption) {
+                    opt.classList.add('active');
+                }
+            });
+
+            const optionNames = { 'reel': 'Reel', 'live': 'مباشر', 'tour': 'جولة' };
+            document.getElementById('addBtnText').textContent = `إضافة ${optionNames[selectedOption]}`;
+        }
+
+        function snapToNearestOption() {
+            const angles = [0, 120, 240];
+            let minDiff = 360;
+            let targetAngle = 0;
+            
+            angles.forEach(angle => {
+                let diff = Math.abs(currentRotation - angle);
+                diff = Math.min(diff, 360 - diff);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    targetAngle = angle;
+                }
+            });
+
+            animateToAngle(targetAngle);
+        }
+
+        function animateToAngle(targetAngle) {
+            const startAngle = currentRotation;
+            const startTime = performance.now();
+            
+            function animate(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / 300, 1);
+                currentRotation = startAngle + (targetAngle - startAngle) * progress;
+                document.getElementById('wheel3D').style.transform = `rotateY(${currentRotation}deg)`;
+                updateActiveOption();
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function addSelectedContent() {
+            showNotification(`✅ تمت إضافة ${selectedOption === 'reel' ? 'Reel' : selectedOption === 'live' ? 'بث مباشر' : 'جولة'}`, 'success');
+        }
+
+        // ========== دوال Reels ==========
+        function loadReelsToTrack() {
+            const track = document.getElementById('reelsTrack');
+            if (!track) return;
+
+            if (!reelsDB.length) {
+                reelsDB = [
+                    { id: 1, platform: 'youtube', title: 'طريقة تحضير الزعتر', thumbnail: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400', views: 15000 },
+                    { id: 2, platform: 'instagram', title: 'ماسك طبيعي', thumbnail: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400', views: 23000 },
+                    { id: 3, platform: 'tiktok', title: 'فوائد الكركم', thumbnail: 'https://images.unsplash.com/photo-1615485500704-8e990c9900f9?w=400', views: 42000 }
+                ];
+            }
+
+            track.innerHTML = reelsDB.map(reel => `
+                <div class="reel-card" onclick="openReelFullscreen('${reel.id}')">
+                    <div class="reel-thumbnail">
+                        <img src="${reel.thumbnail}" alt="${reel.title}">
+                        <div class="platform-badge">
+                            <i class="fab fa-${reel.platform}"></i>
+                        </div>
+                    </div>
+                    <div style="padding: 10px;">
+                        <div style="font-weight: bold;">${reel.title}</div>
+                        <div style="font-size: 12px; color: gold;">${(reel.views / 1000).toFixed(1)}K مشاهدة</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showAddReelModal() {
+            showNotification('سيتم إضافة Reel قريباً', 'info');
+        }
+
+        function openReelFullscreen(id) {
+            showNotification('جاري تشغيل Reel', 'info');
+        }
+
+        // ========== دوال المنتجات وعرضها مع صورة التاجر ==========
+        function displayProducts() {
+            const container = document.getElementById('productsContainer');
+            if (!container) return;
+
+            let filtered = products.filter(p => p.stock > 0);
+            
+            if (searchTerm) {
+                filtered = filtered.filter(p => p.name.includes(searchTerm) || p.description?.includes(searchTerm));
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:50px;">لا توجد منتجات</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(product => {
+                const timeAgo = 'منذ ساعة';
+                const views = Math.floor(Math.random() * 500) + 100;
+                const likes = Math.floor(Math.random() * 100) + 20;
+
+                return `
+                    <div class="product-card" onclick="viewProductDetails(${product.id})">
+                        <!-- رأس البطاقة مع صورة التاجر الدائرية (مثل فيسبوك) -->
+                        <div class="product-header">
+                            <img src="${product.merchantAvatar}" class="merchant-avatar" alt="${product.merchantName}">
+                            <div class="merchant-info">
+                                <div class="merchant-name">
+                                    ${product.merchantName}
+                                    <i class="fab fa-telegram" onclick="event.stopPropagation(); window.open('https://t.me/${product.merchantTelegram?.replace('@', '')}', '_blank')"></i>
+                                </div>
+                                <div class="post-time">
+                                    <i class="far fa-clock"></i> ${timeAgo}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- صورة المنتج -->
+                        <img src="${product.images[0]}" class="product-image" alt="${product.name}">
+
+                        <!-- محتوى المنتج -->
+                        <div class="product-content">
+                            <div class="product-title">${product.name}</div>
+                            <div class="product-description">${product.description}</div>
+
+                            <!-- إحصائيات -->
+                            <div class="product-stats">
+                                <div class="stat-item">
+                                    <i class="fas fa-eye"></i> ${views}
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-heart" style="color: #ff4444;"></i> ${likes}
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-tag"></i> ${product.price} دج
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-box"></i> ${product.stock}
+                                </div>
+                            </div>
+
+                            <!-- أزرار التفاعل -->
+                            <div class="product-actions" onclick="event.stopPropagation()">
+                                <button class="action-button btn-gold" onclick="addToCart(${product.id})">
+                                    <i class="fas fa-shopping-cart"></i> أضف للسلة
+                                </button>
+                                <button class="action-button btn-telegram" onclick="window.open('https://t.me/${product.merchantTelegram?.replace('@', '')}', '_blank')">
+                                    <i class="fab fa-telegram"></i> تواصل
+                                </button>
+                            </div>
+
+                            <!-- بصمة المنتج -->
+                            <div class="product-thumbprint">
+                                <i class="fas fa-fingerprint"></i> TP_${product.id}_${new Date().getFullYear()}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ========== دوال البحث والتصفية ==========
+        function filterProducts(category) {
+            currentFilter = category;
+            displayProducts();
+        }
+
+        function searchProducts() {
+            searchTerm = document.getElementById('searchInput').value;
+            displayProducts();
+        }
+
+        // ========== دوال السلة ==========
+        function loadCart() {
+            const saved = localStorage.getItem('nardoo_cart');
+            cart = saved ? JSON.parse(saved) : [];
+            updateCartCounter();
+        }
+
+        function saveCart() {
+            localStorage.setItem('nardoo_cart', JSON.stringify(cart));
+        }
+
+        function updateCartCounter() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCounter').textContent = count;
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product || product.stock <= 0) {
+                showNotification('المنتج غير متوفر', 'error');
+                return;
+            }
+
+            const existing = cart.find(item => item.productId === productId);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({
+                    productId,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1,
+                    merchantName: product.merchantName
+                });
+            }
+
+            saveCart();
+            updateCartCounter();
+            updateCartDisplay();
+            showNotification('تمت الإضافة إلى السلة', 'success');
+        }
+
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('open');
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const itemsDiv = document.getElementById('cartItems');
+            const totalSpan = document.getElementById('cartTotal');
+
+            if (cart.length === 0) {
+                itemsDiv.innerHTML = '<div style="text-align: center; padding: 40px;">السلة فارغة</div>';
+                totalSpan.textContent = '0 دج';
+                return;
+            }
+
+            let total = 0;
+            itemsDiv.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                return `
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 10px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>${item.name}</span>
+                            <span style="color: gold;">${item.price} دج</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                            <button class="action-btn" onclick="updateCartItem(${item.productId}, ${item.quantity - 1})" style="width:30px; height:30px;">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="action-btn" onclick="updateCartItem(${item.productId}, ${item.quantity + 1})" style="width:30px; height:30px;">+</button>
+                            <button class="action-btn" onclick="removeFromCart(${item.productId})" style="background:#f44336; width:30px; height:30px;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            totalSpan.textContent = `${total.toLocaleString()} دج`;
+        }
+
+        function updateCartItem(productId, newQuantity) {
+            const item = cart.find(i => i.productId === productId);
+            const product = products.find(p => p.id === productId);
+
+            if (newQuantity <= 0) {
+                removeFromCart(productId);
+                return;
+            }
+
+            if (newQuantity > product.stock) {
+                showNotification('الكمية غير متوفرة', 'warning');
+                return;
+            }
+
+            item.quantity = newQuantity;
+            saveCart();
+            updateCartCounter();
+            updateCartDisplay();
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(i => i.productId !== productId);
+            saveCart();
+            updateCartCounter();
+            updateCartDisplay();
+        }
+
+        function checkoutCart() {
+            if (cart.length === 0) {
+                showNotification('السلة فارغة', 'warning');
+                return;
+            }
+
+            if (!currentUser) {
+                showNotification('يجب تسجيل الدخول أولاً', 'warning');
+                openLoginModal();
+                return;
+            }
+
+            // إرسال الطلب إلى تليجرام
+            const orderText = `🟢 طلب جديد من ${currentUser.name}\nالمنتجات:\n${cart.map(i => `- ${i.name} x${i.quantity} = ${i.price * i.quantity} دج`).join('\n')}\nالإجمالي: ${cart.reduce((sum, i) => sum + (i.price * i.quantity), 0)} دج`;
+            
+            fetch(`https://api.telegram.org/bot${TELEGRAM.botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM.channelId,
+                    text: orderText
+                })
+            });
+
+            cart = [];
+            saveCart();
+            updateCartCounter();
+            toggleCart();
+            showNotification('✅ تم إرسال الطلب بنجاح', 'success');
+        }
+
+        // ========== دوال المستخدمين ==========
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function switchAuthTab(tab) {
+            document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+        }
+
+        function toggleMerchantFields() {
+            const isMerchant = document.getElementById('isMerchant').checked;
+            document.getElementById('merchantFields').style.display = isMerchant ? 'block' : 'none';
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const user = users.find(u => (u.email === email || u.name === email) && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('current_user', JSON.stringify(user));
+                closeModal('loginModal');
+                document.getElementById('userBtn').style.display = 'flex';
+                document.getElementById('userBtn').innerHTML = '<i class="fas fa-user"></i>';
+                showNotification(`مرحباً ${user.name}`, 'success');
+            } else {
+                showNotification('بيانات غير صحيحة', 'error');
+            }
+        }
+
+        function handleRegister() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const phone = document.getElementById('regPhone').value;
+            const telegram = document.getElementById('regTelegram').value;
+            const isMerchant = document.getElementById('isMerchant').checked;
+
+            if (!name || !email || !password) {
+                showNotification('املأ جميع الحقول', 'error');
+                return;
+            }
+
+            const newUser = {
+                id: users.length + 1,
+                name,
+                email,
+                password,
+                phone,
+                telegram,
+                role: isMerchant ? 'merchant_pending' : 'customer',
+                avatar: `https://ui-avatars.com/api/?name=${name}&background=D4AF37&color=0a1a15&size=100`,
+                createdAt: new Date().toISOString()
+            };
+
+            if (isMerchant) {
+                newUser.storeName = document.getElementById('storeName').value || `متجر ${name}`;
+                newUser.merchantLevel = document.getElementById('merchantLevel').value;
+                newUser.merchantCategory = document.getElementById('merchantCategory').value;
+                newUser.status = 'pending';
+                newUser.storeLogo = newUser.avatar;
+                
+                // إرسال إشعار للمدير على تليجرام
+                fetch(`https://api.telegram.org/bot${TELEGRAM.botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM.channelId,
+                        text: `🆕 طلب تاجر جديد: ${name}\nالمتجر: ${newUser.storeName}\nالقسم: ${newUser.merchantCategory}`,
+                        reply_markup: {
+                            inline_keyboard: [[
+                                { text: "✅ موافقة", callback_data: `approve_${newUser.id}` },
+                                { text: "❌ رفض", callback_data: `reject_${newUser.id}` }
+                            ]]
+                        }
+                    })
+                });
+            }
+
+            users.push(newUser);
+            localStorage.setItem('nardoo_users', JSON.stringify(users));
+            showNotification('تم التسجيل بنجاح', 'success');
+            switchAuthTab('login');
+        }
+
+        // ========== دوال تفاصيل المنتج ==========
+        function viewProductDetails(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const modal = document.getElementById('productDetailModal');
+            const content = document.getElementById('productDetailContent');
+
+            content.innerHTML = `
+                <div style="text-align: center;">
+                    <img src="${product.images[0]}" style="width:100%; max-height:400px; object-fit:cover; border-radius:15px; margin-bottom:20px;">
+                    <h2 style="color:gold;">${product.name}</h2>
+                    <p>${product.description}</p>
+                    <div style="display:flex; justify-content:space-around; margin:20px 0;">
+                        <div><i class="fas fa-tag" style="color:gold;"></i> ${product.price} دج</div>
+                        <div><i class="fas fa-box" style="color:gold;"></i> ${product.stock} قطعة</div>
+                        <div><i class="fas fa-star" style="color:gold;"></i> ${product.rating}</div>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="action-button btn-gold" onclick="addToCart(${product.id}); closeModal('productDetailModal')">
+                            <i class="fas fa-shopping-cart"></i> أضف للسلة
+                        </button>
+                        <button class="action-button btn-telegram" onclick="window.open('https://t.me/${product.merchantTelegram?.replace('@', '')}', '_blank')">
+                            <i class="fab fa-telegram"></i> تواصل مع التاجر
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            modal.style.display = 'flex';
+        }
+
+        // ========== التهيئة ==========
         window.onload = function() {
-            checkFiles();
-            showNotification('✨ خلفية ذهبية للمدير - خلفيات ملونة للتطبيقات');
-            
-            // تعيين الخلفية الافتراضية
-            document.getElementById('appContainer').classList.add('app-bg-snap');
-            
-            // تحميل التطبيق الأول
-            setTimeout(() => {
-                document.getElementById('loadingOverlay').style.display = 'none';
-            }, 1000);
+            initWheel();
+            loadReelsToTrack();
+            displayProducts();
+            loadCart();
+
+            const savedUser = localStorage.getItem('current_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                document.getElementById('userBtn').style.display = 'flex';
+            }
         };
     </script>
 </body>
