@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -128,7 +127,7 @@
             font-weight: 500;
         }
 
-        /* شريط التنقل العلوي */
+        /* شريط التنقل العلوي - أيقونات فقط */
         .nav-bar {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
@@ -189,15 +188,15 @@
         }
 
         .nav-item i {
-            font-size: 24px;
+            font-size: 28px;
             transition: all 0.4s;
             position: relative;
             z-index: 1;
         }
 
+        /* إخفاء النصوص في شريط التنقل */
         .nav-item span {
-            position: relative;
-            z-index: 1;
+            display: none;
         }
 
         .nav-item.active {
@@ -223,6 +222,20 @@
             height: 600px;
             position: relative;
             animation: fadeIn 1s ease 0.4s both;
+            transition: all 0.3s ease;
+        }
+
+        /* وضع التكبير */
+        .app-container.maximized {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            width: auto;
+            height: auto;
+            z-index: 1000;
+            margin: 0;
         }
 
         @keyframes fadeIn {
@@ -243,6 +256,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
         }
 
         .app-title {
@@ -316,6 +330,41 @@
             background: gold;
             color: black;
             transform: scale(1.1);
+        }
+
+        /* زر الإغلاق الدائري */
+        .close-btn {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff4d4d, #f44336);
+            border: 3px solid white;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 5px 20px rgba(244, 67, 54, 0.5);
+            transition: all 0.3s ease;
+            z-index: 100;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .app-container:hover .close-btn {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .close-btn:hover {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 8px 25px rgba(244, 67, 54, 0.8);
         }
 
         /* iframe */
@@ -393,21 +442,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* حالة عدم وجود ملف */
-        .error-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(244, 67, 54, 0.2);
-            border: 2px solid #f44336;
-            border-radius: 20px;
-            padding: 30px;
-            color: #f44336;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
         /* إشعارات */
         .notification {
             position: fixed;
@@ -468,16 +502,18 @@
                 text-align: center;
             }
             
-            .nav-item span {
-                display: none;
-            }
-            
             .nav-item i {
                 font-size: 28px;
             }
             
             .app-container {
                 height: 500px;
+            }
+            
+            .close-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
             }
         }
     </style>
@@ -505,7 +541,7 @@
         </div>
     </div>
 
-    <!-- شريط التنقل العلوي -->
+    <!-- شريط التنقل العلوي - أيقونات فقط -->
     <div class="nav-bar">
         <button class="nav-item active" onclick="switchApp('snap')" id="nav-snap">
             <i class="fab fa-snapchat"></i>
@@ -523,6 +559,11 @@
 
     <!-- حاوية التطبيق -->
     <div class="app-container" id="appContainer">
+        <!-- زر الإغلاق الدائري -->
+        <div class="close-btn" onclick="closeApp()">
+            <i class="fas fa-times"></i>
+        </div>
+        
         <div class="app-header" id="appHeader">
             <div class="app-title">
                 <div class="app-icon snap" id="appIcon">
@@ -535,7 +576,7 @@
                 <button class="action-btn" onclick="refreshApp()" title="تحديث">
                     <i class="fas fa-sync-alt"></i>
                 </button>
-                <button class="action-btn" onclick="toggleFullscreen()" title="عرض كامل">
+                <button class="action-btn" onclick="toggleMaximize()" title="تكبير">
                     <i class="fas fa-expand"></i>
                 </button>
             </div>
@@ -626,7 +667,7 @@
             // إخفاء التطبيق القديم
             frame.style.opacity = '0';
             
-            // تغيير المصدر (بدون مجلد reels)
+            // تغيير المصدر
             setTimeout(() => {
                 frame.src = `${appInfo.file}`;
                 currentApp = app;
@@ -664,15 +705,31 @@
             }, 300);
         }
 
-        // وضع ملء الشاشة
-        function toggleFullscreen() {
+        // تكبير وتصغير النافذة (بدون ملء الشاشة الكامل)
+        function toggleMaximize() {
             const container = document.getElementById('appContainer');
+            const maximizeBtn = document.querySelector('.action-btn:last-child i');
             
-            if (!document.fullscreenElement) {
-                container.requestFullscreen();
-                showNotification('🔍 وضع ملء الشاشة');
+            container.classList.toggle('maximized');
+            
+            if (container.classList.contains('maximized')) {
+                maximizeBtn.className = 'fas fa-compress';
+                showNotification('🔍 تم تكبير النافذة');
             } else {
-                document.exitFullscreen();
+                maximizeBtn.className = 'fas fa-expand';
+                showNotification('🔍 تم تصغير النافذة');
+            }
+        }
+
+        // إغلاق التطبيق
+        function closeApp() {
+            const frame = document.getElementById('appFrame');
+            const appInfo = apps[currentApp];
+            
+            // إظهار رسالة تأكيد
+            if (confirm(`هل تريد إغلاق ${appInfo.name}؟`)) {
+                frame.src = 'about:blank';
+                showNotification(`🔴 تم إغلاق ${appInfo.name}`);
             }
         }
 
@@ -726,15 +783,19 @@
                     case 'r':
                         refreshApp();
                         break;
-                    case 'f':
-                        toggleFullscreen();
+                    case 'm':
+                        toggleMaximize();
                         break;
                 }
             }
             
-            // ESC للخروج من ملء الشاشة
-            if (e.key === 'Escape' && document.fullscreenElement) {
-                document.exitFullscreen();
+            // ESC للخروج من التكبير
+            if (e.key === 'Escape') {
+                const container = document.getElementById('appContainer');
+                if (container.classList.contains('maximized')) {
+                    container.classList.remove('maximized');
+                    document.querySelector('.action-btn:last-child i').className = 'fas fa-expand';
+                }
             }
         });
 
@@ -751,4 +812,3 @@
     </script>
 </body>
 </html>
-
