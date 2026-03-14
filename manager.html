@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المدير المتكامل - النسخة المطورة</title>
+    <title>المدير المتكامل</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -323,87 +323,6 @@
             font-size: 24px;
         }
 
-        /* ===== رسالة المدير ===== */
-        .message-container {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 100;
-            max-width: 350px;
-        }
-
-        .message-box {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 20px;
-            border: 2px solid gold;
-            animation: slideInLeft 0.5s ease;
-        }
-
-        .message-box.closed {
-            display: none;
-        }
-
-        @keyframes slideInLeft {
-            from {
-                transform: translateX(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .message-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .message-header h3 {
-            color: gold;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .close-message {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-message:hover {
-            background: rgba(255, 0, 0, 0.2);
-            color: red;
-            transform: rotate(90deg);
-        }
-
-        .message-content {
-            color: white;
-            font-size: 15px;
-            line-height: 1.8;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-        }
-
         /* ===== نافذة التطبيق المكبرة ===== */
         .fullscreen-app {
             display: none;
@@ -481,32 +400,27 @@
             gap: 15px;
         }
 
-        .fullscreen-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 30px;
+        /* ===== زر الإغلاق الدائري الصغير ===== */
+        .close-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
             border: 2px solid white;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(255, 0, 0, 0.8);
             color: white;
-            font-size: 28px;
+            font-size: 22px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .fullscreen-btn:hover {
-            background: white;
-            color: black;
-            transform: scale(1.1);
-        }
-
-        .fullscreen-btn.close:hover {
+        .close-btn:hover {
             background: red;
-            border-color: red;
-            color: white;
-            transform: rotate(90deg);
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.5);
         }
 
         .fullscreen-frame {
@@ -589,38 +503,6 @@
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
-        }
-
-        /* ===== إشعارات ===== */
-        .notification {
-            position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, gold, #ffd700);
-            color: black;
-            padding: 18px 40px;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 18px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-            z-index: 3000;
-            animation: slideDown 0.4s ease;
-            border: 3px solid white;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .notification.fade-out {
-            animation: fadeOut 0.5s ease forwards;
-        }
-
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-                transform: translate(-50%, -20px);
-            }
         }
 
         /* ===== نافذة معلومات الملفات ===== */
@@ -815,27 +697,6 @@
         </div>
     </div>
 
-    <!-- رسالة المدير -->
-    <div class="message-container">
-        <div class="message-box" id="welcomeMessage">
-            <div class="message-header">
-                <h3>
-                    <i class="fas fa-bell"></i>
-                    رسالة الترحيب
-                </h3>
-                <button class="close-message" onclick="closeMessage()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="message-content">
-                <i class="fas fa-crown" style="color: gold; margin-left: 8px;"></i>
-                مرحباً بك في المدير المتكامل<br>
-                اضغط على أي أيقونة لتشغيل التطبيق<br>
-                <span style="color: gold;">ESC</span> أو زر الرجوع للعودة
-            </div>
-        </div>
-    </div>
-
     <!-- نافذة التطبيق المكبرة -->
     <div class="fullscreen-app" id="fullscreenApp">
         <div class="fullscreen-header" id="fullscreenHeader">
@@ -847,13 +708,7 @@
                 <span class="fullscreen-file" id="fullscreenFile">snam.html</span>
             </div>
             <div class="fullscreen-actions">
-                <button class="fullscreen-btn" onclick="refreshApp()">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-                <button class="fullscreen-btn" onclick="minimizeApp()">
-                    <i class="fas fa-window-minimize"></i>
-                </button>
-                <button class="fullscreen-btn close" onclick="closeFullscreen()">
+                <button class="close-btn" onclick="closeFullscreen()" title="إغلاق">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -913,47 +768,54 @@
         };
 
         let currentApp = '';
-        let isMinimized = false;
-        let previousAppState = null;
 
-        // فتح التطبيق بملء الشاشة
+        // فتح التطبيق بملء الشاشة - مع إغلاق النافذة الحالية أولاً
         function openFullscreen(app) {
-            const appInfo = apps[app];
-            currentApp = app;
+            const fullscreenApp = document.getElementById('fullscreenApp');
             
-            // إظهار مؤشر التحميل
-            document.getElementById('loadingOverlay').style.display = 'flex';
+            // إذا كانت هناك نافذة مفتوحة حالياً، أغلقها أولاً
+            if (fullscreenApp.classList.contains('show')) {
+                closeFullscreen(false); // false يعني لا تظهر رسالة
+            }
             
-            // تحديث رأس النافذة
-            document.getElementById('fullscreenName').textContent = appInfo.name;
-            document.getElementById('fullscreenFile').textContent = appInfo.file;
-            
-            const fullscreenIcon = document.getElementById('fullscreenIcon');
-            fullscreenIcon.className = `fullscreen-icon ${appInfo.iconClass}`;
-            fullscreenIcon.innerHTML = `<i class="${appInfo.icon}"></i>`;
-            
-            const header = document.getElementById('fullscreenHeader');
-            header.style.background = appInfo.headerColor;
-            
-            // تحميل التطبيق
-            const frame = document.getElementById('fullscreenFrame');
-            frame.src = appInfo.file;
-            
-            frame.onload = function() {
-                document.getElementById('loadingOverlay').style.display = 'none';
-                document.getElementById('fullscreenApp').classList.add('show');
-                document.getElementById('appBackButton').classList.add('show');
-                showNotification(`✅ تم تشغيل ${appInfo.name}`);
-            };
-            
-            frame.onerror = function() {
-                document.getElementById('loadingOverlay').style.display = 'none';
-                showNotification(`❌ خطأ في تحميل ${appInfo.file}`, 'error');
-            };
+            // تأخير بسيط لضمان إغلاق النافذة السابقة
+            setTimeout(() => {
+                const appInfo = apps[app];
+                currentApp = app;
+                
+                // إظهار مؤشر التحميل
+                document.getElementById('loadingOverlay').style.display = 'flex';
+                
+                // تحديث رأس النافذة
+                document.getElementById('fullscreenName').textContent = appInfo.name;
+                document.getElementById('fullscreenFile').textContent = appInfo.file;
+                
+                const fullscreenIcon = document.getElementById('fullscreenIcon');
+                fullscreenIcon.className = `fullscreen-icon ${appInfo.iconClass}`;
+                fullscreenIcon.innerHTML = `<i class="${appInfo.icon}"></i>`;
+                
+                const header = document.getElementById('fullscreenHeader');
+                header.style.background = appInfo.headerColor;
+                
+                // تحميل التطبيق
+                const frame = document.getElementById('fullscreenFrame');
+                frame.src = appInfo.file;
+                
+                frame.onload = function() {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    fullscreenApp.classList.add('show');
+                    document.getElementById('appBackButton').classList.add('show');
+                };
+                
+                frame.onerror = function() {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    alert(`خطأ في تحميل ${appInfo.file}`);
+                };
+            }, 100);
         }
 
-        // إغلاق التطبيق المكبر - تم إصلاح المشكلة
-        function closeFullscreen() {
+        // إغلاق التطبيق المكبر
+        function closeFullscreen(showAlert = false) {
             const fullscreenApp = document.getElementById('fullscreenApp');
             const appBackButton = document.getElementById('appBackButton');
             const fullscreenFrame = document.getElementById('fullscreenFrame');
@@ -968,54 +830,7 @@
             setTimeout(() => {
                 fullscreenFrame.src = '';
                 currentApp = '';
-                showNotification('↩️ تم العودة للمدير');
             }, 100);
-        }
-
-        // تصغير التطبيق
-        function minimizeApp() {
-            const fullscreenApp = document.getElementById('fullscreenApp');
-            const appBackButton = document.getElementById('appBackButton');
-            
-            if (!isMinimized) {
-                fullscreenApp.style.transform = 'scale(0.1)';
-                fullscreenApp.style.opacity = '0';
-                fullscreenApp.style.pointerEvents = 'none';
-                appBackButton.style.display = 'none';
-                isMinimized = true;
-                showNotification('🔽 تم تصغير التطبيق');
-            } else {
-                fullscreenApp.style.transform = 'scale(1)';
-                fullscreenApp.style.opacity = '1';
-                fullscreenApp.style.pointerEvents = 'auto';
-                appBackButton.style.display = 'block';
-                isMinimized = false;
-                showNotification('🔼 تم تكبير التطبيق');
-            }
-        }
-
-        // تحديث التطبيق الحالي
-        function refreshApp() {
-            if (!currentApp) return;
-            
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            const frame = document.getElementById('fullscreenFrame');
-            frame.src = frame.src;
-            
-            setTimeout(() => {
-                document.getElementById('loadingOverlay').style.display = 'none';
-                showNotification('🔄 تم تحديث التطبيق');
-            }, 1000);
-        }
-
-        // إغلاق رسالة الترحيب
-        function closeMessage() {
-            const messageBox = document.getElementById('welcomeMessage');
-            messageBox.classList.add('closed');
-            showNotification('✖️ تم إغلاق الرسالة');
-            
-            // حفظ حالة الإغلاق في localStorage
-            localStorage.setItem('messageClosed', 'true');
         }
 
         // عرض معلومات الملف
@@ -1025,7 +840,7 @@
             else if (fileName === 'tikm.html') appName = 'تيك توك';
             else if (fileName === 'reels.html') appName = 'ريلز تلجرام';
             
-            showNotification(`📄 ${fileName} - ${appName}`);
+            alert(`الملف: ${fileName}\nالتطبيق: ${appName}`);
         }
 
         // عرض نافذة المعلومات
@@ -1040,27 +855,6 @@
             document.getElementById('modalOverlay').classList.remove('show');
         }
 
-        // عرض الإشعارات
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            
-            let icon = '✅';
-            if (type === 'error') icon = '❌';
-            else if (type === 'warning') icon = '⚠️';
-            
-            notification.innerHTML = `<i class="fas fa-bell"></i> ${icon} ${message}`;
-            document.body.appendChild(notification);
-            
-            // إضافة تأثير الاختفاء
-            setTimeout(() => {
-                notification.classList.add('fade-out');
-                setTimeout(() => {
-                    notification.remove();
-                }, 500);
-            }, 2500);
-        }
-
         // إغلاق بالضغط على ESC
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
@@ -1073,19 +867,6 @@
                 if (document.getElementById('infoModal').classList.contains('show')) {
                     closeInfoModal();
                 }
-            }
-        });
-
-        // منع إغلاق النافذة عند الضغط على زر الإغلاق في الإطار
-        document.getElementById('fullscreenFrame').addEventListener('load', function() {
-            try {
-                // محاولة منع الأحداث من الإطار
-                const iframe = this;
-                iframe.contentWindow.document.addEventListener('keydown', function(e) {
-                    e.stopPropagation();
-                }, true);
-            } catch (e) {
-                // تجاهل أخطاء cross-origin
             }
         });
 
@@ -1104,35 +885,13 @@
             }
         }
 
-        // التحقق من حالة الرسالة المحفوظة
-        function checkMessageState() {
-            const messageClosed = localStorage.getItem('messageClosed');
-            if (messageClosed === 'true') {
-                document.getElementById('welcomeMessage').classList.add('closed');
-            }
-        }
-
-        // إضافة تأثير النقر المزدوج على الشعار
-        document.querySelector('.logo-icon').addEventListener('dblclick', function() {
-            showNotification('👑 المدير المتكامل - الإصدار 2.0');
-        });
-
         // تهيئة الصفحة
         window.onload = function() {
             createStars();
-            checkMessageState();
-            
             setTimeout(() => {
                 document.getElementById('loadingOverlay').style.display = 'none';
             }, 1000);
-            
-            showNotification('✨ مرحباً بك في المدير المتكامل');
         };
-
-        // منع إغلاق النافذة عند النقر على خلفية النافذة المنبثقة
-        document.getElementById('infoModal').addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
     </script>
 </body>
 </html>
