@@ -9,6 +9,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ===== المتغيرات والأساسيات ===== */
         * {
             margin: 0;
             padding: 0;
@@ -24,11 +25,29 @@
 
         :root {
             --gold: #D4AF37;
+            --gold-light: #ffd700;
             --dark-green: #1a3a32;
             --darker-green: #0a1a15;
             --telegram: #0088cc;
+            --telegram-dark: #006699;
             --glass: rgba(255, 255, 255, 0.05);
+            --glass-dark: rgba(0, 0, 0, 0.3);
             --border: rgba(212, 175, 55, 0.3);
+            --success: #4CAF50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --info: #2196F3;
+            --text-primary: #fff;
+            --text-secondary: #888;
+            --text-muted: rgba(255,255,255,0.6);
+            --shadow: 0 4px 12px rgba(0,0,0,0.6);
+            --shadow-gold: 0 0 30px var(--gold);
+            --transition: all 0.3s ease;
+            --border-radius-sm: 8px;
+            --border-radius-md: 15px;
+            --border-radius-lg: 20px;
+            --border-radius-xl: 40px;
+            --border-radius-circle: 50%;
         }
 
         /* ===== 1. الشريط العلوي ===== */
@@ -42,7 +61,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            box-shadow: var(--shadow);
         }
 
         .logo-area {
@@ -55,29 +74,38 @@
             background: var(--gold);
             width: 42px;
             height: 42px;
-            border-radius: 50%;
+            border-radius: var(--border-radius-circle);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--darker-green);
             font-size: 22px;
             font-weight: 800;
+            box-shadow: 0 0 10px var(--gold);
         }
 
         .logo-text {
             font-size: 22px;
             font-weight: 700;
             color: var(--gold);
+            text-shadow: 0 0 10px rgba(212,175,55,0.3);
         }
 
         .search-bar {
-            background: rgba(255,255,255,0.1);
-            border-radius: 40px;
+            background: var(--glass);
+            border-radius: var(--border-radius-xl);
             padding: 8px 20px;
             display: flex;
             align-items: center;
             width: 350px;
             border: 1px solid var(--gold);
+            transition: var(--transition);
+        }
+
+        .search-bar:hover,
+        .search-bar:focus-within {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px var(--gold);
         }
 
         .search-bar i {
@@ -88,13 +116,14 @@
         .search-bar input {
             background: transparent;
             border: none;
-            color: white;
+            color: var(--text-primary);
             width: 100%;
             outline: none;
+            font-size: 14px;
         }
 
         .search-bar input::placeholder {
-            color: rgba(255,255,255,0.6);
+            color: var(--text-muted);
         }
 
         .header-actions {
@@ -104,23 +133,26 @@
         }
 
         .action-btn {
-            background: rgba(255,255,255,0.1);
+            background: var(--glass);
             border: none;
-            color: white;
+            color: var(--text-primary);
             width: 40px;
             height: 40px;
-            border-radius: 50%;
+            border-radius: var(--border-radius-circle);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
             position: relative;
+            border: 1px solid transparent;
         }
 
         .action-btn:hover {
             background: var(--gold);
             color: var(--darker-green);
+            transform: translateY(-2px);
+            border-color: white;
         }
 
         .cart-badge {
@@ -129,7 +161,7 @@
             right: -5px;
             background: var(--gold);
             color: var(--darker-green);
-            border-radius: 50%;
+            border-radius: var(--border-radius-circle);
             width: 20px;
             height: 20px;
             font-size: 12px;
@@ -137,6 +169,7 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            border: 1px solid white;
         }
 
         .user-btn {
@@ -145,12 +178,18 @@
             font-weight: bold;
             width: 42px;
             height: 42px;
-            border-radius: 50%;
+            border-radius: var(--border-radius-circle);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             border: 2px solid white;
+            transition: var(--transition);
+        }
+
+        .user-btn:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-gold);
         }
 
         /* ===== 2. القائمة الرئيسية ===== */
@@ -159,32 +198,45 @@
             padding: 10px 20px;
             display: flex;
             gap: 15px;
-            border-bottom: 1px solid var(--gold);
+            border-bottom: 1px solid var(--border);
             overflow-x: auto;
             white-space: nowrap;
             align-items: center;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold) var(--dark-green);
         }
 
         .main-nav::-webkit-scrollbar {
-            display: none;
+            height: 5px;
+        }
+
+        .main-nav::-webkit-scrollbar-track {
+            background: var(--dark-green);
+        }
+
+        .main-nav::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
         }
 
         .nav-link {
             display: flex;
             align-items: center;
             gap: 8px;
-            color: white;
+            color: var(--text-primary);
             text-decoration: none;
             padding: 8px 15px;
             border-radius: 20px;
-            transition: all 0.3s;
+            transition: var(--transition);
             cursor: pointer;
             font-size: 14px;
+            border: 1px solid transparent;
         }
 
         .nav-link:hover {
             background: var(--gold);
             color: var(--darker-green);
+            border-color: white;
         }
 
         .nav-link i {
@@ -196,7 +248,7 @@
             color: var(--darker-green);
             width: 40px;
             height: 40px;
-            border-radius: 50%;
+            border-radius: var(--border-radius-circle);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -205,20 +257,22 @@
             font-weight: bold;
             margin-right: auto;
             border: 2px solid white;
+            transition: var(--transition);
         }
 
         .add-product-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 15px var(--gold);
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: var(--shadow-gold);
         }
 
-        /* ===== 3. قسم Reels (ثابت) ===== */
+        /* ===== 3. قسم Reels ===== */
         .reels-section {
             background: var(--dark-green);
             margin: 20px;
             padding: 20px;
-            border-radius: 20px;
+            border-radius: var(--border-radius-lg);
             border: 2px solid var(--gold);
+            box-shadow: var(--shadow);
         }
 
         .reels-header {
@@ -256,26 +310,33 @@
         .reel-card {
             min-width: 200px;
             background: var(--darker-green);
-            border-radius: 15px;
+            border-radius: var(--border-radius-md);
             overflow: hidden;
             border: 2px solid var(--gold);
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: var(--transition);
         }
 
         .reel-card:hover {
             transform: scale(1.05);
+            box-shadow: var(--shadow-gold);
         }
 
         .reel-thumbnail {
             position: relative;
             height: 280px;
+            overflow: hidden;
         }
 
         .reel-thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .reel-card:hover .reel-thumbnail img {
+            transform: scale(1.1);
         }
 
         .platform-badge {
@@ -288,6 +349,10 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid white;
         }
 
         .reel-info {
@@ -300,11 +365,12 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            color: var(--gold);
         }
 
         .reel-info p {
             font-size: 12px;
-            color: #888;
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
             gap: 5px;
@@ -321,16 +387,17 @@
         /* ===== 5. بطاقة المنتج ===== */
         .product-card {
             background: var(--dark-green);
-            border-radius: 20px;
+            border-radius: var(--border-radius-lg);
             overflow: hidden;
             border: 2px solid var(--gold);
-            transition: all 0.3s;
+            transition: var(--transition);
             cursor: pointer;
+            position: relative;
         }
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px var(--gold);
+            box-shadow: var(--shadow-gold);
         }
 
         .product-header {
@@ -339,15 +406,22 @@
             gap: 12px;
             padding: 15px;
             border-bottom: 1px solid var(--border);
+            background: linear-gradient(to bottom, var(--dark-green), var(--darker-green));
         }
 
         .merchant-avatar {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
+            border-radius: var(--border-radius-circle);
             border: 3px solid var(--gold);
             object-fit: cover;
             background: var(--darker-green);
+            transition: var(--transition);
+        }
+
+        .product-card:hover .merchant-avatar {
+            transform: scale(1.1);
+            border-color: white;
         }
 
         .merchant-info {
@@ -367,21 +441,36 @@
             color: var(--telegram);
             font-size: 14px;
             cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .merchant-name i:hover {
+            transform: scale(1.2);
+            color: var(--telegram-dark);
         }
 
         .post-time {
             font-size: 12px;
-            color: rgba(255,255,255,0.6);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 3px;
         }
 
         .product-image {
             width: 100%;
             height: 300px;
             object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.02);
         }
 
         .product-content {
             padding: 15px;
+            background: linear-gradient(to top, var(--dark-green), transparent);
         }
 
         .product-title {
@@ -392,9 +481,10 @@
         }
 
         .product-description {
-            color: rgba(255,255,255,0.8);
+            color: var(--text-secondary);
             margin-bottom: 15px;
             font-size: 14px;
+            line-height: 1.6;
         }
 
         .product-stats {
@@ -412,6 +502,7 @@
             align-items: center;
             gap: 5px;
             font-size: 14px;
+            color: var(--text-secondary);
         }
 
         .stat-item i {
@@ -425,26 +516,28 @@
 
         .action-button {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             border: none;
-            border-radius: 10px;
+            border-radius: var(--border-radius-sm);
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            transition: all 0.3s;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 14px;
         }
 
         .btn-gold {
             background: var(--gold);
-            color: black;
+            color: var(--darker-green);
         }
 
         .btn-gold:hover {
-            background: #ffd700;
-            transform: scale(1.02);
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
         }
 
         .btn-telegram {
@@ -453,19 +546,22 @@
         }
 
         .btn-telegram:hover {
-            background: #006699;
+            background: var(--telegram-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.4);
         }
 
         .product-thumbprint {
             font-family: monospace;
-            background: rgba(0,0,0,0.3);
+            background: var(--glass-dark);
             padding: 8px;
-            border-radius: 5px;
+            border-radius: var(--border-radius-sm);
             font-size: 11px;
             color: var(--gold);
             text-align: center;
             margin-top: 10px;
             border: 1px dashed var(--gold);
+            direction: ltr;
         }
 
         /* ===== 6. السلة الجانبية ===== */
@@ -478,30 +574,41 @@
             background: var(--dark-green);
             border-right: 3px solid var(--gold);
             z-index: 1500;
-            transition: left 0.3s;
+            transition: left 0.3s ease-in-out;
             padding: 20px;
             overflow-y: auto;
+            box-shadow: 5px 0 20px rgba(0,0,0,0.5);
         }
 
         .cart-sidebar.open {
             left: 0;
         }
 
+        .cart-sidebar h3 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gold);
+        }
+
         .cart-item {
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
+            background: var(--glass-dark);
+            border-radius: var(--border-radius-sm);
             padding: 10px;
             margin-bottom: 10px;
+            border: 1px solid var(--border);
         }
 
         .cart-item-title {
             font-weight: bold;
             margin-bottom: 5px;
+            color: var(--gold);
         }
 
         .cart-item-price {
             color: var(--gold);
             margin-bottom: 5px;
+            font-size: 14px;
         }
 
         .cart-item-quantity {
@@ -513,12 +620,18 @@
         .quantity-btn {
             width: 30px;
             height: 30px;
-            border-radius: 50%;
+            border-radius: var(--border-radius-circle);
             border: none;
             background: var(--gold);
-            color: black;
+            color: var(--darker-green);
             cursor: pointer;
             font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .quantity-btn:hover {
+            transform: scale(1.1);
+            background: var(--gold-light);
         }
 
         /* ===== 7. المودالات ===== */
@@ -533,16 +646,29 @@
             z-index: 2000;
             justify-content: center;
             align-items: center;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-content {
             background: var(--dark-green);
             border: 3px solid var(--gold);
-            border-radius: 20px;
+            border-radius: var(--border-radius-lg);
             max-width: 600px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
+            animation: slideUp 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .modal-header {
@@ -554,6 +680,14 @@
             align-items: center;
             position: sticky;
             top: 0;
+            z-index: 10;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .modal-body {
@@ -568,23 +702,32 @@
             color: black;
             width: 30px;
             height: 30px;
-            border-radius: 50%;
+            border-radius: var(--border-radius-circle);
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: var(--transition);
         }
 
         .close-btn:hover {
             background: rgba(0,0,0,0.2);
+            transform: rotate(90deg);
         }
 
         /* ===== 8. لوحة التاجر ===== */
         .merchant-panel {
             background: var(--dark-green);
             border: 2px solid var(--gold);
-            border-radius: 15px;
+            border-radius: var(--border-radius-lg);
             padding: 20px;
             margin: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .merchant-panel h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-size: 20px;
         }
 
         .stats-grid {
@@ -595,11 +738,23 @@
         }
 
         .stat-card {
-            background: rgba(0,0,0,0.3);
+            background: var(--glass-dark);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: var(--border-radius-sm);
             text-align: center;
             border: 1px solid var(--gold);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .stat-card i {
+            font-size: 24px;
+            color: var(--gold);
+            margin-bottom: 5px;
         }
 
         /* ===== 9. الإشعارات ===== */
@@ -613,38 +768,53 @@
             border-radius: 50px;
             font-weight: bold;
             z-index: 3000;
-            animation: slideIn 0.3s;
+            animation: slideInRight 0.3s, fadeOut 0.3s 2.7s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border: 1px solid white;
+            max-width: 350px;
         }
 
-        @keyframes slideIn {
+        @keyframes slideInRight {
             from { transform: translateX(100px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
 
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
         /* ===== 10. النماذج ===== */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 5px;
             color: var(--gold);
+            font-weight: 600;
         }
 
         .form-control {
             width: 100%;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
+            padding: 12px;
+            background: var(--glass-dark);
             border: 1px solid var(--gold);
-            border-radius: 8px;
-            color: white;
+            border-radius: var(--border-radius-sm);
+            color: var(--text-primary);
+            transition: var(--transition);
+            font-size: 14px;
         }
 
         .form-control:focus {
             outline: none;
-            border-color: #ffd700;
+            border-color: var(--gold-light);
             box-shadow: 0 0 10px var(--gold);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
         }
 
         .btn-outline-gold {
@@ -652,14 +822,16 @@
             border: 2px solid var(--gold);
             color: var(--gold);
             padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: var(--border-radius-sm);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
+            font-weight: bold;
         }
 
         .btn-outline-gold:hover {
             background: var(--gold);
             color: black;
+            transform: translateY(-2px);
         }
 
         /* ===== 11. تنسيقات إضافية ===== */
@@ -675,6 +847,23 @@
             color: var(--telegram);
         }
 
+        .text-success {
+            color: var(--success);
+        }
+
+        .text-danger {
+            color: var(--danger);
+        }
+
+        .text-warning {
+            color: var(--warning);
+        }
+
+        .bg-gold {
+            background: var(--gold);
+            color: black;
+        }
+
         .mt-20 {
             margin-top: 20px;
         }
@@ -687,23 +876,409 @@
             text-align: center;
         }
 
-        /* ===== 12. تصغير للجوال ===== */
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .gap-10 {
+            gap: 10px;
+        }
+
+        .gap-15 {
+            gap: 15px;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        /* ===== 12. حالة المخزون ===== */
+        .stock-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .stock-badge.good {
+            background: var(--success);
+            color: white;
+        }
+
+        .stock-badge.low {
+            background: var(--danger);
+            color: white;
+        }
+
+        .stock-badge.medium {
+            background: var(--warning);
+            color: black;
+        }
+
+        /* ===== 13. أزرار الإجراءات ===== */
+        .action-icon {
+            background: var(--glass);
+            border: none;
+            color: var(--text-primary);
+            width: 35px;
+            height: 35px;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 0 2px;
+        }
+
+        .action-icon:hover {
+            background: var(--gold);
+            color: black;
+            transform: translateY(-2px);
+        }
+
+        /* ===== 14. تنسيقات Reel المكبر ===== */
+        .reel-modal-content {
+            max-width: 800px !important;
+        }
+
+        .reel-video-container {
+            width: 100%;
+            height: 400px;
+            background: black;
+            margin: 20px 0;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            border: 2px solid var(--gold);
+        }
+
+        .reel-video-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .reel-details {
+            background: var(--glass-dark);
+            padding: 15px;
+            border-radius: var(--border-radius-sm);
+            margin: 15px 0;
+        }
+
+        .reel-detail-row {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-label {
+            width: 100px;
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        .detail-value.thumbprint {
+            font-family: monospace;
+            color: var(--gold);
+            direction: ltr;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--gold);
+            cursor: pointer;
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .reel-actions-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* ===== 15. تنسيقات المنتجات المصغرة ===== */
+        .product-mini-card {
+            background: var(--glass-dark);
+            border-radius: var(--border-radius-sm);
+            padding: 15px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .product-mini-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .product-mini-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: var(--border-radius-sm);
+            border: 2px solid var(--gold);
+        }
+
+        /* ===== 16. تنسيقات الجدول ===== */
+        .products-table {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .products-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .products-table th {
+            background: var(--gold);
+            color: black;
+            padding: 12px;
+            font-weight: bold;
+        }
+
+        .products-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .products-table tr:hover {
+            background: var(--glass);
+        }
+
+        /* ===== 17. تنسيقات التمرير ===== */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--gold);
+            color: black;
+            border-radius: var(--border-radius-circle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+            border: 2px solid white;
+            z-index: 900;
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+        }
+
+        .scroll-to-top:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-gold);
+        }
+
+        /* ===== 18. تنسيقات التصنيفات ===== */
+        .category-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .category-badge.promo {
+            background: var(--gold);
+            color: black;
+        }
+
+        .category-badge.spices {
+            background: #8B4513;
+            color: white;
+        }
+
+        .category-badge.cosmetic {
+            background: #FF69B4;
+            color: white;
+        }
+
+        /* ===== 19. تنسيقات النجوم ===== */
+        .stars-container {
+            display: inline-flex;
+            gap: 2px;
+        }
+
+        .star {
+            color: var(--gold);
+        }
+
+        .star.filled {
+            color: var(--gold);
+        }
+
+        .star.half {
+            color: var(--gold);
+        }
+
+        .rating-value {
+            margin-right: 5px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== 20. تصغير للجوال ===== */
         @media (max-width: 768px) {
             .search-bar {
                 width: 200px;
             }
+            
             .products-grid {
                 grid-template-columns: 1fr;
             }
+            
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
             .reel-card {
                 min-width: 150px;
             }
+            
             .reel-thumbnail {
                 height: 200px;
             }
+            
+            .cart-sidebar {
+                width: 300px;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+            
+            .product-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* ===== 21. تنسيقات إضافية للرسوم المتحركة ===== */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .spin {
+            animation: spin 2s linear infinite;
+        }
+
+        /* ===== 22. تنسيقات الشارات ===== */
+        .merchant-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .merchant-badge.approved {
+            background: var(--success);
+            color: white;
+        }
+
+        .merchant-badge.pending {
+            background: var(--warning);
+            color: black;
+        }
+
+        .merchant-badge.rejected {
+            background: var(--danger);
+            color: white;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .status-badge.new {
+            background: var(--info);
+            color: white;
+        }
+
+        .status-badge.processing {
+            background: var(--warning);
+            color: black;
+        }
+
+        .status-badge.delivered {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-badge.cancelled {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* ===== 23. تنسيقات الروابط ===== */
+        a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--gold-light);
+            text-decoration: underline;
+        }
+
+        /* ===== 24. تنسيقات القوائم ===== */
+        ul, ol {
+            padding-right: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        /* ===== 25. تنسيقات الخطوط ===== */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 15px 0;
         }
     </style>
 </head>
@@ -756,10 +1331,10 @@
         </div>
     </div>
 
-    <!-- ===== 3. قسم Reels (ثابت - بدون دوال) ===== -->
+    <!-- ===== 3. قسم Reels ===== -->
     <div class="reels-section">
         <div class="reels-header">
-            <h3><i class="fas fa-film" style="color: gold;"></i> Reels مقترحة</h3>
+            <h3><i class="fas fa-film"></i> Reels مقترحة</h3>
             <button class="action-btn" onclick="showNotification('قريباً...', 'info')">
                 <i class="fas fa-plus"></i>
             </button>
@@ -770,7 +1345,7 @@
                 <div class="reel-thumbnail">
                     <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400" alt="Reel">
                     <div class="platform-badge" style="background: #FF0000;">
-                        <i class="fab fa-youtube"></i>
+                        <i class="fab fa-youtube"></i> يوتيوب
                     </div>
                 </div>
                 <div class="reel-info">
@@ -783,7 +1358,7 @@
                 <div class="reel-thumbnail">
                     <img src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400" alt="Reel">
                     <div class="platform-badge" style="background: #E4405F;">
-                        <i class="fab fa-instagram"></i>
+                        <i class="fab fa-instagram"></i> انستغرام
                     </div>
                 </div>
                 <div class="reel-info">
@@ -796,7 +1371,7 @@
                 <div class="reel-thumbnail">
                     <img src="https://images.unsplash.com/photo-1615485500704-8e990c9900f9?w=400" alt="Reel">
                     <div class="platform-badge" style="background: #000000;">
-                        <i class="fab fa-tiktok"></i>
+                        <i class="fab fa-tiktok"></i> تيك توك
                     </div>
                 </div>
                 <div class="reel-info">
@@ -809,7 +1384,7 @@
                 <div class="reel-thumbnail">
                     <img src="https://images.unsplash.com/photo-1599909631710-9a23ffa66aeb?w=400" alt="Reel">
                     <div class="platform-badge" style="background: #FF0000;">
-                        <i class="fab fa-youtube"></i>
+                        <i class="fab fa-youtube"></i> يوتيوب
                     </div>
                 </div>
                 <div class="reel-info">
@@ -834,16 +1409,14 @@
 
     <!-- ===== 7. السلة الجانبية ===== -->
     <div class="cart-sidebar" id="cartSidebar">
-        <h3 style="color: gold; margin-bottom: 20px;">
-            <i class="fas fa-shopping-cart"></i> سلة التسوق
-        </h3>
+        <h3><i class="fas fa-shopping-cart"></i> سلة التسوق</h3>
         <div id="cartItems"></div>
-        <div style="margin-top: 20px; border-top: 1px solid gold; padding-top: 20px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <div class="mt-20" style="border-top: 1px solid var(--gold); padding-top: 20px;">
+            <div class="d-flex justify-content-between mb-20">
                 <span>الإجمالي:</span>
-                <span style="color: gold; font-size: 20px;" id="cartTotal">0 دج</span>
+                <span class="text-gold" style="font-size: 20px;" id="cartTotal">0 دج</span>
             </div>
-            <button class="action-button btn-gold" onclick="checkoutCart()" style="width: 100%;">
+            <button class="action-button btn-gold w-100" onclick="checkoutCart()">
                 <i class="fas fa-check"></i> إتمام الشراء
             </button>
         </div>
@@ -853,62 +1426,62 @@
     <div class="modal" id="loginModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>تسجيل الدخول</h2>
+                <h2><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</h2>
                 <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <div class="d-flex gap-10 mb-20">
                     <button class="action-button btn-gold" style="flex:1;" onclick="switchAuthTab('login')">تسجيل دخول</button>
-                    <button class="action-button" style="flex:1; background: transparent; border:1px solid gold;" onclick="switchAuthTab('register')">حساب جديد</button>
+                    <button class="action-button btn-outline-gold" style="flex:1;" onclick="switchAuthTab('register')">حساب جديد</button>
                 </div>
                 
                 <div id="loginForm">
                     <div class="form-group">
-                        <label>البريد الإلكتروني أو اسم المستخدم</label>
-                        <input type="text" id="loginEmail" class="form-control">
+                        <label><i class="fas fa-envelope"></i> البريد أو اسم المستخدم</label>
+                        <input type="text" id="loginEmail" class="form-control" placeholder="أدخل بريدك أو اسمك">
                     </div>
                     <div class="form-group">
-                        <label>كلمة المرور</label>
-                        <input type="password" id="loginPassword" class="form-control">
+                        <label><i class="fas fa-lock"></i> كلمة المرور</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="أدخل كلمة المرور">
                     </div>
-                    <button class="action-button btn-gold" style="width:100%; margin-top:20px;" onclick="handleLogin()">
+                    <button class="action-button btn-gold w-100" onclick="handleLogin()">
                         <i class="fas fa-sign-in-alt"></i> دخول
                     </button>
                 </div>
 
                 <div id="registerForm" style="display:none;">
                     <div class="form-group">
-                        <label>الاسم الكامل</label>
-                        <input type="text" id="regName" class="form-control">
+                        <label><i class="fas fa-user"></i> الاسم الكامل</label>
+                        <input type="text" id="regName" class="form-control" placeholder="أدخل اسمك">
                     </div>
                     <div class="form-group">
-                        <label>البريد الإلكتروني</label>
-                        <input type="email" id="regEmail" class="form-control">
+                        <label><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
+                        <input type="email" id="regEmail" class="form-control" placeholder="أدخل بريدك">
                     </div>
                     <div class="form-group">
-                        <label>كلمة المرور</label>
-                        <input type="password" id="regPassword" class="form-control">
+                        <label><i class="fas fa-lock"></i> كلمة المرور</label>
+                        <input type="password" id="regPassword" class="form-control" placeholder="أدخل كلمة المرور">
                     </div>
                     <div class="form-group">
-                        <label>رقم الهاتف</label>
-                        <input type="text" id="regPhone" class="form-control">
+                        <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+                        <input type="text" id="regPhone" class="form-control" placeholder="05XXXXXXXX">
                     </div>
                     <div class="form-group">
-                        <label>معرف تليجرام</label>
+                        <label><i class="fab fa-telegram"></i> معرف تليجرام</label>
                         <input type="text" id="regTelegram" class="form-control" placeholder="@username">
                     </div>
-                    <div style="margin-top:15px;">
+                    <div class="form-group">
                         <label>
                             <input type="checkbox" id="isMerchant" onchange="toggleMerchantFields()"> تسجيل كتاجر
                         </label>
                     </div>
-                    <div id="merchantFields" style="display:none; margin-top:15px;">
+                    <div id="merchantFields" style="display:none;">
                         <div class="form-group">
-                            <label>اسم المتجر</label>
-                            <input type="text" id="storeName" class="form-control">
+                            <label><i class="fas fa-store"></i> اسم المتجر</label>
+                            <input type="text" id="storeName" class="form-control" placeholder="اسم متجرك">
                         </div>
                         <div class="form-group">
-                            <label>مستوى التاجر</label>
+                            <label><i class="fas fa-level-up-alt"></i> مستوى التاجر</label>
                             <select id="merchantLevel" class="form-control">
                                 <option value="1">مستوى 1</option>
                                 <option value="2">مستوى 2</option>
@@ -916,7 +1489,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>القسم</label>
+                            <label><i class="fas fa-tag"></i> القسم</label>
                             <select id="merchantCategory" class="form-control">
                                 <option value="promo">برومسيون</option>
                                 <option value="spices">توابل</option>
@@ -924,7 +1497,7 @@
                             </select>
                         </div>
                     </div>
-                    <button class="action-button btn-gold" style="width:100%; margin-top:20px;" onclick="handleRegister()">
+                    <button class="action-button btn-gold w-100" onclick="handleRegister()">
                         <i class="fas fa-user-plus"></i> تسجيل
                     </button>
                 </div>
@@ -936,46 +1509,48 @@
     <div class="modal" id="productModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>➕ إضافة منتج جديد</h2>
+                <h2><i class="fas fa-plus-circle"></i> إضافة منتج جديد</h2>
                 <button class="close-btn" onclick="closeModal('productModal')">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="productForm" onsubmit="event.preventDefault(); saveProduct();">
                     <div class="form-group">
-                        <label>📦 اسم المنتج</label>
+                        <label><i class="fas fa-box"></i> اسم المنتج</label>
                         <input type="text" id="productName" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label>🏷️ القسم</label>
+                        <label><i class="fas fa-tag"></i> القسم</label>
                         <select id="productCategory" class="form-control">
                             <option value="promo">برومسيون</option>
                             <option value="spices">توابل</option>
                             <option value="cosmetic">كوسمتيك</option>
                         </select>
                     </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                        <div class="form-group">
-                            <label>💰 السعر (دج)</label>
+                    <div class="d-flex gap-10">
+                        <div class="form-group" style="flex:1;">
+                            <label><i class="fas fa-coins"></i> السعر (دج)</label>
                             <input type="number" id="productPrice" class="form-control" required>
                         </div>
-                        <div class="form-group">
-                            <label>📊 الكمية</label>
+                        <div class="form-group" style="flex:1;">
+                            <label><i class="fas fa-boxes"></i> الكمية</label>
                             <input type="number" id="productStock" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>📝 وصف المنتج</label>
+                        <label><i class="fas fa-align-left"></i> وصف المنتج</label>
                         <textarea id="productDescription" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="form-group">
-                        <label>🖼️ صورة المنتج</label>
+                        <label><i class="fas fa-image"></i> صورة المنتج</label>
                         <input type="file" id="productImages" class="form-control" accept="image/*" required>
                     </div>
                     <div class="form-group" id="merchantTelegramGroup">
-                        <label>📱 معرف تليجرام (للتواصل)</label>
+                        <label><i class="fab fa-telegram"></i> معرف تليجرام (للتواصل)</label>
                         <input type="text" id="merchantTelegram" class="form-control" placeholder="@username">
                     </div>
-                    <button type="submit" class="btn-gold" style="width:100%;">رفع المنتج</button>
+                    <button type="submit" class="btn-gold w-100">
+                        <i class="fas fa-cloud-upload-alt"></i> رفع المنتج
+                    </button>
                 </form>
             </div>
         </div>
@@ -985,7 +1560,7 @@
     <div class="modal" id="productDetailModal">
         <div class="modal-content" style="max-width: 800px;">
             <div class="modal-header">
-                <h2>تفاصيل المنتج</h2>
+                <h2><i class="fas fa-info-circle"></i> تفاصيل المنتج</h2>
                 <button class="close-btn" onclick="closeModal('productDetailModal')">&times;</button>
             </div>
             <div class="modal-body" id="productDetailContent"></div>
@@ -1025,7 +1600,12 @@
         </div>
     </div>
 
-    <!-- ===== 14. الإشعارات ===== -->
+    <!-- ===== 14. زر العودة للأعلى ===== -->
+    <div class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- ===== 15. الإشعارات ===== -->
     <div id="toastContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 3000;"></div>
 
     <script>
@@ -1297,7 +1877,7 @@
             }
 
             if (filtered.length === 0) {
-                container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:50px;"><i class="fas fa-box-open" style="font-size:60px; color:gold;"></i><h3 style="color:gold; margin-top:20px;">لا توجد منتجات</h3></div>';
+                container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:50px;"><i class="fas fa-box-open" style="font-size:60px; color:var(--gold);"></i><h3 style="color:var(--gold); margin-top:20px;">لا توجد منتجات</h3></div>';
                 return;
             }
 
@@ -1663,21 +2243,26 @@
             panel.innerHTML = `
                 <div class="merchant-panel">
                     <h3>👨‍💼 لوحة التاجر - ${currentUser.storeName || currentUser.name}</h3>
-                    <div style="display: flex; gap: 20px; justify-content: center; margin: 20px 0;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 32px; color: gold;">${merchantProducts.length}</div>
-                            <div>📦 منتجاتي</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-boxes"></i>
+                            <div style="font-size: 32px; color: var(--gold);">${merchantProducts.length}</div>
+                            <div>منتجاتي</div>
                         </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 32px; color: gold;">${merchantProducts.filter(p => p.stock > 0).length}</div>
-                            <div>✅ متاحة</div>
+                        <div class="stat-card">
+                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                            <div style="font-size: 32px; color: var(--gold);">${merchantProducts.filter(p => p.stock > 0).length}</div>
+                            <div>متاحة</div>
                         </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 32px; color: gold;">${merchantProducts.reduce((sum, p) => sum + p.stock, 0)}</div>
-                            <div>📊 إجمالي المخزون</div>
+                        <div class="stat-card">
+                            <i class="fas fa-boxes"></i>
+                            <div style="font-size: 32px; color: var(--gold);">${merchantProducts.reduce((sum, p) => sum + p.stock, 0)}</div>
+                            <div>إجمالي المخزون</div>
                         </div>
                     </div>
-                    <button class="btn-gold" onclick="showMerchantDashboard()">فتح لوحة التحكم</button>
+                    <button class="btn-gold w-100" onclick="showMerchantDashboard()">
+                        <i class="fas fa-chart-line"></i> فتح لوحة التحكم
+                    </button>
                 </div>
             `;
         }
@@ -1692,23 +2277,40 @@
             
             const content = document.getElementById('merchantDashboardContent');
             content.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px;">
-                    <img src="${currentUser.storeLogo || currentUser.avatar}" style="width:80px; height:80px; border-radius:50%; border:3px solid gold;">
+                <div class="d-flex align-items-center gap-20 mb-30">
+                    <img src="${currentUser.storeLogo || currentUser.avatar}" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--gold);">
                     <div>
-                        <h2 style="color: gold;">${currentUser.storeName || currentUser.name}</h2>
+                        <h2 style="color: var(--gold);">${currentUser.storeName || currentUser.name}</h2>
                         <p><i class="fab fa-telegram"></i> ${currentUser.telegram}</p>
+                        <p><i class="fas fa-phone"></i> ${currentUser.phone}</p>
                     </div>
                 </div>
 
                 <div class="stats-grid">
-                    <div class="stat-card"><i class="fas fa-boxes"></i><div style="font-size:24px;">${totalProducts}</div><div>إجمالي المنتجات</div></div>
-                    <div class="stat-card"><i class="fas fa-check-circle" style="color:#4CAF50;"></i><div style="font-size:24px;">${inStock}</div><div>متوفر</div></div>
-                    <div class="stat-card"><i class="fas fa-coins" style="color:gold;"></i><div style="font-size:24px;">${totalValue.toLocaleString()}</div><div>قيمة المخزون</div></div>
+                    <div class="stat-card">
+                        <i class="fas fa-boxes"></i>
+                        <div style="font-size: 24px;">${totalProducts}</div>
+                        <div>إجمالي المنتجات</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                        <div style="font-size: 24px;">${inStock}</div>
+                        <div>متوفر</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-coins" style="color: var(--gold);"></i>
+                        <div style="font-size: 24px;">${totalValue.toLocaleString()} دج</div>
+                        <div>قيمة المخزون</div>
+                    </div>
                 </div>
 
-                <div style="display: flex; gap: 10px; margin: 20px 0;">
-                    <button class="btn-gold" onclick="showAddProductModal()"><i class="fas fa-plus"></i> إضافة منتج</button>
-                    <button class="btn-outline-gold" onclick="showMerchantProducts()"><i class="fas fa-list"></i> منتجاتي</button>
+                <div class="d-flex gap-10 mt-20">
+                    <button class="btn-gold" style="flex:1;" onclick="showAddProductModal()">
+                        <i class="fas fa-plus"></i> إضافة منتج
+                    </button>
+                    <button class="btn-outline-gold" style="flex:1;" onclick="showMerchantProducts()">
+                        <i class="fas fa-list"></i> منتجاتي
+                    </button>
                 </div>
             `;
             
@@ -1719,16 +2321,19 @@
             const merchantProducts = products.filter(p => p.merchantId === currentUser.id);
             const content = document.getElementById('merchantProductsContent');
             content.innerHTML = `
-                <h3 style="color: gold;">منتجاتي (${merchantProducts.length})</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+                <h3 style="color: var(--gold); margin-bottom: 20px;">منتجاتي (${merchantProducts.length})</h3>
+                <div class="products-grid" style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
                     ${merchantProducts.map(p => `
-                        <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:10px;">
-                            <img src="${p.images[0]}" style="width:100%; height:150px; object-fit:cover; border-radius:10px;">
-                            <h4>${p.name}</h4>
-                            <p style="color:gold;">${p.price} دج</p>
+                        <div class="product-mini-card">
+                            <img src="${p.images[0]}" alt="${p.name}">
+                            <h4 style="margin: 10px 0;">${p.name}</h4>
+                            <p style="color: var(--gold); font-weight: bold;">${p.price} دج</p>
                             <p>📦 ${p.stock} قطعة</p>
                             <p><i class="fas fa-fingerprint"></i> ${p.thumbprint}</p>
-                            <button class="btn-gold" style="width:100%; margin-top:10px;" onclick="editProduct(${p.id})">تعديل</button>
+                            <div class="d-flex gap-10 mt-10">
+                                <button class="btn-gold" style="flex:1;" onclick="editProduct(${p.id})">تعديل</button>
+                                <button class="btn-outline-gold" style="flex:1;" onclick="deleteProduct(${p.id})">حذف</button>
+                            </div>
                         </div>
                     `).join('')}
                 </div>
@@ -1746,14 +2351,28 @@
             const pendingMerchants = users.filter(u => u.role === 'merchant_pending').length;
             const content = document.getElementById('dashboardContent');
             content.innerHTML = `
-                <h3 style="color: gold;">📊 نظرة عامة</h3>
+                <h3 style="color: var(--gold);">📊 نظرة عامة</h3>
                 <div class="stats-grid">
-                    <div class="stat-card"><div style="font-size:32px;">${products.length}</div><div>منتجات</div></div>
-                    <div class="stat-card"><div style="font-size:32px;">${users.length}</div><div>مستخدمين</div></div>
-                    <div class="stat-card"><div style="font-size:32px;">${pendingMerchants}</div><div>طلبات تجار</div></div>
+                    <div class="stat-card">
+                        <i class="fas fa-boxes"></i>
+                        <div style="font-size: 32px;">${products.length}</div>
+                        <div>منتجات</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div style="font-size: 32px;">${users.length}</div>
+                        <div>مستخدمين</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-clock"></i>
+                        <div style="font-size: 32px;">${pendingMerchants}</div>
+                        <div>طلبات تجار</div>
+                    </div>
                 </div>
-                <div style="margin-top:20px;">
-                    <button class="btn-gold" onclick="showPendingMerchants()">عرض طلبات التجار</button>
+                <div class="d-flex gap-10 mt-20">
+                    <button class="btn-gold" onclick="showPendingMerchants()">
+                        <i class="fas fa-user-clock"></i> عرض طلبات التجار
+                    </button>
                 </div>
             `;
         }
@@ -1762,21 +2381,27 @@
             const pending = users.filter(u => u.role === 'merchant_pending');
             const content = document.getElementById('dashboardContent');
             content.innerHTML = `
-                <h3 style="color: gold;">طلبات التجار (${pending.length})</h3>
+                <h3 style="color: var(--gold); margin-bottom: 20px;">طلبات التجار (${pending.length})</h3>
                 ${pending.map(m => `
-                    <div style="background:rgba(0,0,0,0.3); border:2px solid gold; border-radius:15px; padding:20px; margin-bottom:20px;">
-                        <div style="display:flex; gap:20px;">
-                            <img src="${m.storeLogo || m.avatar}" style="width:80px; height:80px; border-radius:50%;">
-                            <div>
-                                <h4>${m.storeName || m.name}</h4>
-                                <p>${m.email}</p>
+                    <div class="merchant-panel">
+                        <div class="d-flex gap-20">
+                            <img src="${m.storeLogo || m.avatar}" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--gold);">
+                            <div style="flex:1;">
+                                <h4 style="color: var(--gold);">${m.storeName || m.name}</h4>
+                                <p><i class="fas fa-user"></i> ${m.name}</p>
+                                <p><i class="fas fa-envelope"></i> ${m.email}</p>
                                 <p><i class="fab fa-telegram"></i> ${m.telegram}</p>
-                                <p>القسم: ${getCategoryName(m.merchantCategory)}</p>
+                                <p><i class="fas fa-tag"></i> القسم: ${getCategoryName(m.merchantCategory)}</p>
+                                <span class="merchant-badge pending">في الانتظار</span>
                             </div>
                         </div>
-                        <div style="margin-top:15px; display:flex; gap:10px;">
-                            <button class="btn-gold" onclick="approveMerchant(${m.id})">✅ موافقة</button>
-                            <button class="btn-outline-gold" onclick="rejectMerchant(${m.id})">❌ رفض</button>
+                        <div class="d-flex gap-10 mt-20">
+                            <button class="btn-gold" style="flex:1;" onclick="approveMerchant(${m.id})">
+                                <i class="fas fa-check"></i> موافقة
+                            </button>
+                            <button class="btn-outline-gold" style="flex:1;" onclick="rejectMerchant(${m.id})">
+                                <i class="fas fa-times"></i> رفض
+                            </button>
                         </div>
                     </div>
                 `).join('')}
@@ -1812,21 +2437,41 @@
             
             const content = document.getElementById('productDetailContent');
             content.innerHTML = `
-                <div style="text-align:center;">
-                    <img src="${product.images[0]}" style="width:100%; max-height:400px; object-fit:cover; border-radius:15px;">
-                    <h2 style="color:gold; margin:20px 0;">${product.name}</h2>
-                    <p>${product.description}</p>
-                    <div style="display:flex; justify-content:space-around; margin:20px 0;">
-                        <div><i class="fas fa-tag" style="color:gold;"></i> ${product.price} دج</div>
-                        <div><i class="fas fa-box" style="color:gold;"></i> ${product.stock} قطعة</div>
+                <div class="text-center">
+                    <img src="${product.images[0]}" style="width:100%; max-height:400px; object-fit:cover; border-radius:15px; border:3px solid var(--gold);">
+                    <h2 style="color:var(--gold); margin:20px 0;">${product.name}</h2>
+                    <p style="color: var(--text-secondary);">${product.description}</p>
+                    
+                    <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="stat-card">
+                            <i class="fas fa-tag" style="color:var(--gold);"></i>
+                            <div style="font-size: 20px;">${product.price} دج</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-box" style="color:var(--gold);"></i>
+                            <div style="font-size: 20px;">${product.stock} قطعة</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-star" style="color:var(--gold);"></i>
+                            <div style="font-size: 20px;">${product.rating}</div>
+                        </div>
                     </div>
-                    <div style="margin:20px 0; padding:10px; background:rgba(0,0,0,0.3); border-radius:10px;">
-                        <i class="fas fa-fingerprint" style="color:gold;"></i> البصمة: ${product.thumbprint}
+                    
+                    <div style="margin:20px 0; padding:15px; background:var(--glass-dark); border-radius:var(--border-radius-sm); border:1px dashed var(--gold);">
+                        <i class="fas fa-fingerprint" style="color:var(--gold);"></i>
+                        <span style="font-family: monospace; color:var(--gold);">${product.thumbprint}</span>
                     </div>
-                    <div style="display:flex; gap:10px;">
-                        <button class="btn-gold" onclick="addToCart(${product.id}); closeModal('productDetailModal')">🛒 أضف للسلة</button>
-                        <button class="btn-telegram" onclick="window.open('https://t.me/${product.merchantTelegram?.replace('@', '')}', '_blank')">📱 تواصل</button>
-                        <button class="btn-outline-gold" onclick="closeModal('productDetailModal')">إغلاق</button>
+                    
+                    <div class="d-flex gap-10">
+                        <button class="btn-gold" style="flex:1;" onclick="addToCart(${product.id}); closeModal('productDetailModal')">
+                            <i class="fas fa-shopping-cart"></i> أضف للسلة
+                        </button>
+                        <button class="btn-telegram" style="flex:1;" onclick="window.open('https://t.me/${product.merchantTelegram?.replace('@', '')}', '_blank')">
+                            <i class="fab fa-telegram"></i> تواصل
+                        </button>
+                        <button class="btn-outline-gold" style="flex:1;" onclick="closeModal('productDetailModal')">
+                            <i class="fas fa-times"></i> إغلاق
+                        </button>
                     </div>
                 </div>
             `;
@@ -1881,6 +2526,16 @@
             showNotification('سيتم التعديل قريباً', 'info');
         }
 
+        function deleteProduct(productId) {
+            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                products = products.filter(p => p.id !== productId);
+                localStorage.setItem('nardoo_products', JSON.stringify(products));
+                displayProducts();
+                showNotification('تم حذف المنتج', 'success');
+                closeModal('merchantProductsModal');
+            }
+        }
+
         function showUserMenu() {
             if (currentUser) {
                 if (confirm('تسجيل الخروج؟')) {
@@ -1892,6 +2547,17 @@
                     updateNavigation();
                     showNotification('تم تسجيل الخروج', 'info');
                 }
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleQuickTopButton() {
+            const btn = document.getElementById('scrollToTop');
+            if (btn) {
+                btn.classList.toggle('show', window.scrollY > 300);
             }
         }
 
@@ -1916,10 +2582,12 @@
 
             updateNavigation();
             
+            window.addEventListener('scroll', toggleQuickTopButton);
+            
             console.log('✅ نظام ناردو برو جاهز');
             console.log('👑 المدير: azer | كلمة المرور: 123456');
-            console.log('👨‍💼 تاجر: أحمد | كلمة المرور: a123');
-            console.log('👩‍💼 تاجر معلق: سارة | كلمة المرور: s123');
+            console.log('👨‍💼 تاجر: أحمد | البريد: ahmed@merchant.com | كلمة المرور: a123');
+            console.log('👩‍💼 تاجر معلق: سارة | البريد: sara@merchant.com | كلمة المرور: s123');
         };
 
         // ========== 22. إغلاق النوافذ ==========
