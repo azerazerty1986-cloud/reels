@@ -1,1 +1,1098 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapTik - سناب شات + TikTok</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* واجهة سناب شات الرئيسية */
+        .snap-container {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        /* كاميرا سناب شات */
+        .snap-camera {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* خلفية الكاميرا مع تأثيرات */
+        .camera-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* طبقة الفلاتر */
+        .filter-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            background: rgba(0,0,0,0.1);
+        }
+
+        /* الفلاتر المختلفة */
+        .filter-bw .filter-overlay {
+            background: rgba(0,0,0,0.3);
+            filter: grayscale(100%);
+        }
+
+        .filter-warm .filter-overlay {
+            background: rgba(255,200,100,0.2);
+        }
+
+        .filter-cool .filter-overlay {
+            background: rgba(100,200,255,0.2);
+        }
+
+        .filter-dream .filter-overlay {
+            background: rgba(255,192,203,0.2);
+            filter: blur(1px);
+        }
+
+        /* رأس سناب شات */
+        .snap-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            color: white;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-left i, .header-right i {
+            font-size: 24px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #ff0050, #ff8a00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* مؤقت القصة */
+        .story-timer {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            right: 20px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            z-index: 10;
+        }
+
+        .timer-progress {
+            height: 100%;
+            width: 30%;
+            background: white;
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* فلاتر أسفل الشاشة */
+        .filters-bar {
+            position: absolute;
+            bottom: 150px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            z-index: 10;
+            padding: 10px;
+        }
+
+        .filter-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s;
+        }
+
+        .filter-icon.active {
+            background: white;
+            color: #ff0050;
+            transform: scale(1.1);
+        }
+
+        /* العدسات (Lenses) */
+        .lenses-bar {
+            position: absolute;
+            bottom: 210px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 15px;
+            padding: 0 20px;
+            overflow-x: auto;
+            z-index: 10;
+            scrollbar-width: none;
+        }
+
+        .lenses-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .lens-item {
+            min-width: 70px;
+            height: 70px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lens-item i {
+            font-size: 24px;
+        }
+
+        .lens-item.active {
+            border-color: #ff0050;
+            background: rgba(255,0,80,0.3);
+        }
+
+        /* زر التصوير */
+        .capture-section {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .gallery-preview {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            border: 2px solid white;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .gallery-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .capture-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            border: 5px solid rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .capture-btn:active {
+            transform: scale(0.95);
+        }
+
+        .switch-camera {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        /* قائمة القصص الجانبية */
+        .stories-sidebar {
+            position: absolute;
+            right: 20px;
+            top: 120px;
+            bottom: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .story-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 20px;
+            background: linear-gradient(45deg, #ff0050, #ff8a00);
+            padding: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .story-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 17px;
+            border: 2px solid white;
+            object-fit: cover;
+        }
+
+        .story-avatar.live::after {
+            content: '●';
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            color: #ff0050;
+            font-size: 20px;
+        }
+
+        .story-avatar.live::before {
+            content: 'بث مباشر';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff0050;
+            color: white;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+
+        /* الرسائل والمحادثات */
+        .chat-bubble {
+            position: absolute;
+            bottom: 120px;
+            left: 20px;
+            right: 80px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 12px;
+            border-radius: 25px;
+            color: white;
+            font-size: 14px;
+            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: slideUp 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-bubble i {
+            color: #ff0050;
+        }
+
+        /* خريطة سناب */
+        .snap-map-preview {
+            position: absolute;
+            top: 120px;
+            left: 20px;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
+            border-radius: 20px;
+            border: 3px solid white;
+            overflow: hidden;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .snap-map-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .map-badge {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: #ff0050;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        /* قائمة TikTok السفلية */
+        .tiktok-bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 20;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-item i {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: #ff0050;
+        }
+
+        .nav-item span {
+            font-size: 11px;
+        }
+
+        /* نافذة المحادثة المنبثقة */
+        .chat-window {
+            position: absolute;
+            bottom: 90px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 30px;
+            z-index: 30;
+            max-height: 400px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #ff0050, #ff8a00);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 15px;
+        }
+
+        .chat-messages {
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 80%;
+        }
+
+        .message.sent {
+            margin-right: auto;
+        }
+
+        .message.received {
+            margin-left: auto;
+        }
+
+        .message-content {
+            padding: 10px 15px;
+            border-radius: 20px;
+            background: #f0f0f0;
+        }
+
+        .message.sent .message-content {
+            background: #ff0050;
+            color: white;
+        }
+
+        .chat-input {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .chat-input button {
+            background: #ff0050;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        /* مؤشر التسجيل */
+        .recording-indicator {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff0050;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            z-index: 10;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recording-dot {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        /* إشعارات */
+        .snap-notification {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: slideDown 0.3s ease;
+        }
+
+        /* تأثيرات */
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translate(-50%, -100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+
+        @keyframes flash {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* وضع الليل */
+        .night-mode .filter-overlay {
+            background: rgba(0,0,50,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="snap-container">
+        <!-- واجهة سناب شات الرئيسية -->
+        <div class="snap-camera" id="snapCamera">
+            <!-- خلفية الكاميرا (صورة ثابتة للتجربة) -->
+            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400" class="camera-preview" alt="camera preview" id="cameraPreview">
+            
+            <!-- طبقة الفلتر -->
+            <div class="filter-overlay" id="filterOverlay"></div>
+
+            <!-- رأس سناب شات -->
+            <div class="snap-header">
+                <div class="header-left">
+                    <i class="fas fa-user-circle" onclick="openProfile()"></i>
+                    <i class="fas fa-search" onclick="openSearch()"></i>
+                </div>
+                <div class="header-right">
+                    <i class="fas fa-bolt" onclick="toggleFlash()"></i>
+                    <i class="fas fa-moon" onclick="toggleNightMode()"></i>
+                    <div class="profile-avatar" onclick="openSettings()">
+                        <span>✨</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- مؤقت القصة -->
+            <div class="story-timer">
+                <div class="timer-progress" id="timerProgress"></div>
+            </div>
+
+            <!-- خريطة سناب -->
+            <div class="snap-map-preview" onclick="openMap()">
+                <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=100" alt="map">
+                <div class="map-badge">3 أصدقاء</div>
+            </div>
+
+            <!-- قائمة القصص الجانبية -->
+            <div class="stories-sidebar">
+                <div class="story-avatar live" onclick="viewStory(1)">
+                    <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="story">
+                </div>
+                <div class="story-avatar" onclick="viewStory(2)">
+                    <img src="https://randomuser.me/api/portraits/men/4.jpg" alt="story">
+                </div>
+                <div class="story-avatar" onclick="viewStory(3)">
+                    <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="story">
+                </div>
+                <div class="story-avatar" onclick="addStory()">
+                    <img src="https://via.placeholder.com/60/ff0050/ffffff?text=+" alt="add">
+                </div>
+            </div>
+
+            <!-- العدسات (Lenses) -->
+            <div class="lenses-bar" id="lensesBar">
+                <div class="lens-item active" onclick="selectLens('normal', this)">
+                    <i class="fas fa-smile"></i>
+                    <span>عادي</span>
+                </div>
+                <div class="lens-item" onclick="selectLens('dog', this)">
+                    <i class="fas fa-dog"></i>
+                    <span>كلب</span>
+                </div>
+                <div class="lens-item" onclick="selectLens('cat', this)">
+                    <i class="fas fa-cat"></i>
+                    <span>قطة</span>
+                </div>
+                <div class="lens-item" onclick="selectLens('heart', this)">
+                    <i class="fas fa-heart"></i>
+                    <span>قلوب</span>
+                </div>
+                <div class="lens-item" onclick="selectLens('glasses', this)">
+                    <i class="fas fa-glasses"></i>
+                    <span>نظارات</span>
+                </div>
+            </div>
+
+            <!-- فلاتر الألوان -->
+            <div class="filters-bar">
+                <div class="filter-icon" onclick="applyFilter('normal')">
+                    <i class="fas fa-circle"></i>
+                </div>
+                <div class="filter-icon" onclick="applyFilter('bw')">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="filter-icon active" onclick="applyFilter('warm')">
+                    <i class="fas fa-sun"></i>
+                </div>
+                <div class="filter-icon" onclick="applyFilter('cool')">
+                    <i class="fas fa-snowflake"></i>
+                </div>
+                <div class="filter-icon" onclick="applyFilter('dream')">
+                    <i class="fas fa-cloud"></i>
+                </div>
+            </div>
+
+            <!-- رسالة واردة -->
+            <div class="chat-bubble" id="chatBubble" onclick="openChat()">
+                <i class="fas fa-comment-dots"></i>
+                <span>Sara: شوف القصة الجديدة! ✨</span>
+            </div>
+
+            <!-- مؤشر التسجيل -->
+            <div class="recording-indicator" id="recordingIndicator">
+                <div class="recording-dot"></div>
+                <span>جاري التسجيل...</span>
+            </div>
+
+            <!-- أزرار التصوير -->
+            <div class="capture-section">
+                <div class="gallery-preview" onclick="openGallery()">
+                    <img src="https://via.placeholder.com/50/ff0050/ffffff?text=📸" alt="gallery">
+                </div>
+                <div class="capture-btn" onclick="capturePhoto()" id="captureBtn"></div>
+                <div class="switch-camera" onclick="switchCamera()">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+            </div>
+
+            <!-- شريط TikTok السفلي -->
+            <div class="tiktok-bottom-nav">
+                <div class="nav-item active" onclick="switchToTikTok('home')">
+                    <i class="fas fa-home"></i>
+                    <span>الرئيسية</span>
+                </div>
+                <div class="nav-item" onclick="switchToTikTok('discover')">
+                    <i class="fas fa-compass"></i>
+                    <span>اكتشف</span>
+                </div>
+                <div class="nav-item" onclick="switchToTikTok('messages')">
+                    <i class="fas fa-comment"></i>
+                    <span>الرسائل</span>
+                </div>
+                <div class="nav-item" onclick="switchToTikTok('profile')">
+                    <i class="fas fa-user"></i>
+                    <span>الملف</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- نافذة المحادثة -->
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="Sara">
+                <div>
+                    <h4>Sara Mohamed</h4>
+                    <small>نشط الآن</small>
+                </div>
+                <i class="fas fa-times" onclick="closeChat()" style="margin-right: auto; font-size: 24px; cursor: pointer;"></i>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="message received">
+                    <div class="message-content">مرحباً! كيف حالك؟</div>
+                </div>
+                <div class="message sent">
+                    <div class="message-content">الحمدلله، شفت قصتك الجديدة 👍</div>
+                </div>
+                <div class="message received">
+                    <div class="message-content">شكراً! 😊</div>
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" placeholder="أرسل رسالة..." id="messageInput">
+                <button onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // متغيرات الحالة
+        let currentFilter = 'warm';
+        let currentLens = 'normal';
+        let isRecording = false;
+        let flashActive = false;
+        let nightMode = false;
+        let cameraStream = null;
+
+        // تطبيق الفلتر
+        function applyFilter(filter) {
+            currentFilter = filter;
+            const camera = document.getElementById('snapCamera');
+            
+            // إزالة كل الفلاتر
+            camera.classList.remove('filter-bw', 'filter-warm', 'filter-cool', 'filter-dream');
+            
+            // إضافة الفلتر المحدد
+            if (filter !== 'normal') {
+                camera.classList.add(`filter-${filter}`);
+            }
+            
+            // تحديث الأيقونات
+            document.querySelectorAll('.filter-icon').forEach(el => {
+                el.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            showNotification(`✨ فلتر ${filter} مفعل`);
+        }
+
+        // اختيار العدسة
+        function selectLens(lens, element) {
+            currentLens = lens;
+            
+            document.querySelectorAll('.lens-item').forEach(el => {
+                el.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            const icons = {
+                'normal': '😊',
+                'dog': '🐕',
+                'cat': '🐈',
+                'heart': '❤️',
+                'glasses': '👓'
+            };
+            
+            showNotification(`عدسة ${icons[lens] || lens} مفعلة`);
+        }
+
+        // فتح الملف الشخصي
+        function openProfile() {
+            showNotification('📱 فتح الملف الشخصي');
+        }
+
+        // فتح البحث
+        function openSearch() {
+            showNotification('🔍 فتح البحث');
+        }
+
+        // تبديل الفلاش
+        function toggleFlash() {
+            flashActive = !flashActive;
+            const flashIcon = document.querySelector('.fa-bolt');
+            
+            if (flashActive) {
+                flashIcon.style.color = '#ff0050';
+                showNotification('⚡ فلاش نشط');
+                
+                // تأثير الفلاش
+                const overlay = document.getElementById('filterOverlay');
+                overlay.style.backgroundColor = 'rgba(255,255,255,0.3)';
+                setTimeout(() => {
+                    overlay.style.backgroundColor = '';
+                }, 200);
+            } else {
+                flashActive = false;
+                flashIcon.style.color = 'white';
+                showNotification('💡 فلاش غير نشط');
+            }
+        }
+
+        // وضع الليل
+        function toggleNightMode() {
+            nightMode = !nightMode;
+            const camera = document.getElementById('snapCamera');
+            const moonIcon = document.querySelector('.fa-moon');
+            
+            if (nightMode) {
+                camera.classList.add('night-mode');
+                moonIcon.style.color = '#ff0050';
+                showNotification('🌙 وضع الليل مفعل');
+            } else {
+                camera.classList.remove('night-mode');
+                moonIcon.style.color = 'white';
+                showNotification('☀️ وضع النهار مفعل');
+            }
+        }
+
+        // فتح الخريطة
+        function openMap() {
+            showNotification('🗺️ فتح خريطة سناب - 3 أصدقاء قريبين');
+        }
+
+        // عرض القصة
+        function viewStory(userId) {
+            const names = {
+                1: 'Sara',
+                2: 'Khaled',
+                3: 'Noor'
+            };
+            showNotification(`📱 مشاهدة قصة ${names[userId] || 'المستخدم'}`);
+            
+            // بدء مؤقت القصة
+            let progress = 30;
+            const timer = document.getElementById('timerProgress');
+            timer.style.width = '100%';
+            
+            const interval = setInterval(() => {
+                progress -= 1;
+                timer.style.width = progress + '%';
+                
+                if (progress <= 0) {
+                    clearInterval(interval);
+                    timer.style.width = '0%';
+                }
+            }, 100);
+        }
+
+        // إضافة قصة
+        function addStory() {
+            showNotification('📸 إضافة قصة جديدة - التقط صورة أو فيديو');
+            startRecording();
+        }
+
+        // بدء التسجيل
+        function startRecording() {
+            isRecording = true;
+            document.getElementById('recordingIndicator').style.display = 'flex';
+            document.getElementById('captureBtn').style.transform = 'scale(1.2)';
+            document.getElementById('captureBtn').style.backgroundColor = '#ff0050';
+            
+            setTimeout(() => {
+                stopRecording();
+            }, 10000); // تسجيل لمدة 10 ثواني
+        }
+
+        // إيقاف التسجيل
+        function stopRecording() {
+            isRecording = false;
+            document.getElementById('recordingIndicator').style.display = 'none';
+            document.getElementById('captureBtn').style.transform = 'scale(1)';
+            document.getElementById('captureBtn').style.backgroundColor = 'white';
+        }
+
+        // التقاط صورة
+        function capturePhoto() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                // تأثير الفلاش
+                const overlay = document.getElementById('filterOverlay');
+                overlay.style.backgroundColor = 'white';
+                overlay.style.transition = 'background-color 0.1s';
+                
+                setTimeout(() => {
+                    overlay.style.backgroundColor = '';
+                }, 100);
+                
+                showNotification('📸 تم التقاط الصورة!');
+                
+                // بدء التسريب (لقطة شاشة)
+                setTimeout(() => {
+                    showNotification('👀 تم حفظ الصورة في الذاكرة');
+                }, 500);
+            }
+        }
+
+        // تبديل الكاميرا
+        function switchCamera() {
+            showNotification('🔄 تبديل الكاميرا');
+        }
+
+        // فتح المعرض
+        function openGallery() {
+            showNotification('🖼️ فتح معرض الصور');
+        }
+
+        // فتح المحادثة
+        function openChat() {
+            document.getElementById('chatWindow').style.display = 'flex';
+            document.getElementById('chatBubble').style.display = 'none';
+        }
+
+        // إغلاق المحادثة
+        function closeChat() {
+            document.getElementById('chatWindow').style.display = 'none';
+            document.getElementById('chatBubble').style.display = 'flex';
+        }
+
+        // إرسال رسالة
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                const messages = document.getElementById('chatMessages');
+                messages.innerHTML += `
+                    <div class="message sent">
+                        <div class="message-content">${message}</div>
+                    </div>
+                `;
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+                
+                // رد تلقائي
+                setTimeout(() => {
+                    messages.innerHTML += `
+                        <div class="message received">
+                            <div class="message-content">😊 تمت مشاهدة الرسالة</div>
+                        </div>
+                    `;
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000);
+            }
+        }
+
+        // التبديل إلى TikTok
+        function switchToTikTok(section) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            const icons = {
+                'home': '🏠 الصفحة الرئيسية',
+                'discover': '🔍 اكتشف',
+                'messages': '💬 الرسائل',
+                'profile': '👤 الملف الشخصي'
+            };
+            
+            showNotification(`TikTok - ${icons[section]}`);
+        }
+
+        // فتح الإعدادات
+        function openSettings() {
+            showNotification('⚙️ فتح الإعدادات');
+        }
+
+        // إظهار الإشعارات
+        function showNotification(message) {
+            // إزالة أي إشعار سابق
+            const oldNotification = document.querySelector('.snap-notification');
+            if (oldNotification) {
+                oldNotification.remove();
+            }
+            
+            // إنشاء إشعار جديد
+            const notification = document.createElement('div');
+            notification.className = 'snap-notification';
+            notification.innerHTML = `
+                <i class="fas fa-camera" style="color: #ff0050;"></i>
+                <span>${message}</span>
+            `;
+            
+            document.querySelector('.snap-container').appendChild(notification);
+            
+            // إخفاء الإشعار بعد 2 ثانية
+            setTimeout(() => {
+                notification.style.animation = 'slideUp 0.3s reverse';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 2000);
+        }
+
+        // محاكاة كاميرا حقيقية (للتجربة)
+        function initCamera() {
+            // استخدام صورة ثابتة للتجربة بدلاً من الكاميرا الحقيقية
+            console.log('كاميرا سناب شات جاهزة');
+            
+            // محاكاة رسائل واردة
+            setTimeout(() => {
+                showNotification('💬 رسالة جديدة من Sara');
+            }, 5000);
+            
+            // محاكاة قصة جديدة
+            setTimeout(() => {
+                showNotification('📱 قصة جديدة من Khaled');
+            }, 8000);
+        }
+
+        // تنبيه لقطة الشاشة
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'PrintScreen') {
+                showNotification('📸 تم أخذ لقطة شاشة!');
+            }
+        });
+
+        // منع قائمة السياق (يمين)
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            showNotification('❌ لا يمكن النسخ');
+        });
+
+        // تهيئة الصفحة
+        window.onload = function() {
+            initCamera();
+            
+            // تأثيرات تفاعلية للكاميرا
+            const captureBtn = document.getElementById('captureBtn');
+            
+            captureBtn.addEventListener('mousedown', () => {
+                if (!isRecording) {
+                    startRecording();
+                }
+            });
+            
+            captureBtn.addEventListener('mouseup', () => {
+                if (isRecording) {
+                    stopRecording();
+                }
+            });
+            
+            captureBtn.addEventListener('mouseleave', () => {
+                if (isRecording) {
+                    stopRecording();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
+
+
