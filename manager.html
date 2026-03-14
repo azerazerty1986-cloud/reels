@@ -19,7 +19,7 @@
         body {
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             min-height: 100vh;
-            padding: 15px;
+            padding: 10px;
             position: relative;
         }
 
@@ -56,91 +56,79 @@
             100% { transform: translate(5%, 5%) rotate(5deg); }
         }
 
-        /* الهيدر الرئيسي - أصغر حجماً */
+        /* الهيدر الرئيسي - مصغر */
         .main-header {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 10px 20px;
-            margin-bottom: 15px;
+            border-radius: 15px;
+            padding: 8px 15px;
+            margin-bottom: 10px;
             border: 2px solid rgba(255, 215, 0, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .header-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
         }
 
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             background: linear-gradient(135deg, gold, #ffd700);
-            border-radius: 12px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 16px;
             color: #1a1a2e;
-            transform: rotate(5deg);
-            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.4);
         }
 
         .logo-text h1 {
             color: white;
-            font-size: 20px;
-            margin-bottom: 2px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            font-weight: 800;
+            font-size: 16px;
+            font-weight: 700;
         }
 
         .logo-text p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 10px;
-            font-weight: 500;
+            display: none;
         }
 
         /* شريط التنقل العلوي - أيقونات فقط */
         .nav-bar {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
-            border-radius: 40px;
-            padding: 5px;
+            border-radius: 30px;
+            padding: 4px;
             display: flex;
-            gap: 5px;
+            gap: 4px;
             border: 2px solid rgba(255, 215, 0, 0.3);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .nav-item {
             flex: 1;
-            padding: 10px 15px;
-            border-radius: 35px;
+            padding: 8px 12px;
+            border-radius: 25px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
             background: transparent;
             color: rgba(255, 255, 255, 0.6);
             border: none;
         }
 
         .nav-item i {
-            font-size: 22px;
-            transition: all 0.3s;
+            font-size: 20px;
         }
 
-        /* إخفاء النصوص في شريط التنقل */
         .nav-item span {
             display: none;
         }
@@ -148,32 +136,23 @@
         .nav-item.active {
             background: linear-gradient(135deg, gold, #ffd700);
             color: #1a1a2e;
-            transform: scale(1.02);
-            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.5);
         }
 
-        .nav-item.active i {
-            transform: scale(1.1);
-            color: #1a1a2e;
-        }
-
-        /* حاوية التطبيق - أكبر حجماً */
+        /* حاوية التطبيق - ممتلئة */
         .app-container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
+            border-radius: 15px;
             overflow: hidden;
             border: 3px solid rgba(255, 215, 0, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-            height: 70vh; /* أكبر حجماً */
-            min-height: 500px;
+            height: calc(100vh - 180px); /* تأخذ المساحة المتبقية */
+            min-height: 400px;
             position: relative;
-            margin-top: 10px;
         }
 
         /* رأس التطبيق */
         .app-header {
-            padding: 8px 15px;
+            padding: 5px 10px;
             background: rgba(0, 0, 0, 0.4);
             border-bottom: 2px solid rgba(255, 215, 0, 0.3);
             display: flex;
@@ -184,17 +163,17 @@
         .app-title {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
         }
 
         .app-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
+            width: 25px;
+            height: 25px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .app-icon.snap {
@@ -214,36 +193,35 @@
 
         .app-name {
             color: white;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
         }
 
         .app-file {
             color: gold;
-            font-size: 11px;
+            font-size: 10px;
             background: rgba(0, 0, 0, 0.3);
-            padding: 3px 8px;
-            border-radius: 12px;
+            padding: 2px 6px;
+            border-radius: 10px;
         }
 
         .app-actions {
             display: flex;
-            gap: 5px;
+            gap: 3px;
         }
 
         .action-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             border: 2px solid gold;
             background: transparent;
             color: gold;
             cursor: pointer;
-            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .action-btn:hover {
@@ -251,13 +229,13 @@
             color: black;
         }
 
-        /* زر الإغلاق الدائري - دائم الظهور */
+        /* زر الإغلاق الدائري */
         .close-btn {
             position: absolute;
-            top: -12px;
-            right: -12px;
-            width: 40px;
-            height: 40px;
+            top: -8px;
+            right: -8px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             background: linear-gradient(135deg, #ff4d4d, #f44336);
             border: 3px solid white;
@@ -266,27 +244,23 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 20px;
-            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.6);
-            transition: all 0.3s ease;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(244, 67, 54, 0.6);
             z-index: 1000;
-            /* دائم الظهور */
-            opacity: 1;
-            transform: scale(1);
         }
 
         .close-btn:hover {
             background: linear-gradient(135deg, #f44336, #d32f2f);
-            transform: scale(1.1) rotate(90deg);
-            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.9);
+            transform: scale(1.1);
         }
 
-        /* iframe */
+        /* iframe - يظهر كاملاً */
         .app-frame {
             width: 100%;
-            height: calc(100% - 46px);
+            height: calc(100% - 40px); /* حساب ارتفاع الرأس */
             border: none;
             background: white;
+            display: block;
         }
 
         /* مؤشر التحميل */
@@ -305,8 +279,8 @@
         }
 
         .loading-spinner {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             border: 4px solid rgba(255, 215, 0, 0.3);
             border-top: 4px solid gold;
             border-radius: 50%;
@@ -321,60 +295,55 @@
         /* إشعارات */
         .notification {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 15px;
+            right: 15px;
             background: linear-gradient(135deg, gold, #ffd700);
             color: black;
-            padding: 10px 20px;
-            border-radius: 30px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 13px;
             font-weight: bold;
-            font-size: 14px;
-            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
             z-index: 1000;
             border: 2px solid white;
         }
 
-        /* إحصائيات سريعة - أصغر */
+        /* إحصائيات سريعة */
         .stats-bar {
             display: flex;
             justify-content: space-between;
-            margin-top: 10px;
-            padding: 8px 15px;
+            margin-top: 8px;
+            padding: 6px 12px;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
+            border-radius: 15px;
             border: 1px solid rgba(255, 215, 0, 0.2);
         }
 
         .stat-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             color: white;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .stat-item i {
             color: gold;
-            font-size: 12px;
+            font-size: 11px;
         }
 
-        /* تجاوب */
+        /* تجاوب للشاشات الصغيرة */
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
             .app-container {
-                height: 60vh;
+                height: calc(100vh - 160px);
             }
             
             .close-btn {
-                width: 35px;
-                height: 35px;
-                font-size: 18px;
-                top: -10px;
-                right: -10px;
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+                top: -6px;
+                right: -6px;
             }
         }
     </style>
@@ -391,53 +360,49 @@
                 </div>
                 <div class="logo-text">
                     <h1>منصة التطبيقات</h1>
-                    <p>تبديل تلقائي</p>
                 </div>
             </div>
             
             <div class="stat-item">
                 <i class="fas fa-circle" style="color: #4caf50;"></i>
-                <span>الملفات جاهزة</span>
+                <span>جاهز</span>
             </div>
         </div>
     </div>
 
     <!-- شريط التنقل العلوي - أيقونات فقط -->
     <div class="nav-bar">
-        <button class="nav-item active" onclick="switchApp('snap')" id="nav-snap">
+        <button class="nav-item" onclick="switchApp('snap')" id="nav-snap">
             <i class="fab fa-snapchat"></i>
-            <span>سناب شات</span>
         </button>
         <button class="nav-item" onclick="switchApp('tiktok')" id="nav-tiktok">
             <i class="fab fa-tiktok"></i>
-            <span>تيك توك</span>
         </button>
-        <button class="nav-item" onclick="switchApp('reels')" id="nav-reels">
+        <button class="nav-item active" onclick="switchApp('reels')" id="nav-reels">
             <i class="fas fa-film"></i>
-            <span>ريلز تلجرام</span>
         </button>
     </div>
 
     <!-- حاوية التطبيق -->
     <div class="app-container" id="appContainer">
-        <!-- زر الإغلاق الدائري - دائم الظهور -->
-        <div class="close-btn" onclick="closeApp()" title="إغلاق التطبيق">
+        <!-- زر الإغلاق الدائري -->
+        <div class="close-btn" onclick="closeApp()" title="إغلاق">
             <i class="fas fa-times"></i>
         </div>
         
         <div class="app-header" id="appHeader">
             <div class="app-title">
-                <div class="app-icon snap" id="appIcon">
-                    <i class="fab fa-snapchat"></i>
+                <div class="app-icon reels" id="appIcon">
+                    <i class="fas fa-film"></i>
                 </div>
-                <span class="app-name" id="appName">سناب شات</span>
-                <span class="app-file" id="appFile">snam.html</span>
+                <span class="app-name" id="appName">ريلز تلجرام</span>
+                <span class="app-file" id="appFile">reels.html</span>
             </div>
             <div class="app-actions">
                 <button class="action-btn" onclick="refreshApp()" title="تحديث">
                     <i class="fas fa-sync-alt"></i>
                 </button>
-                <button class="action-btn" onclick="toggleFullscreen()" title="عرض كامل">
+                <button class="action-btn" onclick="toggleFullscreen()" title="تكبير">
                     <i class="fas fa-expand"></i>
                 </button>
             </div>
@@ -445,7 +410,7 @@
         
         <!-- مكان عرض التطبيق -->
         <div id="appContent">
-            <iframe class="app-frame" id="appFrame" src="snam.html" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
+            <iframe class="app-frame" id="appFrame" src="reels.html" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
         </div>
         
         <!-- مؤشر التحميل -->
@@ -472,7 +437,7 @@
 
     <script>
         // التطبيق الحالي
-        let currentApp = 'snap';
+        let currentApp = 'reels'; // نبدأ بريلز
         
         // معلومات التطبيقات
         const apps = {
@@ -516,14 +481,12 @@
             appIcon.innerHTML = `<i class="${appInfo.icon}"></i>`;
             
             const frame = document.getElementById('appFrame');
-            frame.style.opacity = '0';
             
             setTimeout(() => {
-                frame.src = `${appInfo.file}`;
+                frame.src = appInfo.file;
                 currentApp = app;
                 
                 frame.onload = function() {
-                    frame.style.opacity = '1';
                     document.getElementById('loadingOverlay').style.display = 'none';
                     showNotification(`✅ تم تشغيل ${appInfo.name}`);
                 };
@@ -532,21 +495,21 @@
                     document.getElementById('loadingOverlay').style.display = 'none';
                     showNotification(`❌ خطأ في تحميل ${appInfo.file}`, 'error');
                     
-                    // عرض محتوى تجريبي إذا لم يوجد الملف
+                    // عرض رسالة خطأ
                     frame.src = 'about:blank';
                     frame.srcdoc = `
-                        <html dir="rtl">
-                        <body style="display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; font-family: Arial; text-align: center;">
+                        <html>
+                        <body style="display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #1a1a2e; color: white; font-family: Arial; text-align: center; direction: rtl;">
                             <div>
-                                <h2>${appInfo.name}</h2>
+                                <h2 style="color: gold;">${appInfo.name}</h2>
                                 <p>الملف ${appInfo.file} غير موجود</p>
-                                <p style="color: gold;">قم بإنشاء الملف لعرض المحتوى</p>
+                                <button onclick="alert('يجب إنشاء الملف أولاً')" style="background: gold; border: none; padding: 10px 20px; border-radius: 20px; margin-top: 20px; cursor: pointer;">محاولة مرة أخرى</button>
                             </div>
                         </body>
                         </html>
                     `;
                 };
-            }, 300);
+            }, 100);
         }
 
         // تحديث التطبيق الحالي
@@ -555,16 +518,14 @@
             const appInfo = apps[currentApp];
             
             document.getElementById('loadingOverlay').style.display = 'flex';
-            frame.style.opacity = '0';
             
             setTimeout(() => {
-                frame.src = `${appInfo.file}`;
+                frame.src = appInfo.file;
                 frame.onload = function() {
-                    frame.style.opacity = '1';
                     document.getElementById('loadingOverlay').style.display = 'none';
                     showNotification(`🔄 تم تحديث ${appInfo.name}`);
                 };
-            }, 300);
+            }, 100);
         }
 
         // وضع ملء الشاشة
@@ -579,7 +540,7 @@
             }
         }
 
-        // إغلاق التطبيق
+        // إغلاق التطبيق (إخفاء المحتوى)
         function closeApp() {
             const frame = document.getElementById('appFrame');
             const appInfo = apps[currentApp];
@@ -592,11 +553,7 @@
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
             notification.className = 'notification';
-            
-            let icon = '✅';
-            if (type === 'error') icon = '❌';
-            
-            notification.innerHTML = `${icon} ${message}`;
+            notification.innerHTML = message;
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -604,26 +561,16 @@
             }, 2000);
         }
 
-        // اختصار لوحة المفاتيح
-        document.addEventListener('keydown', (e) => {
-            if (e.altKey) {
-                switch(e.key) {
-                    case '1': switchApp('snap'); break;
-                    case '2': switchApp('tiktok'); break;
-                    case '3': switchApp('reels'); break;
-                    case 'r': refreshApp(); break;
-                    case 'f': toggleFullscreen(); break;
-                }
-            }
-        });
-
         // تهيئة الصفحة
         window.onload = function() {
-            showNotification('✨ مرحباً بك');
+            // تفعيل زر ريلز
+            document.getElementById('nav-reels').classList.add('active');
+            
+            showNotification('✨ مرحباً بك في ريلز');
             
             setTimeout(() => {
                 document.getElementById('loadingOverlay').style.display = 'none';
-            }, 1000);
+            }, 500);
         };
     </script>
 </body>
