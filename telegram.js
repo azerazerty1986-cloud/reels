@@ -54,7 +54,259 @@ const ID_SYSTEM = {
 };
 
 ID_SYSTEM.loadCounters();
+// ========== جلب الريلز من تلغرام ==========
+async function fetchReelsFromTelegram() {
+    try {
+        console.log('🎬 جلب الريلز من تلغرام...');
+        
+        const response = await fetch(`${TELEGRAM.apiUrl}${TELEGRAM.botToken}/getUpdates`);
+        const data = await response.json();
+        
+        const reels = [];
+        
+        if (data.ok && data.result) {
+            const updates = data.result.slice(-100); // آخر 100 تحديث
+            
+            for (const update of updates) {
+                // البحث عن رسائل الفيديو (ريلز)
+                if (update.channel_post) {
+                    const post = update.channel_post;
+                    
+                    // التحقق من وجود فيديو
+                    if (post.video || (post.text && post.text.includes('🎬'))) {
+                        const reel = parseReelFromPost(post);
+                        if (reel) {
+                            reels.push(reel);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // ترتيب من الأحدث
+        reels.sort((a, b) => b.date - a.date);
+        
+        console.log(`✅ تم جلب ${reels.length} ريل من تلغرام`);
+        
+        // حفظ في localStorage
+        localStorage.setItem('nardoo_reels', JSON.stringify(reels));
+        
+        // تحديث العرض إذا كانت الدالة موجودة
+        if (typeof window.displayReels === 'function') {
+            window.displayReels();
+        }
+        
+        return reels;
+        
+    } catch (error) {
+        console.error('❌ خطأ في جلب الريلز:', error);
+        const cached = localStorage.getItem('nardoo_reels');
+        return cached ? JSON.parse(cached) : [];
+    }
+}
 
+// ========== تحليل الريل من رسالة تلغرام ==========
+function parseReelFromPost(post) {
+    try {
+        // استخراج معلومات الفيديو
+        const videoInfo = post.video || {};
+        const text = post.text || '';
+        
+        // استخراج البيانات من النص
+        const lines = text.split('\n');
+        let reelData = {
+            id: post.message_id,
+            telegramId: post.message_id,
+            title: 'ريل جديد',
+            description: '',
+            publisher: 'ناردو',
+            publisherAvatar: 'https://i.pravatar.cc/150?u=nardoo',
+            views: Math.floor(Math.random() * 1000) + 100,
+            likes: Math.floor(Math.random() * 100) + 10,
+            duration: videoInfo.duration || 30,
+            thumbnail: '',
+            videoUrl: '',
+            date: post.date,
+            dateStr: TimeAgo.getTimeAgo(post.date),
+            fullDate: new Date(post.date * 1000).toLocaleString('ar-EG')
+        };
+        
+        // البحث عن رابط الفيديو
+        if (post.video) {
+            // الحصول على رابط الفيديو من تلغرام
+            getTelegramVideoUrl(post.video.file_id).then(url => {
+                reelData.videoUrl = url;
+            });
+        }
+        
+        // البحث عن رابط الصورة المصغرة
+        if (post.thumbnail) {
+            getTelegramImageUrl(post.thumbnail.file_id).then(url => {
+                reelData.thumbnail = url;
+            });
+        }
+        
+        // استخراج المعلومات من النص
+        lines.forEach(line => {
+            if (line.includes('🎬')) reelData.title = line.replace('🎬', '').trim();
+            if (line.includes('👤')) reelData.publisher = line.replace('👤', '').trim();
+            if (line.includes('⏱️')) {
+                const match = line.match(/\d+/);
+                if (match) reelData.duration = parseInt(match[0]);
+            }
+        });
+        
+        // صورة مصغرة افتراضية
+        if (!reelData.thumbnail) {
+            reelData.thumbnail = 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=400';
+        }
+        
+        return reelData;
+        
+    } catch (error) {
+        console.error('خطأ في تحليل الريل:', error);
+        return null;
+    }
+}
+
+// ========== الحصول على رابط الفيديو من تلغرام ==========
+async function getTelegramVideoUrl(fileId) {
+    try {
+        const response = await fetch(`${TELEGRAM.apiUrl}${TELEGRAM.botToken}/getFile?file_id=${fileId}`);
+        const data = await response.json();
+        
+        if (data.ok && data.result) {
+            return `https://api.telegram.org/file/bot${TELEGRAM.botToken}/${data.result.file_path}`;
+        }
+    } catch (error) {
+        console.error('خطأ في جلب رابط الفيديو:', error);
+    }
+    return '';
+}
+
+// ========== إضافة ريل جديد إلى تلغرام ==========
+async function addReelToTelegram(reelData, videoFile = null) {
+    try {
+        let videoUrl = '';
+        
+        // رفع الفيديو إذا وجد
+        if (videoFile) {
+            const formData = new FormData();
+            formData.append('chat_id', TELEGRAM.channelId);
+            formData.append('video', videoFile);
+            formData.append('caption', `🎬 ${reelData.title}\n👤 ${reelData.publisher}\n⏱️ ${reelData.duration || 30} ثانية`);
+            
+            const response = await fetch(`${TELEGRAM.apiUrl}${TELEGRAM.botToken}/sendVideo`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.ok) {
+                console.log('✅ ريل مضاف، المعرف:', result.result.message_id);
+                
+                // تحديث الريلز بعد ثانيتين
+                setTimeout(fetchReelsFromTelegram, 2000);
+                
+                return { success: true, id: result.result.message_id };
+            }
+        }
+        
+        return { success: false };
+        
+    } catch (error) {
+        console.error('❌ خطأ في إضافة الريل:', error);
+        return { success: false };
+    }
+}
+
+// ========== عرض الريلز في الصفحة الرئيسية ==========
+function displayReels() {
+    const container = document.getElementById('reelsContainer');
+    if (!container) return;
+    
+    const reels = JSON.parse(localStorage.getItem('nardoo_reels') || '[]');
+    
+    if (reels.length === 0) {
+        container.innerHTML = `
+            <div class="no-reels-message">
+                <i class="fas fa-film"></i>
+                <p>لا توجد ريلز حالياً</p>
+                <a href="reels.html" target="_blank" class="btn-gold">
+                    <i class="fas fa-plus"></i> إضافة ريلز
+                </a>
+            </div>
+        `;
+        return;
+    }
+    
+    // عرض آخر 5 ريلز
+    const recentReels = reels.slice(0, 5);
+    
+    container.innerHTML = recentReels.map(reel => `
+        <div class="reel-card" onclick="playReel(${reel.id})">
+            <div class="reel-thumbnail">
+                <img src="${reel.thumbnail}" alt="${reel.title}">
+                <div class="reel-play-overlay">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <span class="reel-video-badge">
+                    <i class="fas fa-video"></i> ${reel.duration || 30}s
+                </span>
+                <div class="reel-publisher">
+                    <div class="reel-publisher-avatar">
+                        <img src="${reel.publisherAvatar}" alt="${reel.publisher}">
+                    </div>
+                    <span class="reel-publisher-name">${reel.publisher}</span>
+                </div>
+            </div>
+            <div class="reel-info">
+                <h4 class="reel-title">${reel.title}</h4>
+                <div class="reel-meta">
+                    <div class="reel-stats">
+                        <span><i class="fas fa-eye"></i> ${formatNumber(reel.views)}</span>
+                        <span><i class="fas fa-heart"></i> ${formatNumber(reel.likes)}</span>
+                    </div>
+                    <span class="reel-time"><i class="far fa-clock"></i> ${reel.dateStr}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    // تحديث الإشعار
+    updateReelsNotification(reels.length);
+}
+
+// ========== تحديث إشعار الريلز ==========
+function updateReelsNotification(count) {
+    const notification = document.getElementById('reelsNotification');
+    if (notification) {
+        notification.textContent = count > 9 ? '9+' : count;
+    }
+}
+
+// ========== تشغيل الريل ==========
+function playReel(reelId) {
+    const reels = JSON.parse(localStorage.getItem('nardoo_reels') || '[]');
+    const reel = reels.find(r => r.id === reelId);
+    
+    if (reel && reel.videoUrl) {
+        // فتح مشغل الريلز
+        window.open(`reels-player.html?id=${reelId}`, '_blank');
+    }
+}
+
+// ========== تنسيق الأرقام ==========
+function formatNumber(num) {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+    return num.toString();
+}
+
+// ========== إضافة دالة جلب الريلز إلى API ==========
+window.TelegramAPI.fetchReels = fetchReelsFromTelegram;
+window.TelegramAPI.addReel = addReelToTelegram;
 // ========== 2. نظام حساب الوقت ==========
 const TimeAgo = {
     getTimeAgo(timestamp) {
@@ -220,6 +472,7 @@ async function fetchProductsFromTelegram() {
         
         console.log(`✅ تم جلب ${products.length} منتج من تلغرام`);
         
+
         localStorage.setItem('telegram_products', JSON.stringify(products));
         
         if (window.products !== undefined) {
