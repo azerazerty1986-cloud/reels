@@ -519,6 +519,137 @@ async function saveProduct() {
         showNotification('تم حفظ المنتج محلياً', 'success');
     }
 }
+// ========== إدارة الريلز ==========
+let reels = [];
+
+// تحميل الريلز من التطبيق المدمج
+function loadReels() {
+    // محاولة جلب الريلز من localStorage (يتم تخزينها من تطبيق reels.html)
+    const savedReels = localStorage.getItem('nardoo_reels');
+    if (savedReels) {
+        reels = JSON.parse(savedReels);
+    } else {
+        // ريلز تجريبية
+        reels = [
+            {
+                id: 1,
+                title: 'وصفة زعتر فلسطيني',
+                thumbnail: 'https://images.unsplash.com/photo-1542838132-92c5330041e7?w=400',
+                videoUrl: 'reels/video1.mp4',
+                publisher: 'مطبخ ناردو',
+                publisherAvatar: 'https://i.pravatar.cc/150?u=1',
+                views: '15K',
+                likes: '2.5K',
+                timeAgo: 'منذ ساعتين'
+            },
+            {
+                id: 2,
+                title: 'طريقة تحضير الكسكس',
+                thumbnail: 'https://images.unsplash.com/photo-1596040033229-a9821e1929c7?w=400',
+                videoUrl: 'reels/video2.mp4',
+                publisher: 'وصفات جزائرية',
+                publisherAvatar: 'https://i.pravatar.cc/150?u=2',
+                views: '23K',
+                likes: '3.8K',
+                timeAgo: 'منذ 5 ساعات'
+            },
+            {
+                id: 3,
+                title: 'عطور تقليدية',
+                thumbnail: 'https://images.unsplash.com/photo-1608571423912-8a4c8a8c9b9a?w=400',
+                videoUrl: 'reels/video3.mp4',
+                publisher: 'عالم العطور',
+                publisherAvatar: 'https://i.pravatar.cc/150?u=3',
+                views: '8K',
+                likes: '1.2K',
+                timeAgo: 'منذ يوم'
+            }
+        ];
+        localStorage.setItem('nardoo_reels', JSON.stringify(reels));
+    }
+    
+    displayReels();
+    updateReelsNotification();
+}
+
+// عرض الريلز في الصفحة الرئيسية
+function displayReels() {
+    const container = document.getElementById('reelsContainer');
+    if (!container) return;
+    
+    if (reels.length === 0) {
+        container.innerHTML = `
+            <div class="no-reels-message">
+                <i class="fas fa-film"></i>
+                <p>لا توجد ريلز حالياً</p>
+                <a href="reels.html" target="_blank" class="btn-gold">
+                    <i class="fas fa-plus"></i> إضافة ريلز
+                </a>
+            </div>
+        `;
+        return;
+    }
+    
+    // عرض آخر 5 ريلز
+    const recentReels = reels.slice(0, 5);
+    
+    container.innerHTML = recentReels.map(reel => `
+        <div class="reel-card" onclick="openReel(${reel.id})">
+            <div class="reel-thumbnail">
+                <img src="${reel.thumbnail}" alt="${reel.title}">
+                <div class="reel-play-overlay">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <span class="reel-video-badge">
+                    <i class="fas fa-video"></i> ريل
+                </span>
+                <div class="reel-publisher">
+                    <div class="reel-publisher-avatar">
+                        <img src="${reel.publisherAvatar}" alt="${reel.publisher}">
+                    </div>
+                    <span class="reel-publisher-name">${reel.publisher}</span>
+                </div>
+            </div>
+            <div class="reel-info">
+                <h4 class="reel-title">${reel.title}</h4>
+                <div class="reel-meta">
+                    <div class="reel-stats">
+                        <span><i class="fas fa-eye"></i> ${reel.views}</span>
+                        <span><i class="fas fa-heart"></i> ${reel.likes}</span>
+                    </div>
+                    <span class="reel-time"><i class="far fa-clock"></i> ${reel.timeAgo}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// تحديث عدد الإشعارات
+function updateReelsNotification() {
+    const notification = document.getElementById('reelsNotification');
+    if (notification) {
+        const newReels = reels.filter(r => r.isNew).length || reels.length;
+        notification.textContent = newReels > 9 ? '9+' : newReels;
+    }
+}
+
+// فتح الريل
+function openReel(reelId) {
+    // فتح صفحة الريلز في تبويب جديد مع معرف الريل
+    window.open(`reels.html?id=${reelId}`, '_blank');
+}
+
+// الاستماع للتحديثات من تطبيق reels.html
+window.addEventListener('storage', function(e) {
+    if (e.key === 'nardoo_reels') {
+        reels = JSON.parse(e.newValue || '[]');
+        displayReels();
+        updateReelsNotification();
+    }
+});
+
+// استدعاء تحميل الريلز عند تحميل الصفحة
+setTimeout(loadReels, 500);
 
 // ========== لوحة التحكم ==========
 function openDashboard() {
