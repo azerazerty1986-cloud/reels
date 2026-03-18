@@ -7,7 +7,7 @@ if (!localStorage.getItem('nardoo_users')) {
             email: 'admin@nardoo.com', 
             password: 'admin123', 
             role: 'admin', 
-            phone: '0562243648',
+            phone: '0548',
             merchantId: 'ADMIN_001',
             avatar: 'https://i.pravatar.cc/150?u=admin',
             createdAt: new Date().toISOString()
