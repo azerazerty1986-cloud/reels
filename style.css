@@ -1419,4 +1419,192 @@ tr:hover td {
 .admin-only { display: block; }
 .merchant-only { display: block; }
 .fade-in-up { animation: fadeInUp 0.5s ease forwards; }
+/* ===== 41. إصلاح مشكلة ظهور النوافذ ===== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(15px);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
 
+.modal.show {
+    display: flex !important;
+}
+
+/* للتأكد من ظهور النوافذ */
+#loginModal.show,
+#productModal.show,
+#productDetailModal.show,
+#merchantDashboardModal.show,
+#merchantProductsModal.show,
+#merchantOrdersModal.show,
+#adminAppsModal.show,
+#appRunnerModal.show {
+    display: flex !important;
+}
+
+/* تحسين ظهور المحتوى داخل النافذة */
+.modal-content {
+    background: var(--bg-secondary);
+    border: 3px solid var(--gold);
+    border-radius: 35px;
+    padding: 35px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(212, 175, 55, 0.4);
+    animation: modalFadeIn 0.3s ease;
+}
+
+.modal-lg {
+    max-width: 1000px;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* تحسين أزرار الإغلاق */
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--gold);
+    font-size: 32px;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.close-btn:hover {
+    background: var(--gold);
+    color: var(--bg-primary);
+    transform: rotate(90deg);
+}
+
+/* تحسين رأس النافذة */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--gold);
+}
+
+.modal-header h2 {
+    color: var(--gold);
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* تحسين حقول الإدخال في النوافذ */
+.modal .form-group {
+    margin-bottom: 20px;
+}
+
+.modal .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.modal .form-control {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--glass);
+    border: 2px solid var(--glass-border);
+    border-radius: 20px;
+    color: var(--text-primary);
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    transition: var(--transition);
+}
+
+.modal .form-control:focus {
+    border-color: var(--gold);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+/* تحسين الأزرار في النوافذ */
+.modal .btn-gold,
+.modal .btn-outline-gold {
+    padding: 14px 28px;
+    font-size: 16px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 700;
+    border: none;
+}
+
+.modal .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--bg-primary);
+}
+
+.modal .btn-outline-gold {
+    background: transparent;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+}
+
+.modal .btn-gold:hover,
+.modal .btn-outline-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+}
+
+/* تحسين ظهور النوافذ على الجوال */
+@media (max-width: 768px) {
+    .modal-content {
+        padding: 25px;
+        width: 95%;
+    }
+    
+    .modal-header h2 {
+        font-size: 20px;
+    }
+    
+    .modal .btn-gold,
+    .modal .btn-outline-gold {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+/* تحسين خلفية النافذة */
+.modal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+    pointer-events: none;
+}
