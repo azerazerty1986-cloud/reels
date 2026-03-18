@@ -1237,7 +1237,407 @@ tr:hover td {
         transform: translateY(0);
     }
 }
+/* ===== قسم ريلز في الصفحة الرئيسية ===== */
+.reels-section {
+    margin: 50px 0;
+    padding: 30px 0;
+    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border-radius: 40px;
+    border: 2px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+}
 
+.reels-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+}
+
+.reels-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2;
+}
+
+.reels-header-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.reels-header-title h2 {
+    color: var(--gold);
+    font-size: 32px;
+    font-weight: 800;
+    text-shadow: 0 0 20px rgba(212,175,55,0.3);
+}
+
+.reels-view-all {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    background: var(--glass);
+    border: 2px solid var(--gold);
+    border-radius: 40px;
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.reels-view-all:hover {
+    background: var(--gold);
+    color: var(--bg-primary);
+    transform: translateX(-5px);
+}
+
+.reels-view-all i {
+    transition: transform 0.3s;
+}
+
+.reels-view-all:hover i {
+    transform: translateX(-5px);
+}
+
+.reels-container {
+    display: flex;
+    gap: 20px;
+    padding: 10px 30px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) var(--glass);
+    position: relative;
+    z-index: 2;
+}
+
+.reels-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.reels-container::-webkit-scrollbar-track {
+    background: var(--glass);
+    border-radius: 10px;
+}
+
+.reels-container::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 10px;
+}
+
+/* ===== بطاقة الريل ===== */
+.reel-card {
+    min-width: 280px;
+    width: 280px;
+    background: var(--bg-card);
+    border: 2px solid var(--gold);
+    border-radius: 30px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.reel-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px var(--shadow-gold);
+    border-color: var(--gold-light);
+}
+
+/* ===== صورة مصغرة للفيديو ===== */
+.reel-thumbnail {
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+}
+
+.reel-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s;
+}
+
+.reel-card:hover .reel-thumbnail img {
+    transform: scale(1.1);
+}
+
+.reel-play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(2px);
+}
+
+.reel-card:hover .reel-play-overlay {
+    opacity: 1;
+}
+
+.reel-play-overlay i {
+    font-size: 70px;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(0,0,0,0.5);
+    animation: pulse 2s infinite;
+}
+
+/* ===== شارة الفيديو ===== */
+.reel-video-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    color: var(--gold);
+    padding: 8px 15px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 2;
+}
+
+.reel-video-badge i {
+    font-size: 14px;
+}
+
+/* ===== دوائر الناشرين ===== */
+.reel-publisher {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+}
+
+.reel-publisher-avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: 3px solid var(--gold);
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(212,175,55,0.5);
+    animation: pulse 2s infinite;
+    transition: transform 0.3s;
+}
+
+.reel-publisher-avatar:hover {
+    transform: scale(1.1);
+}
+
+.reel-publisher-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.reel-publisher-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.7);
+    padding: 5px 15px;
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--gold);
+    white-space: nowrap;
+}
+
+/* ===== معلومات الريل ===== */
+.reel-info {
+    padding: 20px;
+    background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+}
+
+.reel-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--gold);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.reel-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.reel-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.reel-stats span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.reel-stats i {
+    color: var(--gold);
+    font-size: 16px;
+}
+
+.reel-time {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--glass);
+    padding: 5px 12px;
+    border-radius: 30px;
+    border: 1px solid var(--gold);
+}
+
+/* ===== أيقونة ريلز ثابتة ===== */
+.fixed-reels {
+    position: fixed;
+    bottom: 100px;
+    right: 100px;
+    width: 65px;
+    height: 65px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 30px var(--shadow-gold);
+    z-index: 999;
+    transition: all 0.3s;
+    animation: float 3s ease-in-out infinite;
+    text-decoration: none;
+}
+
+.fixed-reels:hover {
+    transform: scale(1.15) rotate(5deg);
+    animation: none;
+    box-shadow: 0 15px 40px var(--gold);
+}
+
+.fixed-reels i {
+    font-size: 28px;
+    color: var(--bg-primary);
+}
+
+.reels-notification {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--red);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--bg-primary);
+    animation: pulse 1s infinite;
+}
+
+/* ===== رسالة لا توجد ريلز ===== */
+.no-reels-message {
+    min-width: 100%;
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--glass);
+    border-radius: 30px;
+    border: 2px dashed var(--gold);
+}
+
+.no-reels-message i {
+    font-size: 60px;
+    color: var(--gold);
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.no-reels-message p {
+    color: var(--gold);
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.no-reels-message .btn-gold {
+    display: inline-flex;
+    padding: 12px 30px;
+}
+
+/* ===== تجاوب ===== */
+@media (max-width: 768px) {
+    .reels-header {
+        padding: 0 20px;
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .reels-header-title h2 {
+        font-size: 24px;
+    }
+    
+    .reels-container {
+        padding: 10px 20px;
+    }
+    
+    .reel-card {
+        min-width: 240px;
+        width: 240px;
+    }
+    
+    .reel-thumbnail {
+        height: 360px;
+    }
+    
+    .fixed-reels {
+        bottom: 80px;
+        right: 80px;
+        width: 55px;
+        height: 55px;
+    }
+    
+    .fixed-reels i {
+        font-size: 24px;
+    }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
 /* ===== تجاوب للشاشات الصغيرة ===== */
 @media (max-width: 768px) {
     .fixed-cart {
