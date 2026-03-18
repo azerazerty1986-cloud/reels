@@ -311,7 +311,7 @@ async function handleRegister() {
     const isMerchant = document.getElementById('isMerchant').checked;
 
     if (!name || !email || !password) {
-        showNotification('الرجاء ملء جميع الحقول', 'error');
+        showNotification('الرجاء ملء جميع الحقول الأساسية', 'error');
         return;
     }
 
@@ -326,20 +326,40 @@ async function handleRegister() {
         email, 
         password, 
         phone,
-        role: isMerchant ? 'merchant_pending' : 'user',
+        role: isMerchant ? 'pending' : 'user',
         avatar: `https://i.pravatar.cc/150?u=${Date.now()}`,
         createdAt: new Date().toISOString()
     };
 
     if (isMerchant) {
         newUser.storeName = document.getElementById('storeName').value;
-        newUser.merchantCategory = document.getElementById('merchantCategory').value;
+        newUser.specialization = document.getElementById('userSpecialization').value;
         newUser.merchantLevel = document.getElementById('merchantLevel').value;
+        newUser.workArea = document.getElementById('workArea').value;
+        newUser.activityDesc = document.getElementById('activityDesc').value;
+        
+        // إرسال إلى تلغرام
+        if (window.TelegramAPI) {
+            const activityData = {
+                name: name,
+                type: 'نشاط تجاري',
+                storeName: newUser.storeName,
+                specialization: newUser.specialization,
+                workArea: newUser.workArea,
+                level: newUser.merchantLevel,
+                email: email,
+                phone: phone,
+                description: newUser.activityDesc
+            };
+            
+            await TelegramAPI.addMerchant(activityData);
+            showNotification('📨 تم إرسال طلب التسجيل إلى المدير', 'info');
+        }
     }
 
     users.push(newUser);
     localStorage.setItem('nardoo_users', JSON.stringify(users));
-    showNotification('تم التسجيل بنجاح', 'success');
+    showNotification('✅ تم التسجيل بنجاح', 'success');
     switchAuthTab('login');
 }
 
@@ -405,7 +425,6 @@ function openAddProductModal() {
     }
 }
 
-// ========== عرض تفاصيل المنتج مع صور متعددة ==========
 async function showProductDetail(productIdentifier) {
     let product;
     if (window.TelegramAPI) {
@@ -475,7 +494,6 @@ async function showProductDetail(productIdentifier) {
     openModal('productDetailModal');
 }
 
-// ========== حفظ المنتج مع الصور المتعددة ==========
 async function saveProduct() {
     if (!currentUser) {
         showNotification('يجب تسجيل الدخول أولاً', 'error');
@@ -519,137 +537,6 @@ async function saveProduct() {
         showNotification('تم حفظ المنتج محلياً', 'success');
     }
 }
-// ========== إدارة الريلز ==========
-let reels = [];
-
-// تحميل الريلز من التطبيق المدمج
-function loadReels() {
-    // محاولة جلب الريلز من localStorage (يتم تخزينها من تطبيق reels.html)
-    const savedReels = localStorage.getItem('nardoo_reels');
-    if (savedReels) {
-        reels = JSON.parse(savedReels);
-    } else {
-        // ريلز تجريبية
-        reels = [
-            {
-                id: 1,
-                title: 'وصفة زعتر فلسطيني',
-                thumbnail: 'https://images.unsplash.com/photo-1542838132-92c5330041e7?w=400',
-                videoUrl: 'reels/video1.mp4',
-                publisher: 'مطبخ ناردو',
-                publisherAvatar: 'https://i.pravatar.cc/150?u=1',
-                views: '15K',
-                likes: '2.5K',
-                timeAgo: 'منذ ساعتين'
-            },
-            {
-                id: 2,
-                title: 'طريقة تحضير الكسكس',
-                thumbnail: 'https://images.unsplash.com/photo-1596040033229-a9821e1929c7?w=400',
-                videoUrl: 'reels/video2.mp4',
-                publisher: 'وصفات جزائرية',
-                publisherAvatar: 'https://i.pravatar.cc/150?u=2',
-                views: '23K',
-                likes: '3.8K',
-                timeAgo: 'منذ 5 ساعات'
-            },
-            {
-                id: 3,
-                title: 'عطور تقليدية',
-                thumbnail: 'https://images.unsplash.com/photo-1608571423912-8a4c8a8c9b9a?w=400',
-                videoUrl: 'reels/video3.mp4',
-                publisher: 'عالم العطور',
-                publisherAvatar: 'https://i.pravatar.cc/150?u=3',
-                views: '8K',
-                likes: '1.2K',
-                timeAgo: 'منذ يوم'
-            }
-        ];
-        localStorage.setItem('nardoo_reels', JSON.stringify(reels));
-    }
-    
-    displayReels();
-    updateReelsNotification();
-}
-
-// عرض الريلز في الصفحة الرئيسية
-function displayReels() {
-    const container = document.getElementById('reelsContainer');
-    if (!container) return;
-    
-    if (reels.length === 0) {
-        container.innerHTML = `
-            <div class="no-reels-message">
-                <i class="fas fa-film"></i>
-                <p>لا توجد ريلز حالياً</p>
-                <a href="reels.html" target="_blank" class="btn-gold">
-                    <i class="fas fa-plus"></i> إضافة ريلز
-                </a>
-            </div>
-        `;
-        return;
-    }
-    
-    // عرض آخر 5 ريلز
-    const recentReels = reels.slice(0, 5);
-    
-    container.innerHTML = recentReels.map(reel => `
-        <div class="reel-card" onclick="openReel(${reel.id})">
-            <div class="reel-thumbnail">
-                <img src="${reel.thumbnail}" alt="${reel.title}">
-                <div class="reel-play-overlay">
-                    <i class="fas fa-play-circle"></i>
-                </div>
-                <span class="reel-video-badge">
-                    <i class="fas fa-video"></i> ريل
-                </span>
-                <div class="reel-publisher">
-                    <div class="reel-publisher-avatar">
-                        <img src="${reel.publisherAvatar}" alt="${reel.publisher}">
-                    </div>
-                    <span class="reel-publisher-name">${reel.publisher}</span>
-                </div>
-            </div>
-            <div class="reel-info">
-                <h4 class="reel-title">${reel.title}</h4>
-                <div class="reel-meta">
-                    <div class="reel-stats">
-                        <span><i class="fas fa-eye"></i> ${reel.views}</span>
-                        <span><i class="fas fa-heart"></i> ${reel.likes}</span>
-                    </div>
-                    <span class="reel-time"><i class="far fa-clock"></i> ${reel.timeAgo}</span>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// تحديث عدد الإشعارات
-function updateReelsNotification() {
-    const notification = document.getElementById('reelsNotification');
-    if (notification) {
-        const newReels = reels.filter(r => r.isNew).length || reels.length;
-        notification.textContent = newReels > 9 ? '9+' : newReels;
-    }
-}
-
-// فتح الريل
-function openReel(reelId) {
-    // فتح صفحة الريلز في تبويب جديد مع معرف الريل
-    window.open(`reels.html?id=${reelId}`, '_blank');
-}
-
-// الاستماع للتحديثات من تطبيق reels.html
-window.addEventListener('storage', function(e) {
-    if (e.key === 'nardoo_reels') {
-        reels = JSON.parse(e.newValue || '[]');
-        displayReels();
-        updateReelsNotification();
-    }
-});
-
-// استدعاء تحميل الريلز عند تحميل الصفحة
-setTimeout(loadReels, 500);
 
 // ========== لوحة التحكم ==========
 function openDashboard() {
@@ -668,7 +555,7 @@ function switchDashboardTab(tab) {
     let content = '';
     if (tab === 'overview') {
         const merchants = users.filter(u => u.role === 'merchant_approved').length;
-        const pending = users.filter(u => u.role === 'merchant_pending').length;
+        const pending = users.filter(u => u.role === 'pending').length;
         content = `
             <h3 style="color:var(--gold); margin-bottom:20px;">نظرة عامة</h3>
             <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px;">
@@ -684,7 +571,7 @@ function switchDashboardTab(tab) {
                 </div>
                 <div style="background:var(--glass); padding:20px; border-radius:20px; text-align:center;">
                     <i class="fas fa-clock" style="font-size:40px; color:var(--gold);"></i>
-                    <h4>طلبات تجار</h4>
+                    <h4>طلبات جديدة</h4>
                     <p style="font-size:24px;">${pending}</p>
                 </div>
                 <div style="background:var(--glass); padding:20px; border-radius:20px; text-align:center;">
@@ -705,8 +592,8 @@ function switchDashboardTab(tab) {
             content += `<p>${u.name} - ${u.role} - ${u.merchantId || ''}</p>`;
         });
     } else if (tab === 'merchants') {
-        const pending = users.filter(u => u.role === 'merchant_pending');
-        content = '<h3 style="color:var(--gold); margin-bottom:20px;">طلبات التجار</h3>';
+        const pending = users.filter(u => u.role === 'pending');
+        content = '<h3 style="color:var(--gold); margin-bottom:20px;">طلبات الانضمام</h3>';
         if (pending.length === 0) {
             content += '<p>لا توجد طلبات جديدة</p>';
         } else {
@@ -714,9 +601,10 @@ function switchDashboardTab(tab) {
                 content += `
                     <div style="background:var(--glass); padding:15px; border-radius:15px; margin:10px 0;">
                         <p><strong>${u.name}</strong> - ${u.email}</p>
-                        <p>متجر: ${u.storeName || 'غير محدد'}</p>
-                        <button class="btn-gold" onclick="approveMerchant(${u.id})">موافقة</button>
-                        <button class="btn-outline-gold" onclick="rejectMerchant(${u.id})">رفض</button>
+                        <p>نشاط: ${u.storeName || 'غير محدد'}</p>
+                        <p>تخصص: ${u.specialization || 'غير محدد'}</p>
+                        <button class="btn-gold" onclick="approveUser(${u.id})">موافقة</button>
+                        <button class="btn-outline-gold" onclick="rejectUser(${u.id})">رفض</button>
                     </div>
                 `;
             });
@@ -725,7 +613,7 @@ function switchDashboardTab(tab) {
     document.getElementById('dashboardContent').innerHTML = content;
 }
 
-function approveMerchant(userId) {
+function approveUser(userId) {
     const user = users.find(u => u.id == userId);
     if (user) {
         user.role = 'merchant_approved';
@@ -733,17 +621,17 @@ function approveMerchant(userId) {
             user.merchantId = `MERCH_${1000 + users.length}`;
         }
         localStorage.setItem('nardoo_users', JSON.stringify(users));
-        showNotification('تمت الموافقة على التاجر', 'success');
+        showNotification('✅ تمت الموافقة', 'success');
         switchDashboardTab('merchants');
     }
 }
 
-function rejectMerchant(userId) {
+function rejectUser(userId) {
     const user = users.find(u => u.id == userId);
     if (user) {
         user.role = 'user';
         localStorage.setItem('nardoo_users', JSON.stringify(users));
-        showNotification('تم رفض طلب التاجر', 'info');
+        showNotification('تم رفض الطلب', 'info');
         switchDashboardTab('merchants');
     }
 }
@@ -788,6 +676,107 @@ function refreshApp() {
     showNotification('تم التحديث', 'success');
 }
 
+// ========== ⬇️⬇️⬇️ نظام الريلز - مضاف حديثاً ⬇️⬇️⬇️ ==========
+
+// ========== تحميل الريلز من التخزين المحلي ==========
+function loadReels() {
+    displayReels();
+    
+    // محاولة جلب من تلغرام إذا كانت API موجودة
+    if (window.TelegramAPI && window.TelegramAPI.fetchReels) {
+        TelegramAPI.fetchReels().then(() => {
+            displayReels();
+        });
+    }
+}
+
+// ========== عرض الريلز في الصفحة الرئيسية ==========
+function displayReels() {
+    const container = document.getElementById('reelsContainer');
+    if (!container) return;
+    
+    const reels = JSON.parse(localStorage.getItem('nardoo_reels') || '[]');
+    
+    if (reels.length === 0) {
+        container.innerHTML = `
+            <div class="no-reels-message">
+                <i class="fas fa-film"></i>
+                <p>لا توجد ريلز حالياً</p>
+                <a href="reels.html" target="_blank" class="btn-gold">
+                    <i class="fas fa-plus"></i> إضافة ريلز
+                </a>
+            </div>
+        `;
+        return;
+    }
+    
+    // عرض آخر 5 ريلز
+    const recentReels = reels.slice(0, 5);
+    
+    container.innerHTML = recentReels.map(reel => `
+        <div class="reel-card" onclick="playReel(${reel.id})">
+            <div class="reel-thumbnail">
+                <img src="${reel.thumbnail || 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=400'}" alt="${reel.title}">
+                <div class="reel-play-overlay">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <span class="reel-video-badge">
+                    <i class="fas fa-video"></i> ${reel.duration || 30}s
+                </span>
+                <div class="reel-publisher">
+                    <div class="reel-publisher-avatar">
+                        <img src="${reel.publisherAvatar || 'https://i.pravatar.cc/150?u=nardoo'}" alt="${reel.publisher}">
+                    </div>
+                    <span class="reel-publisher-name">${reel.publisher || 'ناردو'}</span>
+                </div>
+            </div>
+            <div class="reel-info">
+                <h4 class="reel-title">${reel.title || 'ريل جديد'}</h4>
+                <div class="reel-meta">
+                    <div class="reel-stats">
+                        <span><i class="fas fa-eye"></i> ${formatNumber(reel.views || 0)}</span>
+                        <span><i class="fas fa-heart"></i> ${formatNumber(reel.likes || 0)}</span>
+                    </div>
+                    <span class="reel-time"><i class="far fa-clock"></i> ${reel.dateStr || 'الآن'}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    // تحديث الإشعار
+    updateReelsNotification(reels.length);
+}
+
+// ========== تحديث إشعار الريلز ==========
+function updateReelsNotification(count) {
+    const notification = document.getElementById('reelsNotification');
+    if (notification) {
+        notification.textContent = count > 9 ? '9+' : count;
+    }
+}
+
+// ========== تشغيل الريل ==========
+function playReel(reelId) {
+    const reels = JSON.parse(localStorage.getItem('nardoo_reels') || '[]');
+    const reel = reels.find(r => r.id === reelId);
+    
+    if (reel && reel.videoUrl) {
+        window.open(`reels-player.html?id=${reelId}`, '_blank');
+    } else {
+        showNotification('رابط الفيديو غير متوفر', 'info');
+    }
+}
+
+// ========== تحديث دوري للريلز (كل 30 ثانية) ==========
+setInterval(async () => {
+    if (window.TelegramAPI && window.TelegramAPI.fetchReels) {
+        await TelegramAPI.fetchReels();
+        displayReels();
+    }
+}, 30000);
+
+// ========== ⬆️⬆️⬆️ نهاية نظام الريلز ⬆️⬆️⬆️ ==========
+
 // ========== دوال مساعدة ==========
 function showNotification(message, type = 'success') {
     const container = document.getElementById('toastContainer');
@@ -814,6 +803,14 @@ function scrollToBottom() {
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 }
 
+// ========== تنسيق الأرقام ==========
+function formatNumber(num) {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+    return num.toString();
+}
+
+// ========== تأثير الكتابة ==========
 function startTypingEffect() {
     const texts = ['نكهة وجمال', 'ناردو برو', 'تسوق آمن', 'جودة عالية'];
     let index = 0, charIndex = 0;
@@ -857,6 +854,7 @@ window.onload = function() {
     loadCart();
     startTypingEffect();
     startClock();
+    loadReels(); // ⬅️ تحميل الريلز
     
     const savedUser = localStorage.getItem('current_user');
     if (savedUser) {
@@ -876,7 +874,9 @@ window.onload = function() {
 
 window.onscroll = function() {
     const btn = document.getElementById('quickTopBtn');
-    btn.classList.toggle('show', window.scrollY > 300);
+    if (btn) {
+        btn.classList.toggle('show', window.scrollY > 300);
+    }
 };
 
 window.onclick = function(event) {
