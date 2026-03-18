@@ -1,3 +1,19 @@
+// ========== تهيئة المستخدمين عند تحميل الصفحة ==========
+if (!localStorage.getItem('nardoo_users')) {
+    localStorage.setItem('nardoo_users', JSON.stringify([
+        { 
+            id: 1, 
+            name: 'مدير النظام', 
+            email: 'admin@nardoo.com', 
+            password: 'admin123', 
+            role: 'admin', 
+            phone: '0562243648',
+            createdAt: new Date().toISOString()
+        }
+    ]));
+    console.log('✅ تم تهيئة المستخدمين');
+}
+
 // ========== المتغيرات العامة ==========
 let products = [];
 let currentUser = null;
@@ -52,7 +68,7 @@ function displayProducts() {
     }
 
     if (filtered.length === 0) {
-        container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:80px 20px;"><i class="fas fa-box-open" style="font-size:80px; color:var(--gold); margin-bottom:20px;"></i><h3 style="color:var(--gold);">لا توجد منتجات</h3></div>';
+        container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:80px 20px;"><i class="fas fa-box-open" style="font-size:80px; color:var(--gold); margin-bottom:20px;"></i><h3 style="color:var(--gold);">لا توجد منتجات</h3><p style="color:var(--text-secondary); margin-bottom:20px;">أضف منتج جديد للبدء</p><button class="btn-gold" onclick="openAddProductModal()"><i class="fas fa-plus"></i> إضافة منتج جديد</button></div>';
         return;
     }
 
@@ -274,6 +290,7 @@ function handleLogin() {
         }
         
         showNotification(`مرحباً ${user.name}`, 'success');
+        location.reload(); // إعادة تحميل الصفحة لتحديث الأزرار
     } else {
         showNotification('بيانات غير صحيحة', 'error');
     }
@@ -318,6 +335,21 @@ async function handleRegister() {
     localStorage.setItem('nardoo_users', JSON.stringify(users));
     showNotification('تم التسجيل بنجاح', 'success');
     switchAuthTab('login');
+}
+
+// ========== فتح نافذة إضافة منتج ==========
+function openAddProductModal() {
+    if (!currentUser) {
+        showNotification('يجب تسجيل الدخول أولاً', 'error');
+        openLoginModal();
+        return;
+    }
+    
+    if (currentUser.role === 'admin' || currentUser.role === 'merchant_approved') {
+        document.getElementById('productModal').classList.add('show');
+    } else {
+        showNotification('فقط المدير والتجار يمكنهم إضافة منتجات', 'error');
+    }
 }
 
 // ========== تفاصيل المنتج ==========
@@ -430,19 +462,28 @@ function switchDashboardTab(tab) {
             </div>
         `;
     } else if (tab === 'products') {
-        content = '<h3>المنتجات</h3>' + products.map(p => `<p>${p.name} - ${p.price} دج</p>`).join('');
+        content = '<h3 style="color:var(--gold); margin-bottom:20px;">المنتجات</h3>';
+        products.forEach(p => {
+            content += `<p>${p.name} - ${p.price} دج</p>`;
+        });
     } else if (tab === 'users') {
-        content = '<h3>المستخدمين</h3>' + users.map(u => `<p>${u.name} - ${u.role}</p>`).join('');
+        content = '<h3 style="color:var(--gold); margin-bottom:20px;">المستخدمين</h3>';
+        users.forEach(u => {
+            content += `<p>${u.name} - ${u.role}</p>`;
+        });
     } else if (tab === 'merchants') {
         const pending = users.filter(u => u.role === 'merchant_pending');
-        content = '<h3>طلبات التجار</h3>' + pending.map(u => `
-            <div style="background:var(--glass); padding:15px; border-radius:15px; margin:10px 0;">
-                <p><strong>${u.name}</strong> - ${u.email}</p>
-                <p>متجر: ${u.storeName || 'غير محدد'}</p>
-                <button class="btn-gold" onclick="approveMerchant(${u.id})">موافقة</button>
-                <button class="btn-outline-gold" onclick="rejectMerchant(${u.id})">رفض</button>
-            </div>
-        `).join('');
+        content = '<h3 style="color:var(--gold); margin-bottom:20px;">طلبات التجار</h3>';
+        pending.forEach(u => {
+            content += `
+                <div style="background:var(--glass); padding:15px; border-radius:15px; margin:10px 0;">
+                    <p><strong>${u.name}</strong> - ${u.email}</p>
+                    <p>متجر: ${u.storeName || 'غير محدد'}</p>
+                    <button class="btn-gold" onclick="approveMerchant(${u.id})">موافقة</button>
+                    <button class="btn-outline-gold" onclick="rejectMerchant(${u.id})">رفض</button>
+                </div>
+            `;
+        });
     }
     document.getElementById('dashboardContent').innerHTML = content;
 }
