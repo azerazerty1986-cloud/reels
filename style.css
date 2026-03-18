@@ -1,18 +1,18 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-
-/* ========== ناردو برو - ملف الأنماط الرئيسي ========== */
-/* ========== النسخة النهائية مع جميع التعديلات ========== */
-
-/* ===== 1. المتغيرات العامة ===== */
 :root {
+    --gold: #d4af37;
+    --gold-dark: #b38f2c;
+    --gold-light: #f4e3b1;
     --bg-primary: #0a1a15;
     --bg-secondary: #1a2f28;
     --bg-card: rgba(26, 47, 40, 0.95);
     --text-primary: #ffffff;
     --text-secondary: #e0e0e0;
-    --gold: #d4af37;
-    --gold-dark: #b38f2c;
-    --gold-light: #f4e3b1;
     --nardoo: #2c5e4f;
     --nardoo-dark: #1a3a32;
     --nardoo-light: #3e826b;
@@ -42,12 +42,6 @@ body.light-mode {
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     font-family: 'Cairo', sans-serif;
     background: var(--bg-primary);
@@ -65,7 +59,7 @@ body {
     padding: 0 15px;
 }
 
-/* ===== 2. شاشة التحميل ===== */
+/* ===== شاشة التحميل ===== */
 .loader {
     position: fixed;
     top: 0;
@@ -93,7 +87,7 @@ body {
     to { transform: rotate(360deg); }
 }
 
-/* ===== 3. نظام الإشعارات Toast ===== */
+/* ===== نظام الإشعارات Toast ===== */
 .toast-container {
     position: fixed;
     top: 20px;
@@ -149,7 +143,7 @@ body {
     to { transform: translateX(0); opacity: 1; }
 }
 
-/* ===== 4. سلة التسوق الجانبية ===== */
+/* ===== سلة التسوق الجانبية ===== */
 .cart-sidebar {
     position: fixed;
     top: 0;
@@ -258,7 +252,7 @@ body {
 
 .checkout-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--green); }
 
-/* ===== 5. أيقونة السلة الثابتة ===== */
+/* ===== أيقونة السلة الثابتة ===== */
 .fixed-cart {
     position: fixed;
     bottom: 100px;
@@ -297,7 +291,7 @@ body {
     border: 2px solid var(--bg-primary);
 }
 
-/* ===== 6. أزرار الصعود والهبوط ===== */
+/* ===== أزرار الصعود والهبوط ===== */
 .navigation-buttons {
     position: fixed;
     bottom: 100px;
@@ -335,7 +329,7 @@ body {
 .up-btn { animation: float 2s ease-in-out infinite; }
 .down-btn { animation: float 2s ease-in-out infinite reverse; }
 
-/* ===== 7. زر العودة للأعلى ===== */
+/* ===== زر العودة للأعلى ===== */
 .quick-top-btn {
     position: fixed;
     bottom: 30px;
@@ -360,7 +354,7 @@ body {
 .quick-top-btn:hover { transform: scale(1.1); animation: none; }
 .quick-top-btn.show { display: flex; }
 
-/* ===== 8. الشريط العلوي ===== */
+/* ===== الشريط العلوي ===== */
 .top-bar {
     background: var(--bg-secondary);
     backdrop-filter: blur(10px);
@@ -404,7 +398,7 @@ body {
 
 .theme-toggle:hover { background: var(--gold); color: var(--bg-primary); }
 
-/* ===== 9. شريط المميزات المتحرك ===== */
+/* ===== شريط المميزات المتحرك ===== */
 .marquee-bar {
     background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-dark));
     padding: 12px 0;
@@ -460,7 +454,7 @@ body {
 .pulse-item { animation: pulse 2s ease-in-out infinite; }
 .rotate-item i { animation: rotate 4s linear infinite; }
 
-/* ===== 10. الهيدر الرئيسي ===== */
+/* ===== الهيدر الرئيسي ===== */
 .main-header {
     background: var(--bg-card);
     backdrop-filter: blur(20px);
@@ -510,7 +504,7 @@ body {
 
 .logo-text span { color: var(--gold-light); font-size: 14px; font-weight: 600; }
 
-/* ===== 11. البحث ===== */
+/* ===== البحث ===== */
 .search-wrapper { flex: 0 1 400px; position: relative; }
 
 .search-box {
@@ -552,7 +546,7 @@ body {
 
 .search-box button:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--gold); }
 
-/* ===== 12. أزرار الإجراءات ===== */
+/* ===== أزرار الإجراءات ===== */
 .header-actions { display: flex; align-items: center; gap: 12px; }
 
 .action-btn {
@@ -594,7 +588,7 @@ body {
     justify-content: center;
 }
 
-/* ===== 13. القائمة الرئيسية ===== */
+/* ===== القائمة الرئيسية ===== */
 .nav-menu {
     background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
     backdrop-filter: blur(10px);
@@ -651,7 +645,7 @@ body {
 .nav-link.active i { color: var(--bg-primary); }
 .nav-link i { color: var(--gold); transition: var(--transition); font-size: 16px; }
 
-/* ===== 14. نص متحرك ===== */
+/* ===== نص متحرك ===== */
 .typing-container {
     text-align: center;
     margin: 20px 0;
@@ -664,7 +658,7 @@ body {
 .typing-cursor { animation: blink 1s infinite; }
 @keyframes blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
 
-/* ===== 15. لوحة التاجر ===== */
+/* ===== لوحة التاجر ===== */
 .merchant-panel {
     background: linear-gradient(135deg, var(--purple), var(--purple-dark));
     border-radius: 30px;
@@ -690,19 +684,15 @@ body {
     font-size: 24px;
 }
 
-/* ===== 16. شبكة المنتجات ===== */
+/* ===== شبكة المنتجات ===== */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 30px;
     margin: 30px 0;
 }
 
-@media (max-width: 1200px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 992px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 576px) { .products-grid { grid-template-columns: 1fr; } }
-
-/* ===== 17. بطاقة المنتج ===== */
+/* ===== بطاقة المنتج ===== */
 .product-card {
     background: var(--bg-card);
     backdrop-filter: blur(10px);
@@ -714,7 +704,6 @@ body {
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
-    animation: fadeInUp 0.5s ease forwards;
     cursor: pointer;
 }
 
@@ -728,7 +717,7 @@ body {
     transform: scale(1.1);
 }
 
-/* ===== 18. شارة الوقت ===== */
+/* ===== شارة الوقت ===== */
 .product-time-badge {
     position: absolute;
     top: 15px;
@@ -745,22 +734,15 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
-    animation: fadeIn 0.5s;
 }
 
-.product-time-badge i {
-    font-size: 11px;
-    color: var(--gold-light);
-}
-
-/* ===== 19. معرض الصور ===== */
+/* ===== معرض الصور ===== */
 .product-gallery {
     position: relative;
     width: 100%;
     height: 240px;
     overflow: hidden;
     border-radius: 25px 25px 0 0;
-    cursor: pointer;
 }
 
 .product-gallery img {
@@ -770,37 +752,7 @@ body {
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.product-gallery::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: linear-gradient(to top, var(--bg-card), transparent);
-    pointer-events: none;
-}
-
-/* ===== 20. مؤشر عدد الصور ===== */
-.product-gallery .image-counter {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.7);
-    color: var(--gold);
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    z-index: 5;
-    backdrop-filter: blur(5px);
-    border: 1px solid var(--gold);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-/* ===== 21. معلومات المنتج ===== */
+/* ===== معلومات المنتج ===== */
 .product-info {
     padding: 20px;
     flex: 1;
@@ -808,7 +760,6 @@ body {
     flex-direction: column;
 }
 
-/* ===== 22. قسم المنتج ===== */
 .product-category {
     display: inline-block;
     background: linear-gradient(135deg, var(--gold), var(--gold-dark));
@@ -819,12 +770,9 @@ body {
     font-weight: 700;
     margin-bottom: 12px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
     width: fit-content;
 }
 
-/* ===== 23. عنوان المنتج ===== */
 .product-title {
     font-size: 18px;
     font-weight: 700;
@@ -836,14 +784,12 @@ body {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    transition: var(--transition);
 }
 
 .product-card:hover .product-title {
     color: var(--gold);
 }
 
-/* ===== 24. معلومات التاجر ===== */
 .product-merchant-info {
     display: inline-flex;
     align-items: center;
@@ -863,62 +809,6 @@ body {
     font-size: 12px;
 }
 
-.product-merchant-info:hover {
-    background: var(--gold);
-    color: var(--bg-primary);
-    transform: translateX(-3px);
-}
-
-/* ===== 25. تقييم النجوم ===== */
-.product-rating {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.stars-container {
-    display: flex;
-    gap: 3px;
-    direction: ltr;
-}
-
-.star {
-    color: #ddd;
-    font-size: 14px;
-    transition: var(--transition);
-}
-
-.star.filled {
-    color: var(--gold);
-    text-shadow: 0 0 5px var(--gold);
-}
-
-.star.half {
-    position: relative;
-    color: #ddd;
-}
-
-.star.half::before {
-    content: '★';
-    position: absolute;
-    left: 0;
-    width: 50%;
-    overflow: hidden;
-    color: var(--gold);
-}
-
-.rating-value {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gold);
-    background: rgba(212, 175, 55, 0.1);
-    padding: 2px 12px;
-    border-radius: 20px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-/* ===== 26. السعر ===== */
 .product-price {
     font-size: 26px;
     font-weight: 800;
@@ -927,17 +817,14 @@ body {
     display: flex;
     align-items: center;
     gap: 5px;
-    line-height: 1;
 }
 
 .product-price small {
     font-size: 14px;
     color: var(--gold-light);
     font-weight: 400;
-    margin-right: 5px;
 }
 
-/* ===== 27. المخزون ===== */
 .product-stock {
     font-size: 13px;
     margin-bottom: 15px;
@@ -945,7 +832,6 @@ body {
     border-radius: 25px;
     display: inline-block;
     font-weight: 600;
-    transition: var(--transition);
 }
 
 .in-stock {
@@ -967,7 +853,7 @@ body {
     border: 1px solid #f87171;
 }
 
-/* ===== 28. أزرار الإجراءات ===== */
+/* ===== أزرار المنتج ===== */
 .product-actions {
     display: flex;
     gap: 12px;
@@ -989,13 +875,11 @@ body {
     justify-content: center;
     gap: 8px;
     font-size: 14px;
-    border: 1px solid transparent;
 }
 
 .add-to-cart:hover:not(:disabled) {
     transform: translateY(-3px);
     box-shadow: 0 10px 25px var(--gold);
-    background: linear-gradient(135deg, var(--gold-light), var(--gold));
 }
 
 .add-to-cart:disabled {
@@ -1004,29 +888,10 @@ body {
     background: #666;
 }
 
-.add-to-cart i { font-size: 16px; }
-
-/* ===== 29. خيارات الفرز ===== */
-.sort-options { display: flex; justify-content: flex-end; margin: 20px 0; }
-
-.sort-select {
-    background: var(--glass);
-    border: 2px solid var(--gold);
-    border-radius: 35px;
-    padding: 12px 30px;
-    color: var(--text-primary);
-    font-family: 'Cairo', sans-serif;
-    font-size: 15px;
-    cursor: pointer;
-    outline: none;
-    transition: var(--transition);
+/* ===== لوحة التحكم ===== */
+.dashboard-section {
+    margin: 40px 0;
 }
-
-.sort-select:hover { background: var(--gold); color: var(--bg-primary); }
-.sort-select option { background: var(--bg-secondary); color: var(--text-primary); }
-
-/* ===== 30. لوحة التحكم ===== */
-.dashboard-section { margin: 40px 0; }
 
 .dashboard-tabs {
     display: flex;
@@ -1044,7 +909,6 @@ body {
     cursor: pointer;
     transition: var(--transition);
     font-weight: 600;
-    font-size: 15px;
 }
 
 .dashboard-tab:hover,
@@ -1063,7 +927,7 @@ body {
     overflow-x: auto;
 }
 
-/* ===== 31. الجداول ===== */
+/* ===== الجداول ===== */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -1078,7 +942,6 @@ th {
     background: linear-gradient(135deg, var(--gold), var(--gold-dark));
     color: var(--bg-primary);
     font-weight: 700;
-    font-size: 15px;
 }
 
 td {
@@ -1091,106 +954,7 @@ tr:hover td {
     background: var(--glass);
 }
 
-/* ===== 32. نموذج إضافة منتج ===== */
-.product-form { display: grid; gap: 20px; }
-.form-group { display: flex; flex-direction: column; gap: 8px; }
-.form-group label { font-weight: 600; color: var(--gold); font-size: 15px; }
-
-.form-control {
-    padding: 15px;
-    background: var(--glass);
-    border: 2px solid var(--glass-border);
-    border-radius: 20px;
-    color: var(--text-primary);
-    font-family: 'Cairo', sans-serif;
-    font-size: 15px;
-    transition: var(--transition);
-}
-
-.form-control:focus { border-color: var(--gold); outline: none; }
-
-/* ===== 33. رفع الصور ===== */
-.image-upload-area {
-    border: 2px dashed var(--gold);
-    border-radius: 25px;
-    padding: 40px 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: var(--transition);
-    background: var(--glass);
-}
-
-.image-upload-area:hover {
-    background: rgba(212, 175, 55, 0.1);
-    border-color: var(--gold-light);
-}
-
-.image-upload-area i {
-    font-size: 48px;
-    color: var(--gold);
-    margin-bottom: 15px;
-    animation: float 3s ease-in-out infinite;
-}
-
-.image-upload-area p {
-    font-size: 16px;
-    color: var(--gold);
-    font-weight: 600;
-}
-
-.image-preview {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 20px;
-    justify-content: center;
-}
-
-.preview-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border: 3px solid var(--gold);
-    border-radius: 15px;
-    transition: var(--transition);
-}
-
-.preview-image:hover {
-    transform: scale(1.1);
-    box-shadow: var(--shadow-gold);
-}
-
-/* ===== 34. النوافذ المنبثقة ===== */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(15px);
-    z-index: 3000;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background: var(--bg-secondary);
-    border: 2px solid var(--gold);
-    border-radius: 35px;
-    padding: 35px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow);
-    animation: fadeInUp 0.3s ease;
-}
-
-.modal-lg { max-width: 1000px; }
-
-/* ===== 35. الفوتر ===== */
+/* ===== الفوتر ===== */
 .footer {
     background: var(--bg-secondary);
     padding: 60px 0 30px;
@@ -1205,9 +969,23 @@ tr:hover td {
     margin-bottom: 40px;
 }
 
-.footer-col h3 { color: var(--gold); font-size: 20px; margin-bottom: 20px; }
-.footer-col p { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-.footer-col i { color: var(--gold); width: 22px; font-size: 16px; }
+.footer-col h3 {
+    color: var(--gold);
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.footer-col p {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-col i {
+    color: var(--gold);
+    width: 22px;
+}
 
 .copyright {
     text-align: center;
@@ -1216,36 +994,124 @@ tr:hover td {
     color: var(--text-secondary);
 }
 
-/* ===== 36. شارات الحالة ===== */
-.status-badge {
-    padding: 5px 15px;
-    border-radius: 25px;
-    font-size: 12px;
+/* ===== النوافذ المنبثقة ===== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(15px);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.show {
+    display: flex !important;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border: 3px solid var(--gold);
+    border-radius: 35px;
+    padding: 35px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(212, 175, 55, 0.4);
+    animation: modalFadeIn 0.3s ease;
+}
+
+.modal-lg {
+    max-width: 1000px;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ===== رأس النافذة ===== */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--gold);
+}
+
+.modal-header h2 {
+    color: var(--gold);
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--gold);
+    font-size: 32px;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.close-btn:hover {
+    background: var(--gold);
+    color: var(--bg-primary);
+    transform: rotate(90deg);
+}
+
+/* ===== نماذج الإدخال ===== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--gold);
     font-weight: 600;
-    display: inline-block;
-    text-align: center;
-    min-width: 100px;
+    font-size: 15px;
 }
 
-.status-pending {
-    background: rgba(251, 191, 36, 0.2);
-    color: #fbbf24;
-    border: 1px solid #fbbf24;
+.form-control {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--glass);
+    border: 2px solid var(--glass-border);
+    border-radius: 20px;
+    color: var(--text-primary);
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    transition: var(--transition);
 }
 
-.status-approved {
-    background: rgba(74, 222, 128, 0.2);
-    color: #4ade80;
-    border: 1px solid #4ade80;
+.form-control:focus {
+    border-color: var(--gold);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
 }
 
-.status-rejected {
-    background: rgba(248, 113, 113, 0.2);
-    color: #f87171;
-    border: 1px solid #f87171;
-}
-
-/* ===== 37. أزرار مخصصة ===== */
+/* ===== الأزرار ===== */
 .btn-gold {
     background: linear-gradient(135deg, var(--gold), var(--gold-dark));
     color: var(--bg-primary);
@@ -1288,7 +1154,59 @@ tr:hover td {
     color: var(--bg-primary);
 }
 
-/* ===== 38. تأثيرات حركية ===== */
+/* ===== رفع الصور ===== */
+.image-upload-area {
+    border: 2px dashed var(--gold);
+    border-radius: 25px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--glass);
+    margin: 15px 0;
+}
+
+.image-upload-area:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--gold-light);
+}
+
+.image-upload-area i {
+    font-size: 48px;
+    color: var(--gold);
+    margin-bottom: 15px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.image-upload-area p {
+    font-size: 16px;
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.preview-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 3px solid var(--gold);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.preview-image:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-gold);
+}
+
+/* ===== تحريك ===== */
 @keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-8px); }
@@ -1320,18 +1238,7 @@ tr:hover td {
     }
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* ===== 39. تحسينات للشاشات الصغيرة ===== */
+/* ===== تجاوب للشاشات الصغيرة ===== */
 @media (max-width: 768px) {
     .fixed-cart {
         bottom: 80px;
@@ -1388,13 +1295,6 @@ tr:hover td {
         font-size: 22px;
     }
     
-    .product-time-badge {
-        font-size: 10px;
-        padding: 4px 12px;
-        top: 10px;
-        right: 10px;
-    }
-    
     .cart-sidebar {
         width: 100%;
         left: -100%;
@@ -1412,199 +1312,4 @@ tr:hover td {
     .modal-content {
         padding: 20px;
     }
-}
-
-/* ===== 40. تأثيرات إضافية ===== */
-.glow-text { text-shadow: 0 0 10px var(--gold); }
-.admin-only { display: block; }
-.merchant-only { display: block; }
-.fade-in-up { animation: fadeInUp 0.5s ease forwards; }
-/* ===== 41. إصلاح مشكلة ظهور النوافذ ===== */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(15px);
-    z-index: 10000;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal.show {
-    display: flex !important;
-}
-
-/* للتأكد من ظهور النوافذ */
-#loginModal.show,
-#productModal.show,
-#productDetailModal.show,
-#merchantDashboardModal.show,
-#merchantProductsModal.show,
-#merchantOrdersModal.show,
-#adminAppsModal.show,
-#appRunnerModal.show {
-    display: flex !important;
-}
-
-/* تحسين ظهور المحتوى داخل النافذة */
-.modal-content {
-    background: var(--bg-secondary);
-    border: 3px solid var(--gold);
-    border-radius: 35px;
-    padding: 35px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(212, 175, 55, 0.4);
-    animation: modalFadeIn 0.3s ease;
-}
-
-.modal-lg {
-    max-width: 1000px;
-}
-
-@keyframes modalFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-30px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* تحسين أزرار الإغلاق */
-.close-btn {
-    background: none;
-    border: none;
-    color: var(--gold);
-    font-size: 32px;
-    cursor: pointer;
-    transition: var(--transition);
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.close-btn:hover {
-    background: var(--gold);
-    color: var(--bg-primary);
-    transform: rotate(90deg);
-}
-
-/* تحسين رأس النافذة */
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--gold);
-}
-
-.modal-header h2 {
-    color: var(--gold);
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* تحسين حقول الإدخال في النوافذ */
-.modal .form-group {
-    margin-bottom: 20px;
-}
-
-.modal .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--gold);
-    font-weight: 600;
-    font-size: 15px;
-}
-
-.modal .form-control {
-    width: 100%;
-    padding: 14px 18px;
-    background: var(--glass);
-    border: 2px solid var(--glass-border);
-    border-radius: 20px;
-    color: var(--text-primary);
-    font-family: 'Cairo', sans-serif;
-    font-size: 15px;
-    transition: var(--transition);
-}
-
-.modal .form-control:focus {
-    border-color: var(--gold);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
-}
-
-/* تحسين الأزرار في النوافذ */
-.modal .btn-gold,
-.modal .btn-outline-gold {
-    padding: 14px 28px;
-    font-size: 16px;
-    border-radius: 40px;
-    cursor: pointer;
-    transition: var(--transition);
-    font-weight: 700;
-    border: none;
-}
-
-.modal .btn-gold {
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-    color: var(--bg-primary);
-}
-
-.modal .btn-outline-gold {
-    background: transparent;
-    border: 2px solid var(--gold);
-    color: var(--gold);
-}
-
-.modal .btn-gold:hover,
-.modal .btn-outline-gold:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
-}
-
-/* تحسين ظهور النوافذ على الجوال */
-@media (max-width: 768px) {
-    .modal-content {
-        padding: 25px;
-        width: 95%;
-    }
-    
-    .modal-header h2 {
-        font-size: 20px;
-    }
-    
-    .modal .btn-gold,
-    .modal .btn-outline-gold {
-        padding: 12px 20px;
-        font-size: 14px;
-    }
-}
-
-/* تحسين خلفية النافذة */
-.modal::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
-    pointer-events: none;
 }
