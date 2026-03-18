@@ -9,6 +9,7 @@ if (!localStorage.getItem('nardoo_users')) {
             role: 'admin', 
             phone: '0562243648',
             merchantId: 'ADMIN_001',
+            avatar: 'https://i.pravatar.cc/150?u=admin',
             createdAt: new Date().toISOString()
         }
     ]));
@@ -21,6 +22,7 @@ let cart = [];
 let currentFilter = 'all';
 let searchTerm = '';
 let users = [];
+let selectedImageFiles = [];
 
 // ========== تحميل المستخدمين ==========
 function loadUsers() {
@@ -39,7 +41,7 @@ async function loadProducts() {
     displayProducts();
 }
 
-// ========== عرض المنتجات ==========
+// ========== عرض المنتجات مع التوقيت ==========
 function displayProducts() {
     const container = document.getElementById('productsContainer');
     if (!container) return;
@@ -67,17 +69,26 @@ function displayProducts() {
         return;
     }
 
-    container.innerHTML = filtered.map(product => `
+    container.innerHTML = filtered.map(product => {
+        const mainImage = product.images && product.images.length > 0 ? product.images[0] : 
+                         (product.image || 'https://images.unsplash.com/photo-1542838132-92c5330041e7?w=300');
+        
+        return `
         <div class="product-card" onclick="showProductDetail('${product.productId || product.id}')">
+            <div class="product-time-badge">
+                <i class="far fa-clock"></i> ${product.dateStr || 'جديد'}
+            </div>
             <div class="product-gallery">
-                <img src="${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c5330041e7?w=300'">
+                <img src="${mainImage}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c5330041e7?w=300'">
+                ${product.images && product.images.length > 1 ? 
+                    `<span class="image-counter"><i class="fas fa-images"></i> ${product.images.length}</span>` : ''}
             </div>
             <div class="product-info">
                 <span class="product-category">${product.category === 'promo' ? 'برموسيو' : product.category === 'spices' ? 'توابل' : product.category === 'cosmetic' ? 'كوسمتيك' : 'أخرى'}</span>
                 <h3 class="product-title">${product.name}</h3>
                 <div class="product-merchant-info">
                     <i class="fas fa-store"></i> ${product.merchantName || product.merchant}
-                    ${product.merchantId ? `<small style="color:var(--gold-light);">(${product.merchantId})</small>` : ''}
+                    <small style="color:var(--gold-light);">(${product.merchantId || 'ADMIN_001'})</small>
                 </div>
                 <div class="product-price">${product.price.toLocaleString()} <small>دج</small></div>
                 <div class="product-stock ${product.stock <= 0 ? 'out-of-stock' : product.stock < 5 ? 'low-stock' : 'in-stock'}">
@@ -90,7 +101,7 @@ function displayProducts() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 // ========== دوال التصفية ==========
@@ -144,7 +155,8 @@ function addToCart(productId) {
             name: product.name,
             price: product.price,
             quantity: 1,
-            merchantName: product.merchantName || product.merchant
+            merchantName: product.merchantName || product.merchant,
+            image: product.images ? product.images[0] : product.image
         });
     }
 
@@ -175,6 +187,9 @@ function updateCartDisplay() {
         total += itemTotal;
         return `
             <div class="cart-item">
+                <div class="cart-item-image">
+                    <img src="${item.image || 'https://images.unsplash.com/photo-1542838132-92c5330041e7?w=300'}" style="width:50px; height:50px; object-fit:cover; border-radius:10px;">
+                </div>
                 <div class="cart-item-details">
                     <div class="cart-item-title">${item.name}</div>
                     <div class="cart-item-price">${item.price.toLocaleString()} دج</div>
@@ -230,10 +245,6 @@ async function checkoutCart() {
         items: cart,
         total: total + 800
     };
-
-    if (window.TelegramAPI) {
-        await TelegramAPI.addOrder(order);
-    }
 
     let message = '🛍️ طلب جديد:\n\n';
     cart.forEach(item => {
@@ -316,6 +327,7 @@ async function handleRegister() {
         password, 
         phone,
         role: isMerchant ? 'merchant_pending' : 'user',
+        avatar: `https://i.pravatar.cc/150?u=${Date.now()}`,
         createdAt: new Date().toISOString()
     };
 
@@ -323,21 +335,58 @@ async function handleRegister() {
         newUser.storeName = document.getElementById('storeName').value;
         newUser.merchantCategory = document.getElementById('merchantCategory').value;
         newUser.merchantLevel = document.getElementById('merchantLevel').value;
-        
-        if (window.TelegramAPI) {
-            await TelegramAPI.addMerchant(newUser);
-            showNotification('تم إرسال طلب التسجيل كتاجر', 'info');
-        }
-    } else {
-        if (window.TelegramAPI) {
-            await TelegramAPI.registerUser({ ...newUser, isMerchant: false });
-        }
-        showNotification('تم التسجيل بنجاح', 'success');
     }
 
     users.push(newUser);
     localStorage.setItem('nardoo_users', JSON.stringify(users));
+    showNotification('تم التسجيل بنجاح', 'success');
     switchAuthTab('login');
+}
+
+// ========== رفع الصور المتعددة ==========
+function handleImageUpload(event) {
+    const files = event.target.files;
+    const preview = document.getElementById('imagePreview');
+    
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            const imgContainer = document.createElement('div');
+            imgContainer.style.position = 'relative';
+            imgContainer.style.display = 'inline-block';
+            
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'preview-image';
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '×';
+            removeBtn.style.position = 'absolute';
+            removeBtn.style.top = '5px';
+            removeBtn.style.right = '5px';
+            removeBtn.style.background = 'var(--red)';
+            removeBtn.style.color = 'white';
+            removeBtn.style.border = 'none';
+            removeBtn.style.borderRadius = '50%';
+            removeBtn.style.width = '25px';
+            removeBtn.style.height = '25px';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.onclick = function() {
+                imgContainer.remove();
+                selectedImageFiles = selectedImageFiles.filter(f => f !== file);
+            };
+            
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(removeBtn);
+            preview.appendChild(imgContainer);
+            
+            selectedImageFiles.push(file);
+        };
+        
+        reader.readAsDataURL(file);
+    }
 }
 
 function openAddProductModal() {
@@ -348,54 +397,85 @@ function openAddProductModal() {
     }
     
     if (currentUser.role === 'admin' || currentUser.role === 'merchant_approved') {
+        selectedImageFiles = [];
+        document.getElementById('imagePreview').innerHTML = '';
         document.getElementById('productModal').classList.add('show');
     } else {
         showNotification('فقط المدير والتجار يمكنهم إضافة منتجات', 'error');
     }
 }
 
+// ========== عرض تفاصيل المنتج مع صور متعددة ==========
 async function showProductDetail(productIdentifier) {
     let product;
     if (window.TelegramAPI) {
-        product = await TelegramAPI.getProductBySerialId(productIdentifier);
-    }
-    if (!product) {
-        product = products.find(p => p.id == productIdentifier || p.productId == productIdentifier);
+        const products = await TelegramAPI.fetchProducts();
+        product = products.find(p => p.productId === productIdentifier || p.id == productIdentifier);
     }
     
     if (!product) return;
     
+    const images = product.images && product.images.length > 0 ? product.images : 
+                   [product.image || 'https://images.unsplash.com/photo-1542838132-92c5330041e7?w=300'];
+    
+    let galleryHTML = '';
+    if (images.length > 1) {
+        galleryHTML = `
+            <div class="product-gallery-container">
+                <div class="product-main-image">
+                    <img src="${images[0]}" id="mainProductImage" style="width:100%; border-radius:20px; border:3px solid var(--gold);">
+                </div>
+                <div class="product-thumbnails" style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
+                    ${images.map((img, index) => `
+                        <img src="${img}" onclick="document.getElementById('mainProductImage').src='${img}'" 
+                             style="width:60px; height:60px; object-fit:cover; border-radius:10px; border:2px solid var(--gold); cursor:pointer; ${index === 0 ? 'opacity:1;' : 'opacity:0.7;'}"
+                             onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='${index === 0 ? '1' : '0.7'}'">
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    } else {
+        galleryHTML = `<img src="${images[0]}" style="width:100%; border-radius:20px; border:3px solid var(--gold);">`;
+    }
+    
     document.getElementById('productDetailContent').innerHTML = `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px;">
-            <div><img src="${product.image}" style="width:100%; border-radius:20px; border:3px solid var(--gold);"></div>
+            <div>${galleryHTML}</div>
             <div>
-                <h2 style="color:var(--gold); margin-bottom:20px;">${product.name}</h2>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <span class="product-category">${product.category === 'promo' ? 'برموسيو' : product.category === 'spices' ? 'توابل' : product.category === 'cosmetic' ? 'كوسمتيك' : 'أخرى'}</span>
+                    <span style="background:var(--glass); padding:5px 15px; border-radius:20px; font-size:14px;">
+                        <i class="far fa-clock"></i> ${product.dateStr || 'جديد'}
+                    </span>
+                </div>
+                <h2 style="color:var(--gold); margin-bottom:20px; font-size:28px;">${product.name}</h2>
                 <p style="margin-bottom:20px;">${product.description || 'منتج عالي الجودة'}</p>
-                <p style="margin-bottom:10px;"><i class="fas fa-store"></i> ${product.merchantName || product.merchant}</p>
-                ${product.merchantId ? `<p style="margin-bottom:10px; color:var(--gold-light);">🆔 ${product.merchantId}</p>` : ''}
-                <p style="margin-bottom:10px;">🆔 ${product.productId}</p>
-                <div style="font-size:32px; color:var(--gold); margin-bottom:20px;">${product.price} دج</div>
-                <div style="margin-bottom:20px;">المتبقي: ${product.stock} قطعة</div>
-                <button class="btn-gold" onclick="addToCart('${product.productId || product.id}'); closeModal('productDetailModal');">أضف للسلة</button>
-                <button class="btn-outline-gold" onclick="closeModal('productDetailModal')" style="margin-right:10px;">إغلاق</button>
+                <div style="background:var(--glass); padding:15px; border-radius:15px; margin-bottom:20px;">
+                    <p style="margin-bottom:10px;"><i class="fas fa-store"></i> ${product.merchantName || product.merchant}</p>
+                    <p style="margin-bottom:5px; color:var(--gold-light);">🆔 معرف التاجر: ${product.merchantId || 'ADMIN_001'}</p>
+                    <p style="margin-bottom:5px;">🆔 معرف المنتج: ${product.productId}</p>
+                </div>
+                <div style="font-size:36px; color:var(--gold); font-weight:800; margin-bottom:20px;">${product.price.toLocaleString()} <small style="font-size:16px;">دج</small></div>
+                <div style="margin-bottom:20px;">
+                    <span class="product-stock ${product.stock <= 0 ? 'out-of-stock' : product.stock < 5 ? 'low-stock' : 'in-stock'}">
+                        ${product.stock <= 0 ? 'غير متوفر' : product.stock < 5 ? `كمية محدودة (${product.stock})` : `متوفر (${product.stock})`}
+                    </span>
+                </div>
+                <div style="display:flex; gap:15px;">
+                    <button class="btn-gold" style="flex:2;" onclick="addToCart('${product.productId || product.id}'); closeModal('productDetailModal');">
+                        <i class="fas fa-shopping-cart"></i> أضف للسلة
+                    </button>
+                    <button class="btn-outline-gold" style="flex:1;" onclick="closeModal('productDetailModal')">
+                        إغلاق
+                    </button>
+                </div>
             </div>
         </div>
     `;
     openModal('productDetailModal');
 }
 
-function handleImageUpload(event) {
-    const preview = document.getElementById('imagePreview');
-    preview.innerHTML = '';
-    for (let file of event.target.files) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.innerHTML += `<img src="${e.target.result}" class="preview-image">`;
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
+// ========== حفظ المنتج مع الصور المتعددة ==========
 async function saveProduct() {
     if (!currentUser) {
         showNotification('يجب تسجيل الدخول أولاً', 'error');
@@ -411,19 +491,25 @@ async function saveProduct() {
     };
 
     if (window.TelegramAPI) {
-        const result = await TelegramAPI.addProduct(product, currentUser);
+        showNotification('جاري رفع المنتج والصور...', 'info');
+        
+        const result = await TelegramAPI.addProduct(product, currentUser, selectedImageFiles);
+        
         if (result.success) {
-            showNotification('تم إضافة المنتج بنجاح', 'success');
+            showNotification(`✅ تم إضافة المنتج مع ${result.images.length} صور`, 'success');
             closeModal('productModal');
             document.getElementById('productForm').reset();
             document.getElementById('imagePreview').innerHTML = '';
+            selectedImageFiles = [];
         } else {
-            showNotification('فشل إضافة المنتج', 'error');
+            showNotification('❌ فشل إضافة المنتج', 'error');
         }
     } else {
         product.id = Date.now();
-        product.image = 'https://images.unsplash.com/photo-1542838132-92c5330041e7?w=300';
+        product.images = ['https://images.unsplash.com/photo-1542838132-92c5330041e7?w=300'];
         product.merchantName = currentUser.name;
+        product.merchantId = currentUser.merchantId || 'ADMIN_001';
+        product.dateStr = 'الآن';
         product.rating = 4.5;
         
         products.push(product);
@@ -480,12 +566,12 @@ function switchDashboardTab(tab) {
     } else if (tab === 'products') {
         content = '<h3 style="color:var(--gold); margin-bottom:20px;">المنتجات</h3>';
         products.forEach(p => {
-            content += `<p>${p.name} - ${p.price} دج - ${p.merchantName}</p>`;
+            content += `<p>${p.name} - ${p.price} دج - ${p.merchantName} - ${p.productId}</p>`;
         });
     } else if (tab === 'users') {
         content = '<h3 style="color:var(--gold); margin-bottom:20px;">المستخدمين</h3>';
         users.forEach(u => {
-            content += `<p>${u.name} - ${u.role} ${u.merchantId ? `(${u.merchantId})` : ''}</p>`;
+            content += `<p>${u.name} - ${u.role} - ${u.merchantId || ''}</p>`;
         });
     } else if (tab === 'merchants') {
         const pending = users.filter(u => u.role === 'merchant_pending');
@@ -512,17 +598,11 @@ function approveMerchant(userId) {
     const user = users.find(u => u.id == userId);
     if (user) {
         user.role = 'merchant_approved';
-        if (!user.merchantId && window.TelegramAPI) {
-            const stats = TelegramAPI.getIdsStats();
-            user.merchantId = stats.lastMerchantId;
+        if (!user.merchantId) {
+            user.merchantId = `MERCH_${1000 + users.length}`;
         }
         localStorage.setItem('nardoo_users', JSON.stringify(users));
         showNotification('تمت الموافقة على التاجر', 'success');
-        
-        if (window.TelegramAPI) {
-            TelegramAPI.approveMerchant(user.merchantId || 'MERCH_?', user.name);
-        }
-        
         switchDashboardTab('merchants');
     }
 }
@@ -533,11 +613,6 @@ function rejectMerchant(userId) {
         user.role = 'user';
         localStorage.setItem('nardoo_users', JSON.stringify(users));
         showNotification('تم رفض طلب التاجر', 'info');
-        
-        if (window.TelegramAPI) {
-            TelegramAPI.rejectMerchant('MERCH_?', user.name);
-        }
-        
         switchDashboardTab('merchants');
     }
 }
@@ -608,7 +683,6 @@ function scrollToBottom() {
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 }
 
-// ========== تأثير الكتابة ==========
 function startTypingEffect() {
     const texts = ['نكهة وجمال', 'ناردو برو', 'تسوق آمن', 'جودة عالية'];
     let index = 0, charIndex = 0;
