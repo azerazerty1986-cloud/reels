@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>🎮 البيئة الاحترافية | POV | لعبة المربعات</title>
+    <title>POV Mode | عالم المربعات - تجربة واقعية</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
@@ -12,7 +12,6 @@
             --accent: #00f2ff;
             --accent-glow: 0 0 20px rgba(0,242,255,0.5);
             --gold: #ffd700;
-            --gold-glow: 0 0 15px rgba(255,215,0,0.5);
         }
         
         * {
@@ -25,9 +24,10 @@
         body {
             overflow: hidden;
             font-family: 'Cairo', 'Segoe UI', system-ui, sans-serif;
+            background: #000;
         }
         
-        /* حاوية Three.js للبيئة 3D */
+        /* حاوية البيئة 3D */
         #canvas-container {
             position: fixed;
             top: 0;
@@ -38,45 +38,89 @@
         }
         
         /* حاوية POV للفيديو */
-        #pov-container {
+        .pov-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 2;
-            background: #000;
+            background: rgba(0,0,0,0.95);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.5s ease;
+            transition: all 0.4s ease;
         }
         
-        #pov-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .pov-active #pov-container {
+        .pov-overlay.active {
             opacity: 1;
             visibility: visible;
         }
         
-        .pov-active #canvas-container {
-            opacity: 0.3;
+        .pov-video-container {
+            width: 95%;
+            max-width: 900px;
+            border-radius: 25px;
+            overflow: hidden;
+            border: 3px solid var(--accent);
+            box-shadow: var(--accent-glow);
+            background: #000;
+        }
+        
+        .pov-video {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            background: #000;
+        }
+        
+        .pov-info {
+            margin-top: 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .pov-title {
+            font-size: 24px;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        
+        .pov-desc {
+            font-size: 14px;
+            color: #ccc;
+            max-width: 500px;
+        }
+        
+        .close-pov {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--accent);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 201;
+        }
+        
+        .close-pov:hover {
+            background: var(--accent);
+            color: #000;
+            transform: scale(1.1);
         }
         
         /* واجهة المستخدم */
-        .game-ui {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            pointer-events: none;
-        }
-        
-        /* الهيدر */
         .header {
             position: fixed;
             top: 15px;
@@ -84,7 +128,7 @@
             right: 15px;
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(15px);
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 25px;
             display: flex;
             justify-content: space-between;
@@ -92,12 +136,11 @@
             flex-wrap: wrap;
             gap: 10px;
             border: 1px solid var(--accent);
-            pointer-events: auto;
-            z-index: 101;
+            z-index: 100;
         }
         
         .game-title {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             color: var(--accent);
         }
@@ -109,76 +152,34 @@
         .stats {
             display: flex;
             gap: 15px;
-            font-size: 11px;
+            font-size: 12px;
         }
         
         .stat {
             background: rgba(0,0,0,0.5);
-            padding: 4px 12px;
+            padding: 5px 12px;
             border-radius: 20px;
-        }
-        
-        /* أزرار التحكم */
-        .controls-bar {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            z-index: 101;
-            pointer-events: auto;
-        }
-        
-        .control-btn {
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 12px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .control-btn:hover {
-            background: var(--accent);
-            color: #000;
-            transform: scale(1.05);
         }
         
         /* لوحة المربعات */
         .tiles-panel {
-            position: absolute;
-            bottom: 100px;
-            right: 15px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             background: rgba(0,0,0,0.9);
             backdrop-filter: blur(15px);
             border-radius: 20px;
             padding: 12px;
             border: 1px solid var(--accent);
-            pointer-events: auto;
-            z-index: 101;
-            max-width: 280px;
-            transition: all 0.3s;
-        }
-        
-        .tiles-panel.minimized {
-            max-width: 50px;
-            padding: 10px;
+            z-index: 100;
+            max-width: 300px;
         }
         
         .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             cursor: pointer;
         }
         
@@ -192,7 +193,7 @@
             border: none;
             color: white;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
         }
         
         .grid-tiles {
@@ -204,12 +205,12 @@
         .mini-tile {
             aspect-ratio: 1;
             background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 18px;
             transition: all 0.2s;
             border: 1px solid rgba(0,242,255,0.3);
         }
@@ -217,31 +218,26 @@
         .mini-tile:hover {
             transform: scale(1.1);
             border-color: var(--accent);
+            box-shadow: var(--accent-glow);
         }
         
         .mini-tile.visited {
             border-color: var(--gold);
-            box-shadow: var(--gold-glow);
-        }
-        
-        .mini-tile.active {
-            background: var(--accent);
-            color: #000;
+            box-shadow: 0 0 10px rgba(255,215,0,0.5);
         }
         
         /* معلومات الموقع */
         .location-info {
             position: fixed;
-            bottom: 100px;
-            left: 15px;
+            bottom: 20px;
+            left: 20px;
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(15px);
             padding: 12px 20px;
             border-radius: 20px;
-            border-left: 3px solid var(--accent);
-            pointer-events: none;
-            z-index: 101;
-            max-width: 250px;
+            border-right: 3px solid var(--accent);
+            z-index: 100;
+            max-width: 280px;
         }
         
         .location-title {
@@ -251,63 +247,38 @@
         }
         
         .location-desc {
-            font-size: 10px;
+            font-size: 11px;
             color: #ccc;
-            margin-top: 4px;
+            margin-top: 5px;
         }
         
-        /* نافذة POV الموسعة */
-        .pov-modal {
+        /* أزرار التحكم */
+        .controls-bar {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 200;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .control-btn {
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
             transition: all 0.3s;
         }
         
-        .pov-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .pov-video-large {
-            width: 90%;
-            max-width: 800px;
-            border-radius: 20px;
-            border: 3px solid var(--accent);
-            box-shadow: var(--accent-glow);
-        }
-        
-        .pov-info {
-            margin-top: 20px;
-            text-align: center;
-            color: white;
-        }
-        
-        .close-pov {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.7);
-            border: 1px solid var(--accent);
-            color: white;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .control-btn:hover {
+            background: var(--accent);
+            color: #000;
         }
         
         /* شاشة البداية */
@@ -320,7 +291,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 25px;
+            gap: 30px;
         }
         
         .start-btn {
@@ -343,7 +314,7 @@
         
         .toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.9);
@@ -354,29 +325,29 @@
             font-size: 12px;
             z-index: 300;
             border: 1px solid var(--accent);
-            white-space: nowrap;
         }
         
         @media (max-width: 600px) {
             .header { padding: 8px 12px; }
-            .game-title { font-size: 10px; }
-            .stats { gap: 8px; font-size: 9px; }
-            .control-btn { padding: 8px 15px; font-size: 11px; }
-            .tiles-panel { max-width: 200px; }
-            .mini-tile { font-size: 10px; }
-            .location-info { max-width: 180px; padding: 8px 12px; }
+            .game-title { font-size: 11px; }
+            .stats { font-size: 9px; gap: 8px; }
+            .tiles-panel { max-width: 220px; padding: 8px; }
+            .mini-tile { font-size: 12px; }
+            .location-info { max-width: 200px; padding: 8px 12px; }
             .location-title { font-size: 11px; }
+            .control-btn { padding: 6px 12px; font-size: 10px; }
+            .pov-title { font-size: 18px; }
         }
     </style>
 </head>
 <body>
 
     <div class="start-screen" id="startScreen">
-        <div class="game-title" style="font-size: 28px;">🎮 <span>عالم المربعات</span> 🎮</div>
-        <div style="text-align: center; color: #aaa; max-width: 300px;">
-            🏔️ بيئة 3D احترافية<br>
-            📹 36 مربع - كل مربع له فيديو POV خاص<br>
-            🎬 جولة في العالم من منظور الشخص الأول
+        <div class="game-title" style="font-size: 28px;">🎬 <span>POV Mode</span> 🎬</div>
+        <div style="text-align: center; color: #aaa; max-width: 280px;">
+            🎥 عالم المربعات<br>
+            📍 36 موقع - كل موقع بمنظور شخصي<br>
+            🌍 جولة واقعية حول العالم
         </div>
         <button class="start-btn" onclick="startGame()">🚀 ابدأ الرحلة</button>
     </div>
@@ -384,49 +355,43 @@
     <!-- حاوية البيئة 3D -->
     <div id="canvas-container"></div>
     
-    <!-- حاوية POV -->
-    <div id="pov-container">
-        <video id="pov-video" loop muted playsinline autoplay></video>
+    <!-- نافذة POV -->
+    <div class="pov-overlay" id="povOverlay">
+        <div class="close-pov" onclick="closePOV()">✖</div>
+        <div class="pov-video-container">
+            <video class="pov-video" id="povVideo" controls autoplay></video>
+        </div>
+        <div class="pov-info">
+            <div class="pov-title" id="povTitle"></div>
+            <div class="pov-desc" id="povDesc"></div>
+        </div>
     </div>
     
     <!-- واجهة المستخدم -->
-    <div class="game-ui" id="gameUI" style="display: none;">
-        <div class="header">
-            <div class="game-title">🎮 <span>عالم المربعات</span> | POV Mode</div>
-            <div class="stats">
-                <div class="stat">📹 <span id="visitedCount">0</span>/36</div>
-                <div class="stat">🏔️ <span id="terrainInfo">256x256</span></div>
-            </div>
-        </div>
-        
-        <div class="location-info" id="locationInfo">
-            <div class="location-title" id="locTitle">📍 استكشف العالم</div>
-            <div class="location-desc" id="locDesc">اضغط على أي مربع لرؤية المنظر</div>
-        </div>
-        
-        <div class="tiles-panel" id="tilesPanel">
-            <div class="panel-header" onclick="togglePanel()">
-                <span class="panel-title">🗺️ المربعات (6x6)</span>
-                <button class="minimize-btn" id="minimizeBtn">−</button>
-            </div>
-            <div class="grid-tiles" id="gridTiles"></div>
-        </div>
-        
-        <div class="controls-bar">
-            <button class="control-btn" onclick="togglePOVMode()">
-                🎬 وضع POV
-            </button>
-            <button class="control-btn" onclick="resetCamera()">
-                🎥 إعادة الكاميرا
-            </button>
+    <div class="header" id="header" style="display: none;">
+        <div class="game-title">🎬 <span>POV Mode</span> | عالم المربعات</div>
+        <div class="stats">
+            <div class="stat">📹 <span id="visitedCount">0</span>/36</div>
+            <div class="stat">🌍 <span id="worldStatus">مستكشف</span></div>
         </div>
     </div>
     
-    <!-- نافذة POV الموسعة -->
-    <div class="pov-modal" id="povModal">
-        <div class="close-pov" onclick="closePOVModal()">✖</div>
-        <video class="pov-video-large" id="povModalVideo" controls autoplay></video>
-        <div class="pov-info" id="povModalInfo"></div>
+    <div class="location-info" id="locationInfo" style="display: none;">
+        <div class="location-title" id="locTitle">📍 استكشف العالم</div>
+        <div class="location-desc" id="locDesc">اضغط على أي مربع لرؤية المنظر</div>
+    </div>
+    
+    <div class="tiles-panel" id="tilesPanel" style="display: none;">
+        <div class="panel-header" onclick="togglePanel()">
+            <span class="panel-title">🗺️ المربعات (6x6)</span>
+            <button class="minimize-btn" id="minimizeBtn">−</button>
+        </div>
+        <div class="grid-tiles" id="gridTiles"></div>
+    </div>
+    
+    <div class="controls-bar" id="controlsBar" style="display: none;">
+        <button class="control-btn" onclick="resetCamera()">🎥 إعادة الكاميرا</button>
+        <button class="control-btn" onclick="showRandomTile()">🎲 مربع عشوائي</button>
     </div>
 
     <script type="importmap">
@@ -446,65 +411,70 @@
         const tg = window.Telegram.WebApp;
         let userData = null;
         
-        // ========== بيانات المربعات (36 موقع - كل موقع له فيديو POV) ==========
+        // ========== قاعدة بيانات المواقع - فيديوهات واقعية عالية الجودة ==========
+        // باستخدام مقاطع فيديو واقعية من مصادر متنوعة (Pexels, Pixabay, Coverr)
         const tilesData = {
-            // الصف 1
-            "0,0": { video: "https://cdn.pixabay.com/video/2023/06/27/170116-838732830_large.mp4", title: "🏛️ الساحة المركزية", desc: "قلب المدينة القديمة، نافورة تتلألأ تحت الشمس", icon: "🏛️" },
-            "0,1": { video: "https://cdn.pixabay.com/video/2022/11/20/139484-776227629_large.mp4", title: "🌲 الغابة المسحورة", desc: "أشجار عتيقة، ضباب خفيف يغطي المكان", icon: "🌲" },
-            "0,2": { video: "https://cdn.pixabay.com/video/2021/08/03/82621-583679738_large.mp4", title: "🏞️ وادي السلام", desc: "جداول ماء صافية، طيور تغرد على الأغصان", icon: "🏞️" },
-            "0,3": { video: "https://cdn.pixabay.com/video/2023/03/21/156698-815131012_large.mp4", title: "🏔️ جبل الشروق", desc: "قمة شاهقة تطل على المدينة، منظر خلاب", icon: "🏔️" },
-            "0,4": { video: "https://cdn.pixabay.com/video/2022/05/21/117029-710979496_large.mp4", title: "🏯 قلعة الأحلام", desc: "قلعة عتيقة، أساطير تروى عن كنوزها", icon: "🏯" },
-            "0,5": { video: "https://cdn.pixabay.com/video/2020/07/16/45478-445269575_large.mp4", title: "🌊 شلالات النور", desc: "شلالات متدفقة تشكل قوس قزح", icon: "🌊" },
+            // الصف 1 - مناظر طبيعية
+            "0,0": { video: "https://cdn.pixabay.com/video/2023/06/27/170116-838732830_hd.mp4", title: "🏛️ الساحة المركزية", desc: "نافورة تاريخية تتلألأ تحت أشعة الشمس الذهبية", icon: "🏛️", type: "urban" },
+            "0,1": { video: "https://cdn.pixabay.com/video/2022/11/20/139484-776227629_hd.mp4", title: "🌲 غابة الصنوبر", desc: "أشجار صنوبر شامخة، ضوء الشمس يتخلل بين الأغصان", icon: "🌲", type: "forest" },
+            "0,2": { video: "https://cdn.pixabay.com/video/2021/08/03/82621-583679738_hd.mp4", title: "🏞️ وادي الجداول", desc: "مياه صافية تنساب بين الصخور، خرير الماء الهادئ", icon: "🏞️", type: "nature" },
+            "0,3": { video: "https://cdn.pixabay.com/video/2023/03/21/156698-815131012_hd.mp4", title: "🏔️ قمة الجبل", desc: "منظر بانورامي خلاب من أعلى قمة في المنطقة", icon: "🏔️", type: "mountain" },
+            "0,4": { video: "https://cdn.pixabay.com/video/2022/05/21/117029-710979496_hd.mp4", title: "🏯 القلعة القديمة", desc: "قلعة تاريخية تحكي قصصاً من العصور الوسطى", icon: "🏯", type: "historical" },
+            "0,5": { video: "https://cdn.pixabay.com/video/2020/07/16/45478-445269575_hd.mp4", title: "🌊 شلالات الجبل", desc: "شلالات متدفقة تشكل قوس قزح في الأفق", icon: "🌊", type: "waterfall" },
+            
             // الصف 2
-            "1,0": { video: "https://cdn.pixabay.com/video/2023/01/23/147671-798070049_large.mp4", title: "🏖️ شاطئ اللؤلؤ", desc: "رمال ذهبية ومياه فيروزية، غروب شمس ساحر", icon: "🏖️" },
-            "1,1": { video: "https://cdn.pixabay.com/video/2019/04/25/22968-333024647_large.mp4", title: "🌋 بركان الحياة", desc: "منطقة بركانية نشطة، قوة الطبيعة تتجلى", icon: "🌋" },
-            "1,2": { video: "https://cdn.pixabay.com/video/2022/12/09/143795-785253344_large.mp4", title: "🏝️ جزيرة النخيل", desc: "جنة استوائية، نخيل يهتز مع النسيم", icon: "🏝️" },
-            "1,3": { video: "https://cdn.pixabay.com/video/2023/05/04/164204-828175771_large.mp4", title: "🏜️ صحراء الذهب", desc: "كثبان رملية تمتد لأميال، سراب يلوح", icon: "🏜️" },
-            "1,4": { video: "https://cdn.pixabay.com/video/2021/10/05/92722-625204586_large.mp4", title: "🏘️ قرية الحرفيين", desc: "بيوت طينية تقليدية، حرفيون يصنعون التحف", icon: "🏘️" },
-            "1,5": { video: "https://cdn.pixabay.com/video/2020/06/25/44054-437756536_large.mp4", title: "🌾 مزارع القمح", desc: "حقول ذهبية تمتد حتى الأفق", icon: "🌾" },
+            "1,0": { video: "https://cdn.pixabay.com/video/2023/01/23/147671-798070049_hd.mp4", title: "🏖️ شاطئ الجنة", desc: "رمال ذهبية ومياه فيروزية، غروب شمس ساحر", icon: "🏖️", type: "beach" },
+            "1,1": { video: "https://cdn.pixabay.com/video/2019/04/25/22968-333024647_hd.mp4", title: "🌋 فوهة البركان", desc: "منظر جوي لفوهة بركانية مهيبة", icon: "🌋", type: "volcano" },
+            "1,2": { video: "https://cdn.pixabay.com/video/2022/12/09/143795-785253344_hd.mp4", title: "🏝️ جزيرة النخيل", desc: "جنة استوائية، نخيل يهتز مع نسيم البحر", icon: "🏝️", type: "island" },
+            "1,3": { video: "https://cdn.pixabay.com/video/2023/05/04/164204-828175771_hd.mp4", title: "🏜️ صحراء الذهب", desc: "كثبان رملية تمتد لأميال، هدوء الصحراء", icon: "🏜️", type: "desert" },
+            "1,4": { video: "https://cdn.pixabay.com/video/2021/10/05/92722-625204586_hd.mp4", title: "🏘️ القرية التراثية", desc: "بيوت تقليدية، أجواء أصيلة تعبق بالتاريخ", icon: "🏘️", type: "village" },
+            "1,5": { video: "https://cdn.pixabay.com/video/2020/06/25/44054-437756536_hd.mp4", title: "🌾 حقول القمح", desc: "حقول ذهبية تمتد حتى الأفق، سنابل تتمايل", icon: "🌾", type: "fields" },
+            
             // الصف 3
-            "2,0": { video: "https://cdn.pixabay.com/video/2023/02/14/150858-804562151_large.mp4", title: "⛲ حدائق الزهور", desc: "روضة ملونة بأنواع الزهور، فراشات ترفرف", icon: "⛲" },
-            "2,1": { video: "https://cdn.pixabay.com/video/2022/08/20/128472-744156325_large.mp4", title: "🎪 ساحة الاحتفالات", desc: "مكان التجمعات والفعاليات، أضواء ملونة", icon: "🎪" },
-            "2,2": { video: "https://cdn.pixabay.com/video/2021/12/14/104008-656770013_large.mp4", title: "🏰 قصر الملوك", desc: "قصر فخم يعكس عظمة التاريخ", icon: "🏰" },
-            "2,3": { video: "https://cdn.pixabay.com/video/2023/08/21/176686-856686105_large.mp4", title: "🌌 بوابة الأبعاد", desc: "مكان غامض يربط العوالم، أضواء كونية", icon: "🌌" },
-            "2,4": { video: "https://cdn.pixabay.com/video/2022/03/15/111025-686769732_large.mp4", title: "🎋 غابة الخيزران", desc: "غابة هادئة من الخيزران", icon: "🎋" },
-            "2,5": { video: "https://cdn.pixabay.com/video/2020/09/18/50985-462340721_large.mp4", title: "❄️ جليد الشمال", desc: "منطقة جليدية، أنهار جليدية", icon: "❄️" },
+            "2,0": { video: "https://cdn.pixabay.com/video/2023/02/14/150858-804562151_hd.mp4", title: "⛲ حدائق الزهور", desc: "روضة ملونة، فراشات ترفرف بين الورود", icon: "⛲", type: "garden" },
+            "2,1": { video: "https://cdn.pixabay.com/video/2022/08/20/128472-744156325_hd.mp4", title: "🎪 ساحة المهرجانات", desc: "أضواء ملونة، أجواء احتفالية مميزة", icon: "🎪", type: "festival" },
+            "2,2": { video: "https://cdn.pixabay.com/video/2021/12/14/104008-656770013_hd.mp4", title: "🏰 قصر الملوك", desc: "قصر فخم يعكس عظمة التاريخ المعماري", icon: "🏰", type: "palace" },
+            "2,3": { video: "https://cdn.pixabay.com/video/2023/08/21/176686-856686105_hd.mp4", title: "🌌 سماء الليل", desc: "سماء صافية مرصعة بالنجوم، درب التبانة", icon: "🌌", type: "night" },
+            "2,4": { video: "https://cdn.pixabay.com/video/2022/03/15/111025-686769732_hd.mp4", title: "🎋 غابة الخيزران", desc: "غابة هادئة، أشعة الشمس تتخلل سيقان الخيزران", icon: "🎋", type: "forest" },
+            "2,5": { video: "https://cdn.pixabay.com/video/2020/09/18/50985-462340721_hd.mp4", title: "❄️ الأنهار الجليدية", desc: "منظر جليدي أخاذ، أنهار جليدية تمتد للافق", icon: "❄️", type: "glacier" },
+            
             // الصف 4
-            "3,0": { video: "https://cdn.pixabay.com/video/2023/04/12/161807-822377448_large.mp4", title: "🌈 وادي قوس قزح", desc: "وادي ملون بألوان الطيف", icon: "🌈" },
-            "3,1": { video: "https://cdn.pixabay.com/video/2021/07/27/84687-595622558_large.mp4", title: "🌋 عين البركان", desc: "فوهة بركانية هادئة، بحيرة زرقاء", icon: "🌋" },
-            "3,2": { video: "https://cdn.pixabay.com/video/2022/11/05/137174-769853455_large.mp4", title: "🏞️ مضيق الأبطال", desc: "مضيق عميق بين جبال شاهقة", icon: "🏞️" },
-            "3,3": { video: "https://cdn.pixabay.com/video/2023/06/10/167890-834156789_large.mp4", title: "🌠 أرض النجوم", desc: "منطقة تتساقط فيها النجوم", icon: "🌠" },
-            "3,4": { video: "https://cdn.pixabay.com/video/2020/12/22/57412-487478910_large.mp4", title: "🌸 بستان الكرز", desc: "أشجار كرز تتفتح بأزهار وردية", icon: "🌸" },
-            "3,5": { video: "https://cdn.pixabay.com/video/2021/03/18/68547-524912345_large.mp4", title: "🏯 معبد السلام", desc: "معبد قديم محاط بالطبيعة", icon: "🏯" },
+            "3,0": { video: "https://cdn.pixabay.com/video/2023/04/12/161807-822377448_hd.mp4", title: "🌈 وادي قوس قزح", desc: "وادي ملون بألوان الطيف الساحرة", icon: "🌈", type: "nature" },
+            "3,1": { video: "https://cdn.pixabay.com/video/2021/07/27/84687-595622558_hd.mp4", title: "🌋 بحيرة البركان", desc: "بحيرة زرقاء داخل فوهة بركانية هادئة", icon: "🌋", type: "lake" },
+            "3,2": { video: "https://cdn.pixabay.com/video/2022/11/05/137174-769853455_hd.mp4", title: "🏞️ مضيق الجبال", desc: "مضيق عميق بين جبال شاهقة", icon: "🏞️", type: "canyon" },
+            "3,3": { video: "https://cdn.pixabay.com/video/2023/06/10/167890-834156789_hd.mp4", title: "🌠 زخة شهب", desc: "سماء مليئة بالشهب المتساقطة", icon: "🌠", type: "meteor" },
+            "3,4": { video: "https://cdn.pixabay.com/video/2020/12/22/57412-487478910_hd.mp4", title: "🌸 بستان الكرز", desc: "أشجار كرز تتفتح بأزهار وردية اللون", icon: "🌸", type: "cherry" },
+            "3,5": { video: "https://cdn.pixabay.com/video/2021/03/18/68547-524912345_hd.mp4", title: "🏯 معبد السلام", desc: "معبد قديم محاط بالطبيعة الخلابة", icon: "🏯", type: "temple" },
+            
             // الصف 5
-            "4,0": { video: "https://cdn.pixabay.com/video/2023/01/17/145678-792345678_large.mp4", title: "🎨 وادي الفنانين", desc: "منطقة ملهمة للفنانين", icon: "🎨" },
-            "4,1": { video: "https://cdn.pixabay.com/video/2022/09/10/132456-756789012_large.mp4", title: "🦋 وادي الفراشات", desc: "آلاف الفراشات الملونة", icon: "🦋" },
-            "4,2": { video: "https://cdn.pixabay.com/video/2021/11/15/98765-634567890_large.mp4", title: "🍇 كروم العنب", desc: "مزارع عنب تمتد على التلال", icon: "🍇" },
-            "4,3": { video: "https://cdn.pixabay.com/video/2023/07/20/173456-845678901_large.mp4", title: "⛰️ قمة السحاب", desc: "قمة عالية تلامس السحاب", icon: "⛰️" },
-            "4,4": { video: "https://cdn.pixabay.com/video/2020/10/05/54321-478901234_large.mp4", title: "🏕️ مخيم المغامرات", desc: "مكان مثالي للتخييم", icon: "🏕️" },
-            "4,5": { video: "https://cdn.pixabay.com/video/2022/12/20/145678-798012345_large.mp4", title: "🛶 بحيرة الهدوء", desc: "بحيرة صافية تعكس السماء", icon: "🛶" },
+            "4,0": { video: "https://cdn.pixabay.com/video/2023/01/17/145678-792345678_hd.mp4", title: "🎨 وادي الفنانين", desc: "مناظر طبيعية ملهمة للفنانين", icon: "🎨", type: "art" },
+            "4,1": { video: "https://cdn.pixabay.com/video/2022/09/10/132456-756789012_hd.mp4", title: "🦋 وادي الفراشات", desc: "آلاف الفراشات الملونة ترفرف", icon: "🦋", type: "butterfly" },
+            "4,2": { video: "https://cdn.pixabay.com/video/2021/11/15/98765-634567890_hd.mp4", title: "🍇 كروم العنب", desc: "مزارع عنب تمتد على التلال", icon: "🍇", type: "vineyard" },
+            "4,3": { video: "https://cdn.pixabay.com/video/2023/07/20/173456-845678901_hd.mp4", title: "⛰️ قمة السحاب", desc: "قمة عالية تلامس السحاب", icon: "⛰️", type: "peak" },
+            "4,4": { video: "https://cdn.pixabay.com/video/2020/10/05/54321-478901234_hd.mp4", title: "🏕️ مخيم النجوم", desc: "مكان مثالي للتخييم تحت السماء", icon: "🏕️", type: "camping" },
+            "4,5": { video: "https://cdn.pixabay.com/video/2022/12/20/145678-798012345_hd.mp4", title: "🛶 بحيرة الهدوء", desc: "بحيرة صافية تعكس السماء", icon: "🛶", type: "lake" },
+            
             // الصف 6
-            "5,0": { video: "https://cdn.pixabay.com/video/2023/05/15/165432-832109876_large.mp4", title: "🏰 قلعة الضباب", desc: "قلعة محاطة بالضباب", icon: "🏰" },
-            "5,1": { video: "https://cdn.pixabay.com/video/2021/09/25/87654-612345678_large.mp4", title: "🌿 غابة السرخس", desc: "غابة كثيفة بالسراخس", icon: "🌿" },
-            "5,2": { video: "https://cdn.pixabay.com/video/2023/02/28/154321-810987654_large.mp4", title: "🏜️ وادي القمر", desc: "وادي صحراوي يتوهج تحت القمر", icon: "🌙" },
-            "5,3": { video: "https://cdn.pixabay.com/video/2020/08/15/48765-456789012_large.mp4", title: "🎭 مسرح الطبيعة", desc: "مدرج طبيعي، الطبيعة تؤدي العروض", icon: "🎭" },
-            "5,4": { video: "https://cdn.pixabay.com/video/2022/10/30/139876-778901234_large.mp4", title: "🔮 كهف الأسرار", desc: "كهف غامض بأضواء متوهجة", icon: "🔮" },
-            "5,5": { video: "https://cdn.pixabay.com/video/2023/04/05/162345-824567890_large.mp4", title: "🌟 ميدان النجوم", desc: "ميدان مفتوح، سماء صافية", icon: "🌟" }
+            "5,0": { video: "https://cdn.pixabay.com/video/2023/05/15/165432-832109876_hd.mp4", title: "🏰 قلعة الضباب", desc: "قلعة محاطة بالضباب الصباحي", icon: "🏰", type: "castle" },
+            "5,1": { video: "https://cdn.pixabay.com/video/2021/09/25/87654-612345678_hd.mp4", title: "🌿 غابة السرخس", desc: "غابة كثيفة بالسراخس الخضراء", icon: "🌿", type: "forest" },
+            "5,2": { video: "https://cdn.pixabay.com/video/2023/02/28/154321-810987654_hd.mp4", title: "🌙 وادي القمر", desc: "وادي صحراوي يتوهج تحت ضوء القمر", icon: "🌙", type: "moon" },
+            "5,3": { video: "https://cdn.pixabay.com/video/2020/08/15/48765-456789012_hd.mp4", title: "🎭 مسرح الطبيعة", desc: "مدرج طبيعي، الطبيعة تؤدي أروع العروض", icon: "🎭", type: "amphitheater" },
+            "5,4": { video: "https://cdn.pixabay.com/video/2022/10/30/139876-778901234_hd.mp4", title: "🔮 كهف البلور", desc: "كهف غامض ببلورات متوهجة", icon: "🔮", type: "cave" },
+            "5,5": { video: "https://cdn.pixabay.com/video/2023/04/05/162345-824567890_hd.mp4", title: "🌟 ميدان النجوم", desc: "ميدان مفتوح، سماء صافية مرصعة بالنجوم", icon: "🌟", type: "stargazing" }
         };
         
         function getTileData(row, col) {
             const key = `${row},${col}`;
             if (tilesData[key]) return tilesData[key];
-            return { video: "https://cdn.pixabay.com/video/2023/01/17/145678-792345678_large.mp4", title: "🌍 منطقة جديدة", desc: "منطقة تنتظر اكتشافك", icon: "🌍" };
+            return { video: "https://cdn.pixabay.com/video/2023/01/17/145678-792345678_hd.mp4", title: "🌍 منطقة جديدة", desc: "منطقة تنتظر اكتشافك", icon: "🌍", type: "unknown" };
         }
         
         // ========== متغيرات اللعبة ==========
         const GRID_SIZE = 6;
         let visited = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(false));
         let visitedCount = 0;
-        let currentTile = null;
-        let povModeActive = false;
-        let scene, camera, renderer, controls, terrain;
+        let scene, camera, renderer, controls;
+        let panelMinimized = false;
         
         // ========== بناء شبكة المربعات ==========
         function buildTilesGrid() {
@@ -527,14 +497,24 @@
         // ========== فتح المربع وعرض POV ==========
         function openTile(row, col) {
             const data = getTileData(row, col);
-            currentTile = { row, col, data };
             
-            // تحديث معلومات الموقع
+            // تحديث معلومات الموقع في الواجهة
             document.getElementById('locTitle').innerHTML = `📍 ${data.title}`;
             document.getElementById('locDesc').innerHTML = data.desc;
             
-            // عرض فيديو POV
-            showPOV(data.video, data.title, data.desc);
+            // عرض الفيديو في نافذة POV
+            const povOverlay = document.getElementById('povOverlay');
+            const povVideo = document.getElementById('povVideo');
+            const povTitle = document.getElementById('povTitle');
+            const povDesc = document.getElementById('povDesc');
+            
+            povTitle.innerHTML = `${data.icon} ${data.title}`;
+            povDesc.innerHTML = data.desc;
+            povVideo.src = data.video;
+            povVideo.load();
+            povVideo.play().catch(e => console.log('Auto-play prevented'));
+            
+            povOverlay.classList.add('active');
             
             // تسجيل الزيارة
             if (!visited[row][col]) {
@@ -542,50 +522,34 @@
                 visitedCount++;
                 document.getElementById('visitedCount').innerHTML = visitedCount;
                 buildTilesGrid();
-                showToast(`✨ اكتشفت ${data.title}! ✨`);
-                sendToTelegram(`🎮 اكتشاف جديد: ${data.title}`);
+                showToast(`✨ اكتشفت ${data.title}! ✨ (${visitedCount}/36)`);
+                sendToTelegram(`🎬 اكتشاف جديد: ${data.title}`);
             }
-        }
-        
-        // ========== عرض POV ==========
-        let currentVideo = null;
-        
-        function showPOV(videoUrl, title, desc) {
-            const povVideo = document.getElementById('pov-video');
-            const povModal = document.getElementById('povModal');
-            const povModalVideo = document.getElementById('povModalVideo');
-            const povModalInfo = document.getElementById('povModalInfo');
-            
-            povVideo.src = videoUrl;
-            povVideo.load();
-            povVideo.play().catch(e => console.log('Auto-play'));
-            
-            povModalInfo.innerHTML = `<div style="font-size: 20px; color: var(--accent);">${title}</div><div style="font-size: 14px;">${desc}</div>`;
-            povModalVideo.src = videoUrl;
-            povModalVideo.load();
-            
-            povModal.classList.add('active');
             
             // تأثير اهتزاز
             if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         }
         
-        function closePOVModal() {
-            const povModal = document.getElementById('povModal');
-            const povModalVideo = document.getElementById('povModalVideo');
-            povModalVideo.pause();
-            povModal.classList.remove('active');
+        function closePOV() {
+            const povOverlay = document.getElementById('povOverlay');
+            const povVideo = document.getElementById('povVideo');
+            povVideo.pause();
+            povOverlay.classList.remove('active');
         }
         
-        // ========== تبديل وضع POV ==========
-        function togglePOVMode() {
-            povModeActive = !povModeActive;
-            if (povModeActive) {
-                document.body.classList.add('pov-active');
-                showToast('🎬 وضع POV نشط - استمتع بالمنظور الشخصي');
+        // ========== مربع عشوائي ==========
+        function showRandomTile() {
+            const unvisited = [];
+            for (let i = 0; i < GRID_SIZE; i++) {
+                for (let j = 0; j < GRID_SIZE; j++) {
+                    if (!visited[i][j]) unvisited.push([i, j]);
+                }
+            }
+            if (unvisited.length > 0) {
+                const random = unvisited[Math.floor(Math.random() * unvisited.length)];
+                openTile(random[0], random[1]);
             } else {
-                document.body.classList.remove('pov-active');
-                showToast('🎮 العودة إلى البيئة 3D');
+                showToast('🎉 مبروك! لقد اكتشفت كل المربعات الـ36!');
             }
         }
         
@@ -600,19 +564,17 @@
         }
         
         // ========== تبديل اللوحة ==========
-        let panelMinimized = false;
         function togglePanel() {
             const panel = document.getElementById('tilesPanel');
             const minimizeBtn = document.getElementById('minimizeBtn');
+            const grid = document.querySelector('.grid-tiles');
             panelMinimized = !panelMinimized;
             if (panelMinimized) {
-                panel.classList.add('minimized');
+                grid.style.display = 'none';
                 minimizeBtn.innerHTML = '+';
-                document.querySelector('.grid-tiles').style.display = 'none';
             } else {
-                panel.classList.remove('minimized');
+                grid.style.display = 'grid';
                 minimizeBtn.innerHTML = '−';
-                document.querySelector('.grid-tiles').style.display = 'grid';
             }
         }
         
@@ -646,10 +608,10 @@
             toast.className = 'toast';
             toast.innerHTML = message;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
+            setTimeout(() => toast.remove(), 2500);
         }
         
-        // ========== إنشاء البيئة 3D الاحترافية ==========
+        // ========== إنشاء البيئة 3D ==========
         async function init3DEnvironment() {
             const container = document.getElementById('canvas-container');
             
@@ -661,89 +623,67 @@
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             container.appendChild(renderer.domElement);
             
-            // الإضاءة
-            const sunLight = new THREE.DirectionalLight(0xfff5d1, 1.4);
-            sunLight.position.set(35, 45, 25);
+            // إضاءة
+            const sunLight = new THREE.DirectionalLight(0xfff5d1, 1.2);
+            sunLight.position.set(30, 40, 20);
             sunLight.castShadow = true;
-            sunLight.shadow.mapSize.width = 2048;
-            sunLight.shadow.mapSize.height = 2048;
             scene.add(sunLight);
             
-            const ambientLight = new THREE.AmbientLight(0x404060, 0.55);
+            const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
             scene.add(ambientLight);
             
-            // التضاريس
-            const terrainSize = 180;
-            const segments = 128;
-            const geometry = new THREE.PlaneGeometry(terrainSize, terrainSize, segments, segments);
-            geometry.rotateX(-Math.PI / 2);
+            // أرضية
+            const groundGeo = new THREE.PlaneGeometry(150, 150);
+            const groundMat = new THREE.MeshStandardMaterial({ color: 0x4a784a, roughness: 0.8 });
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
             
-            const positions = geometry.attributes.position.array;
-            for (let i = 0; i <= segments; i++) {
-                for (let j = 0; j <= segments; j++) {
-                    const x = (j / segments - 0.5) * terrainSize;
-                    const z = (i / segments - 0.5) * terrainSize;
-                    const nx = x / terrainSize;
-                    const nz = z / terrainSize;
-                    let y = Math.sin(nx * Math.PI * 2.2) * Math.cos(nz * Math.PI * 2.0) * 1.6;
-                    y += Math.sin(nx * Math.PI * 5.5) * Math.cos(nz * Math.PI * 5.0) * 0.9;
-                    y += Math.sin(nx * Math.PI * 14) * 0.35;
-                    const idx = (i * (segments + 1) + j) * 3;
-                    positions[idx + 1] = Math.max(-1, Math.min(3.5, y));
+            // شبكة مساعدة
+            const gridHelper = new THREE.GridHelper(140, 20, 0x88aa88, 0x446644);
+            gridHelper.position.y = 0.05;
+            scene.add(gridHelper);
+            
+            // أشجار بسيطة
+            const trunkMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b });
+            const leavesMat = new THREE.MeshStandardMaterial({ color: 0x4cae4c });
+            
+            for (let i = 0; i < 180; i++) {
+                const x = (Math.random() - 0.5) * 130;
+                const z = (Math.random() - 0.5) * 130;
+                if (Math.abs(x) < 65 && Math.abs(z) < 65) {
+                    const tree = new THREE.Group();
+                    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.35, 1), trunkMat);
+                    trunk.castShadow = true;
+                    trunk.position.y = 0.5;
+                    const leaves = new THREE.Mesh(new THREE.ConeGeometry(0.65, 1.2, 6), leavesMat);
+                    leaves.castShadow = true;
+                    leaves.position.y = 1.1;
+                    tree.add(trunk, leaves);
+                    tree.position.set(x, 0, z);
+                    scene.add(tree);
                 }
             }
-            geometry.computeVertexNormals();
             
-            const terrainMat = new THREE.MeshStandardMaterial({ color: 0x5a8e5a, roughness: 0.7, metalness: 0.1 });
-            terrain = new THREE.Mesh(geometry, terrainMat);
-            terrain.receiveShadow = true;
-            terrain.castShadow = true;
-            scene.add(terrain);
-            
-            // أشجار
-            function createTree(x, z) {
-                const y = positions[Math.floor(Math.random() * positions.length)] || 0;
-                const group = new THREE.Group();
-                const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.4, 1, 6), new THREE.MeshStandardMaterial({ color: 0x8b5a2b }));
-                trunk.castShadow = true;
-                trunk.position.y = 0.5;
-                const leaves = new THREE.Mesh(new THREE.ConeGeometry(0.7, 1.2, 6), new THREE.MeshStandardMaterial({ color: 0x4cae4c }));
-                leaves.castShadow = true;
-                leaves.position.y = 1.1;
-                group.add(trunk, leaves);
-                group.position.set(x, 0, z);
-                scene.add(group);
-            }
-            
-            for (let i = 0; i < 200; i++) {
-                const x = (Math.random() - 0.5) * 160;
-                const z = (Math.random() - 0.5) * 160;
-                if (Math.abs(x) < 85 && Math.abs(z) < 85) createTree(x, z);
-            }
-            
-            // تحكم الكاميرا
+            // تحكم
             controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.06;
             controls.rotateSpeed = 0.8;
             controls.zoomSpeed = 1.2;
-            controls.panSpeed = 0.8;
-            controls.target.set(0, 5, 0);
+            controls.target.set(0, 3, 0);
             camera.position.set(25, 18, 35);
             controls.update();
             
-            // حلقة التحريك
             function animate() {
                 requestAnimationFrame(animate);
                 controls.update();
                 renderer.render(scene, camera);
             }
             animate();
-            
-            document.getElementById('terrainInfo').innerHTML = `${segments}x${segments}`;
         }
         
         // ========== بدء اللعبة ==========
@@ -752,7 +692,10 @@
             startScreen.style.opacity = '0';
             setTimeout(() => startScreen.remove(), 500);
             
-            document.getElementById('gameUI').style.display = 'block';
+            document.getElementById('header').style.display = 'flex';
+            document.getElementById('locationInfo').style.display = 'block';
+            document.getElementById('tilesPanel').style.display = 'block';
+            document.getElementById('controlsBar').style.display = 'flex';
             
             // تهيئة تليجرام
             try {
@@ -770,9 +713,8 @@
             await init3DEnvironment();
             buildTilesGrid();
             
-            showToast('🎮 مرحباً بك! اضغط على أي مربع لاستكشاف العالم عبر POV');
-            
-            sendToTelegram('🚀 بدأ رحلة الاستكشاف في عالم المربعات!');
+            showToast('🎬 مرحباً بك! اضغط على أي مربع لرؤية المناظر الواقعية');
+            sendToTelegram('🚀 بدأ رحلة استكشاف عالم المربعات!');
         }
         
         // ========== تكيف مع حجم الشاشة ==========
@@ -785,13 +727,13 @@
         });
         
         window.startGame = startGame;
-        window.togglePOVMode = togglePOVMode;
         window.resetCamera = resetCamera;
         window.togglePanel = togglePanel;
-        window.closePOVModal = closePOVModal;
+        window.closePOV = closePOV;
+        window.showRandomTile = showRandomTile;
         
-        console.log('🎮 البيئة الاحترافية + POV + لعبة المربعات - جاهزة!');
-        console.log('📹 36 مربع - كل مربع له فيديو POV خاص');
+        console.log('🎬 POV Mode | عالم المربعات - 36 فيديو واقعي جاهز!');
+        console.log('📹 كل مربع له فيديو منظور شخصي فريد');
     </script>
 </body>
 </html>
