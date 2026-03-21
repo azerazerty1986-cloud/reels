@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>عالم النقاط | شخصية متحركة + صور POV</title>
+    <title>PUBG Style | شخصية 3D + نقاط + صور POV</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
@@ -18,19 +18,17 @@
         body {
             overflow: hidden;
             font-family: 'Cairo', 'Segoe UI', system-ui, sans-serif;
-            background: #0a0a2a;
-            touch-action: none;
+            background: #000;
         }
         
-        /* حاوية اللعبة */
-        #gameCanvas {
+        /* حاوية Three.js */
+        #canvas-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 1;
-            display: block;
         }
         
         /* واجهة المستخدم */
@@ -49,7 +47,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 8px;
-            border: 1px solid #00f2ff;
+            border: 1px solid #ff5722;
             pointer-events: none;
         }
         
@@ -59,15 +57,15 @@
         }
         
         .tile-counter {
-            background: #00f2ff;
-            padding: 4px 10px;
+            background: #ff5722;
+            padding: 4px 12px;
             border-radius: 20px;
             font-weight: bold;
-            color: #000;
+            color: white;
             font-size: 12px;
         }
         
-        /* أزرار التحكم */
+        /* أزرار التحكم للهواتف */
         .controls {
             position: fixed;
             bottom: 30px;
@@ -86,8 +84,8 @@
         .control-btn {
             width: 65px;
             height: 65px;
-            background: rgba(0,242,255,0.2);
-            border: 2px solid #00f2ff;
+            background: rgba(255,87,34,0.3);
+            border: 2px solid #ff5722;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -100,12 +98,11 @@
         }
         
         .control-btn:active {
-            background: #00f2ff;
+            background: #ff5722;
             transform: scale(0.95);
-            color: #000;
         }
         
-        /* نافذة الصورة POV (تملأ الشاشة) */
+        /* نافذة الصورة POV */
         .pov-modal {
             position: fixed;
             top: 0;
@@ -129,11 +126,11 @@
         
         .pov-image {
             max-width: 95%;
-            max-height: 95%;
+            max-height: 85%;
             object-fit: contain;
             border-radius: 20px;
-            box-shadow: 0 0 50px rgba(0,242,255,0.5);
-            border: 3px solid #00f2ff;
+            border: 3px solid #ff5722;
+            box-shadow: 0 0 50px rgba(255,87,34,0.5);
         }
         
         .pov-info {
@@ -142,7 +139,6 @@
             left: 0;
             right: 0;
             text-align: center;
-            color: white;
             background: rgba(0,0,0,0.7);
             padding: 15px;
             margin: 0 20px;
@@ -152,8 +148,7 @@
         
         .pov-title {
             font-size: 24px;
-            color: #00f2ff;
-            margin-bottom: 8px;
+            color: #ff5722;
         }
         
         .close-pov {
@@ -161,7 +156,7 @@
             top: 20px;
             right: 20px;
             background: rgba(0,0,0,0.7);
-            border: 1px solid #00f2ff;
+            border: 1px solid #ff5722;
             color: white;
             width: 50px;
             height: 50px;
@@ -171,38 +166,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-            z-index: 201;
         }
         
-        .close-pov:hover {
-            background: #00f2ff;
-            color: #000;
-        }
-        
-        /* رسالة منبثقة */
         .toast {
             position: fixed;
             bottom: 120px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
-            color: #00f2ff;
+            color: #ff5722;
             padding: 8px 16px;
             border-radius: 30px;
             font-size: 12px;
             z-index: 150;
-            border: 1px solid #00f2ff;
-            pointer-events: none;
+            border: 1px solid #ff5722;
         }
         
         @media (max-width: 600px) {
             .controls { gap: 12px; padding: 8px 18px; }
             .control-btn { width: 55px; height: 55px; font-size: 22px; }
             .pov-title { font-size: 18px; }
-            .ui { padding: 6px 12px; }
-            .player-info { font-size: 10px; }
         }
     </style>
 </head>
@@ -213,7 +196,7 @@
             🎮 <span id="playerPos">(0,0)</span>
         </div>
         <div class="tile-counter">
-            🏆 <span id="visitedCount">0</span>/<span id="totalTiles">36</span>
+            🏆 <span id="visitedCount">0</span>/<span id="totalTiles">64</span>
         </div>
         <div class="player-info">
             📍 <span id="currentTile">البداية</span>
@@ -227,345 +210,326 @@
         <div class="control-btn" id="btnRight">▶</div>
     </div>
     
-    <canvas id="gameCanvas"></canvas>
+    <div id="canvas-container"></div>
     
-    <!-- نافذة الصورة POV (تملأ الشاشة) -->
     <div class="pov-modal" id="povModal">
         <div class="close-pov" onclick="closePOV()">✖</div>
-        <img class="pov-image" id="povImage" alt="منظر الموقع">
+        <img class="pov-image" id="povImage">
         <div class="pov-info">
             <div class="pov-title" id="povTitle"></div>
             <div id="povDesc"></div>
         </div>
     </div>
 
-    <script>
-        // ========== إعدادات اللعبة ==========
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         
-        let canvasWidth = window.innerWidth;
-        let canvasHeight = window.innerHeight;
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
+        // ========== تكامل تليجرام ==========
+        const tg = window.Telegram.WebApp;
         
-        // ========== نظام النقاط (8x8 = 64 نقطة) ==========
+        // ========== إعدادات العالم ==========
         const GRID_SIZE = 8;
-        const POINT_RADIUS = 8;
+        const POINT_SPACING = 4.5;
         
-        // متغيرات اللاعب (شخصية تتحرك)
-        let player = {
-            x: Math.floor(GRID_SIZE / 2),
-            y: Math.floor(GRID_SIZE / 2),
-            size: 14
-        };
-        
-        // النقاط التي تمت زيارتها
+        // مواقع النقاط في العالم 3D
+        const points = [];
         let visited = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(false));
         let visitedCount = 0;
         
-        // ========== قاعدة بيانات الصور POV (صور واقعية لكل نقطة) ==========
-        // كل نقطة لها صورة مختلفة توحي بأنه في مكان حقيقي
-        const pointsData = {
-            // الصف 0
-            "0,0": { image: "https://picsum.photos/id/104/1200/800", title: "🏛️ الساحة المركزية", desc: "نافورة تاريخية تتلألأ تحت أشعة الشمس الذهبية" },
-            "0,1": { image: "https://picsum.photos/id/15/1200/800", title: "🌲 غابة الصنوبر", desc: "أشجار صنوبر شامخة، ضوء الشمس يتخلل بين الأغصان" },
-            "0,2": { image: "https://picsum.photos/id/96/1200/800", title: "🏞️ وادي الجداول", desc: "مياه صافية تنساب بين الصخور، خرير الماء الهادئ" },
-            "0,3": { image: "https://picsum.photos/id/29/1200/800", title: "🏔️ قمة الجبل", desc: "منظر بانورامي خلاب من أعلى قمة في المنطقة" },
-            "0,4": { image: "https://picsum.photos/id/91/1200/800", title: "🏯 القلعة القديمة", desc: "قلعة تاريخية تحكي قصصاً من العصور الوسطى" },
-            "0,5": { image: "https://picsum.photos/id/43/1200/800", title: "🌊 شلالات الجبل", desc: "شلالات متدفقة تشكل قوس قزح في الأفق" },
-            "0,6": { image: "https://picsum.photos/id/116/1200/800", title: "🏖️ شاطئ الجنة", desc: "رمال ذهبية ومياه فيروزية، غروب شمس ساحر" },
-            "0,7": { image: "https://picsum.photos/id/112/1200/800", title: "🌋 فوهة البركان", desc: "منظر جوي لفوهة بركانية مهيبة" },
-            
-            // الصف 1
-            "1,0": { image: "https://picsum.photos/id/48/1200/800", title: "🏝️ جزيرة النخيل", desc: "جنة استوائية، نخيل يهتز مع نسيم البحر" },
-            "1,1": { image: "https://picsum.photos/id/126/1200/800", title: "🏜️ صحراء الذهب", desc: "كثبان رملية تمتد لأميال، هدوء الصحراء" },
-            "1,2": { image: "https://picsum.photos/id/17/1200/800", title: "🏘️ القرية التراثية", desc: "بيوت تقليدية، أجواء أصيلة تعبق بالتاريخ" },
-            "1,3": { image: "https://picsum.photos/id/13/1200/800", title: "🌾 حقول القمح", desc: "حقول ذهبية تمتد حتى الأفق، سنابل تتمايل" },
-            "1,4": { image: "https://picsum.photos/id/30/1200/800", title: "⛲ حدائق الزهور", desc: "روضة ملونة، فراشات ترفرف بين الورود" },
-            "1,5": { image: "https://picsum.photos/id/59/1200/800", title: "🎪 ساحة المهرجانات", desc: "أضواء ملونة، أجواء احتفالية مميزة" },
-            "1,6": { image: "https://picsum.photos/id/107/1200/800", title: "🏰 قصر الملوك", desc: "قصر فخم يعكس عظمة التاريخ المعماري" },
-            "1,7": { image: "https://picsum.photos/id/118/1200/800", title: "🌌 سماء الليل", desc: "سماء صافية مرصعة بالنجوم، درب التبانة" },
-            
-            // الصف 2
-            "2,0": { image: "https://picsum.photos/id/20/1200/800", title: "🎋 غابة الخيزران", desc: "غابة هادئة، أشعة الشمس تتخلل سيقان الخيزران" },
-            "2,1": { image: "https://picsum.photos/id/23/1200/800", title: "❄️ الأنهار الجليدية", desc: "منظر جليدي أخاذ، أنهار جليدية تمتد للافق" },
-            "2,2": { image: "https://picsum.photos/id/44/1200/800", title: "🌈 وادي قوس قزح", desc: "وادي ملون بألوان الطيف الساحرة" },
-            "2,3": { image: "https://picsum.photos/id/76/1200/800", title: "🌋 بحيرة البركان", desc: "بحيرة زرقاء داخل فوهة بركانية هادئة" },
-            "2,4": { image: "https://picsum.photos/id/38/1200/800", title: "🏞️ مضيق الجبال", desc: "مضيق عميق بين جبال شاهقة" },
-            "2,5": { image: "https://picsum.photos/id/67/1200/800", title: "🌠 زخة شهب", desc: "سماء مليئة بالشهب المتساقطة" },
-            "2,6": { image: "https://picsum.photos/id/53/1200/800", title: "🌸 بستان الكرز", desc: "أشجار كرز تتفتح بأزهار وردية اللون" },
-            "2,7": { image: "https://picsum.photos/id/93/1200/800", title: "🏯 معبد السلام", desc: "معبد قديم محاط بالطبيعة الخلابة" },
-            
-            // الصف 3
-            "3,0": { image: "https://picsum.photos/id/12/1200/800", title: "🎨 وادي الفنانين", desc: "مناظر طبيعية ملهمة للفنانين" },
-            "3,1": { image: "https://picsum.photos/id/22/1200/800", title: "🦋 وادي الفراشات", desc: "آلاف الفراشات الملونة ترفرف" },
-            "3,2": { image: "https://picsum.photos/id/34/1200/800", title: "🍇 كروم العنب", desc: "مزارع عنب تمتد على التلال" },
-            "3,3": { image: "https://picsum.photos/id/42/1200/800", title: "⛰️ قمة السحاب", desc: "قمة عالية تلامس السحاب" },
-            "3,4": { image: "https://picsum.photos/id/45/1200/800", title: "🏕️ مخيم النجوم", desc: "مكان مثالي للتخييم تحت السماء" },
-            "3,5": { image: "https://picsum.photos/id/55/1200/800", title: "🛶 بحيرة الهدوء", desc: "بحيرة صافية تعكس السماء" },
-            "3,6": { image: "https://picsum.photos/id/60/1200/800", title: "🏰 قلعة الضباب", desc: "قلعة محاطة بالضباب الصباحي" },
-            "3,7": { image: "https://picsum.photos/id/68/1200/800", title: "🌿 غابة السرخس", desc: "غابة كثيفة بالسراخس الخضراء" },
-            
-            // الصف 4
-            "4,0": { image: "https://picsum.photos/id/73/1200/800", title: "🌙 وادي القمر", desc: "وادي صحراوي يتوهج تحت ضوء القمر" },
-            "4,1": { image: "https://picsum.photos/id/77/1200/800", title: "🎭 مسرح الطبيعة", desc: "مدرج طبيعي، الطبيعة تؤدي أروع العروض" },
-            "4,2": { image: "https://picsum.photos/id/80/1200/800", title: "🔮 كهف البلور", desc: "كهف غامض ببلورات متوهجة" },
-            "4,3": { image: "https://picsum.photos/id/85/1200/800", title: "🌟 ميدان النجوم", desc: "ميدان مفتوح، سماء صافية مرصعة بالنجوم" },
-            "4,4": { image: "https://picsum.photos/id/88/1200/800", title: "🏞️ بحيرة المرايا", desc: "بحيرة تعكس السماء كالمرآة" },
-            "4,5": { image: "https://picsum.photos/id/92/1200/800", title: "🌳 غابة العمالقة", desc: "أشجار عملاقة تعود لآلاف السنين" },
-            "4,6": { image: "https://picsum.photos/id/95/1200/800", title: "⛲ نافورة الأحلام", desc: "نافورة سحرية بألوان متغيرة" },
-            "4,7": { image: "https://picsum.photos/id/98/1200/800", title: "🏔️ جبل الأمل", desc: "قمة الجبل حيث تبدأ المغامرة" },
-            
-            // الصف 5
-            "5,0": { image: "https://picsum.photos/id/100/1200/800", title: "🏜️ واحة النخيل", desc: "واحة خضراء في وسط الصحراء" },
-            "5,1": { image: "https://picsum.photos/id/103/1200/800", title: "🌋 سهل الحمم", desc: "سهل بركاني قديم" },
-            "5,2": { image: "https://picsum.photos/id/108/1200/800", title: "🏝️ شاطئ المرجان", desc: "شاطئ خلاب بشعاب مرجانية" },
-            "5,3": { image: "https://picsum.photos/id/110/1200/800", title: "🌲 غابة الضباب", desc: "غابة مغطاة بالضباب السحري" },
-            "5,4": { image: "https://picsum.photos/id/113/1200/800", title: "🏯 معبد الشمس", desc: "معبد قديم مخصص لعبادة الشمس" },
-            "5,5": { image: "https://picsum.photos/id/115/1200/800", title: "🌾 سهول القمح", desc: "سهول واسعة من القمح الذهبي" },
-            "5,6": { image: "https://picsum.photos/id/119/1200/800", title: "⛰️ وادي الصخور", desc: "تكوينات صخرية فريدة" },
-            "5,7": { image: "https://picsum.photos/id/120/1200/800", title: "🌸 حدائق الساكورا", desc: "حدائق يابانية بأزهار الكرز" },
-            
-            // الصف 6
-            "6,0": { image: "https://picsum.photos/id/122/1200/800", title: "🏔️ قمة الجليد", desc: "قمة جبلية مغطاة بالجليد" },
-            "6,1": { image: "https://picsum.photos/id/124/1200/800", title: "🌿 مرج الزهور", desc: "مرج مليء بالزهور البرية" },
-            "6,2": { image: "https://picsum.photos/id/127/1200/800", title: "🏞️ شلالات القمر", desc: "شلالات تتوهج تحت ضوء القمر" },
-            "6,3": { image: "https://picsum.photos/id/129/1200/800", title: "🏜️ كثبان الرمال", desc: "كثبان رملية ذهبية" },
-            "6,4": { image: "https://picsum.photos/id/131/1200/800", title: "🌲 غابة الأقزام", desc: "غابة مليئة بالأشجار الصغيرة" },
-            "6,5": { image: "https://picsum.photos/id/133/1200/800", title: "🏰 حصن الحجر", desc: "حصن قديم مبني من الحجر" },
-            "6,6": { image: "https://picsum.photos/id/135/1200/800", title: "⛲ نافورة الشباب", desc: "نافورة أسطورية" },
-            "6,7": { image: "https://picsum.photos/id/137/1200/800", title: "🌟 حقل النجوم", desc: "حقل يتوهج بالنجوم ليلاً" },
-            
-            // الصف 7
-            "7,0": { image: "https://picsum.photos/id/139/1200/800", title: "🏔️ جبل النار", desc: "جبل بركاني نشط" },
-            "7,1": { image: "https://picsum.photos/id/141/1200/800", title: "🌊 خليج الدلافين", desc: "خليج تعيش فيه الدلافين" },
-            "7,2": { image: "https://picsum.photos/id/143/1200/800", title: "🏞️ محمية الطيور", desc: "محمية طبيعية للطيور المهاجرة" },
-            "7,3": { image: "https://picsum.photos/id/145/1200/800", title: "🌾 مزرعة الخزامى", desc: "مزرعة واسعة من الخزامى" },
-            "7,4": { image: "https://picsum.photos/id/147/1200/800", title: "🏯 قلعة الرمال", desc: "قلعة مبنية من الرمال" },
-            "7,5": { image: "https://picsum.photos/id/149/1200/800", title: "🌲 غابة الأضواء", desc: "غابة تتوهج بالليل" },
-            "7,6": { image: "https://picsum.photos/id/150/1200/800", title: "⛰️ قمة الغروب", desc: "أفضل مكان لمشاهدة الغروب" },
-            "7,7": { image: "https://picsum.photos/id/151/1200/800", title: "🏆 ميدان البطولة", desc: "مكان الاحتفالات والبطولات" }
-        };
+        // موقع اللاعب
+        let playerPos = { x: Math.floor(GRID_SIZE/2), y: Math.floor(GRID_SIZE/2) };
+        let playerMesh;
+        let scene, camera, renderer, controls;
         
-        function getPointData(x, y) {
-            const key = `${x},${y}`;
-            if (pointsData[key]) return pointsData[key];
-            return { image: "https://picsum.photos/id/100/1200/800", title: "🌍 منطقة جديدة", desc: "منطقة تنتظر اكتشافك" };
-        }
+        // ========== صور POV لكل نقطة ==========
+        const pointsData = {};
         
-        // ========== عرض الصورة POV (تملأ الشاشة) ==========
-        function showPOV(x, y) {
-            const data = getPointData(x, y);
-            const modal = document.getElementById('povModal');
-            const povImage = document.getElementById('povImage');
-            const povTitle = document.getElementById('povTitle');
-            const povDesc = document.getElementById('povDesc');
-            
-            povImage.src = data.image;
-            povTitle.innerHTML = data.title;
-            povDesc.innerHTML = data.desc;
-            
-            modal.classList.add('active');
-            
-            // اهتزاز
-            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
-                window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        // إنشاء 64 صورة مختلفة
+        const imagesList = [
+            "https://picsum.photos/id/104/1200/800", "https://picsum.photos/id/15/1200/800",
+            "https://picsum.photos/id/96/1200/800", "https://picsum.photos/id/29/1200/800",
+            "https://picsum.photos/id/91/1200/800", "https://picsum.photos/id/43/1200/800",
+            "https://picsum.photos/id/116/1200/800", "https://picsum.photos/id/112/1200/800",
+            "https://picsum.photos/id/48/1200/800", "https://picsum.photos/id/126/1200/800",
+            "https://picsum.photos/id/17/1200/800", "https://picsum.photos/id/13/1200/800",
+            "https://picsum.photos/id/30/1200/800", "https://picsum.photos/id/59/1200/800",
+            "https://picsum.photos/id/107/1200/800", "https://picsum.photos/id/118/1200/800",
+            "https://picsum.photos/id/20/1200/800", "https://picsum.photos/id/23/1200/800",
+            "https://picsum.photos/id/44/1200/800", "https://picsum.photos/id/76/1200/800",
+            "https://picsum.photos/id/38/1200/800", "https://picsum.photos/id/67/1200/800",
+            "https://picsum.photos/id/53/1200/800", "https://picsum.photos/id/93/1200/800",
+            "https://picsum.photos/id/12/1200/800", "https://picsum.photos/id/22/1200/800",
+            "https://picsum.photos/id/34/1200/800", "https://picsum.photos/id/42/1200/800",
+            "https://picsum.photos/id/45/1200/800", "https://picsum.photos/id/55/1200/800",
+            "https://picsum.photos/id/60/1200/800", "https://picsum.photos/id/68/1200/800",
+            "https://picsum.photos/id/73/1200/800", "https://picsum.photos/id/77/1200/800",
+            "https://picsum.photos/id/80/1200/800", "https://picsum.photos/id/85/1200/800",
+            "https://picsum.photos/id/88/1200/800", "https://picsum.photos/id/92/1200/800",
+            "https://picsum.photos/id/95/1200/800", "https://picsum.photos/id/98/1200/800",
+            "https://picsum.photos/id/100/1200/800", "https://picsum.photos/id/103/1200/800",
+            "https://picsum.photos/id/108/1200/800", "https://picsum.photos/id/110/1200/800",
+            "https://picsum.photos/id/113/1200/800", "https://picsum.photos/id/115/1200/800",
+            "https://picsum.photos/id/119/1200/800", "https://picsum.photos/id/120/1200/800",
+            "https://picsum.photos/id/122/1200/800", "https://picsum.photos/id/124/1200/800",
+            "https://picsum.photos/id/127/1200/800", "https://picsum.photos/id/129/1200/800",
+            "https://picsum.photos/id/131/1200/800", "https://picsum.photos/id/133/1200/800",
+            "https://picsum.photos/id/135/1200/800", "https://picsum.photos/id/137/1200/800",
+            "https://picsum.photos/id/139/1200/800", "https://picsum.photos/id/141/1200/800",
+            "https://picsum.photos/id/143/1200/800", "https://picsum.photos/id/145/1200/800",
+            "https://picsum.photos/id/147/1200/800", "https://picsum.photos/id/149/1200/800",
+            "https://picsum.photos/id/150/1200/800", "https://picsum.photos/id/151/1200/800"
+        ];
+        
+        const titles = [
+            "🏛️ الساحة المركزية", "🌲 غابة الصنوبر", "🏞️ وادي الجداول", "🏔️ قمة الجبل",
+            "🏯 القلعة القديمة", "🌊 شلالات الجبل", "🏖️ شاطئ الجنة", "🌋 فوهة البركان",
+            "🏝️ جزيرة النخيل", "🏜️ صحراء الذهب", "🏘️ القرية التراثية", "🌾 حقول القمح",
+            "⛲ حدائق الزهور", "🎪 ساحة المهرجانات", "🏰 قصر الملوك", "🌌 سماء الليل",
+            "🎋 غابة الخيزران", "❄️ الأنهار الجليدية", "🌈 وادي قوس قزح", "🌋 بحيرة البركان",
+            "🏞️ مضيق الجبال", "🌠 زخة شهب", "🌸 بستان الكرز", "🏯 معبد السلام",
+            "🎨 وادي الفنانين", "🦋 وادي الفراشات", "🍇 كروم العنب", "⛰️ قمة السحاب",
+            "🏕️ مخيم النجوم", "🛶 بحيرة الهدوء", "🏰 قلعة الضباب", "🌿 غابة السرخس",
+            "🌙 وادي القمر", "🎭 مسرح الطبيعة", "🔮 كهف البلور", "🌟 ميدان النجوم",
+            "🏞️ بحيرة المرايا", "🌳 غابة العمالقة", "⛲ نافورة الأحلام", "🏔️ جبل الأمل",
+            "🏜️ واحة النخيل", "🌋 سهل الحمم", "🏝️ شاطئ المرجان", "🌲 غابة الضباب",
+            "🏯 معبد الشمس", "🌾 سهول القمح", "⛰️ وادي الصخور", "🌸 حدائق الساكورا",
+            "🏔️ قمة الجليد", "🌿 مرج الزهور", "🏞️ شلالات القمر", "🏜️ كثبان الرمال",
+            "🌲 غابة الأقزام", "🏰 حصن الحجر", "⛲ نافورة الشباب", "🌟 حقل النجوم",
+            "🏔️ جبل النار", "🌊 خليج الدلافين", "🏞️ محمية الطيور", "🌾 مزرعة الخزامى",
+            "🏯 قلعة الرمال", "🌲 غابة الأضواء", "⛰️ قمة الغروب", "🏆 ميدان البطولة"
+        ];
+        
+        // تعبئة البيانات
+        for (let i = 0; i < GRID_SIZE; i++) {
+            for (let j = 0; j < GRID_SIZE; j++) {
+                const idx = i * GRID_SIZE + j;
+                pointsData[`${i},${j}`] = {
+                    image: imagesList[idx % imagesList.length],
+                    title: titles[idx % titles.length],
+                    desc: "منظر طبيعي خلاب يستحق الاستكشاف"
+                };
             }
         }
         
-        function closePOV() {
-            const modal = document.getElementById('povModal');
-            modal.classList.remove('active');
+        function getPointData(x, y) {
+            return pointsData[`${x},${y}`] || { image: imagesList[0], title: "🌍 منطقة جديدة", desc: "اكتشف هذا المكان" };
         }
         
-        // ========== حركة الشخصية ==========
-        let moveState = { up: false, down: false, left: false, right: false };
+        // ========== عرض POV ==========
+        function showPOV(x, y) {
+            const data = getPointData(x, y);
+            document.getElementById('povImage').src = data.image;
+            document.getElementById('povTitle').innerHTML = data.title;
+            document.getElementById('povDesc').innerHTML = data.desc;
+            document.getElementById('povModal').classList.add('active');
+            
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        }
         
-        function movePlayer() {
-            let newX = player.x;
-            let newY = player.y;
+        window.closePOV = () => {
+            document.getElementById('povModal').classList.remove('active');
+        };
+        
+        // ========== تحديث موقع اللاعب ==========
+        function updatePlayerPosition(dx, dy) {
+            const newX = playerPos.x + dx;
+            const newY = playerPos.y + dy;
             
-            if (moveState.up) newY--;
-            if (moveState.down) newY++;
-            if (moveState.left) newX--;
-            if (moveState.right) newX++;
-            
-            // التحقق من الحدود
             if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE) {
-                const moved = (newX !== player.x || newY !== player.y);
+                playerPos.x = newX;
+                playerPos.y = newY;
                 
-                if (moved) {
-                    player.x = newX;
-                    player.y = newY;
-                    
-                    // تحديث موقع اللاعب في الواجهة
-                    document.getElementById('playerPos').innerHTML = `(${player.x},${player.y})`;
-                    
-                    // تسجيل الزيارة إذا كانت أول مرة
-                    if (!visited[player.x][player.y]) {
-                        visited[player.x][player.y] = true;
-                        visitedCount++;
-                        document.getElementById('visitedCount').innerHTML = visitedCount;
-                        
-                        // عرض الصورة POV
-                        showPOV(player.x, player.y);
-                        
-                        // تحديث اسم الموقع الحالي
-                        const data = getPointData(player.x, player.y);
-                        document.getElementById('currentTile').innerHTML = data.title.substring(0, 15);
-                        
-                        // رسالة منبثقة
-                        showToast(`✨ اكتشفت ${data.title}! ✨`);
-                        
-                        // إرسال إشعار لتليجرام (اختياري)
-                        sendToTelegram(`اكتشف ${data.title}`);
-                    } else {
-                        // تحديث اسم الموقع حتى لو مكتشف سابقاً
-                        const data = getPointData(player.x, player.y);
-                        document.getElementById('currentTile').innerHTML = data.title.substring(0, 15);
-                    }
+                // تحديث موقع الشخصية 3D
+                const targetX = (playerPos.x - GRID_SIZE/2) * POINT_SPACING;
+                const targetZ = (playerPos.y - GRID_SIZE/2) * POINT_SPACING;
+                
+                // حركة سلسة للشخصية
+                if (playerMesh) {
+                    playerMesh.position.lerp(new THREE.Vector3(targetX, 0.5, targetZ), 0.3);
+                    // تدوير الكاميرا مع الشخصية
+                    controls.target.lerp(new THREE.Vector3(targetX, 0.5, targetZ), 0.1);
+                }
+                
+                // تحديث واجهة المستخدم
+                document.getElementById('playerPos').innerHTML = `(${playerPos.x},${playerPos.y})`;
+                const data = getPointData(playerPos.x, playerPos.y);
+                document.getElementById('currentTile').innerHTML = data.title.substring(0, 12);
+                
+                // تسجيل الزيارة
+                if (!visited[playerPos.x][playerPos.y]) {
+                    visited[playerPos.x][playerPos.y] = true;
+                    visitedCount++;
+                    document.getElementById('visitedCount').innerHTML = visitedCount;
+                    showPOV(playerPos.x, playerPos.y);
+                    showToast(`✨ اكتشفت ${data.title}! ✨`);
                 }
             }
         }
         
-        function showToast(message) {
+        function showToast(msg) {
             const toast = document.createElement('div');
             toast.className = 'toast';
-            toast.innerHTML = message;
+            toast.innerHTML = msg;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2000);
         }
         
-        // ========== إرسال إلى تليجرام ==========
-        const BOT_CONFIG = {
-            botToken: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
-            channelId: '-1003822964890'
-        };
-        
-        async function sendToTelegram(message) {
-            try {
-                const url = `https://api.telegram.org/bot${BOT_CONFIG.botToken}/sendMessage`;
-                await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: BOT_CONFIG.channelId,
-                        text: `🎮 ${message}\n📍 الموقع: (${player.x},${player.y})`,
-                        parse_mode: 'HTML'
-                    })
-                });
-            } catch(e) {}
-        }
-        
-        // ========== رسم اللعبة ==========
-        function draw() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        // ========== إنشاء العالم 3D ==========
+        function init3D() {
+            const container = document.getElementById('canvas-container');
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a1030);
+            scene.fog = new THREE.FogExp2(0x0a1030, 0.008);
             
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.set(12, 8, 12);
             
-            // مسافة بين النقاط
-            const spacing = Math.min(canvas.width, canvas.height) / (GRID_SIZE + 2);
-            const startX = centerX - (GRID_SIZE - 1) * spacing / 2;
-            const startY = centerY - (GRID_SIZE - 1) * spacing / 2;
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
             
-            // رسم خلفية متدرجة
-            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            grad.addColorStop(0, '#0a0a2a');
-            grad.addColorStop(1, '#1a1a3a');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // إضاءة
+            const sunLight = new THREE.DirectionalLight(0xfff5d1, 1.2);
+            sunLight.position.set(10, 20, 5);
+            sunLight.castShadow = true;
+            scene.add(sunLight);
+            scene.add(new THREE.AmbientLight(0x404060, 0.6));
             
-            // رسم الخطوط الواصلة بين النقاط (شبكة)
-            ctx.beginPath();
-            ctx.strokeStyle = 'rgba(0,242,255,0.2)';
-            ctx.lineWidth = 1;
+            // أرضية
+            const groundGeo = new THREE.PlaneGeometry(45, 45);
+            const groundMat = new THREE.MeshStandardMaterial({ color: 0x3a6b3a, roughness: 0.8 });
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
             
+            // شبكة مساعدة
+            const gridHelper = new THREE.GridHelper(44, 20, 0x88aa88, 0x446644);
+            gridHelper.position.y = 0.05;
+            scene.add(gridHelper);
+            
+            // إنشاء النقاط (أعمدة ضوئية)
             for (let i = 0; i < GRID_SIZE; i++) {
                 for (let j = 0; j < GRID_SIZE; j++) {
-                    const x = startX + j * spacing;
-                    const y = startY + i * spacing;
+                    const x = (i - GRID_SIZE/2) * POINT_SPACING;
+                    const z = (j - GRID_SIZE/2) * POINT_SPACING;
                     
-                    // خطوط أفقية
-                    if (j < GRID_SIZE - 1) {
-                        const x2 = startX + (j + 1) * spacing;
-                        ctx.beginPath();
-                        ctx.moveTo(x, y);
-                        ctx.lineTo(x2, y);
-                        ctx.stroke();
-                    }
+                    // قاعدة النقطة
+                    const baseMat = new THREE.MeshStandardMaterial({ color: 0xffaa44, emissive: 0x442200 });
+                    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.5, 0.2, 8), baseMat);
+                    base.position.set(x, 0.1, z);
+                    base.castShadow = true;
+                    scene.add(base);
                     
-                    // خطوط عمودية
-                    if (i < GRID_SIZE - 1) {
-                        const y2 = startY + (i + 1) * spacing;
-                        ctx.beginPath();
-                        ctx.moveTo(x, y);
-                        ctx.lineTo(x, y2);
-                        ctx.stroke();
-                    }
+                    // عمود ضوئي
+                    const pillarMat = new THREE.MeshStandardMaterial({ color: 0x88aaff, emissive: 0x224466 });
+                    const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.25, 0.8, 6), pillarMat);
+                    pillar.position.set(x, 0.5, z);
+                    pillar.castShadow = true;
+                    scene.add(pillar);
+                    
+                    // كرة ضوئية في الأعلى
+                    const orbMat = new THREE.MeshStandardMaterial({ color: 0xffaa66, emissive: 0xff4422, emissiveIntensity: 0.5 });
+                    const orb = new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), orbMat);
+                    orb.position.set(x, 0.95, z);
+                    scene.add(orb);
+                    
+                    points.push({ x, z, visited: false });
                 }
             }
             
-            // رسم النقاط
-            for (let i = 0; i < GRID_SIZE; i++) {
-                for (let j = 0; j < GRID_SIZE; j++) {
-                    const x = startX + j * spacing;
-                    const y = startY + i * spacing;
-                    const isVisited = visited[j][i];
-                    const isPlayer = (player.x === j && player.y === i);
-                    
-                    // ظل للنقطة
-                    ctx.shadowBlur = 10;
-                    ctx.shadowColor = isPlayer ? '#00f2ff' : 'rgba(0,0,0,0.5)';
-                    
-                    // لون النقطة
-                    if (isPlayer) {
-                        ctx.fillStyle = '#00f2ff';
-                        ctx.beginPath();
-                        ctx.arc(x, y, POINT_RADIUS + 3, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.fillStyle = '#ffffff';
-                        ctx.beginPath();
-                        ctx.arc(x, y, POINT_RADIUS, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.fillStyle = '#00f2ff';
-                        ctx.font = `${POINT_RADIUS + 4}px "Segoe UI"`;
-                        ctx.fillText("👤", x - 8, y + 6);
-                    } else if (isVisited) {
-                        ctx.fillStyle = '#4caf50';
-                        ctx.beginPath();
-                        ctx.arc(x, y, POINT_RADIUS, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = `${POINT_RADIUS}px "Segoe UI"`;
-                        ctx.fillText("✓", x - 6, y + 5);
-                    } else {
-                        ctx.fillStyle = 'rgba(255,255,255,0.2)';
-                        ctx.beginPath();
-                        ctx.arc(x, y, POINT_RADIUS, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.fillStyle = 'rgba(255,255,255,0.5)';
-                        ctx.font = `${POINT_RADIUS}px "Segoe UI"`;
-                        ctx.fillText("●", x - 4, y + 5);
-                    }
-                }
+            // إنشاء شخصية بوبجي (شخصية ثلاثية الأبعاد)
+            const group = new THREE.Group();
+            
+            // الجسم
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x3a6ea5, roughness: 0.3 });
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.45, 0.9, 8), bodyMat);
+            body.castShadow = true;
+            body.position.y = 0.45;
+            group.add(body);
+            
+            // الرأس
+            const headMat = new THREE.MeshStandardMaterial({ color: 0xffccaa, roughness: 0.2 });
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.35, 16, 16), headMat);
+            head.castShadow = true;
+            head.position.y = 0.95;
+            group.add(head);
+            
+            // خوذة (لأسلوب بوبجي)
+            const helmetMat = new THREE.MeshStandardMaterial({ color: 0xcc8844, metalness: 0.7, roughness: 0.2 });
+            const helmet = new THREE.Mesh(new THREE.ConeGeometry(0.38, 0.35, 8), helmetMat);
+            helmet.position.y = 1.12;
+            helmet.castShadow = true;
+            group.add(helmet);
+            
+            // السلاح (بندقية)
+            const gunMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.8 });
+            const gunBody = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.12, 0.12), gunMat);
+            gunBody.position.set(0.45, 0.55, 0.2);
+            gunBody.castShadow = true;
+            group.add(gunBody);
+            
+            const gunBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.5, 6), gunMat);
+            gunBarrel.rotation.z = Math.PI / 2;
+            gunBarrel.position.set(0.75, 0.55, 0.2);
+            gunBarrel.castShadow = true;
+            group.add(gunBarrel);
+            
+            // حقيبة ظهر
+            const bagMat = new THREE.MeshStandardMaterial({ color: 0x5d3a1a });
+            const bag = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.6, 0.3), bagMat);
+            bag.position.set(-0.35, 0.5, -0.25);
+            bag.castShadow = true;
+            group.add(bag);
+            
+            group.position.set(0, 0, 0);
+            group.castShadow = true;
+            scene.add(group);
+            playerMesh = group;
+            
+            // تحكم الكاميرا (تتبع الشخصية)
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.rotateSpeed = 1.0;
+            controls.zoomSpeed = 1.0;
+            controls.target.set(0, 0.8, 0);
+            
+            // تشغيل الحركة
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
             }
-            
-            ctx.shadowBlur = 0;
-            
-            // رسم إطار حول اللاعب
-            const px = startX + player.x * spacing;
-            const py = startY + player.y * spacing;
-            ctx.beginPath();
-            ctx.arc(px, py, POINT_RADIUS + 8, 0, Math.PI * 2);
-            ctx.strokeStyle = '#00f2ff';
-            ctx.lineWidth = 2;
-            ctx.stroke();
+            animate();
         }
         
         // ========== أزرار التحكم ==========
+        let moveState = { up: false, down: false, left: false, right: false };
+        
+        function handleMovement() {
+            let dx = 0, dy = 0;
+            if (moveState.up) dy = -1;
+            if (moveState.down) dy = 1;
+            if (moveState.left) dx = -1;
+            if (moveState.right) dx = 1;
+            
+            if (dx !== 0 || dy !== 0) {
+                updatePlayerPosition(dx, dy);
+            }
+        }
+        
         document.getElementById('btnUp').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.up = true; });
         document.getElementById('btnUp').addEventListener('touchend', () => moveState.up = false);
         document.getElementById('btnDown').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.down = true; });
@@ -575,7 +539,6 @@
         document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.right = true; });
         document.getElementById('btnRight').addEventListener('touchend', () => moveState.right = false);
         
-        // التحكم بلوحة المفاتيح
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowUp') moveState.up = true;
             if (e.key === 'ArrowDown') moveState.down = true;
@@ -590,43 +553,26 @@
             if (e.key === 'ArrowRight') moveState.right = false;
         });
         
-        // تسجيل النقطة الحالية كمكتشفة
-        visited[player.x][player.y] = true;
+        // تسجيل النقطة الحالية
+        visited[playerPos.x][playerPos.y] = true;
         visitedCount = 1;
         document.getElementById('visitedCount').innerHTML = visitedCount;
         document.getElementById('totalTiles').innerHTML = GRID_SIZE * GRID_SIZE;
-        const startData = getPointData(player.x, player.y);
-        document.getElementById('currentTile').innerHTML = startData.title.substring(0, 15);
-        document.getElementById('playerPos').innerHTML = `(${player.x},${player.y})`;
+        document.getElementById('playerPos').innerHTML = `(${playerPos.x},${playerPos.y})`;
         
-        // عرض رسالة ترحيب
-        setTimeout(() => {
-            showToast(`🎮 مرحباً! استخدم الأسهم للتحرك بين النقاط`);
-        }, 500);
+        // بدء اللعبة
+        init3D();
         
-        // حلقة اللعبة
-        function gameLoop() {
-            movePlayer();
-            draw();
-            requestAnimationFrame(gameLoop);
+        // حلقة الحركة
+        setInterval(handleMovement, 100);
+        
+        // تهيئة تليجرام
+        if (tg) {
+            tg.ready();
+            tg.expand();
         }
         
-        gameLoop();
-        
-        // تحديث حجم الشاشة
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-        
-        // إغلاق الصورة بالضغط على ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closePOV();
-            }
-        });
-        
-        console.log(`🎮 لعبة النقاط - ${GRID_SIZE}x${GRID_SIZE} = ${GRID_SIZE * GRID_SIZE} نقطة | كل نقطة لها صورة POV`);
+        console.log('🎮 شخصية بوبجي 3D + 64 نقطة + صور POV - جاهزة!');
     </script>
 </body>
 </html>
