@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحاكاة الشخصية | شخصية متحركة POV</title>
+    <title>نظام المحاكاة الشخصية | عالم تفاعلي</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
@@ -27,7 +27,7 @@
             padding: 0; 
             width: 100%; 
             height: 100%; 
-            background: #000; 
+            background: #0a0a2a; 
             overflow: hidden; 
             color: white; 
             font-family: 'Cairo', 'Segoe UI', system-ui, sans-serif;
@@ -37,7 +37,30 @@
             position: absolute; 
             inset: 0; 
             z-index: 1; 
-            background: #000;
+            background: linear-gradient(135deg, #1a1a3a, #0a0a2a);
+        }
+        
+        /* خلفية بديلة عندما لا يوجد فيديو */
+        .fallback-bg {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2a2a4a, #0a0a2a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .fallback-bg .emoji-bg {
+            font-size: 80px;
+            filter: drop-shadow(0 0 20px var(--accent));
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
         
         video { 
@@ -50,7 +73,6 @@
             transition: opacity 0.5s;
         }
         
-        /* تأثير ترميش العين */
         #blink { 
             position: fixed; 
             inset: 0; 
@@ -64,7 +86,6 @@
         
         .active-blink { opacity: 1 !important; }
 
-        /* واجهة HUD */
         #hud { 
             position: absolute; 
             bottom: 20px; 
@@ -78,40 +99,41 @@
         }
         
         #map-box { 
-            background: rgba(0,0,0,0.7); 
+            background: rgba(0,0,0,0.85); 
             backdrop-filter: blur(15px); 
             padding: 12px; 
             border-radius: 20px; 
-            border: 1px solid var(--accent); 
+            border: 2px solid var(--accent); 
             pointer-events: auto;
             box-shadow: var(--accent-glow);
             margin-bottom: 10px;
         }
         
         #location-text { 
-            background: rgba(0,0,0,0.8); 
-            padding: 8px 20px; 
+            background: rgba(0,0,0,0.9); 
+            padding: 10px 20px; 
             border-radius: 30px; 
             margin-bottom: 12px; 
             font-size: 14px; 
             border: 1px solid var(--accent);
             backdrop-filter: blur(5px);
             text-align: center;
+            font-weight: bold;
         }
         
         canvas {
             display: block;
             cursor: pointer;
             border-radius: 12px;
+            background: rgba(0,0,0,0.5);
         }
         
-        /* أزرار التحكم */
         .controls {
             display: flex;
             gap: 20px;
             margin-top: 15px;
             pointer-events: auto;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(15px);
             padding: 12px 25px;
             border-radius: 60px;
@@ -125,18 +147,19 @@
             background: rgba(0,0,0,0.8);
             border: 2px solid var(--accent);
             color: var(--accent);
-            font-size: 28px;
+            font-size: 32px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.1s;
             display: flex;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(5px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            touch-action: manipulation;
         }
         
         .ctrl-btn:active {
-            transform: scale(0.92);
+            transform: scale(0.9);
             background: var(--accent);
             color: #000;
         }
@@ -151,21 +174,11 @@
             color: #000;
         }
         
-        .ctrl-btn.walk {
-            border-color: var(--walk-color);
-            color: var(--walk-color);
-        }
-        
-        .ctrl-btn.walk:active {
-            background: var(--walk-color);
-            color: #000;
-        }
-        
-        /* شريط الحالة */
         .status-bar {
             position: absolute;
             top: 20px;
             right: 20px;
+            left: 20px;
             background: rgba(0,0,0,0.7);
             backdrop-filter: blur(10px);
             padding: 8px 16px;
@@ -174,7 +187,8 @@
             font-size: 12px;
             z-index: 100;
             display: flex;
-            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .mode-indicator {
@@ -184,8 +198,8 @@
         }
         
         .mode-dot {
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             background: var(--walk-color);
             transition: all 0.3s;
@@ -196,17 +210,6 @@
             box-shadow: 0 0 10px var(--run-color);
         }
         
-        /* شخصية على الخريطة */
-        .character-icon {
-            position: absolute;
-            pointer-events: none;
-            font-size: 24px;
-            filter: drop-shadow(0 0 5px var(--accent));
-            transition: all 0.1s linear;
-            z-index: 10;
-        }
-        
-        /* شاشة الدخول */
         #start-screen { 
             position: fixed; 
             inset: 0; 
@@ -229,14 +232,12 @@
             cursor: pointer; 
             transition: all 0.3s;
             font-weight: bold;
-            backdrop-filter: blur(10px);
         }
         
-        .start-btn:hover {
-            transform: scale(1.05);
+        .start-btn:active {
+            transform: scale(0.95);
             background: var(--accent);
             color: #000;
-            box-shadow: 0 0 30px rgba(0,242,255,0.5);
         }
         
         .user-info {
@@ -245,7 +246,6 @@
             background: rgba(0,0,0,0.6);
             padding: 8px 20px;
             border-radius: 30px;
-            backdrop-filter: blur(5px);
         }
         
         .toast {
@@ -253,34 +253,34 @@
             bottom: 180px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             backdrop-filter: blur(10px);
             color: var(--accent);
             padding: 10px 20px;
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 13px;
             z-index: 200;
             border: 1px solid var(--accent);
             white-space: nowrap;
             pointer-events: none;
+            font-weight: bold;
         }
         
-        /* تأثير الاهتزاز عند الجري */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-2px); }
-            75% { transform: translateX(2px); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
         }
         
         .running-effect {
-            animation: shake 0.1s infinite;
+            animation: shake 0.08s infinite;
         }
         
         @media (max-width: 600px) {
-            .ctrl-btn { width: 55px; height: 55px; font-size: 24px; }
+            .ctrl-btn { width: 60px; height: 60px; font-size: 28px; }
             .controls { gap: 15px; padding: 10px 20px; }
             #location-text { font-size: 11px; }
-            .status-bar { font-size: 10px; top: 10px; right: 10px; }
+            .status-bar { font-size: 10px; }
         }
     </style>
 </head>
@@ -289,34 +289,37 @@
     <div id="start-screen">
         <div class="user-info" id="userInfoDisplay">🔄 جاري الاتصال...</div>
         <button class="start-btn" onclick="enterSim()">🚀 دخول المحاكاة</button>
-        <div style="font-size: 12px; color: #666;">شخصية متحركة | نظام مشي وجري</div>
+        <div style="font-size: 12px; color: #666;">شخصية متحركة | اضغط واستمر للمشي أو الجري</div>
     </div>
     
     <div id="blink"></div>
     
-    <!-- شريط الحالة -->
     <div class="status-bar">
         <div class="mode-indicator">
             <div class="mode-dot" id="modeDot"></div>
-            <span id="modeText">🚶 واقف</span>
+            <span id="modeText">⏸ واقف</span>
         </div>
-        <div>⭐ <span id="stepCount">0</span> خطوة</div>
+        <div>👣 <span id="stepCount">0</span> خطوة</div>
+        <div>📍 <span id="coordDisplay">0,0</span></div>
     </div>
     
     <div id="viewport">
-        <video id="povVideo" loop muted playsinline autoplay></video>
+        <div id="fallbackBg" class="fallback-bg" style="display: flex;">
+            <div class="emoji-bg" id="locationEmoji">🏛️</div>
+            <div style="font-size: 18px; color: var(--accent);" id="locationName">الساحة المركزية</div>
+        </div>
+        <video id="povVideo" loop muted playsinline style="display: none;"></video>
     </div>
 
     <div id="hud">
-        <div id="location-text">📍 تحميل العالم...</div>
+        <div id="location-text">📍 الساحة المركزية<br><span style="font-size: 11px;">قلب المدينة القديمة</span></div>
         <div id="map-box">
-            <canvas id="mCanvas" width="180" height="180"></canvas>
+            <canvas id="mCanvas" width="200" height="200"></canvas>
         </div>
         
-        <!-- أزرار التحكم -->
         <div class="controls">
-            <button class="ctrl-btn walk" id="walkBtn" onmousedown="startMoving('walk')" onmouseup="stopMoving()" ontouchstart="startMoving('walk')" ontouchend="stopMoving()">🚶</button>
-            <button class="ctrl-btn run" id="runBtn" onmousedown="startMoving('run')" onmouseup="stopMoving()" ontouchstart="startMoving('run')" ontouchend="stopMoving()">🏃</button>
+            <button class="ctrl-btn walk" id="walkBtn">🚶</button>
+            <button class="ctrl-btn run" id="runBtn">🏃</button>
         </div>
     </div>
 
@@ -325,7 +328,6 @@
         const tg = window.Telegram.WebApp;
         let userData = null;
         
-        // 🔐 بيانات البوت والقناة
         const BOT_CONFIG = {
             botToken: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
             channelId: '-1003822964890',
@@ -334,110 +336,190 @@
         
         // ========== عناصر الصفحة ==========
         const povVideo = document.getElementById('povVideo');
+        const fallbackBg = document.getElementById('fallbackBg');
         const blink = document.getElementById('blink');
         const canvas = document.getElementById('mCanvas');
         const ctx = canvas.getContext('2d');
         
-        // ========== إعدادات العالم والشخصية ==========
+        // ========== إعدادات العالم ==========
         const MAP_SIZE = 8;
         let cellSize;
         let userPos = { x: 0, y: 0 };
         let isLoading = false;
         
         // ========== نظام الحركة ==========
-        let movingDirection = null; // 'up', 'down', 'left', 'right'
-        let movingMode = null; // 'walk' or 'run'
-        let moveInterval = null;
+        let movingInterval = null;
+        let currentMode = null; // 'walk' or 'run'
         let stepCount = 0;
-        let lastMoveTime = 0;
+        let lastStepTime = 0;
         
-        // سرعات الحركة (ملي ثانية بين كل خطوة)
-        const SPEEDS = {
-            walk: 400,  // مشي بطيء
-            run: 180    // جري سريع
+        const STEP_DELAY = {
+            walk: 350,
+            run: 150
         };
         
-        // ========== قاعدة بيانات المواقع ==========
+        // ========== قاعدة بيانات المواقع (باستخدام Emojis كخلفية بديلة) ==========
         const locations = {
-            "0,0": { videoUrl: "https://cdn.pixabay.com/video/2023/06/27/170116-838732830_large.mp4", info: "🏛️ الساحة المركزية", description: "قلب المدينة القديمة", ambience: "🎵 أصوات المدينة" },
-            "0,1": { videoUrl: "https://cdn.pixabay.com/video/2022/11/20/139484-776227629_large.mp4", info: "🌲 الغابة الشمالية", description: "أشجار صنوبر شامخة", ambience: "🍃 حفيف الأشجار" },
-            "0,2": { videoUrl: "https://cdn.pixabay.com/video/2021/08/03/82621-583679738_large.mp4", info: "🏞️ وادي الأنهار", description: "جداول ماء صافية", ambience: "💧 خرير الماء" },
-            "1,0": { videoUrl: "https://cdn.pixabay.com/video/2023/03/21/156698-815131012_large.mp4", info: "🏔️ جبل القمر", description: "قمة شاهقة", ambience: "🌬️ رياح جبلية" },
-            "1,1": { videoUrl: "https://cdn.pixabay.com/video/2022/05/21/117029-710979496_large.mp4", info: "🏯 قلعة الأساطير", description: "قلعة عتيقة", ambience: "🏰 تاريخ عريق" },
-            "1,2": { videoUrl: "https://cdn.pixabay.com/video/2020/07/16/45478-445269575_large.mp4", info: "🌊 شلالات النور", description: "شلالات متدفقة", ambience: "💦 صوت الشلال" },
-            "2,0": { videoUrl: "https://cdn.pixabay.com/video/2023/01/23/147671-798070049_large.mp4", info: "🏖️ شاطئ اللؤلؤ", description: "رمال ذهبية", ambience: "🌊 أمواج البحر" },
-            "2,1": { videoUrl: "https://cdn.pixabay.com/video/2019/04/25/22968-333024647_large.mp4", info: "🌋 بركان النار", description: "منطقة بركانية", ambience: "🔥 حمم متدفقة" },
-            "2,2": { videoUrl: "https://cdn.pixabay.com/video/2022/12/09/143795-785253344_large.mp4", info: "🏝️ جزيرة الأحلام", description: "جنة استوائية", ambience: "🌴 نخيل ونسيم" },
-            "3,0": { videoUrl: "https://cdn.pixabay.com/video/2023/05/04/164204-828175771_large.mp4", info: "🏜️ صحراء الذهب", description: "كثبان رملية", ambience: "🏜️ هدوء الصحراء" },
-            "3,1": { videoUrl: "https://cdn.pixabay.com/video/2021/10/05/92722-625204586_large.mp4", info: "🏘️ قرية الحرفيين", description: "بيوت تقليدية", ambience: "🔨 حرف يدوية" },
-            "3,2": { videoUrl: "https://cdn.pixabay.com/video/2020/06/25/44054-437756536_large.mp4", info: "🌾 مزارع القمح", description: "حقول ذهبية", ambience: "🌾 سنابل قمح" },
-            "4,0": { videoUrl: "https://cdn.pixabay.com/video/2023/02/14/150858-804562151_large.mp4", info: "⛲ حدائق الزهور", description: "روضة ملونة", ambience: "🦋 فراشات" },
-            "4,1": { videoUrl: "https://cdn.pixabay.com/video/2022/08/20/128472-744156325_large.mp4", info: "🎪 ساحة الاحتفالات", description: "أضواء ملونة", ambience: "🎉 أجواء احتفالية" },
-            "4,2": { videoUrl: "https://cdn.pixabay.com/video/2021/12/14/104008-656770013_large.mp4", info: "🏰 قصر الملوك", description: "قصر فخم", ambience: "👑 فخامة ملكية" },
-            "5,0": { videoUrl: "https://cdn.pixabay.com/video/2023/08/21/176686-856686105_large.mp4", info: "🌌 بوابة الأبعاد", description: "مكان غامض", ambience: "✨ طاقة غامضة" },
-            "5,1": { videoUrl: "https://cdn.pixabay.com/video/2022/03/15/111025-686769732_large.mp4", info: "🎋 غابة الخيزران", description: "هدوء شرقي", ambience: "🎋 سكون" },
-            "5,2": { videoUrl: "https://cdn.pixabay.com/video/2020/09/18/50985-462340721_large.mp4", info: "❄️ جليد الشمال", description: "أنهار جليدية", ambience: "❄️ صقيع" },
-            "6,0": { videoUrl: "https://cdn.pixabay.com/video/2023/04/12/161807-822377448_large.mp4", info: "🌈 وادي قوس قزح", description: "وادي ملون", ambience: "🌈 سحر" },
-            "6,1": { videoUrl: "https://cdn.pixabay.com/video/2021/07/27/84687-595622558_large.mp4", info: "🌋 عين البركان", description: "بحيرة زرقاء", ambience: "🌋 دفء" },
-            "6,2": { videoUrl: "https://cdn.pixabay.com/video/2022/11/05/137174-769853455_large.mp4", info: "🏞️ مضيق الأبطال", description: "مضيق عميق", ambience: "🏔️ عظمة" },
-            "7,0": { videoUrl: "https://cdn.pixabay.com/video/2023/06/10/167890-834156789_large.mp4", info: "🌠 أرض النجوم", description: "تساقط النجوم", ambience: "⭐ سحر الليل" },
-            "7,1": { videoUrl: "https://cdn.pixabay.com/video/2020/12/22/57412-487478910_large.mp4", info: "🌸 بستان الكرز", description: "أزهار وردية", ambience: "🌸 ربيع" },
-            "7,2": { videoUrl: "https://cdn.pixabay.com/video/2021/03/18/68547-524912345_large.mp4", info: "🏯 معبد السلام", description: "طبيعة خلابة", ambience: "🕊️ سلام" }
+            "0,0": { emoji: "🏛️", name: "الساحة المركزية", desc: "قلب المدينة القديمة", ambient: "🎵 أصوات المدينة" },
+            "0,1": { emoji: "🌲", name: "الغابة الشمالية", desc: "أشجار صنوبر شامخة", ambient: "🍃 حفيف الأشجار" },
+            "0,2": { emoji: "🏞️", name: "وادي الأنهار", desc: "جداول ماء صافية", ambient: "💧 خرير الماء" },
+            "1,0": { emoji: "🏔️", name: "جبل القمر", desc: "قمة شاهقة", ambient: "🌬️ رياح جبلية" },
+            "1,1": { emoji: "🏯", name: "قلعة الأساطير", desc: "قلعة عتيقة", ambient: "🏰 تاريخ عريق" },
+            "1,2": { emoji: "🌊", name: "شلالات النور", desc: "شلالات متدفقة", ambient: "💦 صوت الشلال" },
+            "2,0": { emoji: "🏖️", name: "شاطئ اللؤلؤ", desc: "رمال ذهبية", ambient: "🌊 أمواج البحر" },
+            "2,1": { emoji: "🌋", name: "بركان النار", desc: "منطقة بركانية", ambient: "🔥 حمم متدفقة" },
+            "2,2": { emoji: "🏝️", name: "جزيرة الأحلام", desc: "جنة استوائية", ambient: "🌴 نخيل ونسيم" },
+            "3,0": { emoji: "🏜️", name: "صحراء الذهب", desc: "كثبان رملية", ambient: "🏜️ هدوء الصحراء" },
+            "3,1": { emoji: "🏘️", name: "قرية الحرفيين", desc: "بيوت تقليدية", ambient: "🔨 حرف يدوية" },
+            "3,2": { emoji: "🌾", name: "مزارع القمح", desc: "حقول ذهبية", ambient: "🌾 سنابل قمح" },
+            "4,0": { emoji: "⛲", name: "حدائق الزهور", desc: "روضة ملونة", ambient: "🦋 فراشات" },
+            "4,1": { emoji: "🎪", name: "ساحة الاحتفالات", desc: "أضواء ملونة", ambient: "🎉 أجواء احتفالية" },
+            "4,2": { emoji: "🏰", name: "قصر الملوك", desc: "قصر فخم", ambient: "👑 فخامة ملكية" },
+            "5,0": { emoji: "🌌", name: "بوابة الأبعاد", desc: "مكان غامض", ambient: "✨ طاقة غامضة" },
+            "5,1": { emoji: "🎋", name: "غابة الخيزران", desc: "هدوء شرقي", ambient: "🎋 سكون" },
+            "5,2": { emoji: "❄️", name: "جليد الشمال", desc: "أنهار جليدية", ambient: "❄️ صقيع" },
+            "6,0": { emoji: "🌈", name: "وادي قوس قزح", desc: "وادي ملون", ambient: "🌈 سحر" },
+            "6,1": { emoji: "🏞️", name: "مضيق الأبطال", desc: "مضيق عميق", ambient: "🏔️ عظمة" },
+            "6,2": { emoji: "🌠", name: "أرض النجوم", desc: "تساقط النجوم", ambient: "⭐ سحر الليل" },
+            "7,0": { emoji: "🌸", name: "بستان الكرز", desc: "أزهار وردية", ambient: "🌸 ربيع" },
+            "7,1": { emoji: "🏯", name: "معبد السلام", desc: "طبيعة خلابة", ambient: "🕊️ سلام" },
+            "7,2": { emoji: "🌋", name: "عين البركان", desc: "بحيرة زرقاء", ambient: "🌋 دفء" }
         };
         
         function getLocationData(x, y) {
             const key = `${x},${y}`;
             if (locations[key]) return locations[key];
             return {
-                videoUrl: "https://cdn.pixabay.com/video/2023/01/17/145678-792345678_large.mp4",
-                info: `🌍 منطقة ${String.fromCharCode(65 + x)}${y + 1}`,
-                description: "منطقة استكشافية",
-                ambience: "🔍 استكشاف"
+                emoji: "🌍",
+                name: `منطقة ${String.fromCharCode(65 + x)}${y + 1}`,
+                desc: "منطقة استكشافية جديدة",
+                ambient: "🔍 استكشاف"
             };
         }
         
-        // ========== تحديث واجهة الحركة ==========
-        function updateModeUI() {
-            const modeDot = document.getElementById('modeDot');
-            const modeText = document.getElementById('modeText');
+        // ========== تحديث العرض (خلفية Emoji بديلة) ==========
+        function updateView(x, y) {
+            const loc = getLocationData(x, y);
             
-            if (movingMode === 'run') {
-                modeDot.classList.add('running');
-                modeText.innerHTML = '🏃 جري';
-                modeText.style.color = '#ff9800';
-                document.body.classList.add('running-effect');
-            } else if (movingMode === 'walk') {
-                modeDot.classList.remove('running');
-                modeText.innerHTML = '🚶 مشي';
-                modeText.style.color = '#4caf50';
-                document.body.classList.remove('running-effect');
-            } else {
-                modeDot.classList.remove('running');
-                modeText.innerHTML = '🚶 واقف';
-                modeText.style.color = '#00f2ff';
-                document.body.classList.remove('running-effect');
+            // تحديث النص
+            document.getElementById('location-text').innerHTML = `📍 ${loc.name}<br><span style="font-size: 11px;">${loc.desc}</span><br><span style="font-size: 10px; color: var(--accent);">${loc.ambient}</span>`;
+            document.getElementById('coordDisplay').innerHTML = `${x},${y}`;
+            
+            // تحديث الخلفية البديلة
+            const emojiElement = document.querySelector('#fallbackBg .emoji-bg');
+            const nameElement = document.getElementById('locationName');
+            if (emojiElement) emojiElement.innerHTML = loc.emoji;
+            if (nameElement) nameElement.innerHTML = loc.name;
+        }
+        
+        // ========== رسم الخريطة مع شخصية واضحة ==========
+        function drawMap() {
+            canvas.width = 200;
+            canvas.height = 200;
+            cellSize = canvas.width / MAP_SIZE;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for(let y = 0; y < MAP_SIZE; y++) {
+                for(let x = 0; x < MAP_SIZE; x++) {
+                    // رسم شبكة
+                    ctx.strokeStyle = "rgba(0,242,255,0.4)";
+                    ctx.lineWidth = 1.5;
+                    ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                    
+                    // أيقونة الموقع
+                    const loc = getLocationData(x, y);
+                    ctx.font = `${cellSize * 0.45}px "Segoe UI"`;
+                    ctx.fillStyle = "rgba(0,242,255,0.7)";
+                    ctx.fillText(loc.emoji, x * cellSize + 5, y * cellSize + cellSize - 8);
+                    
+                    // رسم الشخصية - دائرة كبيرة واضحة
+                    if(x === userPos.x && y === userPos.y) {
+                        const centerX = x * cellSize + cellSize/2;
+                        const centerY = y * cellSize + cellSize/2;
+                        const radius = cellSize * 0.35;
+                        
+                        // توهج خارجي
+                        ctx.shadowBlur = 15;
+                        ctx.shadowColor = "#00f2ff";
+                        
+                        // الجسم
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                        ctx.fillStyle = "#00f2ff";
+                        ctx.fill();
+                        
+                        // عيون
+                        ctx.fillStyle = "#ffffff";
+                        ctx.beginPath();
+                        ctx.arc(centerX - radius * 0.4, centerY - radius * 0.2, radius * 0.2, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(centerX + radius * 0.4, centerY - radius * 0.2, radius * 0.2, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // بؤبؤ العين
+                        ctx.fillStyle = "#000000";
+                        ctx.beginPath();
+                        ctx.arc(centerX - radius * 0.4, centerY - radius * 0.2, radius * 0.1, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(centerX + radius * 0.4, centerY - radius * 0.2, radius * 0.1, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // ابتسامة
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY + radius * 0.2, radius * 0.25, 0, Math.PI);
+                        ctx.strokeStyle = "#ffffff";
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                        
+                        ctx.shadowBlur = 0;
+                        
+                        // إضافة تأثير جري/مشي
+                        if (currentMode === 'run') {
+                            ctx.beginPath();
+                            ctx.moveTo(centerX - radius * 0.7, centerY + radius * 0.5);
+                            ctx.lineTo(centerX - radius * 1, centerY + radius * 0.8);
+                            ctx.lineTo(centerX - radius * 0.4, centerY + radius * 0.6);
+                            ctx.fillStyle = "#ff9800";
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.moveTo(centerX + radius * 0.7, centerY + radius * 0.5);
+                            ctx.lineTo(centerX + radius * 1, centerY + radius * 0.8);
+                            ctx.lineTo(centerX + radius * 0.4, centerY + radius * 0.6);
+                            ctx.fill();
+                        }
+                    }
+                }
             }
         }
         
-        // ========== تنفيذ خطوة ==========
-        async function performStep() {
-            if (!movingDirection) return;
+        // ========== تأثير ترميش ==========
+        async function blinkEffect() {
+            blink.classList.add('active-blink');
+            setTimeout(() => blink.classList.remove('active-blink'), 150);
+        }
+        
+        // ========== تنفيذ الخطوة ==========
+        async function performStep(direction) {
+            if (!direction) return;
             
             const now = Date.now();
-            if (now - lastMoveTime < (movingMode === 'run' ? 150 : 300)) return;
-            lastMoveTime = now;
+            const minDelay = currentMode === 'run' ? 120 : 250;
+            if (now - lastStepTime < minDelay) return;
+            lastStepTime = now;
             
             let newX = userPos.x;
             let newY = userPos.y;
             
-            switch(movingDirection) {
+            switch(direction) {
                 case 'up': newY--; break;
                 case 'down': newY++; break;
                 case 'left': newX--; break;
                 case 'right': newX++; break;
             }
             
-            // التحقق من الحدود
             if (newX >= 0 && newX < MAP_SIZE && newY >= 0 && newY < MAP_SIZE) {
                 if (newX !== userPos.x || newY !== userPos.y) {
                     userPos.x = newX;
@@ -446,169 +528,127 @@
                     document.getElementById('stepCount').innerHTML = stepCount;
                     
                     drawMap();
-                    await loadPOV(userPos.x, userPos.y);
+                    updateView(userPos.x, userPos.y);
+                    await blinkEffect();
                     
-                    // اهتزاز حسب السرعة
                     if (tg && tg.HapticFeedback) {
-                        if (movingMode === 'run') {
-                            tg.HapticFeedback.impactOccurred('heavy');
-                        } else {
-                            tg.HapticFeedback.impactOccurred('light');
-                        }
-                    }
-                    
-                    // إشعار تحرك للمسؤول (كل 10 خطوات فقط)
-                    if (stepCount % 10 === 0 && userData) {
-                        sendToAdmin(`🚶 ${userData.first_name} قطع ${stepCount} خطوة - وصل إلى ${getLocationData(userPos.x, userPos.y).info}`);
+                        tg.HapticFeedback.impactOccurred(currentMode === 'run' ? 'heavy' : 'light');
                     }
                 }
             } else {
-                // وصل للحدود
                 stopMoving();
-                showToast("🚫 لا يمكن تجاوز حدود العالم!", 1000);
-                if (tg && tg.HapticFeedback) {
-                    tg.HapticFeedback.notificationOccurred('error');
-                }
+                showToast("🚫 حدود العالم!", 800);
+                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
             }
         }
         
-        // ========== بدء الحركة ==========
-        function startMoving(mode, direction = null) {
-            // تحديد الاتجاه من آخر لمسة أو افتراضي
-            if (!direction) {
-                // إذا لم يتم تحديد اتجاه، نستخدم آخر اتجاه أو الافتراضي (أسفل)
-                if (!movingDirection) movingDirection = 'down';
+        // ========== متغيرات الاتجاه ==========
+        let activeDirection = null;
+        let stepInterval = null;
+        
+        function startMoving(mode, direction) {
+            if (stepInterval) clearInterval(stepInterval);
+            
+            currentMode = mode;
+            activeDirection = direction;
+            
+            // تحديث واجهة الوضع
+            const modeDot = document.getElementById('modeDot');
+            const modeText = document.getElementById('modeText');
+            if (mode === 'run') {
+                modeDot.classList.add('running');
+                modeText.innerHTML = '🏃 جري';
+                document.body.classList.add('running-effect');
             } else {
-                movingDirection = direction;
+                modeDot.classList.remove('running');
+                modeText.innerHTML = '🚶 مشي';
+                document.body.classList.remove('running-effect');
             }
             
-            movingMode = mode;
-            updateModeUI();
+            const delay = mode === 'run' ? 150 : 350;
+            stepInterval = setInterval(() => {
+                performStep(activeDirection);
+            }, delay);
             
-            // إيقاف المؤقت السابق
-            if (moveInterval) clearInterval(moveInterval);
-            
-            // بدء مؤتمر جديد بالسرعة المناسبة
-            const speed = SPEEDS[mode];
-            moveInterval = setInterval(performStep, speed);
-            
-            // تنفيذ خطوة فورية
-            performStep();
-            
-            // إظهار إشعار
-            const modeName = mode === 'run' ? 'جري 🏃' : 'مشي 🚶';
-            showToast(`${modeName}`, 500);
+            performStep(activeDirection);
         }
         
-        // ========== إيقاف الحركة ==========
         function stopMoving() {
-            if (moveInterval) {
-                clearInterval(moveInterval);
-                moveInterval = null;
+            if (stepInterval) {
+                clearInterval(stepInterval);
+                stepInterval = null;
             }
-            movingMode = null;
-            updateModeUI();
+            currentMode = null;
+            activeDirection = null;
+            
+            const modeDot = document.getElementById('modeDot');
+            const modeText = document.getElementById('modeText');
+            modeDot.classList.remove('running');
+            modeText.innerHTML = '⏸ واقف';
+            document.body.classList.remove('running-effect');
         }
         
-        // ========== تغيير الاتجاه ==========
-        function setDirection(direction) {
-            if (movingMode) {
-                movingDirection = direction;
-            }
+        // ========== معالجة أزرار التحكم ==========
+        let currentTouchDirection = 'down';
+        
+        function setupControls() {
+            const walkBtn = document.getElementById('walkBtn');
+            const runBtn = document.getElementById('runBtn');
+            
+            // دوال بدء الحركة مع اتجاه افتراضي
+            const startWalk = (e) => {
+                e.preventDefault();
+                startMoving('walk', currentTouchDirection);
+            };
+            
+            const startRun = (e) => {
+                e.preventDefault();
+                startMoving('run', currentTouchDirection);
+            };
+            
+            const stop = (e) => {
+                e.preventDefault();
+                stopMoving();
+            };
+            
+            // أحداث الضغط
+            walkBtn.addEventListener('mousedown', startWalk);
+            walkBtn.addEventListener('mouseup', stop);
+            walkBtn.addEventListener('mouseleave', stop);
+            walkBtn.addEventListener('touchstart', startWalk);
+            walkBtn.addEventListener('touchend', stop);
+            
+            runBtn.addEventListener('mousedown', startRun);
+            runBtn.addEventListener('mouseup', stop);
+            runBtn.addEventListener('mouseleave', stop);
+            runBtn.addEventListener('touchstart', startRun);
+            runBtn.addEventListener('touchend', stop);
         }
         
-        // ========== تحميل فيديو POV ==========
-        let currentVideoUrl = "";
+        // ========== التحكم بالسحب لتغيير الاتجاه ==========
+        let touchStart = { x: 0, y: 0 };
         
-        async function loadPOV(x, y) {
-            if (isLoading) return;
-            isLoading = true;
-            
-            const loc = getLocationData(x, y);
-            
-            const locationText = document.getElementById('location-text');
-            locationText.innerHTML = `📍 ${loc.info}<br><span style="font-size: 10px; color: #aaa;">${loc.description}</span><br><span style="font-size: 9px; color: var(--accent);">${loc.ambience}</span>`;
-            
-            blink.classList.add('active-blink');
-            
-            setTimeout(async () => {
-                try {
-                    if (currentVideoUrl !== loc.videoUrl) {
-                        currentVideoUrl = loc.videoUrl;
-                        povVideo.style.opacity = '0';
-                        setTimeout(() => {
-                            povVideo.src = loc.videoUrl;
-                            povVideo.load();
-                            povVideo.play().catch(e => console.log('auto-play blocked'));
-                            povVideo.style.opacity = '1';
-                        }, 100);
-                    }
-                } catch(e) {}
-                
-                blink.classList.remove('active-blink');
-                isLoading = false;
-            }, 150);
+        function handleTouchStart(e) {
+            touchStart.x = e.touches[0].clientX;
+            touchStart.y = e.touches[0].clientY;
         }
         
-        // ========== رسم الخريطة ==========
-        function drawMap() {
-            canvas.width = 180;
-            canvas.height = 180;
-            cellSize = canvas.width / MAP_SIZE;
+        function handleTouchMove(e) {
+            if (!currentMode) return;
             
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const deltaX = e.touches[0].clientX - touchStart.x;
+            const deltaY = e.touches[0].clientY - touchStart.y;
             
-            for(let x = 0; x < MAP_SIZE; x++) {
-                for(let y = 0; y < MAP_SIZE; y++) {
-                    ctx.strokeStyle = "rgba(0,242,255,0.3)";
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
-                    
-                    // موقع المستخدم
-                    if(x === userPos.x && y === userPos.y) {
-                        // رسم شخصية متحركة
-                        ctx.fillStyle = "#00f2ff";
-                        ctx.beginPath();
-                        ctx.arc(x * cellSize + cellSize/2, y * cellSize + cellSize/2, cellSize/3, 0, Math.PI * 2);
-                        ctx.fill();
-                        
-                        // إضافة تأثير توهج
-                        ctx.shadowBlur = 10;
-                        ctx.shadowColor = "#00f2ff";
-                        ctx.fill();
-                        ctx.shadowBlur = 0;
-                        
-                        // رسم عيون للشخصية
-                        ctx.fillStyle = "#fff";
-                        ctx.beginPath();
-                        ctx.arc(x * cellSize + cellSize/2 - 4, y * cellSize + cellSize/2 - 3, 2, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.beginPath();
-                        ctx.arc(x * cellSize + cellSize/2 + 4, y * cellSize + cellSize/2 - 3, 2, 0, Math.PI * 2);
-                        ctx.fill();
-                        
-                        // بؤبؤ العين حسب اتجاه الحركة
-                        ctx.fillStyle = "#000";
-                        let eyeOffset = 0;
-                        if (movingDirection === 'left') eyeOffset = -1;
-                        if (movingDirection === 'right') eyeOffset = 1;
-                        ctx.beginPath();
-                        ctx.arc(x * cellSize + cellSize/2 - 4 + eyeOffset, y * cellSize + cellSize/2 - 3, 1, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.beginPath();
-                        ctx.arc(x * cellSize + cellSize/2 + 4 + eyeOffset, y * cellSize + cellSize/2 - 3, 1, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                    
-                    // أيقونة الموقع
-                    ctx.fillStyle = "rgba(0,242,255,0.5)";
-                    ctx.font = `${cellSize * 0.35}px "Segoe UI"`;
-                    ctx.fillText("📍", x * cellSize + 3, y * cellSize + cellSize - 5);
-                }
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 20) {
+                if (deltaX > 0) currentTouchDirection = 'right';
+                else currentTouchDirection = 'left';
+            } else if (Math.abs(deltaY) > 20) {
+                if (deltaY > 0) currentTouchDirection = 'down';
+                else currentTouchDirection = 'up';
             }
         }
         
-        // ========== التنقل عبر النقر ==========
+        // ========== نقر على الخريطة ==========
         function handleCanvasClick(e) {
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
@@ -621,7 +661,6 @@
             const newY = Math.floor(clickY / cellSize);
             
             if (newX >= 0 && newX < MAP_SIZE && newY >= 0 && newY < MAP_SIZE) {
-                // حركة مباشرة بدون تأثير الحركة المستمرة
                 stopMoving();
                 if (newX !== userPos.x || newY !== userPos.y) {
                     userPos.x = newX;
@@ -629,61 +668,40 @@
                     stepCount++;
                     document.getElementById('stepCount').innerHTML = stepCount;
                     drawMap();
-                    loadPOV(userPos.x, userPos.y);
+                    updateView(userPos.x, userPos.y);
+                    blinkEffect();
                 }
             }
         }
         
-        // ========== التحكم باللمس للاتجاه ==========
-        let touchStartX = 0, touchStartY = 0;
-        
-        function handleTouchStart(e) {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
+        // ========== التحكم بالكيبورد ==========
+        function setupKeyboard() {
+            document.addEventListener('keydown', (e) => {
+                let direction = null;
+                switch(e.key) {
+                    case 'ArrowUp': direction = 'up'; break;
+                    case 'ArrowDown': direction = 'down'; break;
+                    case 'ArrowLeft': direction = 'left'; break;
+                    case 'ArrowRight': direction = 'right'; break;
+                }
+                if (direction) {
+                    e.preventDefault();
+                    const mode = e.shiftKey ? 'run' : 'walk';
+                    startMoving(mode, direction);
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                    stopMoving();
+                }
+            });
         }
         
-        function handleTouchEnd(e) {
-            if (movingMode) return; // إذا كان يتحرك بالفعل، لا نغير الاتجاه باللمس
-            
-            const deltaX = e.changedTouches[0].clientX - touchStartX;
-            const deltaY = e.changedTouches[0].clientY - touchStartY;
-            
-            if (Math.abs(deltaX) < 30 && Math.abs(deltaY) < 30) return;
-            
-            let direction = null;
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                direction = deltaX > 0 ? 'right' : 'left';
-            } else {
-                direction = deltaY > 0 ? 'down' : 'up';
-            }
-            
-            if (direction) {
-                // حركة خطوة واحدة
-                let newX = userPos.x;
-                let newY = userPos.y;
-                switch(direction) {
-                    case 'up': newY--; break;
-                    case 'down': newY++; break;
-                    case 'left': newX--; break;
-                    case 'right': newX++; break;
-                }
-                if (newX >= 0 && newX < MAP_SIZE && newY >= 0 && newY < MAP_SIZE) {
-                    userPos.x = newX;
-                    userPos.y = newY;
-                    stepCount++;
-                    document.getElementById('stepCount').innerHTML = stepCount;
-                    drawMap();
-                    loadPOV(userPos.x, userPos.y);
-                    if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-                }
-            }
-        }
-        
-        // ========== إرسال إشعارات ==========
+        // ========== إشعارات ==========
         async function sendToChannel(message) {
             try {
-                const url = `https://api.telegram.org/bot${BOT_CONFIG.botToken}/sendMessage`;
-                await fetch(url, {
+                await fetch(`https://api.telegram.org/bot${BOT_CONFIG.botToken}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: BOT_CONFIG.channelId, text: message, parse_mode: 'HTML' })
@@ -693,8 +711,7 @@
         
         async function sendToAdmin(message) {
             try {
-                const url = `https://api.telegram.org/bot${BOT_CONFIG.botToken}/sendMessage`;
-                await fetch(url, {
+                await fetch(`https://api.telegram.org/bot${BOT_CONFIG.botToken}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: BOT_CONFIG.adminId, text: message, parse_mode: 'HTML' })
@@ -709,15 +726,15 @@
             await sendToAdmin(message);
         }
         
-        function showToast(message, duration = 2000) {
+        function showToast(msg, duration = 1500) {
             const toast = document.createElement('div');
             toast.className = 'toast';
-            toast.innerHTML = message;
+            toast.innerHTML = msg;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), duration);
         }
         
-        // ========== الدخول للمحاكاة ==========
+        // ========== الدخول ==========
         async function enterSim() {
             const startScreen = document.getElementById('start-screen');
             startScreen.style.opacity = '0';
@@ -728,14 +745,12 @@
             userPos.y = Math.floor((userId / MAP_SIZE) % MAP_SIZE);
             
             drawMap();
-            await loadPOV(userPos.x, userPos.y);
+            updateView(userPos.x, userPos.y);
             await logUserEntry();
             
-            showToast(`🎮 مرحباً ${userData?.first_name || 'زائر'}! اضغط 🚶 للمشي أو 🏃 للجري`, 3000);
+            showToast(`🎮 مرحباً ${userData?.first_name || 'زائر'}! اضغط مع الاستمرار 🚶 للمشي أو 🏃 للجري`, 3000);
             
-            if (tg && tg.HapticFeedback) {
-                tg.HapticFeedback.notificationOccurred('success');
-            }
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
         }
         
         // ========== تهيئة Telegram ==========
@@ -743,9 +758,7 @@
             try {
                 tg.ready();
                 tg.expand();
-                tg.enableClosingConfirmation();
-                
-                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                if (tg.initDataUnsafe?.user) {
                     userData = tg.initDataUnsafe.user;
                     document.getElementById('userInfoDisplay').innerHTML = `👤 مرحباً ${userData.first_name}`;
                 } else {
@@ -758,62 +771,26 @@
             }
         }
         
-        // ========== التحكم بالكيبورد ==========
-        function addKeyboardControls() {
-            document.addEventListener('keydown', (e) => {
-                switch(e.key) {
-                    case 'ArrowUp': 
-                        if (e.shiftKey) startMoving('run', 'up');
-                        else startMoving('walk', 'up');
-                        e.preventDefault();
-                        break;
-                    case 'ArrowDown': 
-                        if (e.shiftKey) startMoving('run', 'down');
-                        else startMoving('walk', 'down');
-                        e.preventDefault();
-                        break;
-                    case 'ArrowLeft': 
-                        if (e.shiftKey) startMoving('run', 'left');
-                        else startMoving('walk', 'left');
-                        e.preventDefault();
-                        break;
-                    case 'ArrowRight': 
-                        if (e.shiftKey) startMoving('run', 'right');
-                        else startMoving('walk', 'right');
-                        e.preventDefault();
-                        break;
-                }
-            });
-            
-            document.addEventListener('keyup', (e) => {
-                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-                    stopMoving();
-                }
-            });
-        }
-        
         // ========== بدء التشغيل ==========
         function init() {
             initTelegram();
             drawMap();
-            addKeyboardControls();
+            updateView(0, 0);
+            setupControls();
+            setupKeyboard();
             
             canvas.addEventListener('click', handleCanvasClick);
             document.addEventListener('touchstart', handleTouchStart);
-            document.addEventListener('touchend', handleTouchEnd);
-            
-            povVideo.loop = true;
-            povVideo.muted = true;
-            povVideo.playsInline = true;
+            document.addEventListener('touchmove', handleTouchMove);
         }
         
         init();
         
+        window.enterSim = enterSim;
         window.startMoving = startMoving;
         window.stopMoving = stopMoving;
-        window.enterSim = enterSim;
         
-        console.log('🎮 نظام الشخصية المتحركة جاهز - مشي/جري');
+        console.log('🎮 النظام جاهز - شخصية واضحة + خلفيات Emoji');
     </script>
 </body>
 </html>
