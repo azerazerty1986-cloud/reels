@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>نظام المحاكاة الشخصية POV | عالم تفاعلي كامل</title>
+    <title>🎮 لعبة الأرضية التفاعلية | كل مربع له عالمه الخاص</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <style>
-        :root { 
+        :root {
             --accent: #00f2ff;
-            --accent-glow: 0 0 20px rgba(0,242,255,0.5);
-            --accent-glow-strong: 0 0 30px rgba(0,242,255,0.8);
+            --accent-glow: 0 0 15px rgba(0,242,255,0.5);
+            --gold: #ffd700;
         }
         
         * {
@@ -21,151 +21,250 @@
             user-select: none;
         }
         
-        body, html { 
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: #000; 
-            overflow: hidden; 
-            color: white; 
+        body {
+            background: linear-gradient(135deg, #0a0a2a, #000000);
             font-family: 'Cairo', 'Segoe UI', system-ui, sans-serif;
-        }
-
-        #viewport { 
-            position: absolute; 
-            inset: 0; 
-            z-index: 1; 
-            background: #000;
+            min-height: 100vh;
+            color: white;
         }
         
-        video { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            position: absolute; 
+        /* الهيدر */
+        .header {
+            position: fixed;
             top: 0;
             left: 0;
-            transition: opacity 0.5s;
-        }
-        
-        /* تأثير ترميش العين */
-        #blink { 
-            position: fixed; 
-            inset: 0; 
-            background: #000; 
-            z-index: 200; 
-            opacity: 0; 
-            pointer-events: none; 
-            transition: opacity 0.15s; 
-        }
-        
-        .active-blink { opacity: 1 !important; }
-
-        /* واجهة HUD */
-        #hud { 
-            position: absolute; 
-            bottom: 20px;
-            left: 0;
             right: 0;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            z-index: 100; 
-            pointer-events: none; 
-            gap: 12px;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px);
+            padding: 12px 20px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 1px solid var(--accent);
         }
         
-        #location-box { 
-            background: rgba(0,0,0,0.85); 
-            backdrop-filter: blur(15px); 
-            padding: 12px 20px; 
-            border-radius: 20px; 
-            border: 1px solid var(--accent); 
-            pointer-events: auto;
-            box-shadow: var(--accent-glow);
-            text-align: center;
-            min-width: 200px;
-        }
-        
-        #location-title { 
-            font-size: 16px;
+        .game-title {
+            font-size: 18px;
             font-weight: bold;
             color: var(--accent);
-            margin-bottom: 5px;
         }
         
-        #location-desc {
-            font-size: 11px;
-            color: #ccc;
-            margin-bottom: 5px;
+        .game-title span {
+            color: var(--gold);
         }
         
-        #location-ambience {
-            font-size: 10px;
-            color: #888;
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
         }
         
-        #map-box { 
-            background: rgba(0,0,0,0.7); 
-            backdrop-filter: blur(15px); 
-            padding: 12px; 
-            border-radius: 20px; 
-            border: 1px solid var(--accent); 
-            pointer-events: auto;
+        .stat {
+            background: rgba(0,0,0,0.5);
+            padding: 5px 12px;
+            border-radius: 20px;
         }
         
-        canvas {
-            display: block;
-            cursor: pointer;
-            border-radius: 12px;
-        }
-
-        /* شاشة الدخول */
-        #start-screen { 
-            position: fixed; 
-            inset: 0; 
-            background: linear-gradient(135deg, #0a0a2a, #000000); 
-            z-index: 1000; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
+        /* الحاوية الرئيسية */
+        .game-container {
+            padding-top: 70px;
+            padding-bottom: 20px;
+            display: flex;
             flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        /* شبكة المربعات */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            max-width: 95vw;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 25px;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* كل مربع */
+        .tile {
+            aspect-ratio: 1 / 1;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 15px;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(0,242,255,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .tile:hover {
+            transform: scale(1.02);
+            border-color: var(--accent);
+            box-shadow: var(--accent-glow);
+        }
+        
+        .tile.active {
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+        
+        /* صورة مصغرة للمربع */
+        .tile-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .tile:hover .tile-preview {
+            transform: scale(1.1);
+        }
+        
+        /* أيقونة التشغيل */
+        .play-icon {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            backdrop-filter: blur(5px);
+            pointer-events: none;
+        }
+        
+        /* اسم المربع */
+        .tile-name {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            background: rgba(0,0,0,0.6);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 8px;
+            backdrop-filter: blur(5px);
+            pointer-events: none;
+        }
+        
+        /* لوحة العرض الرئيسية */
+        .main-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .main-view.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .main-video {
+            width: 90%;
+            max-width: 500px;
+            border-radius: 25px;
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 50px rgba(0,242,255,0.3);
+        }
+        
+        .main-info {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        
+        .main-desc {
+            color: #ccc;
+            max-width: 400px;
+            padding: 0 20px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid var(--accent);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .close-btn:hover {
+            background: var(--accent);
+            color: black;
+            transform: scale(1.1);
+        }
+        
+        /* شاشة الدخول */
+        .start-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0a0a2a, #000000);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             gap: 30px;
         }
         
-        .start-btn { 
-            border: 2px solid var(--accent); 
-            color: var(--accent); 
-            padding: 15px 40px; 
-            background: rgba(0,242,255,0.1); 
-            border-radius: 60px; 
-            font-size: 20px; 
-            cursor: pointer; 
+        .start-btn {
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 15px 40px;
+            background: rgba(0,242,255,0.1);
+            border-radius: 60px;
+            font-size: 20px;
+            cursor: pointer;
             transition: all 0.3s;
             font-weight: bold;
-            backdrop-filter: blur(10px);
         }
         
         .start-btn:hover {
             transform: scale(1.05);
             background: var(--accent);
             color: #000;
-            box-shadow: var(--accent-glow-strong);
-        }
-        
-        .user-info {
-            color: var(--accent);
-            font-size: 14px;
-            background: rgba(0,0,0,0.6);
-            padding: 8px 20px;
-            border-radius: 30px;
-            backdrop-filter: blur(5px);
+            box-shadow: 0 0 30px rgba(0,242,255,0.5);
         }
         
         .toast {
             position: fixed;
-            bottom: 200px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.9);
@@ -174,104 +273,74 @@
             padding: 10px 20px;
             border-radius: 30px;
             font-size: 12px;
-            z-index: 200;
+            z-index: 1100;
             border: 1px solid var(--accent);
             white-space: nowrap;
             pointer-events: none;
-            font-weight: bold;
-        }
-        
-        /* لوحة الفيديوهات التوضيحية */
-        .video-demo-panel {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 12px;
-            z-index: 150;
-            border: 1px solid var(--accent);
-            max-width: 280px;
-            pointer-events: auto;
-            transition: all 0.3s;
-        }
-        
-        .video-demo-panel h4 {
-            color: var(--accent);
-            font-size: 12px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .demo-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-        
-        .demo-item {
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-            padding: 5px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.1);
-        }
-        
-        .demo-item:hover {
-            transform: scale(1.05);
-            background: var(--accent);
-        }
-        
-        .demo-icon {
-            font-size: 20px;
-        }
-        
-        .demo-label {
-            font-size: 8px;
-            margin-top: 3px;
-            color: #ccc;
         }
         
         @media (max-width: 600px) {
-            .video-demo-panel { display: none; }
-            #location-title { font-size: 13px; }
-            #location-desc { font-size: 9px; }
-            .start-btn { padding: 12px 30px; font-size: 16px; }
+            .grid-container {
+                gap: 5px;
+                padding: 10px;
+            }
+            .game-title { font-size: 14px; }
+            .stats { gap: 10px; font-size: 10px; }
+            .main-title { font-size: 18px; }
+        }
+        
+        /* مؤشر التحميل */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0,242,255,0.3);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
-    <div id="start-screen">
-        <div class="user-info" id="userInfoDisplay">🔄 جاري الاتصال...</div>
-        <button class="start-btn" onclick="enterSim()">🚀 دخول المحاكاة</button>
-        <div style="font-size: 12px; color: #666;">نظام POV الموحد | 24 موقع مختلف | فيديوهات توضيحية</div>
-    </div>
-    
-    <div id="blink"></div>
-    
-    <div id="viewport">
-        <video id="povVideo" loop muted playsinline autoplay></video>
-    </div>
-
-    <div id="hud">
-        <div id="location-box">
-            <div id="location-title">📍 تحميل العالم...</div>
-            <div id="location-desc"></div>
-            <div id="location-ambience"></div>
+    <div class="start-screen" id="startScreen">
+        <div class="game-title" style="font-size: 28px;">🎮 <span>عالم المربعات</span> 🎮</div>
+        <div style="text-align: center; color: #aaa; max-width: 280px;">
+            🌍 6x6 مربع<br>
+            📹 كل مربع له فيديو خاص<br>
+            🎬 جولة في العالم من مكانك
         </div>
-        <div id="map-box">
-            <canvas id="mCanvas" width="200" height="200"></canvas>
+        <button class="start-btn" onclick="startGame()">🚀 ابدأ الرحلة</button>
+    </div>
+    
+    <!-- الهيدر -->
+    <div class="header" style="display: none;" id="header">
+        <div class="game-title">🎮 <span>عالم المربعات</span> | 6x6</div>
+        <div class="stats">
+            <div class="stat">📹 <span id="visitedCount">0</span>/36</div>
+            <div class="stat">📍 المربع <span id="currentTile">-</span></div>
         </div>
     </div>
     
-    <!-- لوحة الفيديوهات التوضيحية -->
-    <div class="video-demo-panel" id="demoPanel">
-        <h4>🎬 فيديوهات توضيحية للمناطق</h4>
-        <div class="demo-grid" id="demoGrid">
-            <!-- سيتم تعبئتها بالجافاسكريبت -->
+    <!-- الحاوية الرئيسية -->
+    <div class="game-container" id="gameContainer" style="display: none;">
+        <div class="grid-container" id="grid"></div>
+    </div>
+    
+    <!-- نافذة العرض الرئيسية -->
+    <div class="main-view" id="mainView">
+        <div class="close-btn" onclick="closeMainView()">✖</div>
+        <video class="main-video" id="mainVideo" controls autoplay loop muted></video>
+        <div class="main-info">
+            <div class="main-title" id="mainTitle"></div>
+            <div class="main-desc" id="mainDesc"></div>
         </div>
     </div>
 
@@ -280,214 +349,189 @@
         const tg = window.Telegram.WebApp;
         let userData = null;
         
-        // 🔐 بيانات البوت والقناة
-        const BOT_CONFIG = {
-            botToken: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
-            channelId: '-1003822964890',
-            adminId: '7461896689'
+        // ========== قاعدة بيانات المربعات (6x6 = 36 مربع) ==========
+        // كل مربع يحتوي على: فيديو، عنوان، وصف، أيقونة، لون مميز
+        const tilesData = {
+            // الصف 1
+            "0,0": { video: "https://cdn.pixabay.com/video/2023/06/27/170116-838732830_large.mp4", title: "🏛️ الساحة المركزية", desc: "قلب المدينة القديمة، نافورة تتلألأ تحت الشمس", icon: "🏛️", color: "#4caf50" },
+            "0,1": { video: "https://cdn.pixabay.com/video/2022/11/20/139484-776227629_large.mp4", title: "🌲 الغابة المسحورة", desc: "أشجار عتيقة تحكي قصصاً قديمة، ضباب خفيف يغطي المكان", icon: "🌲", color: "#2e7d32" },
+            "0,2": { video: "https://cdn.pixabay.com/video/2021/08/03/82621-583679738_large.mp4", title: "🏞️ وادي السلام", desc: "جداول ماء صافية، طيور تغرد على الأغصان", icon: "🏞️", color: "#009688" },
+            "0,3": { video: "https://cdn.pixabay.com/video/2023/03/21/156698-815131012_large.mp4", title: "🏔️ جبل الشروق", desc: "قمة شاهقة تطل على المدينة، منظر خلاب عند الفجر", icon: "🏔️", color: "#795548" },
+            "0,4": { video: "https://cdn.pixabay.com/video/2022/05/21/117029-710979496_large.mp4", title: "🏯 قلعة الأحلام", desc: "قلعة عتيقة، أساطير تروى عن كنوزها المخفية", icon: "🏯", color: "#9c27b0" },
+            "0,5": { video: "https://cdn.pixabay.com/video/2020/07/16/45478-445269575_large.mp4", title: "🌊 شلالات النور", desc: "شلالات متدفقة تشكل قوس قزح في الأفق", icon: "🌊", color: "#2196f3" },
+            
+            // الصف 2
+            "1,0": { video: "https://cdn.pixabay.com/video/2023/01/23/147671-798070049_large.mp4", title: "🏖️ شاطئ اللؤلؤ", desc: "رمال ذهبية ومياه فيروزية، غروب شمس ساحر", icon: "🏖️", color: "#ff9800" },
+            "1,1": { video: "https://cdn.pixabay.com/video/2019/04/25/22968-333024647_large.mp4", title: "🌋 بركان الحياة", desc: "منطقة بركانية نشطة، قوة الطبيعة تتجلى", icon: "🌋", color: "#f44336" },
+            "1,2": { video: "https://cdn.pixabay.com/video/2022/12/09/143795-785253344_large.mp4", title: "🏝️ جزيرة النخيل", desc: "جنة استوائية، نخيل يهتز مع النسيم العليل", icon: "🏝️", color: "#4caf50" },
+            "1,3": { video: "https://cdn.pixabay.com/video/2023/05/04/164204-828175771_large.mp4", title: "🏜️ صحراء الذهب", desc: "كثبان رملية تمتد لأميال، سراب يلوح في الأفق", icon: "🏜️", color: "#ff9800" },
+            "1,4": { video: "https://cdn.pixabay.com/video/2021/10/05/92722-625204586_large.mp4", title: "🏘️ قرية الحرفيين", desc: "بيوت طينية تقليدية، حرفيون يصنعون التحف", icon: "🏘️", color: "#8d6e63" },
+            "1,5": { video: "https://cdn.pixabay.com/video/2020/06/25/44054-437756536_large.mp4", title: "🌾 مزارع القمح", desc: "حقول ذهبية تمتد حتى الأفق، سنابل تتمايل مع الريح", icon: "🌾", color: "#cddc39" },
+            
+            // الصف 3
+            "2,0": { video: "https://cdn.pixabay.com/video/2023/02/14/150858-804562151_large.mp4", title: "⛲ حدائق الزهور", desc: "روضة ملونة بأنواع الزهور، فراشات ترفرف بين الورود", icon: "⛲", color: "#e91e63" },
+            "2,1": { video: "https://cdn.pixabay.com/video/2022/08/20/128472-744156325_large.mp4", title: "🎪 ساحة الاحتفالات", desc: "مكان التجمعات والفعاليات، أضواء ملونة تزين المكان", icon: "🎪", color: "#ff5722" },
+            "2,2": { video: "https://cdn.pixabay.com/video/2021/12/14/104008-656770013_large.mp4", title: "🏰 قصر الملوك", desc: "قصر فخم يعكس عظمة التاريخ، حدائقه غناء", icon: "🏰", color: "#9c27b0" },
+            "2,3": { video: "https://cdn.pixabay.com/video/2023/08/21/176686-856686105_large.mp4", title: "🌌 بوابة الأبعاد", desc: "مكان غامض يربط العوالم، أضواء كونية تتلألأ", icon: "🌌", color: "#3f51b5" },
+            "2,4": { video: "https://cdn.pixabay.com/video/2022/03/15/111025-686769732_large.mp4", title: "🎋 غابة الخيزران", desc: "غابة هادئة من الخيزران، أشعة الشمس تتخللها", icon: "🎋", color: "#8bc34a" },
+            "2,5": { video: "https://cdn.pixabay.com/video/2020/09/18/50985-462340721_large.mp4", title: "❄️ جليد الشمال", desc: "منطقة جليدية، أنهار جليدية تمتد للافق", icon: "❄️", color: "#00bcd4" },
+            
+            // الصف 4
+            "3,0": { video: "https://cdn.pixabay.com/video/2023/04/12/161807-822377448_large.mp4", title: "🌈 وادي قوس قزح", desc: "وادي ملون بألوان الطيف، منظر ساحر يأسر القلوب", icon: "🌈", color: "#ff4081" },
+            "3,1": { video: "https://cdn.pixabay.com/video/2021/07/27/84687-595622558_large.mp4", title: "🌋 عين البركان", desc: "فوهة بركانية هادئة، بحيرة زرقاء في القلب", icon: "🌋", color: "#ff6e40" },
+            "3,2": { video: "https://cdn.pixabay.com/video/2022/11/05/137174-769853455_large.mp4", title: "🏞️ مضيق الأبطال", desc: "مضيق عميق بين جبال شاهقة، مغامرات تنتظرك", icon: "🏞️", color: "#607d8b" },
+            "3,3": { video: "https://cdn.pixabay.com/video/2023/06/10/167890-834156789_large.mp4", title: "🌠 أرض النجوم", desc: "منطقة تتساقط فيها النجوم، مشهد ليلي ساحر", icon: "🌠", color: "#673ab7" },
+            "3,4": { video: "https://cdn.pixabay.com/video/2020/12/22/57412-487478910_large.mp4", title: "🌸 بستان الكرز", desc: "أشجار كرز تتفتح بأزهار وردية، ربيع ياباني ساحر", icon: "🌸", color: "#ff80ab" },
+            "3,5": { video: "https://cdn.pixabay.com/video/2021/03/18/68547-524912345_large.mp4", title: "🏯 معبد السلام", desc: "معبد قديم محاط بالطبيعة الخلابة، مكان للتأمل", icon: "🏯", color: "#bcaaa4" },
+            
+            // الصف 5
+            "4,0": { video: "https://cdn.pixabay.com/video/2023/01/17/145678-792345678_large.mp4", title: "🎨 وادي الفنانين", desc: "منطقة ملهمة للفنانين، ألوان الطبيعة تتجلى", icon: "🎨", color: "#ff6d00" },
+            "4,1": { video: "https://cdn.pixabay.com/video/2022/09/10/132456-756789012_large.mp4", title: "🦋 وادي الفراشات", desc: "آلاف الفراشات الملونة ترفرف بين الأزهار", icon: "🦋", color: "#f06292" },
+            "4,2": { video: "https://cdn.pixabay.com/video/2021/11/15/98765-634567890_large.mp4", title: "🍇 كروم العنب", desc: "مزارع عنب تمتد على التلال، موسم الحصاد", icon: "🍇", color: "#9c27b0" },
+            "4,3": { video: "https://cdn.pixabay.com/video/2023/07/20/173456-845678901_large.mp4", title: "⛰️ قمة السحاب", desc: "قمة عالية تلامس السحاب، منظر بانورامي خلاب", icon: "⛰️", color: "#78909c" },
+            "4,4": { video: "https://cdn.pixabay.com/video/2020/10/05/54321-478901234_large.mp4", title: "🏕️ مخيم المغامرات", desc: "مكان مثالي للتخييم، نار المخيم تدفئ الليل", icon: "🏕️", color: "#8d6e63" },
+            "4,5": { video: "https://cdn.pixabay.com/video/2022/12/20/145678-798012345_large.mp4", title: "🛶 بحيرة الهدوء", desc: "بحيرة صافية تعكس السماء، قوارب تجديف هادئة", icon: "🛶", color: "#26c6da" },
+            
+            // الصف 6
+            "5,0": { video: "https://cdn.pixabay.com/video/2023/05/15/165432-832109876_large.mp4", title: "🏰 قلعة الضباب", desc: "قلعة محاطة بالضباب، أسرار قديمة تنتظر الكشف", icon: "🏰", color: "#5c6bc0" },
+            "5,1": { video: "https://cdn.pixabay.com/video/2021/09/25/87654-612345678_large.mp4", title: "🌿 غابة السرخس", desc: "غابة كثيفة بالسراخس، أشعة الشمس تتخللها", icon: "🌿", color: "#43a047" },
+            "5,2": { video: "https://cdn.pixabay.com/video/2023/02/28/154321-810987654_large.mp4", title: "🏜️ وادي القمر", desc: "وادي صحراوي يتوهج تحت ضوء القمر", icon: "🌙", color: "#bdbdbd" },
+            "5,3": { video: "https://cdn.pixabay.com/video/2020/08/15/48765-456789012_large.mp4", title: "🎭 مسرح الطبيعة", desc: "مدرج طبيعي، الطبيعة تؤدي أروع العروض", icon: "🎭", color: "#ffb74d" },
+            "5,4": { video: "https://cdn.pixabay.com/video/2022/10/30/139876-778901234_large.mp4", title: "🔮 كهف الأسرار", desc: "كهف غامض بأضواء متوهجة، حكايات قديمة", icon: "🔮", color: "#ba68c8" },
+            "5,5": { video: "https://cdn.pixabay.com/video/2023/04/05/162345-824567890_large.mp4", title: "🌟 ميدان النجوم", desc: "ميدان مفتوح، سماء صافية ترصع بالنجوم", icon: "🌟", color: "#ffd54f" }
         };
         
-        // ========== عناصر الصفحة ==========
-        const povVideo = document.getElementById('povVideo');
-        const blink = document.getElementById('blink');
-        const canvas = document.getElementById('mCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        // ========== إعدادات العالم ==========
-        const MAP_SIZE = 8;
-        let cellSize;
-        let userPos = { x: 0, y: 0 };
-        let isLoading = false;
-        
-        // ========== قاعدة بيانات المواقع مع فيديوهات توضيحية ==========
-        const locations = {
-            // المنطقة المركزية
-            "0,0": { 
-                videoUrl: "https://cdn.pixabay.com/video/2023/06/27/170116-838732830_large.mp4",
-                title: "🏛️ الساحة المركزية",
-                description: "قلب المدينة القديمة، نافورة تتلألأ تحت الشمس",
-                ambience: "🎵 أصوات المدينة",
-                demoVideo: "https://cdn.pixabay.com/video/2023/06/27/170116-838732830_tiny.mp4"
-            },
-            "0,1": { 
-                videoUrl: "https://cdn.pixabay.com/video/2022/11/20/139484-776227629_large.mp4",
-                title: "🌲 الغابة الشمالية",
-                description: "أشجار صنوبر شامخة، نسيم عليل يهب بين الأغصان",
-                ambience: "🍃 حفيف الأشجار",
-                demoVideo: "https://cdn.pixabay.com/video/2022/11/20/139484-776227629_tiny.mp4"
-            },
-            "0,2": { 
-                videoUrl: "https://cdn.pixabay.com/video/2021/08/03/82621-583679738_large.mp4",
-                title: "🏞️ وادي الأنهار",
-                description: "جداول ماء صافية تنساب بين الصخور الملساء",
-                ambience: "💧 خرير الماء",
-                demoVideo: "https://cdn.pixabay.com/video/2021/08/03/82621-583679738_tiny.mp4"
-            },
-            "1,0": { 
-                videoUrl: "https://cdn.pixabay.com/video/2023/03/21/156698-815131012_large.mp4",
-                title: "🏔️ جبل القمر",
-                description: "قمة شاهقة تطل على الوادي، ضباب خفيف يلف القمة",
-                ambience: "🌬️ رياح جبلية",
-                demoVideo: "https://cdn.pixabay.com/video/2023/03/21/156698-815131012_tiny.mp4"
-            },
-            "1,1": { 
-                videoUrl: "https://cdn.pixabay.com/video/2022/05/21/117029-710979496_large.mp4",
-                title: "🏯 قلعة الأساطير",
-                description: "قلعة عتيقة تحكي قصص الأجداد، أبراجها تلامس السحاب",
-                ambience: "🏰 أجواء تاريخية",
-                demoVideo: "https://cdn.pixabay.com/video/2022/05/21/117029-710979496_tiny.mp4"
-            },
-            "1,2": { 
-                videoUrl: "https://cdn.pixabay.com/video/2020/07/16/45478-445269575_large.mp4",
-                title: "🌊 شلالات النور",
-                description: "شلالات متدفقة تشكل قوس قزح في الأفق",
-                ambience: "💦 صوت الشلال",
-                demoVideo: "https://cdn.pixabay.com/video/2020/07/16/45478-445269575_tiny.mp4"
-            },
-            "2,0": { 
-                videoUrl: "https://cdn.pixabay.com/video/2023/01/23/147671-798070049_large.mp4",
-                title: "🏖️ شاطئ اللؤلؤ",
-                description: "رمال ذهبية ومياه فيروزية، أمواج هادئة تتكسر على الشاطئ",
-                ambience: "🌊 أمواج البحر",
-                demoVideo: "https://cdn.pixabay.com/video/2023/01/23/147671-798070049_tiny.mp4"
-            },
-            "2,1": { 
-                videoUrl: "https://cdn.pixabay.com/video/2019/04/25/22968-333024647_large.mp4",
-                title: "🌋 بركان النار",
-                description: "منطقة بركانية نشطة، حمم متدفقة تنير الليل",
-                ambience: "🔥 صوت الحمم",
-                demoVideo: "https://cdn.pixabay.com/video/2019/04/25/22968-333024647_tiny.mp4"
-            },
-            "2,2": { 
-                videoUrl: "https://cdn.pixabay.com/video/2022/12/09/143795-785253344_large.mp4",
-                title: "🏝️ جزيرة الأحلام",
-                description: "جنة استوائية مخفية، نخيل يهتز مع النسيم",
-                ambience: "🌴 أجواء استوائية",
-                demoVideo: "https://cdn.pixabay.com/video/2022/12/09/143795-785253344_tiny.mp4"
-            },
-            "3,0": { 
-                videoUrl: "https://cdn.pixabay.com/video/2023/05/04/164204-828175771_large.mp4",
-                title: "🏜️ صحراء الذهب",
-                description: "كثبان رملية تمتد لأميال، سراب يلوح في الأفق",
-                ambience: "🏜️ هدوء الصحراء",
-                demoVideo: "https://cdn.pixabay.com/video/2023/05/04/164204-828175771_tiny.mp4"
-            },
-            "3,1": { 
-                videoUrl: "https://cdn.pixabay.com/video/2021/10/05/92722-625204586_large.mp4",
-                title: "🏘️ قرية الحرفيين",
-                description: "بيوت طينية تقليدية، حرفيون يصنعون التحف",
-                ambience: "🔨 أصوات الحرف",
-                demoVideo: "https://cdn.pixabay.com/video/2021/10/05/92722-625204586_tiny.mp4"
-            },
-            "3,2": { 
-                videoUrl: "https://cdn.pixabay.com/video/2020/06/25/44054-437756536_large.mp4",
-                title: "🌾 مزارع القمح",
-                description: "حقول ذهبية تمتد حتى الأفق، سنابل تتمايل مع الريح",
-                ambience: "🌾 حفيف السنابل",
-                demoVideo: "https://cdn.pixabay.com/video/2020/06/25/44054-437756536_tiny.mp4"
-            },
-            "4,0": { 
-                videoUrl: "https://cdn.pixabay.com/video/2023/02/14/150858-804562151_large.mp4",
-                title: "⛲ حدائق الزهور",
-                description: "روضة ملونة بأنواع الزهور، فراشات ترفرف بين الورود",
-                ambience: "🦋 رحيق الزهور",
-                demoVideo: "https://cdn.pixabay.com/video/2023/02/14/150858-804562151_tiny.mp4"
-            },
-            "4,1": { 
-                videoUrl: "https://cdn.pixabay.com/video/2022/08/20/128472-744156325_large.mp4",
-                title: "🎪 ساحة الاحتفالات",
-                description: "مكان التجمعات والفعاليات، أضواء ملونة تزين المكان",
-                ambience: "🎉 أجواء احتفالية",
-                demoVideo: "https://cdn.pixabay.com/video/2022/08/20/128472-744156325_tiny.mp4"
-            },
-            "4,2": { 
-                videoUrl: "https://cdn.pixabay.com/video/2021/12/14/104008-656770013_large.mp4",
-                title: "🏰 قصر الملوك",
-                description: "قصر فخم يعكس عظمة التاريخ، حدائقه غناء",
-                ambience: "👑 فخامة ملكية",
-                demoVideo: "https://cdn.pixabay.com/video/2021/12/14/104008-656770013_tiny.mp4"
-            },
-            "5,0": { 
-                videoUrl: "https://cdn.pixabay.com/video/2023/08/21/176686-856686105_large.mp4",
-                title: "🌌 بوابة الأبعاد",
-                description: "مكان غامض يربط العوالم، أضواء كونية تتلألأ",
-                ambience: "✨ طاقة غامضة",
-                demoVideo: "https://cdn.pixabay.com/video/2023/08/21/176686-856686105_tiny.mp4"
-            },
-            "5,1": { 
-                videoUrl: "https://cdn.pixabay.com/video/2022/03/15/111025-686769732_large.mp4",
-                title: "🎋 غابة الخيزران",
-                description: "غابة هادئة من الخيزران، أشعة الشمس تتخللها",
-                ambience: "🎋 هدوء شرقي",
-                demoVideo: "https://cdn.pixabay.com/video/2022/03/15/111025-686769732_tiny.mp4"
-            },
-            "5,2": { 
-                videoUrl: "https://cdn.pixabay.com/video/2020/09/18/50985-462340721_large.mp4",
-                title: "❄️ جليد الشمال",
-                description: "منطقة جليدية، أنهار جليدية تمتد للافق",
-                ambience: "❄️ صقيع شمالي",
-                demoVideo: "https://cdn.pixabay.com/video/2020/09/18/50985-462340721_tiny.mp4"
-            },
-            "6,0": { 
-                videoUrl: "https://cdn.pixabay.com/video/2023/04/12/161807-822377448_large.mp4",
-                title: "🌈 وادي قوس قزح",
-                description: "وادي ملون بألوان الطيف، منظر ساحر",
-                ambience: "🌈 سحر الألوان",
-                demoVideo: "https://cdn.pixabay.com/video/2023/04/12/161807-822377448_tiny.mp4"
-            },
-            "6,1": { 
-                videoUrl: "https://cdn.pixabay.com/video/2021/07/27/84687-595622558_large.mp4",
-                title: "🌋 عين البركان",
-                description: "فوهة بركانية هادئة، بحيرة زرقاء في القلب",
-                ambience: "🌋 دفء الأرض",
-                demoVideo: "https://cdn.pixabay.com/video/2021/07/27/84687-595622558_tiny.mp4"
-            },
-            "6,2": { 
-                videoUrl: "https://cdn.pixabay.com/video/2022/11/05/137174-769853455_large.mp4",
-                title: "🏞️ مضيق الأبطال",
-                description: "مضيق عميق بين جبال شاهقة",
-                ambience: "🏔️ عظمة الجبال",
-                demoVideo: "https://cdn.pixabay.com/video/2022/11/05/137174-769853455_tiny.mp4"
-            },
-            "7,0": { 
-                videoUrl: "https://cdn.pixabay.com/video/2023/06/10/167890-834156789_large.mp4",
-                title: "🌠 أرض النجوم",
-                description: "منطقة تتساقط فيها النجوم، مشهد ليلي ساحر",
-                ambience: "⭐ سحر الليل",
-                demoVideo: "https://cdn.pixabay.com/video/2023/06/10/167890-834156789_tiny.mp4"
-            },
-            "7,1": { 
-                videoUrl: "https://cdn.pixabay.com/video/2020/12/22/57412-487478910_large.mp4",
-                title: "🌸 بستان الكرز",
-                description: "أشجار كرز تتفتح بأزهار وردية",
-                ambience: "🌸 ربيع ياباني",
-                demoVideo: "https://cdn.pixabay.com/video/2020/12/22/57412-487478910_tiny.mp4"
-            },
-            "7,2": { 
-                videoUrl: "https://cdn.pixabay.com/video/2021/03/18/68547-524912345_large.mp4",
-                title: "🏯 معبد السلام",
-                description: "معبد قديم محاط بالطبيعة الخلابة",
-                ambience: "🕊️ سلام وهدوء",
-                demoVideo: "https://cdn.pixabay.com/video/2021/03/18/68547-524912345_tiny.mp4"
-            }
-        };
-        
-        // الحصول على بيانات الموقع
-        function getLocationData(x, y) {
-            const key = `${x},${y}`;
-            if (locations[key]) return locations[key];
+        // الحصول على بيانات المربع
+        function getTileData(row, col) {
+            const key = `${row},${col}`;
+            if (tilesData[key]) return tilesData[key];
             return {
-                videoUrl: "https://cdn.pixabay.com/video/2023/01/17/145678-792345678_large.mp4",
-                title: `🌍 منطقة ${String.fromCharCode(65 + x)}${y + 1}`,
-                description: "منطقة استكشافية جديدة تنتظر اكتشافك",
-                ambience: "🔍 منطقة مجهولة",
-                demoVideo: "https://cdn.pixabay.com/video/2023/01/17/145678-792345678_tiny.mp4"
+                video: "https://cdn.pixabay.com/video/2023/01/17/145678-792345678_large.mp4",
+                title: `🌍 منطقة ${String.fromCharCode(65 + row)}${col + 1}`,
+                desc: "منطقة جديدة تنتظر اكتشافك",
+                icon: "🌍",
+                color: "#666"
             };
         }
         
-        // ========== إرسال إشعارات ==========
-        async function sendToChannel(message) {
+        // ========== متغيرات اللعبة ==========
+        const GRID_SIZE = 6;
+        let visited = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(false));
+        let visitedCount = 0;
+        let currentTile = null;
+        let currentVideoElement = null;
+        
+        // ========== بناء الشبكة ==========
+        function buildGrid() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    const data = getTileData(row, col);
+                    const tile = document.createElement('div');
+                    tile.className = 'tile';
+                    tile.setAttribute('data-row', row);
+                    tile.setAttribute('data-col', col);
+                    
+                    // صورة مصغرة من الفيديو (لقطة ثابتة)
+                    const img = document.createElement('img');
+                    img.className = 'tile-preview';
+                    // استخدام إطار ثابت من الفيديو
+                    img.src = `https://img.youtube.com/vi/default/mqdefault.jpg`;
+                    img.onerror = () => {
+                        // إذا فشل تحميل الصورة، نستخدم أيقونة
+                        img.style.display = 'none';
+                    };
+                    
+                    const playIcon = document.createElement('div');
+                    playIcon.className = 'play-icon';
+                    playIcon.innerHTML = '▶️';
+                    
+                    const tileName = document.createElement('div');
+                    tileName.className = 'tile-name';
+                    tileName.innerHTML = `${data.icon} ${data.title.substring(0, 10)}`;
+                    
+                    tile.appendChild(img);
+                    tile.appendChild(playIcon);
+                    tile.appendChild(tileName);
+                    
+                    // تأثير زيارة
+                    if (visited[row][col]) {
+                        tile.style.borderColor = 'var(--gold)';
+                        tile.style.boxShadow = '0 0 15px rgba(255,215,0,0.3)';
+                    }
+                    
+                    tile.onclick = () => openTile(row, col);
+                    grid.appendChild(tile);
+                }
+            }
+        }
+        
+        // ========== فتح المربع وعرض الفيديو ==========
+        function openTile(row, col) {
+            const data = getTileData(row, col);
+            currentTile = { row, col, data };
+            
+            // تحديث واجهة العرض
+            const mainView = document.getElementById('mainView');
+            const mainVideo = document.getElementById('mainVideo');
+            const mainTitle = document.getElementById('mainTitle');
+            const mainDesc = document.getElementById('mainDesc');
+            
+            mainTitle.innerHTML = `${data.icon} ${data.title}`;
+            mainDesc.innerHTML = data.desc;
+            
+            // تحميل الفيديو
+            mainVideo.src = data.video;
+            mainVideo.load();
+            mainVideo.play().catch(e => console.log('Auto-play prevented'));
+            
+            // عرض النافذة
+            mainView.classList.add('active');
+            
+            // تسجيل الزيارة إذا كانت أول مرة
+            if (!visited[row][col]) {
+                visited[row][col] = true;
+                visitedCount++;
+                document.getElementById('visitedCount').innerHTML = visitedCount;
+                
+                // تحديث المربع في الشبكة
+                const tiles = document.querySelectorAll('.tile');
+                const index = row * GRID_SIZE + col;
+                if (tiles[index]) {
+                    tiles[index].style.borderColor = 'var(--gold)';
+                    tiles[index].style.boxShadow = '0 0 15px rgba(255,215,0,0.3)';
+                }
+                
+                showToast(`✨ اكتشفت ${data.title}! ✨`);
+                
+                // إرسال إشعار لتليجرام
+                sendDiscoveryMessage(row, col, data.title);
+            }
+            
+            // تحديث المربع الحالي في الهيدر
+            document.getElementById('currentTile').innerHTML = `${row+1},${col+1}`;
+        }
+        
+        function closeMainView() {
+            const mainView = document.getElementById('mainView');
+            const mainVideo = document.getElementById('mainVideo');
+            mainVideo.pause();
+            mainView.classList.remove('active');
+        }
+        
+        // ========== إرسال إشعار لتليجرام ==========
+        const BOT_CONFIG = {
+            botToken: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
+            channelId: '-1003822964890'
+        };
+        
+        async function sendDiscoveryMessage(row, col, title) {
+            if (!userData) return;
             try {
+                const userName = userData.first_name || userData.username || 'مستخدم';
+                const message = `🎮 <b>اكتشاف جديد!</b>\n👤 ${userName}\n📍 ${title}\n🗺️ الموقع: (${row+1},${col+1})\n📊 التقدم: ${visitedCount+1}/36`;
                 const url = `https://api.telegram.org/bot${BOT_CONFIG.botToken}/sendMessage`;
                 await fetch(url, {
                     method: 'POST',
@@ -498,249 +542,10 @@
                         parse_mode: 'HTML'
                     })
                 });
-            } catch(error) {}
+            } catch(e) {}
         }
         
-        async function sendToAdmin(message) {
-            try {
-                const url = `https://api.telegram.org/bot${BOT_CONFIG.botToken}/sendMessage`;
-                await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: BOT_CONFIG.adminId,
-                        text: message,
-                        parse_mode: 'HTML'
-                    })
-                });
-            } catch(error) {}
-        }
-        
-        // ========== تسجيل دخول المستخدم ==========
-        async function logUserEntry() {
-            if (!userData) return;
-            const userName = userData.first_name || userData.username || 'مستخدم';
-            const loc = getLocationData(userPos.x, userPos.y);
-            const message = `🎮 <b>دخول جديد</b>\n👤 ${userName}\n🆔 <code>${userData.id}</code>\n📍 ${loc.title}`;
-            await sendToChannel(message);
-            await sendToAdmin(message);
-        }
-        
-        // ========== تحميل فيديو POV ==========
-        let currentVideoUrl = "";
-        
-        async function loadPOV(x, y) {
-            if (isLoading) return;
-            isLoading = true;
-            
-            const loc = getLocationData(x, y);
-            
-            // تحديث واجهة الموقع
-            document.getElementById('location-title').innerHTML = `📍 ${loc.title}`;
-            document.getElementById('location-desc').innerHTML = loc.description;
-            document.getElementById('location-ambience').innerHTML = loc.ambience;
-            
-            // تأثير ترميش
-            blink.classList.add('active-blink');
-            
-            if (tg && tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('light');
-            }
-            
-            setTimeout(async () => {
-                try {
-                    if (currentVideoUrl !== loc.videoUrl) {
-                        currentVideoUrl = loc.videoUrl;
-                        povVideo.style.opacity = '0';
-                        
-                        setTimeout(() => {
-                            povVideo.src = loc.videoUrl;
-                            povVideo.load();
-                            povVideo.play().catch(e => console.log('auto-play'));
-                            povVideo.style.opacity = '1';
-                        }, 100);
-                    }
-                } catch(e) {}
-                
-                blink.classList.remove('active-blink');
-                isLoading = false;
-            }, 200);
-        }
-        
-        // ========== رسم الخريطة ==========
-        function drawMap() {
-            canvas.width = 200;
-            canvas.height = 200;
-            cellSize = canvas.width / MAP_SIZE;
-            
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            for(let x = 0; x < MAP_SIZE; x++) {
-                for(let y = 0; y < MAP_SIZE; y++) {
-                    ctx.strokeStyle = "rgba(0,242,255,0.3)";
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
-                    
-                    if(x === userPos.x && y === userPos.y) {
-                        ctx.fillStyle = "#00f2ff";
-                        ctx.beginPath();
-                        ctx.arc(x * cellSize + cellSize/2, y * cellSize + cellSize/2, cellSize/3.5, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.shadowBlur = 8;
-                        ctx.shadowColor = "#00f2ff";
-                        ctx.fill();
-                        ctx.shadowBlur = 0;
-                    }
-                    
-                    ctx.fillStyle = "rgba(0,242,255,0.4)";
-                    ctx.font = `${cellSize * 0.35}px "Segoe UI"`;
-                    ctx.fillText("📍", x * cellSize + 3, y * cellSize + cellSize - 5);
-                }
-            }
-        }
-        
-        // ========== التنقل ==========
-        let lastMoveTime = 0;
-        
-        async function moveTo(x, y) {
-            const now = Date.now();
-            if (now - lastMoveTime < 300) return;
-            lastMoveTime = now;
-            
-            if (x < 0) x = 0;
-            if (x >= MAP_SIZE) x = MAP_SIZE - 1;
-            if (y < 0) y = 0;
-            if (y >= MAP_SIZE) y = MAP_SIZE - 1;
-            
-            const moved = (userPos.x !== x || userPos.y !== y);
-            
-            if (moved) {
-                userPos.x = x;
-                userPos.y = y;
-                drawMap();
-                await loadPOV(x, y);
-                
-                if (tg && tg.HapticFeedback) {
-                    tg.HapticFeedback.impactOccurred('light');
-                }
-            }
-        }
-        
-        // ========== عرض فيديو توضيحي ==========
-        function showDemoVideo(locationKey) {
-            const loc = locations[locationKey];
-            if (loc && loc.demoVideo) {
-                const tempVideo = document.createElement('video');
-                tempVideo.src = loc.demoVideo;
-                tempVideo.style.position = 'fixed';
-                tempVideo.style.top = '50%';
-                tempVideo.style.left = '50%';
-                tempVideo.style.transform = 'translate(-50%, -50%)';
-                tempVideo.style.width = '80%';
-                tempVideo.style.maxWidth = '400px';
-                tempVideo.style.zIndex = '1000';
-                tempVideo.style.borderRadius = '20px';
-                tempVideo.style.border = `2px solid var(--accent)`;
-                tempVideo.style.boxShadow = `var(--accent-glow-strong)`;
-                tempVideo.controls = true;
-                tempVideo.autoplay = true;
-                
-                document.body.appendChild(tempVideo);
-                
-                tempVideo.onended = () => tempVideo.remove();
-                
-                const closeBtn = document.createElement('button');
-                closeBtn.innerHTML = '✖';
-                closeBtn.style.position = 'fixed';
-                closeBtn.style.top = 'calc(50% - 220px)';
-                closeBtn.style.left = 'calc(50% + 220px)';
-                closeBtn.style.background = 'rgba(0,0,0,0.8)';
-                closeBtn.style.color = 'white';
-                closeBtn.style.border = '1px solid var(--accent)';
-                closeBtn.style.borderRadius = '30px';
-                closeBtn.style.width = '35px';
-                closeBtn.style.height = '35px';
-                closeBtn.style.cursor = 'pointer';
-                closeBtn.style.zIndex = '1001';
-                closeBtn.style.fontSize = '18px';
-                closeBtn.onclick = () => tempVideo.remove();
-                document.body.appendChild(closeBtn);
-                
-                setTimeout(() => closeBtn.remove(), 30000);
-            }
-        }
-        
-        // ========== إنشاء لوحة الفيديوهات التوضيحية ==========
-        function buildDemoPanel() {
-            const demoGrid = document.getElementById('demoGrid');
-            demoGrid.innerHTML = '';
-            
-            const demoLocations = [
-                { key: "0,0", icon: "🏛️", name: "المركز" },
-                { key: "0,1", icon: "🌲", name: "الغابة" },
-                { key: "1,0", icon: "🏔️", name: "الجبل" },
-                { key: "1,1", icon: "🏯", name: "القلعة" },
-                { key: "2,0", icon: "🏖️", name: "الشاطئ" },
-                { key: "2,1", icon: "🌋", name: "البركان" },
-                { key: "3,0", icon: "🏜️", name: "الصحراء" },
-                { key: "4,0", icon: "⛲", name: "الحدائق" },
-                { key: "5,0", icon: "🌌", name: "الأبعاد" },
-                { key: "5,1", icon: "🎋", name: "الخيزران" },
-                { key: "6,0", icon: "🌈", name: "قوس قزح" },
-                { key: "7,0", icon: "🌠", name: "النجوم" }
-            ];
-            
-            demoLocations.forEach(loc => {
-                const item = document.createElement('div');
-                item.className = 'demo-item';
-                item.onclick = () => showDemoVideo(loc.key);
-                item.innerHTML = `
-                    <div class="demo-icon">${loc.icon}</div>
-                    <div class="demo-label">${loc.name}</div>
-                `;
-                demoGrid.appendChild(item);
-            });
-        }
-        
-        // ========== معالجة الأحداث ==========
-        function handleCanvasClick(e) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            
-            let clickX = (e.clientX - rect.left) * scaleX;
-            let clickY = (e.clientY - rect.top) * scaleY;
-            
-            const newX = Math.floor(clickX / cellSize);
-            const newY = Math.floor(clickY / cellSize);
-            
-            if (newX >= 0 && newX < MAP_SIZE && newY >= 0 && newY < MAP_SIZE) {
-                moveTo(newX, newY);
-            }
-        }
-        
-        let touchStartX = 0, touchStartY = 0;
-        
-        function handleTouchStart(e) {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }
-        
-        function handleTouchEnd(e) {
-            const deltaX = e.changedTouches[0].clientX - touchStartX;
-            const deltaY = e.changedTouches[0].clientY - touchStartY;
-            
-            if (Math.abs(deltaX) < 30 && Math.abs(deltaY) < 30) return;
-            
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                if (deltaX > 0) moveTo(userPos.x + 1, userPos.y);
-                else moveTo(userPos.x - 1, userPos.y);
-            } else {
-                if (deltaY > 0) moveTo(userPos.x, userPos.y + 1);
-                else moveTo(userPos.x, userPos.y - 1);
-            }
-        }
-        
+        // ========== عرض رسالة منبثقة ==========
         function showToast(message, duration = 2000) {
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -749,84 +554,49 @@
             setTimeout(() => toast.remove(), duration);
         }
         
-        // ========== الدخول للمحاكاة ==========
-        async function enterSim() {
-            const startScreen = document.getElementById('start-screen');
+        // ========== بدء اللعبة ==========
+        function startGame() {
+            // إخفاء شاشة البداية
+            const startScreen = document.getElementById('startScreen');
             startScreen.style.opacity = '0';
             setTimeout(() => startScreen.remove(), 500);
             
-            const userId = userData ? userData.id : Math.floor(Math.random() * 10000);
-            userPos.x = userId % MAP_SIZE;
-            userPos.y = Math.floor((userId / MAP_SIZE) % MAP_SIZE);
+            // إظهار الهيدر والحاوية
+            document.getElementById('header').style.display = 'flex';
+            document.getElementById('gameContainer').style.display = 'flex';
             
-            drawMap();
-            await loadPOV(userPos.x, userPos.y);
-            await logUserEntry();
+            // بناء الشبكة
+            buildGrid();
             
-            showToast(`🎮 مرحباً ${userData?.first_name || 'زائر'}! استكشف العالم`, 2500);
+            // تهيئة تليجرام
+            initTelegram();
             
-            if (tg && tg.HapticFeedback) {
-                tg.HapticFeedback.notificationOccurred('success');
-            }
+            showToast('🎮 مرحباً بك في عالم المربعات! اضغط على أي مربع لاستكشافه');
         }
         
-        // ========== تهيئة Telegram ==========
+        // ========== تهيئة تليجرام ==========
         function initTelegram() {
             try {
                 tg.ready();
                 tg.expand();
-                tg.enableClosingConfirmation();
-                
                 if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
                     userData = tg.initDataUnsafe.user;
-                    const userName = userData.first_name || userData.username || 'مستخدم';
-                    document.getElementById('userInfoDisplay').innerHTML = `👤 مرحباً ${userName}`;
                 } else {
                     userData = { id: Math.floor(Math.random() * 10000), first_name: 'زائر' };
-                    document.getElementById('userInfoDisplay').innerHTML = `👤 زائر | تجربة`;
                 }
             } catch(e) {
                 userData = { id: Math.floor(Math.random() * 10000), first_name: 'زائر' };
-                document.getElementById('userInfoDisplay').innerHTML = `👤 وضع التجربة`;
             }
         }
         
-        // ========== إضافة الأحداث ==========
-        function addEvents() {
-            canvas.addEventListener('click', handleCanvasClick);
-            document.addEventListener('touchstart', handleTouchStart);
-            document.addEventListener('touchend', handleTouchEnd);
-            
-            document.addEventListener('keydown', (e) => {
-                switch(e.key) {
-                    case 'ArrowUp': moveTo(userPos.x, userPos.y - 1); break;
-                    case 'ArrowDown': moveTo(userPos.x, userPos.y + 1); break;
-                    case 'ArrowLeft': moveTo(userPos.x - 1, userPos.y); break;
-                    case 'ArrowRight': moveTo(userPos.x + 1, userPos.y); break;
-                }
-                e.preventDefault();
-            });
-        }
+        // ========== إغلاق النافذة بالضغط على ESC ==========
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMainView();
+            }
+        });
         
-        // ========== بدء التشغيل ==========
-        function init() {
-            initTelegram();
-            drawMap();
-            addEvents();
-            buildDemoPanel();
-            
-            povVideo.loop = true;
-            povVideo.muted = true;
-            povVideo.playsInline = true;
-        }
-        
-        init();
-        
-        window.moveTo = moveTo;
-        window.enterSim = enterSim;
-        window.showDemoVideo = showDemoVideo;
-        
-        console.log('🎬 نظام POV الموحد جاهز - 24 موقع مختلف مع فيديوهات توضيحية');
+        console.log('🎮 لعبة الأرضية التفاعلية جاهزة - 36 مربع، كل مربع له فيديو خاص!');
     </script>
 </body>
 </html>
