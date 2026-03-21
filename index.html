@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PUBG - أرضية المربعات | كل نقطة لها فيديو POV</title>
+    <title>عالم النقاط | شخصية متحركة + صور POV</title>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <style>
         * {
@@ -40,42 +42,29 @@
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 12px 20px;
+            padding: 10px 15px;
             z-index: 50;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
-            border: 1px solid #ff5722;
+            gap: 8px;
+            border: 1px solid #00f2ff;
             pointer-events: none;
         }
         
         .player-info {
             color: white;
-            font-size: 14px;
-        }
-        
-        .health-bar {
-            width: 150px;
-            height: 8px;
-            background: #555;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        
-        .health-fill {
-            width: 100%;
-            height: 100%;
-            background: #4caf50;
-            transition: width 0.3s;
+            font-size: 12px;
         }
         
         .tile-counter {
-            background: #ff5722;
-            padding: 5px 12px;
+            background: #00f2ff;
+            padding: 4px 10px;
             border-radius: 20px;
             font-weight: bold;
+            color: #000;
+            font-size: 12px;
         }
         
         /* أزرار التحكم */
@@ -85,52 +74,52 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 15px;
+            gap: 20px;
             z-index: 50;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(10px);
-            padding: 10px 20px;
-            border-radius: 50px;
+            padding: 12px 25px;
+            border-radius: 60px;
             pointer-events: auto;
         }
         
         .control-btn {
-            width: 55px;
-            height: 55px;
-            background: rgba(255,87,34,0.3);
-            border: 2px solid #ff5722;
+            width: 65px;
+            height: 65px;
+            background: rgba(0,242,255,0.2);
+            border: 2px solid #00f2ff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 20px;
+            font-size: 28px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
         }
         
         .control-btn:active {
-            background: #ff5722;
+            background: #00f2ff;
             transform: scale(0.95);
+            color: #000;
         }
         
-        /* نافذة POV */
+        /* نافذة الصورة POV (تملأ الشاشة) */
         .pov-modal {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.98);
             z-index: 200;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.4s ease;
+            transition: all 0.5s ease;
         }
         
         .pov-modal.active {
@@ -138,61 +127,57 @@
             visibility: visible;
         }
         
-        .pov-content {
-            background: rgba(0,0,0,0.9);
-            border-radius: 25px;
-            padding: 20px;
-            max-width: 90%;
-            width: 800px;
-            text-align: center;
-        }
-        
         .pov-image {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 15px;
-            border: 3px solid #ff5722;
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0,242,255,0.5);
+            border: 3px solid #00f2ff;
         }
         
-        .pov-video {
-            width: 100%;
-            max-height: 400px;
-            border-radius: 15px;
-            border: 3px solid #ff5722;
+        .pov-info {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            margin: 0 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
         }
         
         .pov-title {
             font-size: 24px;
-            color: #ff5722;
-            margin: 15px 0 5px;
-        }
-        
-        .pov-desc {
-            color: #ccc;
-            font-size: 14px;
+            color: #00f2ff;
+            margin-bottom: 8px;
         }
         
         .close-pov {
             position: absolute;
             top: 20px;
             right: 20px;
-            background: rgba(0,0,0,0.8);
-            border: 1px solid #ff5722;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid #00f2ff;
             color: white;
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
+            z-index: 201;
         }
         
         .close-pov:hover {
-            background: #ff5722;
+            background: #00f2ff;
+            color: #000;
         }
         
         /* رسالة منبثقة */
@@ -203,22 +188,21 @@
             transform: translateX(-50%);
             background: rgba(0,0,0,0.9);
             backdrop-filter: blur(10px);
-            color: #ff5722;
-            padding: 10px 20px;
+            color: #00f2ff;
+            padding: 8px 16px;
             border-radius: 30px;
             font-size: 12px;
             z-index: 150;
-            border: 1px solid #ff5722;
-            white-space: nowrap;
+            border: 1px solid #00f2ff;
             pointer-events: none;
         }
         
         @media (max-width: 600px) {
-            .ui { padding: 8px 12px; }
-            .player-info { font-size: 10px; }
-            .health-bar { width: 100px; }
-            .control-btn { width: 45px; height: 45px; font-size: 16px; }
+            .controls { gap: 12px; padding: 8px 18px; }
+            .control-btn { width: 55px; height: 55px; font-size: 22px; }
             .pov-title { font-size: 18px; }
+            .ui { padding: 6px 12px; }
+            .player-info { font-size: 10px; }
         }
     </style>
 </head>
@@ -226,8 +210,7 @@
 
     <div class="ui">
         <div class="player-info">
-            🎮 اللاعب | ❤️ <span id="healthValue">100</span>%
-            <div class="health-bar"><div id="healthFill" class="health-fill" style="width: 100%"></div></div>
+            🎮 <span id="playerPos">(0,0)</span>
         </div>
         <div class="tile-counter">
             🏆 <span id="visitedCount">0</span>/<span id="totalTiles">36</span>
@@ -246,14 +229,13 @@
     
     <canvas id="gameCanvas"></canvas>
     
-    <!-- نافذة POV -->
+    <!-- نافذة الصورة POV (تملأ الشاشة) -->
     <div class="pov-modal" id="povModal">
         <div class="close-pov" onclick="closePOV()">✖</div>
-        <div class="pov-content">
-            <img class="pov-image" id="povImage" style="display: none;">
-            <video class="pov-video" id="povVideo" controls autoplay style="display: none;"></video>
+        <img class="pov-image" id="povImage" alt="منظر الموقع">
+        <div class="pov-info">
             <div class="pov-title" id="povTitle"></div>
-            <div class="pov-desc" id="povDesc"></div>
+            <div id="povDesc"></div>
         </div>
     </div>
 
@@ -267,145 +249,137 @@
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
         
-        // ========== نظام المربعات (8x8 = 64 موقع) ==========
+        // ========== نظام النقاط (8x8 = 64 نقطة) ==========
         const GRID_SIZE = 8;
-        const TILE_WIDTH = canvasWidth / GRID_SIZE;
-        const TILE_HEIGHT = canvasHeight / GRID_SIZE;
+        const POINT_RADIUS = 8;
         
-        // متغيرات اللاعب
+        // متغيرات اللاعب (شخصية تتحرك)
         let player = {
             x: Math.floor(GRID_SIZE / 2),
             y: Math.floor(GRID_SIZE / 2),
-            health: 100,
-            size: 12
+            size: 14
         };
         
-        // المربعات التي تم زيارتها
+        // النقاط التي تمت زيارتها
         let visited = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(false));
         let visitedCount = 0;
-        let currentTileInfo = null;
         
-        // ========== قاعدة بيانات المواقع - كل مربع له صورة وفيديو POV ==========
-        // استخدام صور وفيديوهات واقعية من مصادر متنوعة
-        const tilesData = {
+        // ========== قاعدة بيانات الصور POV (صور واقعية لكل نقطة) ==========
+        // كل نقطة لها صورة مختلفة توحي بأنه في مكان حقيقي
+        const pointsData = {
             // الصف 0
-            "0,0": { image: "https://picsum.photos/id/104/400/300", video: "https://cdn.pixabay.com/video/2023/06/27/170116-838732830_hd.mp4", title: "🏛️ الساحة المركزية", desc: "قلب المدينة القديمة، نافورة تاريخية" },
-            "0,1": { image: "https://picsum.photos/id/15/400/300", video: "https://cdn.pixabay.com/video/2022/11/20/139484-776227629_hd.mp4", title: "🌲 غابة الصنوبر", desc: "أشجار صنوبر شامخة، ضوء الشمس يتخلل الأغصان" },
-            "0,2": { image: "https://picsum.photos/id/96/400/300", video: "https://cdn.pixabay.com/video/2021/08/03/82621-583679738_hd.mp4", title: "🏞️ وادي الجداول", desc: "مياه صافية تنساب بين الصخور" },
-            "0,3": { image: "https://picsum.photos/id/29/400/300", video: "https://cdn.pixabay.com/video/2023/03/21/156698-815131012_hd.mp4", title: "🏔️ قمة الجبل", desc: "منظر بانورامي خلاب من أعلى قمة" },
-            "0,4": { image: "https://picsum.photos/id/91/400/300", video: "https://cdn.pixabay.com/video/2022/05/21/117029-710979496_hd.mp4", title: "🏯 القلعة القديمة", desc: "قلعة تاريخية تحكي قصصاً من العصور الوسطى" },
-            "0,5": { image: "https://picsum.photos/id/43/400/300", video: "https://cdn.pixabay.com/video/2020/07/16/45478-445269575_hd.mp4", title: "🌊 شلالات الجبل", desc: "شلالات متدفقة تشكل قوس قزح" },
-            "0,6": { image: "https://picsum.photos/id/116/400/300", video: "https://cdn.pixabay.com/video/2023/01/23/147671-798070049_hd.mp4", title: "🏖️ شاطئ الجنة", desc: "رمال ذهبية ومياه فيروزية" },
-            "0,7": { image: "https://picsum.photos/id/112/400/300", video: "https://cdn.pixabay.com/video/2019/04/25/22968-333024647_hd.mp4", title: "🌋 فوهة البركان", desc: "منظر جوي لفوهة بركانية مهيبة" },
+            "0,0": { image: "https://picsum.photos/id/104/1200/800", title: "🏛️ الساحة المركزية", desc: "نافورة تاريخية تتلألأ تحت أشعة الشمس الذهبية" },
+            "0,1": { image: "https://picsum.photos/id/15/1200/800", title: "🌲 غابة الصنوبر", desc: "أشجار صنوبر شامخة، ضوء الشمس يتخلل بين الأغصان" },
+            "0,2": { image: "https://picsum.photos/id/96/1200/800", title: "🏞️ وادي الجداول", desc: "مياه صافية تنساب بين الصخور، خرير الماء الهادئ" },
+            "0,3": { image: "https://picsum.photos/id/29/1200/800", title: "🏔️ قمة الجبل", desc: "منظر بانورامي خلاب من أعلى قمة في المنطقة" },
+            "0,4": { image: "https://picsum.photos/id/91/1200/800", title: "🏯 القلعة القديمة", desc: "قلعة تاريخية تحكي قصصاً من العصور الوسطى" },
+            "0,5": { image: "https://picsum.photos/id/43/1200/800", title: "🌊 شلالات الجبل", desc: "شلالات متدفقة تشكل قوس قزح في الأفق" },
+            "0,6": { image: "https://picsum.photos/id/116/1200/800", title: "🏖️ شاطئ الجنة", desc: "رمال ذهبية ومياه فيروزية، غروب شمس ساحر" },
+            "0,7": { image: "https://picsum.photos/id/112/1200/800", title: "🌋 فوهة البركان", desc: "منظر جوي لفوهة بركانية مهيبة" },
             
             // الصف 1
-            "1,0": { image: "https://picsum.photos/id/48/400/300", video: "https://cdn.pixabay.com/video/2022/12/09/143795-785253344_hd.mp4", title: "🏝️ جزيرة النخيل", desc: "جنة استوائية، نخيل يهتز مع النسيم" },
-            "1,1": { image: "https://picsum.photos/id/126/400/300", video: "https://cdn.pixabay.com/video/2023/05/04/164204-828175771_hd.mp4", title: "🏜️ صحراء الذهب", desc: "كثبان رملية تمتد لأميال" },
-            "1,2": { image: "https://picsum.photos/id/17/400/300", video: "https://cdn.pixabay.com/video/2021/10/05/92722-625204586_hd.mp4", title: "🏘️ القرية التراثية", desc: "بيوت تقليدية، أجواء أصيلة" },
-            "1,3": { image: "https://picsum.photos/id/13/400/300", video: "https://cdn.pixabay.com/video/2020/06/25/44054-437756536_hd.mp4", title: "🌾 حقول القمح", desc: "حقول ذهبية تمتد حتى الأفق" },
-            "1,4": { image: "https://picsum.photos/id/30/400/300", video: "https://cdn.pixabay.com/video/2023/02/14/150858-804562151_hd.mp4", title: "⛲ حدائق الزهور", desc: "روضة ملونة بأنواع الزهور" },
-            "1,5": { image: "https://picsum.photos/id/59/400/300", video: "https://cdn.pixabay.com/video/2022/08/20/128472-744156325_hd.mp4", title: "🎪 ساحة المهرجانات", desc: "أضواء ملونة، أجواء احتفالية" },
-            "1,6": { image: "https://picsum.photos/id/107/400/300", video: "https://cdn.pixabay.com/video/2021/12/14/104008-656770013_hd.mp4", title: "🏰 قصر الملوك", desc: "قصر فخم يعكس عظمة التاريخ" },
-            "1,7": { image: "https://picsum.photos/id/118/400/300", video: "https://cdn.pixabay.com/video/2023/08/21/176686-856686105_hd.mp4", title: "🌌 سماء الليل", desc: "سماء صافية مرصعة بالنجوم" },
+            "1,0": { image: "https://picsum.photos/id/48/1200/800", title: "🏝️ جزيرة النخيل", desc: "جنة استوائية، نخيل يهتز مع نسيم البحر" },
+            "1,1": { image: "https://picsum.photos/id/126/1200/800", title: "🏜️ صحراء الذهب", desc: "كثبان رملية تمتد لأميال، هدوء الصحراء" },
+            "1,2": { image: "https://picsum.photos/id/17/1200/800", title: "🏘️ القرية التراثية", desc: "بيوت تقليدية، أجواء أصيلة تعبق بالتاريخ" },
+            "1,3": { image: "https://picsum.photos/id/13/1200/800", title: "🌾 حقول القمح", desc: "حقول ذهبية تمتد حتى الأفق، سنابل تتمايل" },
+            "1,4": { image: "https://picsum.photos/id/30/1200/800", title: "⛲ حدائق الزهور", desc: "روضة ملونة، فراشات ترفرف بين الورود" },
+            "1,5": { image: "https://picsum.photos/id/59/1200/800", title: "🎪 ساحة المهرجانات", desc: "أضواء ملونة، أجواء احتفالية مميزة" },
+            "1,6": { image: "https://picsum.photos/id/107/1200/800", title: "🏰 قصر الملوك", desc: "قصر فخم يعكس عظمة التاريخ المعماري" },
+            "1,7": { image: "https://picsum.photos/id/118/1200/800", title: "🌌 سماء الليل", desc: "سماء صافية مرصعة بالنجوم، درب التبانة" },
             
             // الصف 2
-            "2,0": { image: "https://picsum.photos/id/20/400/300", video: "https://cdn.pixabay.com/video/2022/03/15/111025-686769732_hd.mp4", title: "🎋 غابة الخيزران", desc: "غابة هادئة من الخيزران" },
-            "2,1": { image: "https://picsum.photos/id/23/400/300", video: "https://cdn.pixabay.com/video/2020/09/18/50985-462340721_hd.mp4", title: "❄️ الأنهار الجليدية", desc: "منظر جليدي أخاذ" },
-            "2,2": { image: "https://picsum.photos/id/44/400/300", video: "https://cdn.pixabay.com/video/2023/04/12/161807-822377448_hd.mp4", title: "🌈 وادي قوس قزح", desc: "وادي ملون بألوان الطيف" },
-            "2,3": { image: "https://picsum.photos/id/76/400/300", video: "https://cdn.pixabay.com/video/2021/07/27/84687-595622558_hd.mp4", title: "🌋 بحيرة البركان", desc: "بحيرة زرقاء داخل فوهة بركانية" },
-            "2,4": { image: "https://picsum.photos/id/38/400/300", video: "https://cdn.pixabay.com/video/2022/11/05/137174-769853455_hd.mp4", title: "🏞️ مضيق الجبال", desc: "مضيق عميق بين جبال شاهقة" },
-            "2,5": { image: "https://picsum.photos/id/67/400/300", video: "https://cdn.pixabay.com/video/2023/06/10/167890-834156789_hd.mp4", title: "🌠 زخة شهب", desc: "سماء مليئة بالشهب المتساقطة" },
-            "2,6": { image: "https://picsum.photos/id/53/400/300", video: "https://cdn.pixabay.com/video/2020/12/22/57412-487478910_hd.mp4", title: "🌸 بستان الكرز", desc: "أشجار كرز تتفتح بأزهار وردية" },
-            "2,7": { image: "https://picsum.photos/id/93/400/300", video: "https://cdn.pixabay.com/video/2021/03/18/68547-524912345_hd.mp4", title: "🏯 معبد السلام", desc: "معبد قديم محاط بالطبيعة" },
+            "2,0": { image: "https://picsum.photos/id/20/1200/800", title: "🎋 غابة الخيزران", desc: "غابة هادئة، أشعة الشمس تتخلل سيقان الخيزران" },
+            "2,1": { image: "https://picsum.photos/id/23/1200/800", title: "❄️ الأنهار الجليدية", desc: "منظر جليدي أخاذ، أنهار جليدية تمتد للافق" },
+            "2,2": { image: "https://picsum.photos/id/44/1200/800", title: "🌈 وادي قوس قزح", desc: "وادي ملون بألوان الطيف الساحرة" },
+            "2,3": { image: "https://picsum.photos/id/76/1200/800", title: "🌋 بحيرة البركان", desc: "بحيرة زرقاء داخل فوهة بركانية هادئة" },
+            "2,4": { image: "https://picsum.photos/id/38/1200/800", title: "🏞️ مضيق الجبال", desc: "مضيق عميق بين جبال شاهقة" },
+            "2,5": { image: "https://picsum.photos/id/67/1200/800", title: "🌠 زخة شهب", desc: "سماء مليئة بالشهب المتساقطة" },
+            "2,6": { image: "https://picsum.photos/id/53/1200/800", title: "🌸 بستان الكرز", desc: "أشجار كرز تتفتح بأزهار وردية اللون" },
+            "2,7": { image: "https://picsum.photos/id/93/1200/800", title: "🏯 معبد السلام", desc: "معبد قديم محاط بالطبيعة الخلابة" },
             
-            // الصف 3 - استمرار
-            "3,0": { image: "https://picsum.photos/id/12/400/300", video: "https://cdn.pixabay.com/video/2023/01/17/145678-792345678_hd.mp4", title: "🎨 وادي الفنانين", desc: "مناظر طبيعية ملهمة" },
-            "3,1": { image: "https://picsum.photos/id/22/400/300", video: "https://cdn.pixabay.com/video/2022/09/10/132456-756789012_hd.mp4", title: "🦋 وادي الفراشات", desc: "آلاف الفراشات الملونة" },
-            "3,2": { image: "https://picsum.photos/id/34/400/300", video: "https://cdn.pixabay.com/video/2021/11/15/98765-634567890_hd.mp4", title: "🍇 كروم العنب", desc: "مزارع عنب تمتد على التلال" },
-            "3,3": { image: "https://picsum.photos/id/42/400/300", video: "https://cdn.pixabay.com/video/2023/07/20/173456-845678901_hd.mp4", title: "⛰️ قمة السحاب", desc: "قمة عالية تلامس السحاب" },
-            "3,4": { image: "https://picsum.photos/id/45/400/300", video: "https://cdn.pixabay.com/video/2020/10/05/54321-478901234_hd.mp4", title: "🏕️ مخيم النجوم", desc: "مكان مثالي للتخييم" },
-            "3,5": { image: "https://picsum.photos/id/55/400/300", video: "https://cdn.pixabay.com/video/2022/12/20/145678-798012345_hd.mp4", title: "🛶 بحيرة الهدوء", desc: "بحيرة صافية تعكس السماء" },
-            "3,6": { image: "https://picsum.photos/id/60/400/300", video: "https://cdn.pixabay.com/video/2023/05/15/165432-832109876_hd.mp4", title: "🏰 قلعة الضباب", desc: "قلعة محاطة بالضباب" },
-            "3,7": { image: "https://picsum.photos/id/68/400/300", video: "https://cdn.pixabay.com/video/2021/09/25/87654-612345678_hd.mp4", title: "🌿 غابة السرخس", desc: "غابة كثيفة بالسراخس" },
+            // الصف 3
+            "3,0": { image: "https://picsum.photos/id/12/1200/800", title: "🎨 وادي الفنانين", desc: "مناظر طبيعية ملهمة للفنانين" },
+            "3,1": { image: "https://picsum.photos/id/22/1200/800", title: "🦋 وادي الفراشات", desc: "آلاف الفراشات الملونة ترفرف" },
+            "3,2": { image: "https://picsum.photos/id/34/1200/800", title: "🍇 كروم العنب", desc: "مزارع عنب تمتد على التلال" },
+            "3,3": { image: "https://picsum.photos/id/42/1200/800", title: "⛰️ قمة السحاب", desc: "قمة عالية تلامس السحاب" },
+            "3,4": { image: "https://picsum.photos/id/45/1200/800", title: "🏕️ مخيم النجوم", desc: "مكان مثالي للتخييم تحت السماء" },
+            "3,5": { image: "https://picsum.photos/id/55/1200/800", title: "🛶 بحيرة الهدوء", desc: "بحيرة صافية تعكس السماء" },
+            "3,6": { image: "https://picsum.photos/id/60/1200/800", title: "🏰 قلعة الضباب", desc: "قلعة محاطة بالضباب الصباحي" },
+            "3,7": { image: "https://picsum.photos/id/68/1200/800", title: "🌿 غابة السرخس", desc: "غابة كثيفة بالسراخس الخضراء" },
             
             // الصف 4
-            "4,0": { image: "https://picsum.photos/id/73/400/300", video: "https://cdn.pixabay.com/video/2023/02/28/154321-810987654_hd.mp4", title: "🌙 وادي القمر", desc: "وادي صحراوي يتوهج تحت القمر" },
-            "4,1": { image: "https://picsum.photos/id/77/400/300", video: "https://cdn.pixabay.com/video/2020/08/15/48765-456789012_hd.mp4", title: "🎭 مسرح الطبيعة", desc: "مدرج طبيعي، الطبيعة تؤدي العروض" },
-            "4,2": { image: "https://picsum.photos/id/80/400/300", video: "https://cdn.pixabay.com/video/2022/10/30/139876-778901234_hd.mp4", title: "🔮 كهف البلور", desc: "كهف غامض ببلورات متوهجة" },
-            "4,3": { image: "https://picsum.photos/id/85/400/300", video: "https://cdn.pixabay.com/video/2023/04/05/162345-824567890_hd.mp4", title: "🌟 ميدان النجوم", desc: "ميدان مفتوح، سماء صافية" },
-            "4,4": { image: "https://picsum.photos/id/88/400/300", video: "https://cdn.pixabay.com/video/2023/08/10/175234-845678901_hd.mp4", title: "🏞️ بحيرة المرايا", desc: "بحيرة تعكس السماء كالمرآة" },
-            "4,5": { image: "https://picsum.photos/id/92/400/300", video: "https://cdn.pixabay.com/video/2022/06/15/119876-723456789_hd.mp4", title: "🌳 غابة العمالقة", desc: "أشجار عملاقة تعود لآلاف السنين" },
-            "4,6": { image: "https://picsum.photos/id/95/400/300", video: "https://cdn.pixabay.com/video/2021/04/20/73456-556789012_hd.mp4", title: "⛲ نافورة الأحلام", desc: "نافورة سحرية بألوان متغيرة" },
-            "4,7": { image: "https://picsum.photos/id/98/400/300", video: "https://cdn.pixabay.com/video/2020/11/10/54321-498765432_hd.mp4", title: "🏔️ جبل الأمل", desc: "قمة الجبل حيث تبدأ المغامرة" },
+            "4,0": { image: "https://picsum.photos/id/73/1200/800", title: "🌙 وادي القمر", desc: "وادي صحراوي يتوهج تحت ضوء القمر" },
+            "4,1": { image: "https://picsum.photos/id/77/1200/800", title: "🎭 مسرح الطبيعة", desc: "مدرج طبيعي، الطبيعة تؤدي أروع العروض" },
+            "4,2": { image: "https://picsum.photos/id/80/1200/800", title: "🔮 كهف البلور", desc: "كهف غامض ببلورات متوهجة" },
+            "4,3": { image: "https://picsum.photos/id/85/1200/800", title: "🌟 ميدان النجوم", desc: "ميدان مفتوح، سماء صافية مرصعة بالنجوم" },
+            "4,4": { image: "https://picsum.photos/id/88/1200/800", title: "🏞️ بحيرة المرايا", desc: "بحيرة تعكس السماء كالمرآة" },
+            "4,5": { image: "https://picsum.photos/id/92/1200/800", title: "🌳 غابة العمالقة", desc: "أشجار عملاقة تعود لآلاف السنين" },
+            "4,6": { image: "https://picsum.photos/id/95/1200/800", title: "⛲ نافورة الأحلام", desc: "نافورة سحرية بألوان متغيرة" },
+            "4,7": { image: "https://picsum.photos/id/98/1200/800", title: "🏔️ جبل الأمل", desc: "قمة الجبل حيث تبدأ المغامرة" },
             
             // الصف 5
-            "5,0": { image: "https://picsum.photos/id/100/400/300", video: "https://cdn.pixabay.com/video/2023/03/18/158765-818765432_hd.mp4", title: "🏜️ واحة النخيل", desc: "واحة خضراء في وسط الصحراء" },
-            "5,1": { image: "https://picsum.photos/id/103/400/300", video: "https://cdn.pixabay.com/video/2022/08/05/126543-734567890_hd.mp4", title: "🌋 سهل الحمم", desc: "سهل بركاني قديم" },
-            "5,2": { image: "https://picsum.photos/id/108/400/300", video: "https://cdn.pixabay.com/video/2021/12/01/109876-667890123_hd.mp4", title: "🏝️ شاطئ المرجان", desc: "شاطئ خلاب بشعاب مرجانية" },
-            "5,3": { image: "https://picsum.photos/id/110/400/300", video: "https://cdn.pixabay.com/video/2023/01/10/143456-789012345_hd.mp4", title: "🌲 غابة الضباب", desc: "غابة مغطاة بالضباب السحري" },
-            "5,4": { image: "https://picsum.photos/id/113/400/300", video: "https://cdn.pixabay.com/video/2022/10/18/135678-765432109_hd.mp4", title: "🏯 معبد الشمس", desc: "معبد قديم مخصص لعبادة الشمس" },
-            "5,5": { image: "https://picsum.photos/id/115/400/300", video: "https://cdn.pixabay.com/video/2020/09/05/49876-456789012_hd.mp4", title: "🌾 سهول القمح", desc: "سهول واسعة من القمح الذهبي" },
-            "5,6": { image: "https://picsum.photos/id/119/400/300", video: "https://cdn.pixabay.com/video/2023/05/20/166543-834567890_hd.mp4", title: "⛰️ وادي الصخور", desc: "تكوينات صخرية فريدة" },
-            "5,7": { image: "https://picsum.photos/id/120/400/300", video: "https://cdn.pixabay.com/video/2021/11/25/102345-645678901_hd.mp4", title: "🌸 حدائق الساكورا", desc: "حدائق يابانية بأزهار الكرز" },
+            "5,0": { image: "https://picsum.photos/id/100/1200/800", title: "🏜️ واحة النخيل", desc: "واحة خضراء في وسط الصحراء" },
+            "5,1": { image: "https://picsum.photos/id/103/1200/800", title: "🌋 سهل الحمم", desc: "سهل بركاني قديم" },
+            "5,2": { image: "https://picsum.photos/id/108/1200/800", title: "🏝️ شاطئ المرجان", desc: "شاطئ خلاب بشعاب مرجانية" },
+            "5,3": { image: "https://picsum.photos/id/110/1200/800", title: "🌲 غابة الضباب", desc: "غابة مغطاة بالضباب السحري" },
+            "5,4": { image: "https://picsum.photos/id/113/1200/800", title: "🏯 معبد الشمس", desc: "معبد قديم مخصص لعبادة الشمس" },
+            "5,5": { image: "https://picsum.photos/id/115/1200/800", title: "🌾 سهول القمح", desc: "سهول واسعة من القمح الذهبي" },
+            "5,6": { image: "https://picsum.photos/id/119/1200/800", title: "⛰️ وادي الصخور", desc: "تكوينات صخرية فريدة" },
+            "5,7": { image: "https://picsum.photos/id/120/1200/800", title: "🌸 حدائق الساكورا", desc: "حدائق يابانية بأزهار الكرز" },
             
-            // الصف 6 و 7 - تكملة
-            "6,0": { image: "https://picsum.photos/id/122/400/300", video: "https://cdn.pixabay.com/video/2023/07/15/171234-851234567_hd.mp4", title: "🏔️ قمة الجليد", desc: "قمة جبلية مغطاة بالجليد" },
-            "6,1": { image: "https://picsum.photos/id/124/400/300", video: "https://cdn.pixabay.com/video/2022/04/20/114567-698765432_hd.mp4", title: "🌿 مرج الزهور", desc: "مرج مليء بالزهور البرية" },
-            "6,2": { image: "https://picsum.photos/id/127/400/300", video: "https://cdn.pixabay.com/video/2020/07/10/44567-434567890_hd.mp4", title: "🏞️ شلالات القمر", desc: "شلالات تتوهج تحت ضوء القمر" },
-            "6,3": { image: "https://picsum.photos/id/129/400/300", video: "https://cdn.pixabay.com/video/2023/02/05/152345-801234567_hd.mp4", title: "🏜️ كثبان الرمال", desc: "كثبان رملية ذهبية" },
-            "6,4": { image: "https://picsum.photos/id/131/400/300", video: "https://cdn.pixabay.com/video/2021/08/20/86543-601234567_hd.mp4", title: "🌲 غابة الأقزام", desc: "غابة مليئة بالأشجار الصغيرة" },
-            "6,5": { image: "https://picsum.photos/id/133/400/300", video: "https://cdn.pixabay.com/video/2022/11/30/141234-781234567_hd.mp4", title: "🏰 حصن الحجر", desc: "حصن قديم مبني من الحجر" },
-            "6,6": { image: "https://picsum.photos/id/135/400/300", video: "https://cdn.pixabay.com/video/2020/12/15/58765-492345678_hd.mp4", title: "⛲ نافورة الشباب", desc: "نافورة أسطورية" },
-            "6,7": { image: "https://picsum.photos/id/137/400/300", video: "https://cdn.pixabay.com/video/2023/04/28/163456-826543210_hd.mp4", title: "🌟 حقل النجوم", desc: "حقل يتوهج بالنجوم ليلاً" },
+            // الصف 6
+            "6,0": { image: "https://picsum.photos/id/122/1200/800", title: "🏔️ قمة الجليد", desc: "قمة جبلية مغطاة بالجليد" },
+            "6,1": { image: "https://picsum.photos/id/124/1200/800", title: "🌿 مرج الزهور", desc: "مرج مليء بالزهور البرية" },
+            "6,2": { image: "https://picsum.photos/id/127/1200/800", title: "🏞️ شلالات القمر", desc: "شلالات تتوهج تحت ضوء القمر" },
+            "6,3": { image: "https://picsum.photos/id/129/1200/800", title: "🏜️ كثبان الرمال", desc: "كثبان رملية ذهبية" },
+            "6,4": { image: "https://picsum.photos/id/131/1200/800", title: "🌲 غابة الأقزام", desc: "غابة مليئة بالأشجار الصغيرة" },
+            "6,5": { image: "https://picsum.photos/id/133/1200/800", title: "🏰 حصن الحجر", desc: "حصن قديم مبني من الحجر" },
+            "6,6": { image: "https://picsum.photos/id/135/1200/800", title: "⛲ نافورة الشباب", desc: "نافورة أسطورية" },
+            "6,7": { image: "https://picsum.photos/id/137/1200/800", title: "🌟 حقل النجوم", desc: "حقل يتوهج بالنجوم ليلاً" },
             
             // الصف 7
-            "7,0": { image: "https://picsum.photos/id/139/400/300", video: "https://cdn.pixabay.com/video/2022/01/15/106543-678901234_hd.mp4", title: "🏔️ جبل النار", desc: "جبل بركاني نشط" },
-            "7,1": { image: "https://picsum.photos/id/141/400/300", video: "https://cdn.pixabay.com/video/2021/06/20/79876-578901234_hd.mp4", title: "🌊 خليج الدلافين", desc: "خليج تعيش فيه الدلافين" },
-            "7,2": { image: "https://picsum.photos/id/143/400/300", video: "https://cdn.pixabay.com/video/2023/09/01/179876-861234567_hd.mp4", title: "🏞️ محمية الطيور", desc: "محمية طبيعية للطيور المهاجرة" },
-            "7,3": { image: "https://picsum.photos/id/145/400/300", video: "https://cdn.pixabay.com/video/2020/08/22/47654-445678901_hd.mp4", title: "🌾 مزرعة الخزامى", desc: "مزرعة واسعة من الخزامى" },
-            "7,4": { image: "https://picsum.photos/id/147/400/300", video: "https://cdn.pixabay.com/video/2022/07/10/123456-712345678_hd.mp4", title: "🏯 قلعة الرمال", desc: "قلعة مبنية من الرمال" },
-            "7,5": { image: "https://picsum.photos/id/149/400/300", video: "https://cdn.pixabay.com/video/2021/02/18/65432-512345678_hd.mp4", title: "🌲 غابة الأضواء", desc: "غابة تتوهج بالليل" },
-            "7,6": { image: "https://picsum.photos/id/150/400/300", video: "https://cdn.pixabay.com/video/2023/10/01/182345-874567890_hd.mp4", title: "⛰️ قمة الغروب", desc: "أفضل مكان لمشاهدة الغروب" },
-            "7,7": { image: "https://picsum.photos/id/151/400/300", video: "https://cdn.pixabay.com/video/2020/11/28/53456-487654321_hd.mp4", title: "🏆 ميدان البطولة", desc: "مكان الاحتفالات والبطولات" }
+            "7,0": { image: "https://picsum.photos/id/139/1200/800", title: "🏔️ جبل النار", desc: "جبل بركاني نشط" },
+            "7,1": { image: "https://picsum.photos/id/141/1200/800", title: "🌊 خليج الدلافين", desc: "خليج تعيش فيه الدلافين" },
+            "7,2": { image: "https://picsum.photos/id/143/1200/800", title: "🏞️ محمية الطيور", desc: "محمية طبيعية للطيور المهاجرة" },
+            "7,3": { image: "https://picsum.photos/id/145/1200/800", title: "🌾 مزرعة الخزامى", desc: "مزرعة واسعة من الخزامى" },
+            "7,4": { image: "https://picsum.photos/id/147/1200/800", title: "🏯 قلعة الرمال", desc: "قلعة مبنية من الرمال" },
+            "7,5": { image: "https://picsum.photos/id/149/1200/800", title: "🌲 غابة الأضواء", desc: "غابة تتوهج بالليل" },
+            "7,6": { image: "https://picsum.photos/id/150/1200/800", title: "⛰️ قمة الغروب", desc: "أفضل مكان لمشاهدة الغروب" },
+            "7,7": { image: "https://picsum.photos/id/151/1200/800", title: "🏆 ميدان البطولة", desc: "مكان الاحتفالات والبطولات" }
         };
         
-        function getTileData(x, y) {
+        function getPointData(x, y) {
             const key = `${x},${y}`;
-            if (tilesData[key]) return tilesData[key];
-            return { image: "https://picsum.photos/id/100/400/300", video: "https://cdn.pixabay.com/video/2023/01/17/145678-792345678_hd.mp4", title: "🌍 منطقة جديدة", desc: "منطقة تنتظر اكتشافك" };
+            if (pointsData[key]) return pointsData[key];
+            return { image: "https://picsum.photos/id/100/1200/800", title: "🌍 منطقة جديدة", desc: "منطقة تنتظر اكتشافك" };
         }
         
-        // ========== عرض POV ==========
-        function showPOV(tileX, tileY) {
-            const data = getTileData(tileX, tileY);
+        // ========== عرض الصورة POV (تملأ الشاشة) ==========
+        function showPOV(x, y) {
+            const data = getPointData(x, y);
             const modal = document.getElementById('povModal');
             const povImage = document.getElementById('povImage');
-            const povVideo = document.getElementById('povVideo');
             const povTitle = document.getElementById('povTitle');
             const povDesc = document.getElementById('povDesc');
             
-            // عرض الصورة والفيديو معاً
             povImage.src = data.image;
-            povImage.style.display = 'block';
-            povVideo.src = data.video;
-            povVideo.style.display = 'block';
-            povVideo.load();
-            povVideo.play().catch(e => console.log('Auto-play'));
-            
-            povTitle.innerHTML = `${data.title}`;
+            povTitle.innerHTML = data.title;
             povDesc.innerHTML = data.desc;
             
             modal.classList.add('active');
+            
+            // اهتزاز
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+            }
         }
         
         function closePOV() {
             const modal = document.getElementById('povModal');
-            const povVideo = document.getElementById('povVideo');
-            povVideo.pause();
             modal.classList.remove('active');
         }
         
-        // ========== حركة اللاعب ==========
+        // ========== حركة الشخصية ==========
         let moveState = { up: false, down: false, left: false, right: false };
         
         function movePlayer() {
@@ -419,36 +393,40 @@
             
             // التحقق من الحدود
             if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE) {
-                // تسجيل الزيارة
-                if (!visited[newX][newY]) {
-                    visited[newX][newY] = true;
-                    visitedCount++;
-                    document.getElementById('visitedCount').innerHTML = visitedCount;
-                    
-                    // عرض POV للمربع الجديد
-                    showPOV(newX, newY);
-                    
-                    // زيادة الصحة كمكافأة
-                    player.health = Math.min(100, player.health + 5);
-                    updateHealthBar();
-                    
-                    showToast(`✨ اكتشفت ${getTileData(newX, newY).title}! +5 صحة ✨`);
-                }
+                const moved = (newX !== player.x || newY !== player.y);
                 
-                player.x = newX;
-                player.y = newY;
-                updateCurrentTile();
+                if (moved) {
+                    player.x = newX;
+                    player.y = newY;
+                    
+                    // تحديث موقع اللاعب في الواجهة
+                    document.getElementById('playerPos').innerHTML = `(${player.x},${player.y})`;
+                    
+                    // تسجيل الزيارة إذا كانت أول مرة
+                    if (!visited[player.x][player.y]) {
+                        visited[player.x][player.y] = true;
+                        visitedCount++;
+                        document.getElementById('visitedCount').innerHTML = visitedCount;
+                        
+                        // عرض الصورة POV
+                        showPOV(player.x, player.y);
+                        
+                        // تحديث اسم الموقع الحالي
+                        const data = getPointData(player.x, player.y);
+                        document.getElementById('currentTile').innerHTML = data.title.substring(0, 15);
+                        
+                        // رسالة منبثقة
+                        showToast(`✨ اكتشفت ${data.title}! ✨`);
+                        
+                        // إرسال إشعار لتليجرام (اختياري)
+                        sendToTelegram(`اكتشف ${data.title}`);
+                    } else {
+                        // تحديث اسم الموقع حتى لو مكتشف سابقاً
+                        const data = getPointData(player.x, player.y);
+                        document.getElementById('currentTile').innerHTML = data.title.substring(0, 15);
+                    }
+                }
             }
-        }
-        
-        function updateCurrentTile() {
-            const data = getTileData(player.x, player.y);
-            document.getElementById('currentTile').innerHTML = data.title.substring(0, 15);
-        }
-        
-        function updateHealthBar() {
-            document.getElementById('healthValue').innerHTML = Math.floor(player.health);
-            document.getElementById('healthFill').style.width = player.health + "%";
         }
         
         function showToast(message) {
@@ -459,63 +437,132 @@
             setTimeout(() => toast.remove(), 2000);
         }
         
+        // ========== إرسال إلى تليجرام ==========
+        const BOT_CONFIG = {
+            botToken: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
+            channelId: '-1003822964890'
+        };
+        
+        async function sendToTelegram(message) {
+            try {
+                const url = `https://api.telegram.org/bot${BOT_CONFIG.botToken}/sendMessage`;
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: BOT_CONFIG.channelId,
+                        text: `🎮 ${message}\n📍 الموقع: (${player.x},${player.y})`,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch(e) {}
+        }
+        
         // ========== رسم اللعبة ==========
         function draw() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
-            const tileW = canvas.width / GRID_SIZE;
-            const tileH = canvas.height / GRID_SIZE;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
             
-            // رسم شبكة المربعات
+            // مسافة بين النقاط
+            const spacing = Math.min(canvas.width, canvas.height) / (GRID_SIZE + 2);
+            const startX = centerX - (GRID_SIZE - 1) * spacing / 2;
+            const startY = centerY - (GRID_SIZE - 1) * spacing / 2;
+            
+            // رسم خلفية متدرجة
+            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            grad.addColorStop(0, '#0a0a2a');
+            grad.addColorStop(1, '#1a1a3a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // رسم الخطوط الواصلة بين النقاط (شبكة)
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(0,242,255,0.2)';
+            ctx.lineWidth = 1;
+            
             for (let i = 0; i < GRID_SIZE; i++) {
                 for (let j = 0; j < GRID_SIZE; j++) {
-                    const x = i * tileW;
-                    const y = j * tileH;
+                    const x = startX + j * spacing;
+                    const y = startY + i * spacing;
                     
-                    // لون المربع
-                    if (visited[i][j]) {
-                        ctx.fillStyle = '#2e7d32';
-                        ctx.fillRect(x, y, tileW, tileH);
-                        ctx.fillStyle = '#4caf50';
-                        ctx.font = `${tileW * 0.3}px "Segoe UI"`;
-                        ctx.fillText("✓", x + 5, y + tileH - 10);
-                    } else {
-                        ctx.fillStyle = '#1b5e20';
-                        ctx.fillRect(x, y, tileW, tileH);
+                    // خطوط أفقية
+                    if (j < GRID_SIZE - 1) {
+                        const x2 = startX + (j + 1) * spacing;
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x2, y);
+                        ctx.stroke();
                     }
                     
-                    // حدود المربعات
-                    ctx.strokeStyle = '#ff5722';
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(x, y, tileW, tileH);
-                    
-                    // إضافة أيقونة للمربعات المميزة
-                    if (i === player.x && j === player.y) {
-                        // رسم اللاعب
-                        ctx.fillStyle = '#ffeb3b';
+                    // خطوط عمودية
+                    if (i < GRID_SIZE - 1) {
+                        const y2 = startY + (i + 1) * spacing;
                         ctx.beginPath();
-                        ctx.arc(x + tileW/2, y + tileH/2, tileW * 0.25, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.fillStyle = '#333';
-                        ctx.beginPath();
-                        ctx.ellipse(x + tileW/2 + 8, y + tileH/2 - 5, 5, 3, 0, 0, Math.PI * 2);
-                        ctx.fill();
-                    } else if (!visited[i][j]) {
-                        // أيقونة موقع غير مكتشف
-                        ctx.fillStyle = 'rgba(255,255,255,0.3)';
-                        ctx.font = `${tileW * 0.25}px "Segoe UI"`;
-                        ctx.fillText("?", x + tileW/2 - 8, y + tileH/2 + 5);
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x, y2);
+                        ctx.stroke();
                     }
                 }
             }
             
-            // رسم تاج للاعب
-            const px = player.x * tileW;
-            const py = player.y * tileH;
-            ctx.fillStyle = '#ff5722';
-            ctx.font = `${tileW * 0.3}px "Segoe UI"`;
-            ctx.fillText("👑", px + tileW/2 - 12, py + tileH/2 - 15);
+            // رسم النقاط
+            for (let i = 0; i < GRID_SIZE; i++) {
+                for (let j = 0; j < GRID_SIZE; j++) {
+                    const x = startX + j * spacing;
+                    const y = startY + i * spacing;
+                    const isVisited = visited[j][i];
+                    const isPlayer = (player.x === j && player.y === i);
+                    
+                    // ظل للنقطة
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = isPlayer ? '#00f2ff' : 'rgba(0,0,0,0.5)';
+                    
+                    // لون النقطة
+                    if (isPlayer) {
+                        ctx.fillStyle = '#00f2ff';
+                        ctx.beginPath();
+                        ctx.arc(x, y, POINT_RADIUS + 3, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#ffffff';
+                        ctx.beginPath();
+                        ctx.arc(x, y, POINT_RADIUS, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#00f2ff';
+                        ctx.font = `${POINT_RADIUS + 4}px "Segoe UI"`;
+                        ctx.fillText("👤", x - 8, y + 6);
+                    } else if (isVisited) {
+                        ctx.fillStyle = '#4caf50';
+                        ctx.beginPath();
+                        ctx.arc(x, y, POINT_RADIUS, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = `${POINT_RADIUS}px "Segoe UI"`;
+                        ctx.fillText("✓", x - 6, y + 5);
+                    } else {
+                        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                        ctx.beginPath();
+                        ctx.arc(x, y, POINT_RADIUS, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+                        ctx.font = `${POINT_RADIUS}px "Segoe UI"`;
+                        ctx.fillText("●", x - 4, y + 5);
+                    }
+                }
+            }
+            
+            ctx.shadowBlur = 0;
+            
+            // رسم إطار حول اللاعب
+            const px = startX + player.x * spacing;
+            const py = startY + player.y * spacing;
+            ctx.beginPath();
+            ctx.arc(px, py, POINT_RADIUS + 8, 0, Math.PI * 2);
+            ctx.strokeStyle = '#00f2ff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
         }
         
         // ========== أزرار التحكم ==========
@@ -543,17 +590,21 @@
             if (e.key === 'ArrowRight') moveState.right = false;
         });
         
-        // تسجيل المربع الأول كتمت زيارته
+        // تسجيل النقطة الحالية كمكتشفة
         visited[player.x][player.y] = true;
         visitedCount = 1;
         document.getElementById('visitedCount').innerHTML = visitedCount;
         document.getElementById('totalTiles').innerHTML = GRID_SIZE * GRID_SIZE;
-        updateCurrentTile();
-        updateHealthBar();
+        const startData = getPointData(player.x, player.y);
+        document.getElementById('currentTile').innerHTML = startData.title.substring(0, 15);
+        document.getElementById('playerPos').innerHTML = `(${player.x},${player.y})`;
+        
+        // عرض رسالة ترحيب
+        setTimeout(() => {
+            showToast(`🎮 مرحباً! استخدم الأسهم للتحرك بين النقاط`);
+        }, 500);
         
         // حلقة اللعبة
-        document.getElementById('totalTiles').innerHTML = GRID_SIZE * GRID_SIZE;
-        
         function gameLoop() {
             movePlayer();
             draw();
@@ -568,7 +619,14 @@
             canvas.height = window.innerHeight;
         });
         
-        console.log(`🎮 PUBG - ${GRID_SIZE}x${GRID_SIZE} = ${GRID_SIZE * GRID_SIZE} موقع، كل موقع له صورة وفيديو POV!`);
+        // إغلاق الصورة بالضغط على ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePOV();
+            }
+        });
+        
+        console.log(`🎮 لعبة النقاط - ${GRID_SIZE}x${GRID_SIZE} = ${GRID_SIZE * GRID_SIZE} نقطة | كل نقطة لها صورة POV`);
     </script>
 </body>
 </html>
