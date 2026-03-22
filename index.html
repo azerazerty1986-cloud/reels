@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PUBG Mobile | شخصية تتحرك + أرضية نقاط + صور POV</title>
+    <title>PUBG | تخزين الشخصية في تليجرام + تطوير الأسلحة</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
@@ -20,7 +20,6 @@
             overflow: hidden;
             font-family: 'Cairo', 'Segoe UI', system-ui, sans-serif;
             background: #000;
-            touch-action: none;
         }
         
         #canvas-container {
@@ -32,7 +31,6 @@
             z-index: 1;
         }
         
-        /* واجهة المستخدم */
         .ui {
             position: fixed;
             top: 10px;
@@ -54,20 +52,25 @@
         
         .player-info {
             color: white;
-            font-size: 11px;
-            font-weight: bold;
+            font-size: 10px;
         }
         
-        .tile-counter {
+        .weapon-level {
             background: #ff5722;
             padding: 4px 12px;
             border-radius: 20px;
             font-weight: bold;
             color: white;
-            font-size: 12px;
+            font-size: 11px;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.2s;
         }
         
-        /* أزرار التحكم - كبيرة وواضحة */
+        .weapon-level:active {
+            transform: scale(0.95);
+        }
+        
         .controls {
             position: fixed;
             bottom: 25px;
@@ -79,15 +82,15 @@
             z-index: 100;
             background: rgba(0,0,0,0.6);
             backdrop-filter: blur(15px);
-            padding: 15px 25px;
+            padding: 12px 25px;
             border-radius: 80px;
             margin: 0 20px;
             pointer-events: auto;
         }
         
         .control-btn {
-            width: 70px;
-            height: 70px;
+            width: 65px;
+            height: 65px;
             background: rgba(255,87,34,0.5);
             border: 3px solid #ff5722;
             border-radius: 50%;
@@ -95,12 +98,9 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 32px;
-            font-weight: bold;
+            font-size: 28px;
             cursor: pointer;
             transition: all 0.05s linear;
-            touch-action: manipulation;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         
         .control-btn:active {
@@ -108,7 +108,6 @@
             transform: scale(0.92);
         }
         
-        /* نافذة الصورة POV */
         .pov-modal {
             position: fixed;
             top: 0;
@@ -136,25 +135,6 @@
             object-fit: contain;
             border-radius: 15px;
             border: 3px solid #ff5722;
-            box-shadow: 0 0 40px rgba(255,87,34,0.5);
-        }
-        
-        .pov-info {
-            position: absolute;
-            bottom: 30px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            background: rgba(0,0,0,0.8);
-            padding: 12px;
-            margin: 0 20px;
-            border-radius: 20px;
-        }
-        
-        .pov-title {
-            font-size: 18px;
-            color: #ff5722;
-            font-weight: bold;
         }
         
         .close-pov {
@@ -172,7 +152,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 201;
         }
         
         .toast {
@@ -184,17 +163,31 @@
             color: #ff5722;
             padding: 8px 16px;
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 11px;
             z-index: 150;
             border: 1px solid #ff5722;
             white-space: nowrap;
-            font-weight: bold;
+        }
+        
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff5722;
+            background: rgba(0,0,0,0.9);
+            padding: 15px 25px;
+            border-radius: 30px;
+            z-index: 300;
+            font-size: 14px;
+            text-align: center;
+            white-space: nowrap;
+            border: 1px solid #ff5722;
         }
         
         @media (max-width: 600px) {
-            .control-btn { width: 60px; height: 60px; font-size: 28px; }
-            .controls { gap: 12px; padding: 10px 20px; }
-            .player-info { font-size: 10px; }
+            .control-btn { width: 55px; height: 55px; font-size: 24px; }
+            .controls { gap: 12px; padding: 10px 18px; }
         }
     </style>
 </head>
@@ -204,16 +197,19 @@
         <div class="player-info">
             🎮 <span id="playerPos">(4,4)</span>
         </div>
-        <div class="tile-counter">
-            🏆 <span id="visitedCount">1</span>/<span id="totalTiles">64</span>
+        <div class="player-info">
+            🏆 <span id="visitedCount">1</span>/64
         </div>
         <div class="player-info">
-            📍 <span id="currentTile">البداية</span>
+            💰 <span id="points">0</span> نقطة
+        </div>
+        <div class="weapon-level" id="upgradeBtn">
+            ⚔️ سيف Lv.<span id="weaponLevel">1</span> ▲
         </div>
     </div>
     
     <div class="controls">
-        <div class="control-btn" id="btnUp" style="background: #ff5722;">▲</div>
+        <div class="control-btn" id="btnUp">▲</div>
         <div class="control-btn" id="btnLeft">◀</div>
         <div class="control-btn" id="btnDown">▼</div>
         <div class="control-btn" id="btnRight">▶</div>
@@ -224,9 +220,6 @@
     <div class="pov-modal" id="povModal">
         <div class="close-pov" onclick="closePOV()">✖</div>
         <img class="pov-image" id="povImage">
-        <div class="pov-info">
-            <div class="pov-title" id="povTitle"></div>
-        </div>
     </div>
 
     <script type="importmap">
@@ -241,82 +234,252 @@
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
         
         // ========== تكامل تليجرام ==========
         const tg = window.Telegram.WebApp;
-        if (tg) {
-            tg.ready();
+        if (tg) { 
+            tg.ready(); 
             tg.expand();
+            console.log("✅ Telegram WebApp initialized");
         }
         
-        // ========== إعدادات العالم ==========
+        // ========== 🔐 بيانات قناة تليجرام (تم إدخالها) ==========
+        const TELEGRAM_CONFIG = {
+            // معرف القناة
+            channelId: '-1003822964890',
+            // توكن البوت
+            botToken: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
+            // روابط الملفات المخزنة في القناة
+            // ملاحظة: هذه روابط تجريبية، ستحتاج إلى رفع ملفات GLB فعلية إلى القناة
+            files: {
+                character: {
+                    level1: 'https://t.me/battle_royale_game/5',
+                    level2: 'https://t.me/battle_royale_game/6',
+                    level3: 'https://t.me/battle_royale_game/7',
+                },
+                weapons: {
+                    level1: 'https://t.me/battle_royale_game/10',
+                    level2: 'https://t.me/battle_royale_game/11',
+                    level3: 'https://t.me/battle_royale_game/12',
+                    level4: 'https://t.me/battle_royale_game/13',
+                    level5: 'https://t.me/battle_royale_game/14',
+                }
+            }
+        };
+        
+        console.log("📢 قناة تليجرام:", TELEGRAM_CONFIG.channelId);
+        console.log("🤖 توكن البوت:", TELEGRAM_CONFIG.botToken.substring(0, 20) + "...");
+        
+        // ========== إرسال إشعار إلى قناة تليجرام ==========
+        async function sendToTelegram(message, parseMode = 'HTML') {
+            try {
+                const url = `https://api.telegram.org/bot${TELEGRAM_CONFIG.botToken}/sendMessage`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CONFIG.channelId,
+                        text: message,
+                        parse_mode: parseMode
+                    })
+                });
+                const result = await response.json();
+                if (result.ok) {
+                    console.log("✅ تم إرسال الإشعار إلى تليجرام");
+                } else {
+                    console.log("⚠️ فشل إرسال الإشعار:", result.description);
+                }
+            } catch(error) {
+                console.log("❌ خطأ في الاتصال بتليجرام:", error);
+            }
+        }
+        
+        // ========== تحويل رابط تليجرام إلى رابط مباشر ==========
+        function getTelegramDirectUrl(telegramUrl) {
+            if (telegramUrl.includes('t.me/')) {
+                const parts = telegramUrl.split('/');
+                const messageId = parts[parts.length - 1];
+                // استخدام API تليجرام للحصول على الرابط المباشر
+                return `https://api.telegram.org/bot${TELEGRAM_CONFIG.botToken}/getFile?file_id=${messageId}`;
+            }
+            return telegramUrl;
+        }
+        
+        // ========== تحميل نموذج GLB من تليجرام ==========
+        async function loadModelFromTelegram(telegramUrl, onProgress) {
+            console.log(`📦 محاولة تحميل من تليجرام: ${telegramUrl}`);
+            
+            return new Promise((resolve, reject) => {
+                const loader = new GLTFLoader();
+                // نحاول التحميل مباشرة من الرابط
+                loader.load(telegramUrl, 
+                    (gltf) => {
+                        console.log(`✅ تم تحميل النموذج بنجاح من تليجرام`);
+                        resolve(gltf.scene);
+                    },
+                    (progress) => {
+                        if (onProgress && progress.total) {
+                            const percent = Math.round((progress.loaded / progress.total) * 100);
+                            console.log(`📥 تحميل: ${percent}%`);
+                            if (onProgress) onProgress(percent);
+                        }
+                    },
+                    (error) => {
+                        console.error(`❌ فشل تحميل النموذج:`, error);
+                        reject(error);
+                    }
+                );
+            });
+        }
+        
+        // ========== حالة اللاعب ==========
+        let playerState = {
+            weaponLevel: 1,
+            characterLevel: 1,
+            points: 0,
+            weaponUrl: TELEGRAM_CONFIG.files.weapons.level1,
+            characterUrl: TELEGRAM_CONFIG.files.character.level1
+        };
+        
+        // ========== إعدادات اللعبة ==========
         const GRID_SIZE = 8;
         const SPACING = 3.2;
         
-        // موقع اللاعب
         let playerGridX = Math.floor(GRID_SIZE / 2);
         let playerGridY = Math.floor(GRID_SIZE / 2);
-        
-        // النقاط التي تمت زيارتها
         let visited = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(false));
         let visitedCount = 1;
         
-        // عناصر Three.js
         let scene, camera, renderer, controls;
-        let playerMesh;
+        let playerGroup;
+        let currentWeapon;
         
-        // حالة الحركة
         let moving = { up: false, down: false, left: false, right: false };
         let lastMoveTime = 0;
-        const MOVE_DELAY = 250; // ميلي ثانية بين كل حركة
+        const MOVE_DELAY = 250;
         
-        // ========== صور POV ==========
-        const titles = [
-            "🏛️ الساحة المركزية", "🌲 غابة الصنوبر", "🏞️ وادي الجداول", "🏔️ قمة الجبل",
-            "🏯 القلعة القديمة", "🌊 شلالات الجبل", "🏖️ شاطئ الجنة", "🌋 فوهة البركان",
-            "🏝️ جزيرة النخيل", "🏜️ صحراء الذهب", "🏘️ القرية التراثية", "🌾 حقول القمح",
-            "⛲ حدائق الزهور", "🎪 ساحة المهرجانات", "🏰 قصر الملوك", "🌌 سماء الليل",
-            "🎋 غابة الخيزران", "❄️ الأنهار الجليدية", "🌈 وادي قوس قزح", "🌋 بحيرة البركان",
-            "🏞️ مضيق الجبال", "🌠 زخة شهب", "🌸 بستان الكرز", "🏯 معبد السلام",
-            "🎨 وادي الفنانين", "🦋 وادي الفراشات", "🍇 كروم العنب", "⛰️ قمة السحاب",
-            "🏕️ مخيم النجوم", "🛶 بحيرة الهدوء", "🏰 قلعة الضباب", "🌿 غابة السرخس",
-            "🌙 وادي القمر", "🎭 مسرح الطبيعة", "🔮 كهف البلور", "🌟 ميدان النجوم",
-            "🏞️ بحيرة المرايا", "🌳 غابة العمالقة", "⛲ نافورة الأحلام", "🏔️ جبل الأمل",
-            "🏜️ واحة النخيل", "🌋 سهل الحمم", "🏝️ شاطئ المرجان", "🌲 غابة الضباب",
-            "🏯 معبد الشمس", "🌾 سهول القمح", "⛰️ وادي الصخور", "🌸 حدائق الساكورا",
-            "🏔️ قمة الجليد", "🌿 مرج الزهور", "🏞️ شلالات القمر", "🏜️ كثبان الرمال",
-            "🌲 غابة الأقزام", "🏰 حصن الحجر", "⛲ نافورة الشباب", "🌟 حقل النجوم",
-            "🏔️ جبل النار", "🌊 خليج الدلافين", "🏞️ محمية الطيور", "🌾 مزرعة الخزامى",
-            "🏯 قلعة الرمال", "🌲 غابة الأضواء", "⛰️ قمة الغروب", "🏆 ميدان البطولة"
-        ];
-        
-        function getImageUrl(x, y) {
-            const id = (x * GRID_SIZE + y) % 100 + 10;
-            return `https://picsum.photos/id/${id}/1000/700`;
-        }
-        
-        function getPointTitle(x, y) {
-            const idx = (x * GRID_SIZE + y) % titles.length;
-            return titles[idx];
-        }
-        
-        // ========== عرض صورة POV ==========
-        function showPOV(x, y) {
-            const title = getPointTitle(x, y);
-            const imageUrl = getImageUrl(x, y);
+        // ========== تحديث السلاح من تليجرام ==========
+        async function upgradeWeapon() {
+            if (playerState.weaponLevel >= 5) {
+                showToast("🔥 السيف في أعلى مستوى!");
+                return;
+            }
             
-            document.getElementById('povImage').src = imageUrl;
-            document.getElementById('povTitle').innerHTML = title;
-            document.getElementById('povModal').classList.add('active');
+            const newLevel = playerState.weaponLevel + 1;
+            const weaponKey = `level${newLevel}`;
+            const newWeaponUrl = TELEGRAM_CONFIG.files.weapons[weaponKey];
             
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            if (newWeaponUrl) {
+                showToast(`⚔️ تطوير السيف إلى المستوى ${newLevel}...`);
+                
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'loading';
+                loadingDiv.innerHTML = `⚔️ تحميل السيف Lv.${newLevel} من تليجرام...`;
+                document.body.appendChild(loadingDiv);
+                
+                try {
+                    const newWeapon = await loadModelFromTelegram(newWeaponUrl);
+                    
+                    if (currentWeapon && playerGroup) {
+                        playerGroup.remove(currentWeapon);
+                    }
+                    
+                    newWeapon.position.set(0.6, 0.5, 0.3);
+                    newWeapon.scale.set(0.8, 0.8, 0.8);
+                    if (playerGroup) playerGroup.add(newWeapon);
+                    currentWeapon = newWeapon;
+                    
+                    playerState.weaponLevel = newLevel;
+                    playerState.weaponUrl = newWeaponUrl;
+                    document.getElementById('weaponLevel').innerHTML = playerState.weaponLevel;
+                    
+                    // إرسال إشعار لتليجرام
+                    const userName = tg?.initDataUnsafe?.user?.first_name || 'مستخدم';
+                    await sendToTelegram(
+                        `🎮 <b>تطوير السلاح!</b>\n` +
+                        `👤 ${userName}\n` +
+                        `⚔️ السيف المستوى ${newLevel}\n` +
+                        `📍 الموقع: (${playerGridX},${playerGridY})\n` +
+                        `🏆 النقاط: ${playerState.points}`
+                    );
+                    
+                    showToast(`✨ السيف مطور! المستوى ${newLevel}`);
+                } catch (error) {
+                    console.error(error);
+                    showToast("❌ فشل تطوير السيف، تأكد من رفع الملفات في القناة");
+                } finally {
+                    loadingDiv.remove();
+                }
+            } else {
+                showToast("❌ لا يوجد ملف لهذا المستوى في القناة");
+            }
         }
         
-        window.closePOV = () => {
-            document.getElementById('povModal').classList.remove('active');
-        };
+        // ========== إنشاء شخصية افتراضية ==========
+        function createFallbackCharacter() {
+            const group = new THREE.Group();
+            
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x4a7a5a });
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.5, 0.9, 8), bodyMat);
+            body.castShadow = true;
+            body.position.y = 0.45;
+            group.add(body);
+            
+            const headMat = new THREE.MeshStandardMaterial({ color: 0xf5c4a0 });
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.38, 16, 16), headMat);
+            head.castShadow = true;
+            head.position.y = 0.95;
+            group.add(head);
+            
+            const helmetMat = new THREE.MeshStandardMaterial({ color: 0x5a6b3a, metalness: 0.6 });
+            const helmet = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.4, 8), helmetMat);
+            helmet.position.y = 1.12;
+            group.add(helmet);
+            
+            const gunMat = new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.7 });
+            const gun = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.12, 0.12), gunMat);
+            gun.position.set(0.55, 0.55, 0.25);
+            group.add(gun);
+            currentWeapon = gun;
+            
+            return group;
+        }
         
-        // ========== تحديث موقع اللاعب ==========
+        // ========== تحميل الشخصية ==========
+        async function loadCharacter() {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'loading';
+            loadingDiv.innerHTML = "🔄 تحميل الشخصية...";
+            document.body.appendChild(loadingDiv);
+            
+            try {
+                // محاولة تحميل الشخصية
+                playerGroup = createFallbackCharacter();
+                scene.add(playerGroup);
+                showToast("✅ الشخصية جاهزة!");
+                
+                // محاولة تحميل السلاح
+                const weaponModel = await loadModelFromTelegram(playerState.weaponUrl);
+                weaponModel.position.set(0.6, 0.5, 0.3);
+                weaponModel.scale.set(0.8, 0.8, 0.8);
+                if (currentWeapon) playerGroup.remove(currentWeapon);
+                playerGroup.add(weaponModel);
+                currentWeapon = weaponModel;
+                showToast("⚔️ تم تحميل السلاح!");
+            } catch (error) {
+                console.warn("فشل تحميل النموذج، استخدام النموذج الافتراضي", error);
+                if (!playerGroup) {
+                    playerGroup = createFallbackCharacter();
+                    scene.add(playerGroup);
+                }
+                showToast("⚠️ استخدام النموذج الافتراضي");
+            } finally {
+                loadingDiv.remove();
+            }
+        }
+        
+        // ========== حركة اللاعب ==========
         function movePlayer(dx, dy) {
             const newX = playerGridX + dx;
             const newY = playerGridY + dy;
@@ -325,32 +488,53 @@
                 playerGridX = newX;
                 playerGridY = newY;
                 
-                // تحديث موقع الشخصية 3D
                 const targetX = (playerGridX - GRID_SIZE/2) * SPACING;
                 const targetZ = (playerGridY - GRID_SIZE/2) * SPACING;
                 
-                if (playerMesh) {
-                    playerMesh.position.set(targetX, 0.2, targetZ);
-                    controls.target.set(targetX, 0.6, targetZ);
+                if (playerGroup) {
+                    playerGroup.position.lerp(new THREE.Vector3(targetX, 0.2, targetZ), 0.3);
+                    controls.target.lerp(new THREE.Vector3(targetX, 0.6, targetZ), 0.2);
                 }
                 
-                // تحديث واجهة المستخدم
                 document.getElementById('playerPos').innerHTML = `(${playerGridX},${playerGridY})`;
-                const title = getPointTitle(playerGridX, playerGridY);
-                document.getElementById('currentTile').innerHTML = title.substring(0, 14);
                 
-                // تسجيل الزيارة
                 if (!visited[playerGridX][playerGridY]) {
                     visited[playerGridX][playerGridY] = true;
                     visitedCount++;
+                    playerState.points += 10;
                     document.getElementById('visitedCount').innerHTML = visitedCount;
+                    document.getElementById('points').innerHTML = playerState.points;
                     showPOV(playerGridX, playerGridY);
+                    showToast(`✨ +10 نقاط! ✨`);
                     
-                    // رسالة منبثقة
-                    showToast(`✨ اكتشفت ${title}! ✨`);
+                    // إرسال إشعار بالاكتشاف
+                    const title = getPointTitle(playerGridX, playerGridY);
+                    sendToTelegram(
+                        `🎮 <b>اكتشاف جديد!</b>\n` +
+                        `📍 ${title}\n` +
+                        `🗺️ (${playerGridX},${playerGridY})\n` +
+                        `🏆 التقدم: ${visitedCount}/64`
+                    );
                 }
             }
         }
+        
+        function getPointTitle(x, y) {
+            const titles = [
+                "الساحة المركزية", "غابة الصنوبر", "وادي الجداول", "قمة الجبل",
+                "القلعة القديمة", "شلالات الجبل", "شاطئ الجنة", "فوهة البركان"
+            ];
+            return titles[(x * GRID_SIZE + y) % titles.length];
+        }
+        
+        function showPOV(x, y) {
+            const imgId = (x * GRID_SIZE + y) % 100 + 10;
+            document.getElementById('povImage').src = `https://picsum.photos/id/${imgId}/1000/700`;
+            document.getElementById('povModal').classList.add('active');
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        }
+        
+        window.closePOV = () => document.getElementById('povModal').classList.remove('active');
         
         function showToast(msg) {
             const toast = document.createElement('div');
@@ -358,26 +542,6 @@
             toast.innerHTML = msg;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2000);
-        }
-        
-        // ========== معالجة الحركة ==========
-        function processMovement() {
-            const now = Date.now();
-            if (now - lastMoveTime < MOVE_DELAY) return;
-            
-            if (moving.up) {
-                movePlayer(0, -1);
-                lastMoveTime = now;
-            } else if (moving.down) {
-                movePlayer(0, 1);
-                lastMoveTime = now;
-            } else if (moving.left) {
-                movePlayer(-1, 0);
-                lastMoveTime = now;
-            } else if (moving.right) {
-                movePlayer(1, 0);
-                lastMoveTime = now;
-            }
         }
         
         // ========== إنشاء العالم 3D ==========
@@ -396,16 +560,14 @@
             renderer.shadowMap.enabled = true;
             container.appendChild(renderer.domElement);
             
-            // الإضاءة
+            // إضاءة
             const sunLight = new THREE.DirectionalLight(0xfff5d1, 1.2);
             sunLight.position.set(10, 20, 5);
             sunLight.castShadow = true;
             scene.add(sunLight);
+            scene.add(new THREE.AmbientLight(0x404060, 0.6));
             
-            const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
-            scene.add(ambientLight);
-            
-            // الأرضية
+            // أرضية
             const groundGeo = new THREE.PlaneGeometry(30, 30);
             const groundMat = new THREE.MeshStandardMaterial({ color: 0x3a6b3a, roughness: 0.8 });
             const ground = new THREE.Mesh(groundGeo, groundMat);
@@ -419,88 +581,31 @@
             gridHelper.position.y = 0;
             scene.add(gridHelper);
             
-            // إنشاء النقاط
+            // نقاط
             for (let i = 0; i < GRID_SIZE; i++) {
                 for (let j = 0; j < GRID_SIZE; j++) {
                     const x = (i - GRID_SIZE/2) * SPACING;
                     const z = (j - GRID_SIZE/2) * SPACING;
                     
-                    // قاعدة
-                    const baseMat = new THREE.MeshStandardMaterial({ color: 0xcc8844 });
-                    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.55, 0.15, 8), baseMat);
+                    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.55, 0.15, 8), new THREE.MeshStandardMaterial({ color: 0xcc8844 }));
                     base.position.set(x, 0, z);
-                    base.castShadow = true;
                     scene.add(base);
                     
-                    // العمود
-                    const pillarMat = new THREE.MeshStandardMaterial({ color: 0x88aaff, emissive: 0x224466 });
-                    const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 0.7, 6), pillarMat);
+                    const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 0.7, 6), new THREE.MeshStandardMaterial({ color: 0x88aaff, emissive: 0x224466 }));
                     pillar.position.set(x, 0.4, z);
-                    pillar.castShadow = true;
                     scene.add(pillar);
                     
-                    // الكرة
-                    const orbMat = new THREE.MeshStandardMaterial({ color: 0xffaa66, emissive: 0xff4422 });
-                    const orb = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), orbMat);
+                    const orb = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), new THREE.MeshStandardMaterial({ color: 0xffaa66, emissive: 0xff4422 }));
                     orb.position.set(x, 0.8, z);
                     scene.add(orb);
                 }
             }
             
-            // ========== شخصية بوبجي ==========
-            const character = new THREE.Group();
-            
-            // الجسم
-            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.5, 0.9, 8), new THREE.MeshStandardMaterial({ color: 0x4a7a5a }));
-            body.castShadow = true;
-            body.position.y = 0.45;
-            character.add(body);
-            
-            // الرأس
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.38, 16, 16), new THREE.MeshStandardMaterial({ color: 0xf5c4a0 }));
-            head.castShadow = true;
-            head.position.y = 0.95;
-            character.add(head);
-            
-            // خوذة
-            const helmet = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.4, 8), new THREE.MeshStandardMaterial({ color: 0x5a6b3a, metalness: 0.6 }));
-            helmet.position.y = 1.12;
-            helmet.castShadow = true;
-            character.add(helmet);
-            
-            // سلاح
-            const gun = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.12, 0.12), new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.7 }));
-            gun.position.set(0.55, 0.55, 0.25);
-            gun.castShadow = true;
-            character.add(gun);
-            
-            // حقيبة
-            const bag = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.65, 0.35), new THREE.MeshStandardMaterial({ color: 0x5d3a1a }));
-            bag.position.set(-0.4, 0.5, -0.3);
-            bag.castShadow = true;
-            character.add(bag);
-            
-            character.position.set(0, 0, 0);
-            character.castShadow = true;
-            scene.add(character);
-            playerMesh = character;
-            
-            // التحكم
             controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.07;
-            controls.rotateSpeed = 1.0;
-            controls.zoomSpeed = 0.8;
             controls.target.set(0, 0.6, 0);
             
-            // تحديث موقع البداية
-            const startX = (playerGridX - GRID_SIZE/2) * SPACING;
-            const startZ = (playerGridY - GRID_SIZE/2) * SPACING;
-            character.position.set(startX, 0.2, startZ);
-            controls.target.set(startX, 0.6, startZ);
-            camera.position.set(startX + 8, 6, startZ + 8);
-            
-            // حلقة الرسم
             function animate() {
                 requestAnimationFrame(animate);
                 controls.update();
@@ -509,68 +614,86 @@
             animate();
         }
         
-        // ========== إعداد أزرار التحكم ==========
+        // ========== معالجة الحركة ==========
+        function processMovement() {
+            const now = Date.now();
+            if (now - lastMoveTime < MOVE_DELAY) return;
+            
+            if (moving.up) { movePlayer(0, -1); lastMoveTime = now; }
+            else if (moving.down) { movePlayer(0, 1); lastMoveTime = now; }
+            else if (moving.left) { movePlayer(-1, 0); lastMoveTime = now; }
+            else if (moving.right) { movePlayer(1, 0); lastMoveTime = now; }
+        }
+        
+        // ========== إعداد الأزرار ==========
         function setupControls() {
-            const btnUp = document.getElementById('btnUp');
-            const btnDown = document.getElementById('btnDown');
-            const btnLeft = document.getElementById('btnLeft');
-            const btnRight = document.getElementById('btnRight');
+            const btns = {
+                up: document.getElementById('btnUp'), down: document.getElementById('btnDown'),
+                left: document.getElementById('btnLeft'), right: document.getElementById('btnRight')
+            };
             
-            // أحداث اللمس
-            btnUp.addEventListener('touchstart', (e) => { e.preventDefault(); moving.up = true; moving.down = false; moving.left = false; moving.right = false; });
-            btnUp.addEventListener('touchend', () => { moving.up = false; });
-            btnUp.addEventListener('mousedown', () => { moving.up = true; moving.down = false; moving.left = false; moving.right = false; });
-            btnUp.addEventListener('mouseup', () => { moving.up = false; });
+            const setMove = (dir, active) => {
+                moving.up = false; moving.down = false; moving.left = false; moving.right = false;
+                if (active) moving[dir] = true;
+            };
             
-            btnDown.addEventListener('touchstart', (e) => { e.preventDefault(); moving.down = true; moving.up = false; moving.left = false; moving.right = false; });
-            btnDown.addEventListener('touchend', () => { moving.down = false; });
-            btnDown.addEventListener('mousedown', () => { moving.down = true; moving.up = false; moving.left = false; moving.right = false; });
-            btnDown.addEventListener('mouseup', () => { moving.down = false; });
+            btns.up.addEventListener('touchstart', (e) => { e.preventDefault(); setMove('up', true); });
+            btns.up.addEventListener('touchend', () => setMove('up', false));
+            btns.up.addEventListener('mousedown', () => setMove('up', true));
+            btns.up.addEventListener('mouseup', () => setMove('up', false));
             
-            btnLeft.addEventListener('touchstart', (e) => { e.preventDefault(); moving.left = true; moving.up = false; moving.down = false; moving.right = false; });
-            btnLeft.addEventListener('touchend', () => { moving.left = false; });
-            btnLeft.addEventListener('mousedown', () => { moving.left = true; moving.up = false; moving.down = false; moving.right = false; });
-            btnLeft.addEventListener('mouseup', () => { moving.left = false; });
+            btns.down.addEventListener('touchstart', (e) => { e.preventDefault(); setMove('down', true); });
+            btns.down.addEventListener('touchend', () => setMove('down', false));
+            btns.down.addEventListener('mousedown', () => setMove('down', true));
+            btns.down.addEventListener('mouseup', () => setMove('down', false));
             
-            btnRight.addEventListener('touchstart', (e) => { e.preventDefault(); moving.right = true; moving.up = false; moving.down = false; moving.left = false; });
-            btnRight.addEventListener('touchend', () => { moving.right = false; });
-            btnRight.addEventListener('mousedown', () => { moving.right = true; moving.up = false; moving.down = false; moving.left = false; });
-            btnRight.addEventListener('mouseup', () => { moving.right = false; });
+            btns.left.addEventListener('touchstart', (e) => { e.preventDefault(); setMove('left', true); });
+            btns.left.addEventListener('touchend', () => setMove('left', false));
+            btns.left.addEventListener('mousedown', () => setMove('left', true));
+            btns.left.addEventListener('mouseup', () => setMove('left', false));
             
-            // لوحة المفاتيح
+            btns.right.addEventListener('touchstart', (e) => { e.preventDefault(); setMove('right', true); });
+            btns.right.addEventListener('touchend', () => setMove('right', false));
+            btns.right.addEventListener('mousedown', () => setMove('right', true));
+            btns.right.addEventListener('mouseup', () => setMove('right', false));
+            
             window.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowUp') { moving.up = true; moving.down = false; moving.left = false; moving.right = false; e.preventDefault(); }
-                if (e.key === 'ArrowDown') { moving.down = true; moving.up = false; moving.left = false; moving.right = false; e.preventDefault(); }
-                if (e.key === 'ArrowLeft') { moving.left = true; moving.up = false; moving.down = false; moving.right = false; e.preventDefault(); }
-                if (e.key === 'ArrowRight') { moving.right = true; moving.up = false; moving.down = false; moving.left = false; e.preventDefault(); }
+                if (e.key === 'ArrowUp') setMove('up', true);
+                if (e.key === 'ArrowDown') setMove('down', true);
+                if (e.key === 'ArrowLeft') setMove('left', true);
+                if (e.key === 'ArrowRight') setMove('right', true);
+                e.preventDefault();
             });
-            window.addEventListener('keyup', (e) => {
-                if (e.key === 'ArrowUp') moving.up = false;
-                if (e.key === 'ArrowDown') moving.down = false;
-                if (e.key === 'ArrowLeft') moving.left = false;
-                if (e.key === 'ArrowRight') moving.right = false;
-            });
+            window.addEventListener('keyup', () => { moving.up = false; moving.down = false; moving.left = false; moving.right = false; });
+            
+            document.getElementById('upgradeBtn').addEventListener('click', upgradeWeapon);
         }
         
         // ========== بدء اللعبة ==========
         visited[playerGridX][playerGridY] = true;
         document.getElementById('visitedCount').innerHTML = visitedCount;
-        document.getElementById('totalTiles').innerHTML = GRID_SIZE * GRID_SIZE;
-        document.getElementById('playerPos').innerHTML = `(${playerGridX},${playerGridY})`;
-        document.getElementById('currentTile').innerHTML = getPointTitle(playerGridX, playerGridY).substring(0, 14);
+        document.getElementById('weaponLevel').innerHTML = playerState.weaponLevel;
+        document.getElementById('points').innerHTML = playerState.points;
         
         init3D();
         setupControls();
-        
-        // حلقة الحركة
         setInterval(processMovement, 150);
+        loadCharacter();
         
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closePOV();
-        });
+        // إرسال رسالة ترحيب إلى تليجرام
+        setTimeout(() => {
+            const userName = tg?.initDataUnsafe?.user?.first_name || 'زائر';
+            sendToTelegram(
+                `🎮 <b>دخول جديد إلى اللعبة!</b>\n` +
+                `👤 ${userName}\n` +
+                `🆔 ${tg?.initDataUnsafe?.user?.id || 'guest'}\n` +
+                `🗺️ بدأ رحلة استكشاف الـ 64 موقع`
+            );
+        }, 1000);
         
-        console.log('🎮 PUBG Mobile - شخصية تتحرك بالأزرار!');
-        console.log(`📍 الموقع الحالي: (${playerGridX},${playerGridY})`);
+        console.log("🎮 PUBG - تخزين الشخصية في تليجرام!");
+        console.log(`📢 قناة تليجرام: ${TELEGRAM_CONFIG.channelId}`);
+        console.log(`🤖 البوت يعمل: ${TELEGRAM_CONFIG.botToken.substring(0, 15)}...`);
     </script>
 </body>
 </html>
