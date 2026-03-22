@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PUBG Style | شخصية 3D + نقاط + صور POV</title>
+    <title>PUBG Mobile | أرضية 3D + شخصية + نقاط + صور POV</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
@@ -13,12 +13,14 @@
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
             overflow: hidden;
             font-family: 'Cairo', 'Segoe UI', system-ui, sans-serif;
             background: #000;
+            touch-action: none;
         }
         
         /* حاوية Three.js */
@@ -34,72 +36,73 @@
         /* واجهة المستخدم */
         .ui {
             position: fixed;
-            top: 15px;
-            left: 15px;
-            right: 15px;
+            top: 10px;
+            left: 10px;
+            right: 10px;
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 10px 15px;
+            border-radius: 15px;
+            padding: 8px 12px;
             z-index: 50;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 5px;
             border: 1px solid #ff5722;
             pointer-events: none;
         }
         
         .player-info {
             color: white;
-            font-size: 12px;
+            font-size: 10px;
         }
         
         .tile-counter {
             background: #ff5722;
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 20px;
             font-weight: bold;
             color: white;
-            font-size: 12px;
+            font-size: 11px;
         }
         
         /* أزرار التحكم للهواتف */
         .controls {
             position: fixed;
-            bottom: 30px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 20px;
+            gap: 12px;
             z-index: 50;
             background: rgba(0,0,0,0.7);
             backdrop-filter: blur(10px);
-            padding: 12px 25px;
+            padding: 10px 20px;
             border-radius: 60px;
             pointer-events: auto;
         }
         
         .control-btn {
-            width: 65px;
-            height: 65px;
-            background: rgba(255,87,34,0.3);
+            width: 55px;
+            height: 55px;
+            background: rgba(255,87,34,0.4);
             border: 2px solid #ff5722;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.1s;
+            touch-action: manipulation;
         }
         
         .control-btn:active {
             background: #ff5722;
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
         
         /* نافذة الصورة POV */
@@ -116,7 +119,7 @@
             justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.5s ease;
+            transition: all 0.4s ease;
         }
         
         .pov-modal.active {
@@ -126,66 +129,75 @@
         
         .pov-image {
             max-width: 95%;
-            max-height: 85%;
+            max-height: 80%;
             object-fit: contain;
-            border-radius: 20px;
+            border-radius: 15px;
             border: 3px solid #ff5722;
-            box-shadow: 0 0 50px rgba(255,87,34,0.5);
+            box-shadow: 0 0 40px rgba(255,87,34,0.5);
         }
         
         .pov-info {
             position: absolute;
-            bottom: 50px;
+            bottom: 30px;
             left: 0;
             right: 0;
             text-align: center;
-            background: rgba(0,0,0,0.7);
-            padding: 15px;
+            background: rgba(0,0,0,0.8);
+            padding: 12px;
             margin: 0 20px;
             border-radius: 20px;
             backdrop-filter: blur(10px);
         }
         
         .pov-title {
-            font-size: 24px;
+            font-size: 18px;
             color: #ff5722;
+            font-weight: bold;
+        }
+        
+        .pov-desc {
+            font-size: 11px;
+            color: #ccc;
+            margin-top: 5px;
         }
         
         .close-pov {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             background: rgba(0,0,0,0.7);
             border: 1px solid #ff5722;
             color: white;
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 201;
         }
         
         .toast {
             position: fixed;
-            bottom: 120px;
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.9);
             color: #ff5722;
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 11px;
             z-index: 150;
             border: 1px solid #ff5722;
+            white-space: nowrap;
         }
         
         @media (max-width: 600px) {
-            .controls { gap: 12px; padding: 8px 18px; }
-            .control-btn { width: 55px; height: 55px; font-size: 22px; }
-            .pov-title { font-size: 18px; }
+            .control-btn { width: 50px; height: 50px; font-size: 20px; }
+            .ui { padding: 6px 10px; }
+            .player-info { font-size: 9px; }
         }
     </style>
 </head>
@@ -193,10 +205,10 @@
 
     <div class="ui">
         <div class="player-info">
-            🎮 <span id="playerPos">(0,0)</span>
+            🎮 <span id="playerPos">(4,4)</span>
         </div>
         <div class="tile-counter">
-            🏆 <span id="visitedCount">0</span>/<span id="totalTiles">64</span>
+            🏆 <span id="visitedCount">1</span>/<span id="totalTiles">64</span>
         </div>
         <div class="player-info">
             📍 <span id="currentTile">البداية</span>
@@ -217,7 +229,7 @@
         <img class="pov-image" id="povImage">
         <div class="pov-info">
             <div class="pov-title" id="povTitle"></div>
-            <div id="povDesc"></div>
+            <div class="pov-desc" id="povDesc"></div>
         </div>
     </div>
 
@@ -236,58 +248,62 @@
         
         // ========== تكامل تليجرام ==========
         const tg = window.Telegram.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
         
         // ========== إعدادات العالم ==========
-        const GRID_SIZE = 8;
-        const POINT_SPACING = 4.5;
-        
-        // مواقع النقاط في العالم 3D
-        const points = [];
-        let visited = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(false));
-        let visitedCount = 0;
+        const GRID_SIZE = 8;  // 8x8 = 64 نقطة
+        const SPACING = 3.5;   // المسافة بين النقاط
         
         // موقع اللاعب
-        let playerPos = { x: Math.floor(GRID_SIZE/2), y: Math.floor(GRID_SIZE/2) };
-        let playerMesh;
+        let playerGridX = Math.floor(GRID_SIZE / 2);
+        let playerGridY = Math.floor(GRID_SIZE / 2);
+        
+        // النقاط التي تمت زيارتها
+        let visited = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(false));
+        let visitedCount = 1;
+        
+        // عناصر Three.js
         let scene, camera, renderer, controls;
+        let playerMesh;
+        let pointsMeshes = [];
         
-        // ========== صور POV لكل نقطة ==========
-        const pointsData = {};
-        
-        // إنشاء 64 صورة مختلفة
-        const imagesList = [
-            "https://picsum.photos/id/104/1200/800", "https://picsum.photos/id/15/1200/800",
-            "https://picsum.photos/id/96/1200/800", "https://picsum.photos/id/29/1200/800",
-            "https://picsum.photos/id/91/1200/800", "https://picsum.photos/id/43/1200/800",
-            "https://picsum.photos/id/116/1200/800", "https://picsum.photos/id/112/1200/800",
-            "https://picsum.photos/id/48/1200/800", "https://picsum.photos/id/126/1200/800",
-            "https://picsum.photos/id/17/1200/800", "https://picsum.photos/id/13/1200/800",
-            "https://picsum.photos/id/30/1200/800", "https://picsum.photos/id/59/1200/800",
-            "https://picsum.photos/id/107/1200/800", "https://picsum.photos/id/118/1200/800",
-            "https://picsum.photos/id/20/1200/800", "https://picsum.photos/id/23/1200/800",
-            "https://picsum.photos/id/44/1200/800", "https://picsum.photos/id/76/1200/800",
-            "https://picsum.photos/id/38/1200/800", "https://picsum.photos/id/67/1200/800",
-            "https://picsum.photos/id/53/1200/800", "https://picsum.photos/id/93/1200/800",
-            "https://picsum.photos/id/12/1200/800", "https://picsum.photos/id/22/1200/800",
-            "https://picsum.photos/id/34/1200/800", "https://picsum.photos/id/42/1200/800",
-            "https://picsum.photos/id/45/1200/800", "https://picsum.photos/id/55/1200/800",
-            "https://picsum.photos/id/60/1200/800", "https://picsum.photos/id/68/1200/800",
-            "https://picsum.photos/id/73/1200/800", "https://picsum.photos/id/77/1200/800",
-            "https://picsum.photos/id/80/1200/800", "https://picsum.photos/id/85/1200/800",
-            "https://picsum.photos/id/88/1200/800", "https://picsum.photos/id/92/1200/800",
-            "https://picsum.photos/id/95/1200/800", "https://picsum.photos/id/98/1200/800",
-            "https://picsum.photos/id/100/1200/800", "https://picsum.photos/id/103/1200/800",
-            "https://picsum.photos/id/108/1200/800", "https://picsum.photos/id/110/1200/800",
-            "https://picsum.photos/id/113/1200/800", "https://picsum.photos/id/115/1200/800",
-            "https://picsum.photos/id/119/1200/800", "https://picsum.photos/id/120/1200/800",
-            "https://picsum.photos/id/122/1200/800", "https://picsum.photos/id/124/1200/800",
-            "https://picsum.photos/id/127/1200/800", "https://picsum.photos/id/129/1200/800",
-            "https://picsum.photos/id/131/1200/800", "https://picsum.photos/id/133/1200/800",
-            "https://picsum.photos/id/135/1200/800", "https://picsum.photos/id/137/1200/800",
-            "https://picsum.photos/id/139/1200/800", "https://picsum.photos/id/141/1200/800",
-            "https://picsum.photos/id/143/1200/800", "https://picsum.photos/id/145/1200/800",
-            "https://picsum.photos/id/147/1200/800", "https://picsum.photos/id/149/1200/800",
-            "https://picsum.photos/id/150/1200/800", "https://picsum.photos/id/151/1200/800"
+        // ========== صور POV لكل نقطة (64 صورة مختلفة) ==========
+        const imageUrls = [
+            "https://picsum.photos/id/104/1000/700", "https://picsum.photos/id/15/1000/700",
+            "https://picsum.photos/id/96/1000/700", "https://picsum.photos/id/29/1000/700",
+            "https://picsum.photos/id/91/1000/700", "https://picsum.photos/id/43/1000/700",
+            "https://picsum.photos/id/116/1000/700", "https://picsum.photos/id/112/1000/700",
+            "https://picsum.photos/id/48/1000/700", "https://picsum.photos/id/126/1000/700",
+            "https://picsum.photos/id/17/1000/700", "https://picsum.photos/id/13/1000/700",
+            "https://picsum.photos/id/30/1000/700", "https://picsum.photos/id/59/1000/700",
+            "https://picsum.photos/id/107/1000/700", "https://picsum.photos/id/118/1000/700",
+            "https://picsum.photos/id/20/1000/700", "https://picsum.photos/id/23/1000/700",
+            "https://picsum.photos/id/44/1000/700", "https://picsum.photos/id/76/1000/700",
+            "https://picsum.photos/id/38/1000/700", "https://picsum.photos/id/67/1000/700",
+            "https://picsum.photos/id/53/1000/700", "https://picsum.photos/id/93/1000/700",
+            "https://picsum.photos/id/12/1000/700", "https://picsum.photos/id/22/1000/700",
+            "https://picsum.photos/id/34/1000/700", "https://picsum.photos/id/42/1000/700",
+            "https://picsum.photos/id/45/1000/700", "https://picsum.photos/id/55/1000/700",
+            "https://picsum.photos/id/60/1000/700", "https://picsum.photos/id/68/1000/700",
+            "https://picsum.photos/id/73/1000/700", "https://picsum.photos/id/77/1000/700",
+            "https://picsum.photos/id/80/1000/700", "https://picsum.photos/id/85/1000/700",
+            "https://picsum.photos/id/88/1000/700", "https://picsum.photos/id/92/1000/700",
+            "https://picsum.photos/id/95/1000/700", "https://picsum.photos/id/98/1000/700",
+            "https://picsum.photos/id/100/1000/700", "https://picsum.photos/id/103/1000/700",
+            "https://picsum.photos/id/108/1000/700", "https://picsum.photos/id/110/1000/700",
+            "https://picsum.photos/id/113/1000/700", "https://picsum.photos/id/115/1000/700",
+            "https://picsum.photos/id/119/1000/700", "https://picsum.photos/id/120/1000/700",
+            "https://picsum.photos/id/122/1000/700", "https://picsum.photos/id/124/1000/700",
+            "https://picsum.photos/id/127/1000/700", "https://picsum.photos/id/129/1000/700",
+            "https://picsum.photos/id/131/1000/700", "https://picsum.photos/id/133/1000/700",
+            "https://picsum.photos/id/135/1000/700", "https://picsum.photos/id/137/1000/700",
+            "https://picsum.photos/id/139/1000/700", "https://picsum.photos/id/141/1000/700",
+            "https://picsum.photos/id/143/1000/700", "https://picsum.photos/id/145/1000/700",
+            "https://picsum.photos/id/147/1000/700", "https://picsum.photos/id/149/1000/700",
+            "https://picsum.photos/id/150/1000/700", "https://picsum.photos/id/151/1000/700"
         ];
         
         const titles = [
@@ -309,23 +325,16 @@
             "🏯 قلعة الرمال", "🌲 غابة الأضواء", "⛰️ قمة الغروب", "🏆 ميدان البطولة"
         ];
         
-        // تعبئة البيانات
-        for (let i = 0; i < GRID_SIZE; i++) {
-            for (let j = 0; j < GRID_SIZE; j++) {
-                const idx = i * GRID_SIZE + j;
-                pointsData[`${i},${j}`] = {
-                    image: imagesList[idx % imagesList.length],
-                    title: titles[idx % titles.length],
-                    desc: "منظر طبيعي خلاب يستحق الاستكشاف"
-                };
-            }
-        }
-        
         function getPointData(x, y) {
-            return pointsData[`${x},${y}`] || { image: imagesList[0], title: "🌍 منطقة جديدة", desc: "اكتشف هذا المكان" };
+            const idx = (x * GRID_SIZE + y) % imageUrls.length;
+            return {
+                image: imageUrls[idx],
+                title: titles[idx],
+                desc: "منظر طبيعي خلاب يستحق الاستكشاف"
+            };
         }
         
-        // ========== عرض POV ==========
+        // ========== عرض صورة POV ==========
         function showPOV(x, y) {
             const data = getPointData(x, y);
             document.getElementById('povImage').src = data.image;
@@ -341,36 +350,42 @@
         };
         
         // ========== تحديث موقع اللاعب ==========
-        function updatePlayerPosition(dx, dy) {
-            const newX = playerPos.x + dx;
-            const newY = playerPos.y + dy;
+        function movePlayer(dx, dy) {
+            const newX = playerGridX + dx;
+            const newY = playerGridY + dy;
             
             if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE) {
-                playerPos.x = newX;
-                playerPos.y = newY;
+                playerGridX = newX;
+                playerGridY = newY;
                 
                 // تحديث موقع الشخصية 3D
-                const targetX = (playerPos.x - GRID_SIZE/2) * POINT_SPACING;
-                const targetZ = (playerPos.y - GRID_SIZE/2) * POINT_SPACING;
+                const targetX = (playerGridX - GRID_SIZE/2) * SPACING;
+                const targetZ = (playerGridY - GRID_SIZE/2) * SPACING;
                 
-                // حركة سلسة للشخصية
                 if (playerMesh) {
-                    playerMesh.position.lerp(new THREE.Vector3(targetX, 0.5, targetZ), 0.3);
-                    // تدوير الكاميرا مع الشخصية
-                    controls.target.lerp(new THREE.Vector3(targetX, 0.5, targetZ), 0.1);
+                    playerMesh.position.lerp(new THREE.Vector3(targetX, 0.4, targetZ), 0.3);
+                    controls.target.lerp(new THREE.Vector3(targetX, 0.5, targetZ), 0.2);
                 }
                 
                 // تحديث واجهة المستخدم
-                document.getElementById('playerPos').innerHTML = `(${playerPos.x},${playerPos.y})`;
-                const data = getPointData(playerPos.x, playerPos.y);
+                document.getElementById('playerPos').innerHTML = `(${playerGridX},${playerGridY})`;
+                const data = getPointData(playerGridX, playerGridY);
                 document.getElementById('currentTile').innerHTML = data.title.substring(0, 12);
                 
                 // تسجيل الزيارة
-                if (!visited[playerPos.x][playerPos.y]) {
-                    visited[playerPos.x][playerPos.y] = true;
+                if (!visited[playerGridX][playerGridY]) {
+                    visited[playerGridX][playerGridY] = true;
                     visitedCount++;
                     document.getElementById('visitedCount').innerHTML = visitedCount;
-                    showPOV(playerPos.x, playerPos.y);
+                    showPOV(playerGridX, playerGridY);
+                    
+                    // تأثير على النقطة
+                    const idx = playerGridX * GRID_SIZE + playerGridY;
+                    if (pointsMeshes[idx]) {
+                        pointsMeshes[idx].material.color.setHex(0x4caf50);
+                        pointsMeshes[idx].material.emissiveIntensity = 0.3;
+                    }
+                    
                     showToast(`✨ اكتشفت ${data.title}! ✨`);
                 }
             }
@@ -387,11 +402,12 @@
         // ========== إنشاء العالم 3D ==========
         function init3D() {
             const container = document.getElementById('canvas-container');
+            
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x0a1030);
-            scene.fog = new THREE.FogExp2(0x0a1030, 0.008);
+            scene.fog = new THREE.FogExp2(0x0a1030, 0.01);
             
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
             camera.position.set(12, 8, 12);
             
             renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -399,120 +415,161 @@
             renderer.shadowMap.enabled = true;
             container.appendChild(renderer.domElement);
             
-            // إضاءة
+            // الإضاءة
             const sunLight = new THREE.DirectionalLight(0xfff5d1, 1.2);
             sunLight.position.set(10, 20, 5);
             sunLight.castShadow = true;
             scene.add(sunLight);
-            scene.add(new THREE.AmbientLight(0x404060, 0.6));
             
-            // أرضية
-            const groundGeo = new THREE.PlaneGeometry(45, 45);
+            const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
+            scene.add(ambientLight);
+            
+            const fillLight = new THREE.PointLight(0x6688aa, 0.3);
+            fillLight.position.set(-5, 8, -5);
+            scene.add(fillLight);
+            
+            // الأرضية
+            const groundGeo = new THREE.PlaneGeometry(32, 32);
             const groundMat = new THREE.MeshStandardMaterial({ color: 0x3a6b3a, roughness: 0.8 });
             const ground = new THREE.Mesh(groundGeo, groundMat);
             ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.1;
             ground.receiveShadow = true;
             scene.add(ground);
             
             // شبكة مساعدة
-            const gridHelper = new THREE.GridHelper(44, 20, 0x88aa88, 0x446644);
-            gridHelper.position.y = 0.05;
+            const gridHelper = new THREE.GridHelper(30, 20, 0x88aa88, 0x446644);
+            gridHelper.position.y = 0;
             scene.add(gridHelper);
             
             // إنشاء النقاط (أعمدة ضوئية)
             for (let i = 0; i < GRID_SIZE; i++) {
                 for (let j = 0; j < GRID_SIZE; j++) {
-                    const x = (i - GRID_SIZE/2) * POINT_SPACING;
-                    const z = (j - GRID_SIZE/2) * POINT_SPACING;
+                    const x = (i - GRID_SIZE/2) * SPACING;
+                    const z = (j - GRID_SIZE/2) * SPACING;
                     
-                    // قاعدة النقطة
-                    const baseMat = new THREE.MeshStandardMaterial({ color: 0xffaa44, emissive: 0x442200 });
-                    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.5, 0.2, 8), baseMat);
-                    base.position.set(x, 0.1, z);
+                    // قاعدة
+                    const baseMat = new THREE.MeshStandardMaterial({ color: 0xcc8844, roughness: 0.5 });
+                    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.55, 0.2, 8), baseMat);
+                    base.position.set(x, 0.05, z);
                     base.castShadow = true;
                     scene.add(base);
                     
-                    // عمود ضوئي
-                    const pillarMat = new THREE.MeshStandardMaterial({ color: 0x88aaff, emissive: 0x224466 });
-                    const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.25, 0.8, 6), pillarMat);
+                    // العمود
+                    const pillarMat = new THREE.MeshStandardMaterial({ color: 0x88aaff, emissive: 0x224466, emissiveIntensity: 0.3 });
+                    const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 0.8, 6), pillarMat);
                     pillar.position.set(x, 0.5, z);
                     pillar.castShadow = true;
                     scene.add(pillar);
                     
-                    // كرة ضوئية في الأعلى
+                    // الكرة الضوئية
                     const orbMat = new THREE.MeshStandardMaterial({ color: 0xffaa66, emissive: 0xff4422, emissiveIntensity: 0.5 });
-                    const orb = new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), orbMat);
+                    const orb = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), orbMat);
                     orb.position.set(x, 0.95, z);
                     scene.add(orb);
                     
-                    points.push({ x, z, visited: false });
+                    pointsMeshes.push(orb);
                 }
             }
             
-            // إنشاء شخصية بوبجي (شخصية ثلاثية الأبعاد)
-            const group = new THREE.Group();
+            // ========== إنشاء شخصية بوبجي (واضحة وجميلة) ==========
+            const characterGroup = new THREE.Group();
             
-            // الجسم
-            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x3a6ea5, roughness: 0.3 });
-            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.45, 0.9, 8), bodyMat);
+            // الجسم (سترة عسكرية)
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x4a7a5a, roughness: 0.3, metalness: 0.1 });
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.5, 0.9, 8), bodyMat);
             body.castShadow = true;
+            body.receiveShadow = true;
             body.position.y = 0.45;
-            group.add(body);
+            characterGroup.add(body);
             
-            // الرأس
-            const headMat = new THREE.MeshStandardMaterial({ color: 0xffccaa, roughness: 0.2 });
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.35, 16, 16), headMat);
+            // الرأس (بشرة)
+            const headMat = new THREE.MeshStandardMaterial({ color: 0xf5c4a0, roughness: 0.2 });
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.38, 16, 16), headMat);
             head.castShadow = true;
             head.position.y = 0.95;
-            group.add(head);
+            characterGroup.add(head);
             
-            // خوذة (لأسلوب بوبجي)
-            const helmetMat = new THREE.MeshStandardMaterial({ color: 0xcc8844, metalness: 0.7, roughness: 0.2 });
-            const helmet = new THREE.Mesh(new THREE.ConeGeometry(0.38, 0.35, 8), helmetMat);
+            // خوذة عسكرية
+            const helmetMat = new THREE.MeshStandardMaterial({ color: 0x5a6b3a, metalness: 0.6, roughness: 0.3 });
+            const helmet = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.4, 8), helmetMat);
             helmet.position.y = 1.12;
             helmet.castShadow = true;
-            group.add(helmet);
+            characterGroup.add(helmet);
             
-            // السلاح (بندقية)
-            const gunMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.8 });
-            const gunBody = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.12, 0.12), gunMat);
-            gunBody.position.set(0.45, 0.55, 0.2);
+            // قناع/نظارات
+            const visorMat = new THREE.MeshStandardMaterial({ color: 0x336699, metalness: 0.8 });
+            const visor = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.15, 0.1), visorMat);
+            visor.position.set(0, 1.0, 0.38);
+            visor.castShadow = true;
+            characterGroup.add(visor);
+            
+            // سلاح (بندقية)
+            const gunMat = new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.7 });
+            const gunBody = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.12, 0.12), gunMat);
+            gunBody.position.set(0.55, 0.55, 0.25);
             gunBody.castShadow = true;
-            group.add(gunBody);
+            characterGroup.add(gunBody);
             
-            const gunBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.5, 6), gunMat);
+            const gunBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.6, 6), gunMat);
             gunBarrel.rotation.z = Math.PI / 2;
-            gunBarrel.position.set(0.75, 0.55, 0.2);
+            gunBarrel.position.set(0.9, 0.55, 0.25);
             gunBarrel.castShadow = true;
-            group.add(gunBarrel);
+            characterGroup.add(gunBarrel);
+            
+            const scope = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.1, 0.1), gunMat);
+            scope.position.set(0.65, 0.62, 0.3);
+            scope.castShadow = true;
+            characterGroup.add(scope);
             
             // حقيبة ظهر
             const bagMat = new THREE.MeshStandardMaterial({ color: 0x5d3a1a });
-            const bag = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.6, 0.3), bagMat);
-            bag.position.set(-0.35, 0.5, -0.25);
+            const bag = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.65, 0.35), bagMat);
+            bag.position.set(-0.4, 0.5, -0.3);
             bag.castShadow = true;
-            group.add(bag);
+            characterGroup.add(bag);
             
-            group.position.set(0, 0, 0);
-            group.castShadow = true;
-            scene.add(group);
-            playerMesh = group;
+            // ذراعان
+            const armMat = new THREE.MeshStandardMaterial({ color: 0x4a7a5a });
+            const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.55, 6), armMat);
+            leftArm.position.set(-0.5, 0.75, 0);
+            leftArm.castShadow = true;
+            characterGroup.add(leftArm);
             
-            // تحكم الكاميرا (تتبع الشخصية)
+            const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.55, 6), armMat);
+            rightArm.position.set(0.5, 0.75, 0);
+            rightArm.castShadow = true;
+            characterGroup.add(rightArm);
+            
+            characterGroup.position.set(0, 0, 0);
+            characterGroup.castShadow = true;
+            scene.add(characterGroup);
+            playerMesh = characterGroup;
+            
+            // التحكم بالكاميرا
             controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
+            controls.dampingFactor = 0.07;
             controls.rotateSpeed = 1.0;
-            controls.zoomSpeed = 1.0;
+            controls.zoomSpeed = 0.8;
+            controls.enableZoom = true;
+            controls.enablePan = true;
             controls.target.set(0, 0.8, 0);
             
-            // تشغيل الحركة
+            // بدء التحريك
             function animate() {
                 requestAnimationFrame(animate);
                 controls.update();
                 renderer.render(scene, camera);
             }
             animate();
+            
+            // تحديث موقع البداية
+            const startX = (playerGridX - GRID_SIZE/2) * SPACING;
+            const startZ = (playerGridY - GRID_SIZE/2) * SPACING;
+            characterGroup.position.set(startX, 0, startZ);
+            controls.target.set(startX, 0.8, startZ);
+            camera.position.set(startX + 8, 6, startZ + 8);
         }
         
         // ========== أزرار التحكم ==========
@@ -524,12 +581,10 @@
             if (moveState.down) dy = 1;
             if (moveState.left) dx = -1;
             if (moveState.right) dx = 1;
-            
-            if (dx !== 0 || dy !== 0) {
-                updatePlayerPosition(dx, dy);
-            }
+            if (dx !== 0 || dy !== 0) movePlayer(dx, dy);
         }
         
+        // أزرار اللمس
         document.getElementById('btnUp').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.up = true; });
         document.getElementById('btnUp').addEventListener('touchend', () => moveState.up = false);
         document.getElementById('btnDown').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.down = true; });
@@ -539,6 +594,7 @@
         document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.right = true; });
         document.getElementById('btnRight').addEventListener('touchend', () => moveState.right = false);
         
+        // لوحة المفاتيح
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowUp') moveState.up = true;
             if (e.key === 'ArrowDown') moveState.down = true;
@@ -554,25 +610,21 @@
         });
         
         // تسجيل النقطة الحالية
-        visited[playerPos.x][playerPos.y] = true;
-        visitedCount = 1;
+        visited[playerGridX][playerGridY] = true;
         document.getElementById('visitedCount').innerHTML = visitedCount;
         document.getElementById('totalTiles').innerHTML = GRID_SIZE * GRID_SIZE;
-        document.getElementById('playerPos').innerHTML = `(${playerPos.x},${playerPos.y})`;
+        document.getElementById('playerPos').innerHTML = `(${playerGridX},${playerGridY})`;
         
         // بدء اللعبة
         init3D();
+        setInterval(handleMovement, 120);
         
-        // حلقة الحركة
-        setInterval(handleMovement, 100);
+        // إغلاق POV بالضغط على ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePOV();
+        });
         
-        // تهيئة تليجرام
-        if (tg) {
-            tg.ready();
-            tg.expand();
-        }
-        
-        console.log('🎮 شخصية بوبجي 3D + 64 نقطة + صور POV - جاهزة!');
+        console.log('🎮 PUBG Mobile جاهزة! شخصية 3D + 64 نقطة + صور POV');
     </script>
 </body>
 </html>
