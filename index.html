@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PUBG | تخزين الشخصية في تليجرام + تطوير الأسلحة</title>
+    <title>PUBG | اختبار GLB تجريبي</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
@@ -244,78 +244,52 @@
             console.log("✅ Telegram WebApp initialized");
         }
         
-        // ========== 🔐 بيانات قناة تليجرام (تم إدخالها) ==========
-        const TELEGRAM_CONFIG = {
-            // معرف القناة
-            channelId: '-1003822964890',
-            // توكن البوت
-            botToken: '8576673096:AAEFKd-YSJcW_0d_wAHZBt-5nPg_VOjDX_0',
-            // روابط الملفات المخزنة في القناة
-            // ملاحظة: هذه روابط تجريبية، ستحتاج إلى رفع ملفات GLB فعلية إلى القناة
-            files: {
-                character: {
-                    level1: 'https://t.me/battle_royale_game/5',
-                    level2: 'https://t.me/battle_royale_game/6',
-                    level3: 'https://t.me/battle_royale_game/7',
-                },
-                weapons: {
-                    level1: 'https://t.me/battle_royale_game/10',
-                    level2: 'https://t.me/battle_royale_game/11',
-                    level3: 'https://t.me/battle_royale_game/12',
-                    level4: 'https://t.me/battle_royale_game/13',
-                    level5: 'https://t.me/battle_royale_game/14',
-                }
-            }
+        // ========== 🔗 روابط GLB تجريبية (تعمل فوراً) ==========
+        const GLB_URLS = {
+            // سيف تجريبي - نموذج خوذة SciFi (يمكن استخدامه كسلاح)
+            weapon_test: 'https://threejs.org/examples/models/gltf/SciFiHelmet/glTF/SciFiHelmet.gltf',
+            // شخصية تجريبية - فلامنجو
+            character_test: 'https://threejs.org/examples/models/gltf/Flamingo.gltf',
+            // سلاح ثانوي - طائرة
+            weapon_alt: 'https://threejs.org/examples/models/gltf/FlightHelmet/glTF/FlightHelmet.gltf'
         };
         
-        console.log("📢 قناة تليجرام:", TELEGRAM_CONFIG.channelId);
-        console.log("🤖 توكن البوت:", TELEGRAM_CONFIG.botToken.substring(0, 20) + "...");
+        // ========== حالة اللاعب ==========
+        let playerState = {
+            weaponLevel: 1,
+            characterLevel: 1,
+            points: 0,
+            weaponUrl: GLB_URLS.weapon_test,
+            characterUrl: GLB_URLS.character_test
+        };
         
-        // ========== إرسال إشعار إلى قناة تليجرام ==========
-        async function sendToTelegram(message, parseMode = 'HTML') {
-            try {
-                const url = `https://api.telegram.org/bot${TELEGRAM_CONFIG.botToken}/sendMessage`;
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM_CONFIG.channelId,
-                        text: message,
-                        parse_mode: parseMode
-                    })
-                });
-                const result = await response.json();
-                if (result.ok) {
-                    console.log("✅ تم إرسال الإشعار إلى تليجرام");
-                } else {
-                    console.log("⚠️ فشل إرسال الإشعار:", result.description);
-                }
-            } catch(error) {
-                console.log("❌ خطأ في الاتصال بتليجرام:", error);
-            }
-        }
+        // ========== إعدادات اللعبة ==========
+        const GRID_SIZE = 8;
+        const SPACING = 3.2;
         
-        // ========== تحويل رابط تليجرام إلى رابط مباشر ==========
-        function getTelegramDirectUrl(telegramUrl) {
-            if (telegramUrl.includes('t.me/')) {
-                const parts = telegramUrl.split('/');
-                const messageId = parts[parts.length - 1];
-                // استخدام API تليجرام للحصول على الرابط المباشر
-                return `https://api.telegram.org/bot${TELEGRAM_CONFIG.botToken}/getFile?file_id=${messageId}`;
-            }
-            return telegramUrl;
-        }
+        let playerGridX = Math.floor(GRID_SIZE / 2);
+        let playerGridY = Math.floor(GRID_SIZE / 2);
+        let visited = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(false));
+        let visitedCount = 1;
         
-        // ========== تحميل نموذج GLB من تليجرام ==========
-        async function loadModelFromTelegram(telegramUrl, onProgress) {
-            console.log(`📦 محاولة تحميل من تليجرام: ${telegramUrl}`);
+        let scene, camera, renderer, controls;
+        let playerGroup;
+        let currentWeapon;
+        let currentCharacter;
+        
+        let moving = { up: false, down: false, left: false, right: false };
+        let lastMoveTime = 0;
+        const MOVE_DELAY = 250;
+        
+        // ========== تحميل نموذج GLB ==========
+        async function loadGLBModel(url, onProgress) {
+            console.log(`📦 تحميل النموذج: ${url}`);
             
             return new Promise((resolve, reject) => {
                 const loader = new GLTFLoader();
-                // نحاول التحميل مباشرة من الرابط
-                loader.load(telegramUrl, 
+                loader.load(url, 
                     (gltf) => {
-                        console.log(`✅ تم تحميل النموذج بنجاح من تليجرام`);
+                        console.log(`✅ تم تحميل النموذج بنجاح`);
                         resolve(gltf.scene);
                     },
                     (progress) => {
@@ -333,90 +307,66 @@
             });
         }
         
-        // ========== حالة اللاعب ==========
-        let playerState = {
-            weaponLevel: 1,
-            characterLevel: 1,
-            points: 0,
-            weaponUrl: TELEGRAM_CONFIG.files.weapons.level1,
-            characterUrl: TELEGRAM_CONFIG.files.character.level1
-        };
-        
-        // ========== إعدادات اللعبة ==========
-        const GRID_SIZE = 8;
-        const SPACING = 3.2;
-        
-        let playerGridX = Math.floor(GRID_SIZE / 2);
-        let playerGridY = Math.floor(GRID_SIZE / 2);
-        let visited = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(false));
-        let visitedCount = 1;
-        
-        let scene, camera, renderer, controls;
-        let playerGroup;
-        let currentWeapon;
-        
-        let moving = { up: false, down: false, left: false, right: false };
-        let lastMoveTime = 0;
-        const MOVE_DELAY = 250;
-        
-        // ========== تحديث السلاح من تليجرام ==========
+        // ========== تحديث السلاح ==========
         async function upgradeWeapon() {
-            if (playerState.weaponLevel >= 5) {
-                showToast("🔥 السيف في أعلى مستوى!");
+            if (playerState.weaponLevel >= 3) {
+                showToast("🔥 السلاح في أعلى مستوى!");
                 return;
             }
             
             const newLevel = playerState.weaponLevel + 1;
-            const weaponKey = `level${newLevel}`;
-            const newWeaponUrl = TELEGRAM_CONFIG.files.weapons[weaponKey];
             
-            if (newWeaponUrl) {
-                showToast(`⚔️ تطوير السيف إلى المستوى ${newLevel}...`);
-                
-                const loadingDiv = document.createElement('div');
-                loadingDiv.className = 'loading';
-                loadingDiv.innerHTML = `⚔️ تحميل السيف Lv.${newLevel} من تليجرام...`;
-                document.body.appendChild(loadingDiv);
-                
-                try {
-                    const newWeapon = await loadModelFromTelegram(newWeaponUrl);
-                    
-                    if (currentWeapon && playerGroup) {
-                        playerGroup.remove(currentWeapon);
-                    }
-                    
-                    newWeapon.position.set(0.6, 0.5, 0.3);
-                    newWeapon.scale.set(0.8, 0.8, 0.8);
-                    if (playerGroup) playerGroup.add(newWeapon);
-                    currentWeapon = newWeapon;
-                    
-                    playerState.weaponLevel = newLevel;
-                    playerState.weaponUrl = newWeaponUrl;
-                    document.getElementById('weaponLevel').innerHTML = playerState.weaponLevel;
-                    
-                    // إرسال إشعار لتليجرام
-                    const userName = tg?.initDataUnsafe?.user?.first_name || 'مستخدم';
-                    await sendToTelegram(
-                        `🎮 <b>تطوير السلاح!</b>\n` +
-                        `👤 ${userName}\n` +
-                        `⚔️ السيف المستوى ${newLevel}\n` +
-                        `📍 الموقع: (${playerGridX},${playerGridY})\n` +
-                        `🏆 النقاط: ${playerState.points}`
-                    );
-                    
-                    showToast(`✨ السيف مطور! المستوى ${newLevel}`);
-                } catch (error) {
-                    console.error(error);
-                    showToast("❌ فشل تطوير السيف، تأكد من رفع الملفات في القناة");
-                } finally {
-                    loadingDiv.remove();
+            showToast(`⚔️ تطوير السلاح إلى المستوى ${newLevel}...`);
+            
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'loading';
+            loadingDiv.innerHTML = `⚔️ تحميل السلاح Lv.${newLevel}...`;
+            document.body.appendChild(loadingDiv);
+            
+            try {
+                // تبديل السلاح حسب المستوى
+                let newWeaponUrl;
+                if (newLevel === 2) {
+                    newWeaponUrl = GLB_URLS.weapon_alt;
+                } else if (newLevel === 3) {
+                    newWeaponUrl = GLB_URLS.weapon_test;
                 }
-            } else {
-                showToast("❌ لا يوجد ملف لهذا المستوى في القناة");
+                
+                const newWeapon = await loadGLBModel(newWeaponUrl);
+                
+                if (currentWeapon && playerGroup) {
+                    playerGroup.remove(currentWeapon);
+                }
+                
+                // تعديل موضع وحجم السلاح
+                newWeapon.position.set(0.6, 0.5, 0.4);
+                newWeapon.scale.set(0.5, 0.5, 0.5);
+                if (playerGroup) playerGroup.add(newWeapon);
+                currentWeapon = newWeapon;
+                
+                playerState.weaponLevel = newLevel;
+                playerState.weaponUrl = newWeaponUrl;
+                document.getElementById('weaponLevel').innerHTML = playerState.weaponLevel;
+                
+                // إرسال إشعار لتليجرام
+                if (tg) {
+                    const userName = tg?.initDataUnsafe?.user?.first_name || 'مستخدم';
+                    try {
+                        // يمكن تفعيل إرسال الإشعارات لاحقاً
+                        console.log(`🔫 تم تطوير السلاح للمستوى ${newLevel}`);
+                    } catch(e) {}
+                }
+                
+                showToast(`✨ السلاح مطور! المستوى ${newLevel}`);
+            } catch (error) {
+                console.error(error);
+                showToast("❌ فشل تطوير السلاح");
+            } finally {
+                loadingDiv.remove();
             }
         }
         
-        // ========== إنشاء شخصية افتراضية ==========
+        // ========== إنشاء شخصية افتراضية احتياطية ==========
         function createFallbackCharacter() {
             const group = new THREE.Group();
             
@@ -437,12 +387,6 @@
             helmet.position.y = 1.12;
             group.add(helmet);
             
-            const gunMat = new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.7 });
-            const gun = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.12, 0.12), gunMat);
-            gun.position.set(0.55, 0.55, 0.25);
-            group.add(gun);
-            currentWeapon = gun;
-            
             return group;
         }
         
@@ -450,23 +394,30 @@
         async function loadCharacter() {
             const loadingDiv = document.createElement('div');
             loadingDiv.className = 'loading';
-            loadingDiv.innerHTML = "🔄 تحميل الشخصية...";
+            loadingDiv.innerHTML = "🔄 تحميل الشخصية ثلاثية الأبعاد...";
             document.body.appendChild(loadingDiv);
             
             try {
-                // محاولة تحميل الشخصية
-                playerGroup = createFallbackCharacter();
-                scene.add(playerGroup);
-                showToast("✅ الشخصية جاهزة!");
+                // محاولة تحميل الشخصية من GLB
+                const characterModel = await loadGLBModel(playerState.characterUrl);
+                playerGroup = new THREE.Group();
                 
-                // محاولة تحميل السلاح
-                const weaponModel = await loadModelFromTelegram(playerState.weaponUrl);
-                weaponModel.position.set(0.6, 0.5, 0.3);
-                weaponModel.scale.set(0.8, 0.8, 0.8);
-                if (currentWeapon) playerGroup.remove(currentWeapon);
+                // ضبط حجم ومكان الشخصية
+                characterModel.position.y = 0;
+                characterModel.scale.set(0.8, 0.8, 0.8);
+                playerGroup.add(characterModel);
+                currentCharacter = characterModel;
+                
+                scene.add(playerGroup);
+                
+                // تحميل السلاح
+                const weaponModel = await loadGLBModel(playerState.weaponUrl);
+                weaponModel.position.set(0.6, 0.5, 0.4);
+                weaponModel.scale.set(0.5, 0.5, 0.5);
                 playerGroup.add(weaponModel);
                 currentWeapon = weaponModel;
-                showToast("⚔️ تم تحميل السلاح!");
+                
+                showToast("✅ تم تحميل الشخصية والسلاح بنجاح!");
             } catch (error) {
                 console.warn("فشل تحميل النموذج، استخدام النموذج الافتراضي", error);
                 if (!playerGroup) {
@@ -506,15 +457,6 @@
                     document.getElementById('points').innerHTML = playerState.points;
                     showPOV(playerGridX, playerGridY);
                     showToast(`✨ +10 نقاط! ✨`);
-                    
-                    // إرسال إشعار بالاكتشاف
-                    const title = getPointTitle(playerGridX, playerGridY);
-                    sendToTelegram(
-                        `🎮 <b>اكتشاف جديد!</b>\n` +
-                        `📍 ${title}\n` +
-                        `🗺️ (${playerGridX},${playerGridY})\n` +
-                        `🏆 التقدم: ${visitedCount}/64`
-                    );
                 }
             }
         }
@@ -680,20 +622,10 @@
         setInterval(processMovement, 150);
         loadCharacter();
         
-        // إرسال رسالة ترحيب إلى تليجرام
-        setTimeout(() => {
-            const userName = tg?.initDataUnsafe?.user?.first_name || 'زائر';
-            sendToTelegram(
-                `🎮 <b>دخول جديد إلى اللعبة!</b>\n` +
-                `👤 ${userName}\n` +
-                `🆔 ${tg?.initDataUnsafe?.user?.id || 'guest'}\n` +
-                `🗺️ بدأ رحلة استكشاف الـ 64 موقع`
-            );
-        }, 1000);
-        
-        console.log("🎮 PUBG - تخزين الشخصية في تليجرام!");
-        console.log(`📢 قناة تليجرام: ${TELEGRAM_CONFIG.channelId}`);
-        console.log(`🤖 البوت يعمل: ${TELEGRAM_CONFIG.botToken.substring(0, 15)}...`);
+        console.log("🎮 PUBG - تجربة GLB من Three.js!");
+        console.log("🔗 روابط GLB التجريبية:");
+        console.log("   سلاح: " + GLB_URLS.weapon_test);
+        console.log("   شخصية: " + GLB_URLS.character_test);
     </script>
 </body>
 </html>
