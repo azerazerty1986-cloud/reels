@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PUBG Mobile | أرضية 3D + شخصية + نقاط + صور POV</title>
+    <title>PUBG Mobile | شخصية تتحرك + أرضية نقاط + صور POV</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
@@ -23,7 +23,6 @@
             touch-action: none;
         }
         
-        /* حاوية Three.js */
         #canvas-container {
             position: fixed;
             top: 0;
@@ -55,49 +54,53 @@
         
         .player-info {
             color: white;
-            font-size: 10px;
+            font-size: 11px;
+            font-weight: bold;
         }
         
         .tile-counter {
             background: #ff5722;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 20px;
             font-weight: bold;
             color: white;
-            font-size: 11px;
+            font-size: 12px;
         }
         
-        /* أزرار التحكم للهواتف */
+        /* أزرار التحكم - كبيرة وواضحة */
         .controls {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 25px;
+            left: 0;
+            right: 0;
             display: flex;
-            gap: 12px;
-            z-index: 50;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(10px);
-            padding: 10px 20px;
-            border-radius: 60px;
+            justify-content: center;
+            gap: 18px;
+            z-index: 100;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(15px);
+            padding: 15px 25px;
+            border-radius: 80px;
+            margin: 0 20px;
             pointer-events: auto;
         }
         
         .control-btn {
-            width: 55px;
-            height: 55px;
-            background: rgba(255,87,34,0.4);
-            border: 2px solid #ff5722;
+            width: 70px;
+            height: 70px;
+            background: rgba(255,87,34,0.5);
+            border: 3px solid #ff5722;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 24px;
+            font-size: 32px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.1s;
+            transition: all 0.05s linear;
             touch-action: manipulation;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         
         .control-btn:active {
@@ -146,19 +149,12 @@
             padding: 12px;
             margin: 0 20px;
             border-radius: 20px;
-            backdrop-filter: blur(10px);
         }
         
         .pov-title {
             font-size: 18px;
             color: #ff5722;
             font-weight: bold;
-        }
-        
-        .pov-desc {
-            font-size: 11px;
-            color: #ccc;
-            margin-top: 5px;
         }
         
         .close-pov {
@@ -181,23 +177,24 @@
         
         .toast {
             position: fixed;
-            bottom: 100px;
+            bottom: 120px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.9);
             color: #ff5722;
-            padding: 6px 14px;
+            padding: 8px 16px;
             border-radius: 30px;
-            font-size: 11px;
+            font-size: 12px;
             z-index: 150;
             border: 1px solid #ff5722;
             white-space: nowrap;
+            font-weight: bold;
         }
         
         @media (max-width: 600px) {
-            .control-btn { width: 50px; height: 50px; font-size: 20px; }
-            .ui { padding: 6px 10px; }
-            .player-info { font-size: 9px; }
+            .control-btn { width: 60px; height: 60px; font-size: 28px; }
+            .controls { gap: 12px; padding: 10px 20px; }
+            .player-info { font-size: 10px; }
         }
     </style>
 </head>
@@ -216,7 +213,7 @@
     </div>
     
     <div class="controls">
-        <div class="control-btn" id="btnUp">▲</div>
+        <div class="control-btn" id="btnUp" style="background: #ff5722;">▲</div>
         <div class="control-btn" id="btnLeft">◀</div>
         <div class="control-btn" id="btnDown">▼</div>
         <div class="control-btn" id="btnRight">▶</div>
@@ -229,7 +226,6 @@
         <img class="pov-image" id="povImage">
         <div class="pov-info">
             <div class="pov-title" id="povTitle"></div>
-            <div class="pov-desc" id="povDesc"></div>
         </div>
     </div>
 
@@ -254,8 +250,8 @@
         }
         
         // ========== إعدادات العالم ==========
-        const GRID_SIZE = 8;  // 8x8 = 64 نقطة
-        const SPACING = 3.5;   // المسافة بين النقاط
+        const GRID_SIZE = 8;
+        const SPACING = 3.2;
         
         // موقع اللاعب
         let playerGridX = Math.floor(GRID_SIZE / 2);
@@ -268,44 +264,13 @@
         // عناصر Three.js
         let scene, camera, renderer, controls;
         let playerMesh;
-        let pointsMeshes = [];
         
-        // ========== صور POV لكل نقطة (64 صورة مختلفة) ==========
-        const imageUrls = [
-            "https://picsum.photos/id/104/1000/700", "https://picsum.photos/id/15/1000/700",
-            "https://picsum.photos/id/96/1000/700", "https://picsum.photos/id/29/1000/700",
-            "https://picsum.photos/id/91/1000/700", "https://picsum.photos/id/43/1000/700",
-            "https://picsum.photos/id/116/1000/700", "https://picsum.photos/id/112/1000/700",
-            "https://picsum.photos/id/48/1000/700", "https://picsum.photos/id/126/1000/700",
-            "https://picsum.photos/id/17/1000/700", "https://picsum.photos/id/13/1000/700",
-            "https://picsum.photos/id/30/1000/700", "https://picsum.photos/id/59/1000/700",
-            "https://picsum.photos/id/107/1000/700", "https://picsum.photos/id/118/1000/700",
-            "https://picsum.photos/id/20/1000/700", "https://picsum.photos/id/23/1000/700",
-            "https://picsum.photos/id/44/1000/700", "https://picsum.photos/id/76/1000/700",
-            "https://picsum.photos/id/38/1000/700", "https://picsum.photos/id/67/1000/700",
-            "https://picsum.photos/id/53/1000/700", "https://picsum.photos/id/93/1000/700",
-            "https://picsum.photos/id/12/1000/700", "https://picsum.photos/id/22/1000/700",
-            "https://picsum.photos/id/34/1000/700", "https://picsum.photos/id/42/1000/700",
-            "https://picsum.photos/id/45/1000/700", "https://picsum.photos/id/55/1000/700",
-            "https://picsum.photos/id/60/1000/700", "https://picsum.photos/id/68/1000/700",
-            "https://picsum.photos/id/73/1000/700", "https://picsum.photos/id/77/1000/700",
-            "https://picsum.photos/id/80/1000/700", "https://picsum.photos/id/85/1000/700",
-            "https://picsum.photos/id/88/1000/700", "https://picsum.photos/id/92/1000/700",
-            "https://picsum.photos/id/95/1000/700", "https://picsum.photos/id/98/1000/700",
-            "https://picsum.photos/id/100/1000/700", "https://picsum.photos/id/103/1000/700",
-            "https://picsum.photos/id/108/1000/700", "https://picsum.photos/id/110/1000/700",
-            "https://picsum.photos/id/113/1000/700", "https://picsum.photos/id/115/1000/700",
-            "https://picsum.photos/id/119/1000/700", "https://picsum.photos/id/120/1000/700",
-            "https://picsum.photos/id/122/1000/700", "https://picsum.photos/id/124/1000/700",
-            "https://picsum.photos/id/127/1000/700", "https://picsum.photos/id/129/1000/700",
-            "https://picsum.photos/id/131/1000/700", "https://picsum.photos/id/133/1000/700",
-            "https://picsum.photos/id/135/1000/700", "https://picsum.photos/id/137/1000/700",
-            "https://picsum.photos/id/139/1000/700", "https://picsum.photos/id/141/1000/700",
-            "https://picsum.photos/id/143/1000/700", "https://picsum.photos/id/145/1000/700",
-            "https://picsum.photos/id/147/1000/700", "https://picsum.photos/id/149/1000/700",
-            "https://picsum.photos/id/150/1000/700", "https://picsum.photos/id/151/1000/700"
-        ];
+        // حالة الحركة
+        let moving = { up: false, down: false, left: false, right: false };
+        let lastMoveTime = 0;
+        const MOVE_DELAY = 250; // ميلي ثانية بين كل حركة
         
+        // ========== صور POV ==========
         const titles = [
             "🏛️ الساحة المركزية", "🌲 غابة الصنوبر", "🏞️ وادي الجداول", "🏔️ قمة الجبل",
             "🏯 القلعة القديمة", "🌊 شلالات الجبل", "🏖️ شاطئ الجنة", "🌋 فوهة البركان",
@@ -325,21 +290,23 @@
             "🏯 قلعة الرمال", "🌲 غابة الأضواء", "⛰️ قمة الغروب", "🏆 ميدان البطولة"
         ];
         
-        function getPointData(x, y) {
-            const idx = (x * GRID_SIZE + y) % imageUrls.length;
-            return {
-                image: imageUrls[idx],
-                title: titles[idx],
-                desc: "منظر طبيعي خلاب يستحق الاستكشاف"
-            };
+        function getImageUrl(x, y) {
+            const id = (x * GRID_SIZE + y) % 100 + 10;
+            return `https://picsum.photos/id/${id}/1000/700`;
+        }
+        
+        function getPointTitle(x, y) {
+            const idx = (x * GRID_SIZE + y) % titles.length;
+            return titles[idx];
         }
         
         // ========== عرض صورة POV ==========
         function showPOV(x, y) {
-            const data = getPointData(x, y);
-            document.getElementById('povImage').src = data.image;
-            document.getElementById('povTitle').innerHTML = data.title;
-            document.getElementById('povDesc').innerHTML = data.desc;
+            const title = getPointTitle(x, y);
+            const imageUrl = getImageUrl(x, y);
+            
+            document.getElementById('povImage').src = imageUrl;
+            document.getElementById('povTitle').innerHTML = title;
             document.getElementById('povModal').classList.add('active');
             
             if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
@@ -363,14 +330,14 @@
                 const targetZ = (playerGridY - GRID_SIZE/2) * SPACING;
                 
                 if (playerMesh) {
-                    playerMesh.position.lerp(new THREE.Vector3(targetX, 0.4, targetZ), 0.3);
-                    controls.target.lerp(new THREE.Vector3(targetX, 0.5, targetZ), 0.2);
+                    playerMesh.position.set(targetX, 0.2, targetZ);
+                    controls.target.set(targetX, 0.6, targetZ);
                 }
                 
                 // تحديث واجهة المستخدم
                 document.getElementById('playerPos').innerHTML = `(${playerGridX},${playerGridY})`;
-                const data = getPointData(playerGridX, playerGridY);
-                document.getElementById('currentTile').innerHTML = data.title.substring(0, 12);
+                const title = getPointTitle(playerGridX, playerGridY);
+                document.getElementById('currentTile').innerHTML = title.substring(0, 14);
                 
                 // تسجيل الزيارة
                 if (!visited[playerGridX][playerGridY]) {
@@ -379,14 +346,8 @@
                     document.getElementById('visitedCount').innerHTML = visitedCount;
                     showPOV(playerGridX, playerGridY);
                     
-                    // تأثير على النقطة
-                    const idx = playerGridX * GRID_SIZE + playerGridY;
-                    if (pointsMeshes[idx]) {
-                        pointsMeshes[idx].material.color.setHex(0x4caf50);
-                        pointsMeshes[idx].material.emissiveIntensity = 0.3;
-                    }
-                    
-                    showToast(`✨ اكتشفت ${data.title}! ✨`);
+                    // رسالة منبثقة
+                    showToast(`✨ اكتشفت ${title}! ✨`);
                 }
             }
         }
@@ -399,16 +360,36 @@
             setTimeout(() => toast.remove(), 2000);
         }
         
+        // ========== معالجة الحركة ==========
+        function processMovement() {
+            const now = Date.now();
+            if (now - lastMoveTime < MOVE_DELAY) return;
+            
+            if (moving.up) {
+                movePlayer(0, -1);
+                lastMoveTime = now;
+            } else if (moving.down) {
+                movePlayer(0, 1);
+                lastMoveTime = now;
+            } else if (moving.left) {
+                movePlayer(-1, 0);
+                lastMoveTime = now;
+            } else if (moving.right) {
+                movePlayer(1, 0);
+                lastMoveTime = now;
+            }
+        }
+        
         // ========== إنشاء العالم 3D ==========
         function init3D() {
             const container = document.getElementById('canvas-container');
             
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x0a1030);
-            scene.fog = new THREE.FogExp2(0x0a1030, 0.01);
+            scene.fog = new THREE.FogExp2(0x0a1030, 0.008);
             
-            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-            camera.position.set(12, 8, 12);
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.set(10, 7, 12);
             
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -424,12 +405,8 @@
             const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
             scene.add(ambientLight);
             
-            const fillLight = new THREE.PointLight(0x6688aa, 0.3);
-            fillLight.position.set(-5, 8, -5);
-            scene.add(fillLight);
-            
             // الأرضية
-            const groundGeo = new THREE.PlaneGeometry(32, 32);
+            const groundGeo = new THREE.PlaneGeometry(30, 30);
             const groundMat = new THREE.MeshStandardMaterial({ color: 0x3a6b3a, roughness: 0.8 });
             const ground = new THREE.Mesh(groundGeo, groundMat);
             ground.rotation.x = -Math.PI / 2;
@@ -438,193 +415,162 @@
             scene.add(ground);
             
             // شبكة مساعدة
-            const gridHelper = new THREE.GridHelper(30, 20, 0x88aa88, 0x446644);
+            const gridHelper = new THREE.GridHelper(28, 20, 0x88aa88, 0x446644);
             gridHelper.position.y = 0;
             scene.add(gridHelper);
             
-            // إنشاء النقاط (أعمدة ضوئية)
+            // إنشاء النقاط
             for (let i = 0; i < GRID_SIZE; i++) {
                 for (let j = 0; j < GRID_SIZE; j++) {
                     const x = (i - GRID_SIZE/2) * SPACING;
                     const z = (j - GRID_SIZE/2) * SPACING;
                     
                     // قاعدة
-                    const baseMat = new THREE.MeshStandardMaterial({ color: 0xcc8844, roughness: 0.5 });
-                    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.55, 0.2, 8), baseMat);
-                    base.position.set(x, 0.05, z);
+                    const baseMat = new THREE.MeshStandardMaterial({ color: 0xcc8844 });
+                    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.55, 0.15, 8), baseMat);
+                    base.position.set(x, 0, z);
                     base.castShadow = true;
                     scene.add(base);
                     
                     // العمود
-                    const pillarMat = new THREE.MeshStandardMaterial({ color: 0x88aaff, emissive: 0x224466, emissiveIntensity: 0.3 });
-                    const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 0.8, 6), pillarMat);
-                    pillar.position.set(x, 0.5, z);
+                    const pillarMat = new THREE.MeshStandardMaterial({ color: 0x88aaff, emissive: 0x224466 });
+                    const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 0.7, 6), pillarMat);
+                    pillar.position.set(x, 0.4, z);
                     pillar.castShadow = true;
                     scene.add(pillar);
                     
-                    // الكرة الضوئية
-                    const orbMat = new THREE.MeshStandardMaterial({ color: 0xffaa66, emissive: 0xff4422, emissiveIntensity: 0.5 });
+                    // الكرة
+                    const orbMat = new THREE.MeshStandardMaterial({ color: 0xffaa66, emissive: 0xff4422 });
                     const orb = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), orbMat);
-                    orb.position.set(x, 0.95, z);
+                    orb.position.set(x, 0.8, z);
                     scene.add(orb);
-                    
-                    pointsMeshes.push(orb);
                 }
             }
             
-            // ========== إنشاء شخصية بوبجي (واضحة وجميلة) ==========
-            const characterGroup = new THREE.Group();
+            // ========== شخصية بوبجي ==========
+            const character = new THREE.Group();
             
-            // الجسم (سترة عسكرية)
-            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x4a7a5a, roughness: 0.3, metalness: 0.1 });
-            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.5, 0.9, 8), bodyMat);
+            // الجسم
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.5, 0.9, 8), new THREE.MeshStandardMaterial({ color: 0x4a7a5a }));
             body.castShadow = true;
-            body.receiveShadow = true;
             body.position.y = 0.45;
-            characterGroup.add(body);
+            character.add(body);
             
-            // الرأس (بشرة)
-            const headMat = new THREE.MeshStandardMaterial({ color: 0xf5c4a0, roughness: 0.2 });
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.38, 16, 16), headMat);
+            // الرأس
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.38, 16, 16), new THREE.MeshStandardMaterial({ color: 0xf5c4a0 }));
             head.castShadow = true;
             head.position.y = 0.95;
-            characterGroup.add(head);
+            character.add(head);
             
-            // خوذة عسكرية
-            const helmetMat = new THREE.MeshStandardMaterial({ color: 0x5a6b3a, metalness: 0.6, roughness: 0.3 });
-            const helmet = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.4, 8), helmetMat);
+            // خوذة
+            const helmet = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.4, 8), new THREE.MeshStandardMaterial({ color: 0x5a6b3a, metalness: 0.6 }));
             helmet.position.y = 1.12;
             helmet.castShadow = true;
-            characterGroup.add(helmet);
+            character.add(helmet);
             
-            // قناع/نظارات
-            const visorMat = new THREE.MeshStandardMaterial({ color: 0x336699, metalness: 0.8 });
-            const visor = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.15, 0.1), visorMat);
-            visor.position.set(0, 1.0, 0.38);
-            visor.castShadow = true;
-            characterGroup.add(visor);
+            // سلاح
+            const gun = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.12, 0.12), new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.7 }));
+            gun.position.set(0.55, 0.55, 0.25);
+            gun.castShadow = true;
+            character.add(gun);
             
-            // سلاح (بندقية)
-            const gunMat = new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.7 });
-            const gunBody = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.12, 0.12), gunMat);
-            gunBody.position.set(0.55, 0.55, 0.25);
-            gunBody.castShadow = true;
-            characterGroup.add(gunBody);
-            
-            const gunBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.6, 6), gunMat);
-            gunBarrel.rotation.z = Math.PI / 2;
-            gunBarrel.position.set(0.9, 0.55, 0.25);
-            gunBarrel.castShadow = true;
-            characterGroup.add(gunBarrel);
-            
-            const scope = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.1, 0.1), gunMat);
-            scope.position.set(0.65, 0.62, 0.3);
-            scope.castShadow = true;
-            characterGroup.add(scope);
-            
-            // حقيبة ظهر
-            const bagMat = new THREE.MeshStandardMaterial({ color: 0x5d3a1a });
-            const bag = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.65, 0.35), bagMat);
+            // حقيبة
+            const bag = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.65, 0.35), new THREE.MeshStandardMaterial({ color: 0x5d3a1a }));
             bag.position.set(-0.4, 0.5, -0.3);
             bag.castShadow = true;
-            characterGroup.add(bag);
+            character.add(bag);
             
-            // ذراعان
-            const armMat = new THREE.MeshStandardMaterial({ color: 0x4a7a5a });
-            const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.55, 6), armMat);
-            leftArm.position.set(-0.5, 0.75, 0);
-            leftArm.castShadow = true;
-            characterGroup.add(leftArm);
+            character.position.set(0, 0, 0);
+            character.castShadow = true;
+            scene.add(character);
+            playerMesh = character;
             
-            const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.55, 6), armMat);
-            rightArm.position.set(0.5, 0.75, 0);
-            rightArm.castShadow = true;
-            characterGroup.add(rightArm);
-            
-            characterGroup.position.set(0, 0, 0);
-            characterGroup.castShadow = true;
-            scene.add(characterGroup);
-            playerMesh = characterGroup;
-            
-            // التحكم بالكاميرا
+            // التحكم
             controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.07;
             controls.rotateSpeed = 1.0;
             controls.zoomSpeed = 0.8;
-            controls.enableZoom = true;
-            controls.enablePan = true;
-            controls.target.set(0, 0.8, 0);
+            controls.target.set(0, 0.6, 0);
             
-            // بدء التحريك
+            // تحديث موقع البداية
+            const startX = (playerGridX - GRID_SIZE/2) * SPACING;
+            const startZ = (playerGridY - GRID_SIZE/2) * SPACING;
+            character.position.set(startX, 0.2, startZ);
+            controls.target.set(startX, 0.6, startZ);
+            camera.position.set(startX + 8, 6, startZ + 8);
+            
+            // حلقة الرسم
             function animate() {
                 requestAnimationFrame(animate);
                 controls.update();
                 renderer.render(scene, camera);
             }
             animate();
+        }
+        
+        // ========== إعداد أزرار التحكم ==========
+        function setupControls() {
+            const btnUp = document.getElementById('btnUp');
+            const btnDown = document.getElementById('btnDown');
+            const btnLeft = document.getElementById('btnLeft');
+            const btnRight = document.getElementById('btnRight');
             
-            // تحديث موقع البداية
-            const startX = (playerGridX - GRID_SIZE/2) * SPACING;
-            const startZ = (playerGridY - GRID_SIZE/2) * SPACING;
-            characterGroup.position.set(startX, 0, startZ);
-            controls.target.set(startX, 0.8, startZ);
-            camera.position.set(startX + 8, 6, startZ + 8);
+            // أحداث اللمس
+            btnUp.addEventListener('touchstart', (e) => { e.preventDefault(); moving.up = true; moving.down = false; moving.left = false; moving.right = false; });
+            btnUp.addEventListener('touchend', () => { moving.up = false; });
+            btnUp.addEventListener('mousedown', () => { moving.up = true; moving.down = false; moving.left = false; moving.right = false; });
+            btnUp.addEventListener('mouseup', () => { moving.up = false; });
+            
+            btnDown.addEventListener('touchstart', (e) => { e.preventDefault(); moving.down = true; moving.up = false; moving.left = false; moving.right = false; });
+            btnDown.addEventListener('touchend', () => { moving.down = false; });
+            btnDown.addEventListener('mousedown', () => { moving.down = true; moving.up = false; moving.left = false; moving.right = false; });
+            btnDown.addEventListener('mouseup', () => { moving.down = false; });
+            
+            btnLeft.addEventListener('touchstart', (e) => { e.preventDefault(); moving.left = true; moving.up = false; moving.down = false; moving.right = false; });
+            btnLeft.addEventListener('touchend', () => { moving.left = false; });
+            btnLeft.addEventListener('mousedown', () => { moving.left = true; moving.up = false; moving.down = false; moving.right = false; });
+            btnLeft.addEventListener('mouseup', () => { moving.left = false; });
+            
+            btnRight.addEventListener('touchstart', (e) => { e.preventDefault(); moving.right = true; moving.up = false; moving.down = false; moving.left = false; });
+            btnRight.addEventListener('touchend', () => { moving.right = false; });
+            btnRight.addEventListener('mousedown', () => { moving.right = true; moving.up = false; moving.down = false; moving.left = false; });
+            btnRight.addEventListener('mouseup', () => { moving.right = false; });
+            
+            // لوحة المفاتيح
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowUp') { moving.up = true; moving.down = false; moving.left = false; moving.right = false; e.preventDefault(); }
+                if (e.key === 'ArrowDown') { moving.down = true; moving.up = false; moving.left = false; moving.right = false; e.preventDefault(); }
+                if (e.key === 'ArrowLeft') { moving.left = true; moving.up = false; moving.down = false; moving.right = false; e.preventDefault(); }
+                if (e.key === 'ArrowRight') { moving.right = true; moving.up = false; moving.down = false; moving.left = false; e.preventDefault(); }
+            });
+            window.addEventListener('keyup', (e) => {
+                if (e.key === 'ArrowUp') moving.up = false;
+                if (e.key === 'ArrowDown') moving.down = false;
+                if (e.key === 'ArrowLeft') moving.left = false;
+                if (e.key === 'ArrowRight') moving.right = false;
+            });
         }
         
-        // ========== أزرار التحكم ==========
-        let moveState = { up: false, down: false, left: false, right: false };
-        
-        function handleMovement() {
-            let dx = 0, dy = 0;
-            if (moveState.up) dy = -1;
-            if (moveState.down) dy = 1;
-            if (moveState.left) dx = -1;
-            if (moveState.right) dx = 1;
-            if (dx !== 0 || dy !== 0) movePlayer(dx, dy);
-        }
-        
-        // أزرار اللمس
-        document.getElementById('btnUp').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.up = true; });
-        document.getElementById('btnUp').addEventListener('touchend', () => moveState.up = false);
-        document.getElementById('btnDown').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.down = true; });
-        document.getElementById('btnDown').addEventListener('touchend', () => moveState.down = false);
-        document.getElementById('btnLeft').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.left = true; });
-        document.getElementById('btnLeft').addEventListener('touchend', () => moveState.left = false);
-        document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.right = true; });
-        document.getElementById('btnRight').addEventListener('touchend', () => moveState.right = false);
-        
-        // لوحة المفاتيح
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowUp') moveState.up = true;
-            if (e.key === 'ArrowDown') moveState.down = true;
-            if (e.key === 'ArrowLeft') moveState.left = true;
-            if (e.key === 'ArrowRight') moveState.right = true;
-            e.preventDefault();
-        });
-        window.addEventListener('keyup', (e) => {
-            if (e.key === 'ArrowUp') moveState.up = false;
-            if (e.key === 'ArrowDown') moveState.down = false;
-            if (e.key === 'ArrowLeft') moveState.left = false;
-            if (e.key === 'ArrowRight') moveState.right = false;
-        });
-        
-        // تسجيل النقطة الحالية
+        // ========== بدء اللعبة ==========
         visited[playerGridX][playerGridY] = true;
         document.getElementById('visitedCount').innerHTML = visitedCount;
         document.getElementById('totalTiles').innerHTML = GRID_SIZE * GRID_SIZE;
         document.getElementById('playerPos').innerHTML = `(${playerGridX},${playerGridY})`;
+        document.getElementById('currentTile').innerHTML = getPointTitle(playerGridX, playerGridY).substring(0, 14);
         
-        // بدء اللعبة
         init3D();
-        setInterval(handleMovement, 120);
+        setupControls();
         
-        // إغلاق POV بالضغط على ESC
+        // حلقة الحركة
+        setInterval(processMovement, 150);
+        
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closePOV();
         });
         
-        console.log('🎮 PUBG Mobile جاهزة! شخصية 3D + 64 نقطة + صور POV');
+        console.log('🎮 PUBG Mobile - شخصية تتحرك بالأزرار!');
+        console.log(`📍 الموقع الحالي: (${playerGridX},${playerGridY})`);
     </script>
 </body>
 </html>
