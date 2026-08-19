@@ -1,4 +1,4 @@
-head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🌐 العوالم الكروية - النظام المتكامل 100%</title>
@@ -1089,10 +1089,10 @@ function ensureUploadWorldFromIcon(iconIndex) {
     return worldId;
 }
 
-function openTileCDNUploadModal() {
+function openTileCDNUploadModal(prefillTileId,fromTileShortcut) {
     const inAdminRoom=typeof castleState!=='undefined'&&castleState.currentRoom==='0_3';
     const canUseAdminTileCDN=typeof adminSystem!=='undefined'&&typeof adminSystem.requireAdmin==='function'&&adminSystem.requireAdmin();
-    if(!inAdminRoom||!canUseAdminTileCDN){showToast('🔐 TileCDN متاح للمدير من داخل غرفة المدير فقط','warning');return;}
+    if(!canUseAdminTileCDN||(!inAdminRoom&&!fromTileShortcut)){showToast('🔐 TileCDN متاح للمدير فقط — استخدمه من غرفة المدير أو بالضغط المطوّل على مربع','warning');return;}
     let modal = document.getElementById('tilecdn-upload-modal');
     if (!modal) {
         modal = document.createElement('div');
@@ -1119,6 +1119,7 @@ function openTileCDNUploadModal() {
     document.getElementById('tilecdn-upload-visible').checked = true;
     document.getElementById('tilecdn-upload-file-status').textContent = 'لم يتم اختيار ملفات';
     modal.style.display = 'flex';
+    if(prefillTileId){setTimeout(()=>{const iconMatch=String(ServerManager.currentWorldId||currentWorldId||'').match(/^world_icon_(\\d+)$/);const iconSelect=document.getElementById('tilecdn-upload-icon');if(iconMatch&&iconSelect){iconSelect.value=iconMatch[1];tileCDNIconChanged();const tileSelect=document.getElementById('tilecdn-upload-tile');if(tileSelect){tileSelect.value=prefillTileId;tileSelect.dispatchEvent(new Event('change'));}}},30);}
 }
 
 function tileCDNIconChanged() {
@@ -1842,6 +1843,8 @@ function syncAll() {
 let scene, camera, renderer;
 let playerGroup, tileGroup;
 let tileMeshes = [];
+let lastTileTap = { id: null, at: 0 };
+let longPressTimer = null, longPressTriggered = false, suppressNextTapUntil = 0;
 let gridHelper = null;
 let isTransitioning = false;
 let isInWorld = false;
@@ -2752,6 +2755,7 @@ function updateUsersDisplay() {
 //  القسم 22: التحكم
 // ═══════════════════════════════════════════════════════════════════════════
 
+function openTileUploadAtPoint(clientX,clientY){if(currentWorldId==='main'||isTransitioning||typeof ServerManager==='undefined')return false;const canvas=document.getElementById('canvas');if(!canvas||!renderer||!camera)return false;const rect=canvas.getBoundingClientRect(),pointer=new THREE.Vector2(((clientX-rect.left)/rect.width)*2-1,-((clientY-rect.top)/rect.height)*2+1),ray=new THREE.Raycaster();ray.setFromCamera(pointer,camera);const hit=ray.intersectObjects(tileMeshes||[])[0];if(!hit||!hit.object.userData)return false;const tileId=hit.object.userData.row+'_'+hit.object.userData.col;ServerManager.selectTile(tileId);if(!String(currentWorldId).startsWith('world_icon_')){showToast('📍 الضغط المطوّل للرفع يعمل داخل مربعات عوالم الأيقونات','info');return false;}longPressTriggered=true;suppressNextTapUntil=Date.now()+900;openTileCDNUploadModal(tileId,true);return true;}
 function activateVisibleFileAtPoint(clientX, clientY) {
     if (currentWorldId === 'main' || isTransitioning || typeof ServerManager === 'undefined') return false;
     const canvas = document.getElementById('canvas');
@@ -2763,6 +2767,9 @@ function activateVisibleFileAtPoint(clientX, clientY) {
     const hit = ray.intersectObjects(tileMeshes || [])[0];
     if (!hit || !hit.object.userData) return false;
     const tileId = hit.object.userData.row + '_' + hit.object.userData.col;
+    const now=Date.now(); const isDoubleTap=lastTileTap.id===tileId && now-lastTileTap.at<550; lastTileTap={id:tileId,at:now};
+    if(typeof ServerManager!=='undefined'&&typeof ServerManager.selectTile==='function')ServerManager.selectTile(tileId);
+    if(!isDoubleTap){showToast('📍 تم تحديد المربع '+tileId+' — اضغط مرتين للدخول','info');return true;}
     if(typeof castleState!=='undefined'&&currentWorldId===castleState.worldId&&typeof enterTileRoom==='function'){enterTileRoom(tileId);return true;}
     const tile = ServerManager.tiles[tileId];
     if (!tile || !tile.files) return false;
@@ -2810,10 +2817,11 @@ function setupControls() {
             mouseDrag.startY = e.clientY;
             mouseDrag.currentX = e.clientX;
             mouseDrag.currentY = e.clientY;
+            clearTimeout(longPressTimer);longPressTriggered=false;longPressTimer=setTimeout(()=>openTileUploadAtPoint(e.clientX,e.clientY),700);
         });
-        window.addEventListener('mousemove', e => { if (mouseDrag.active) { if (Math.hypot(e.clientX - worldTapStartX, e.clientY - worldTapStartY) > 10) worldTapMoved = true; mouseDrag.currentX = e.clientX; mouseDrag.currentY = e.clientY; } });
-        window.addEventListener('mouseup', () => { mouseDrag.active = false; });
-        canvas.addEventListener('click', e => { if (!worldTapMoved) activateVisibleFileAtPoint(e.clientX, e.clientY); });
+        window.addEventListener('mousemove', e => { if (mouseDrag.active) { if (Math.hypot(e.clientX - worldTapStartX, e.clientY - worldTapStartY) > 10) { worldTapMoved = true; clearTimeout(longPressTimer); longPressTimer=null; } mouseDrag.currentX = e.clientX; mouseDrag.currentY = e.clientY; } });
+        window.addEventListener('mouseup', () => { mouseDrag.active = false; clearTimeout(longPressTimer); longPressTimer=null; });
+        canvas.addEventListener('click', e => { if(Date.now()<suppressNextTapUntil)return; if (!worldTapMoved) activateVisibleFileAtPoint(e.clientX, e.clientY); });
         canvas.addEventListener('touchstart', e => {
             if (currentWorldId === 'main' || currentWorldId === 'world_fight' || isTransitioning) return;
             if (e.touches.length === 1) {
@@ -2824,15 +2832,17 @@ function setupControls() {
                 if (Math.hypot(e.touches[0].clientX - worldTapStartX, e.touches[0].clientY - worldTapStartY) > 10) worldTapMoved = true;
                 mouseDrag.currentX = e.touches[0].clientX;
                 mouseDrag.currentY = e.touches[0].clientY;
+                clearTimeout(longPressTimer);longPressTriggered=false;longPressTimer=setTimeout(()=>openTileUploadAtPoint(e.touches[0].clientX,e.touches[0].clientY),700);
             }
         }, { passive: true });
         canvas.addEventListener('touchmove', e => {
             if (mouseDrag.active && e.touches.length === 1) {
                 mouseDrag.currentX = e.touches[0].clientX;
                 mouseDrag.currentY = e.touches[0].clientY;
+                if(Math.hypot(e.touches[0].clientX-worldTapStartX,e.touches[0].clientY-worldTapStartY)>12){worldTapMoved=true;clearTimeout(longPressTimer);longPressTimer=null;}
             }
         }, { passive: true });
-        canvas.addEventListener('touchend', e => { mouseDrag.active = false; if (!worldTapMoved && e.changedTouches && e.changedTouches[0]) activateVisibleFileAtPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY); });
+        canvas.addEventListener('touchend', e => { mouseDrag.active = false; clearTimeout(longPressTimer);longPressTimer=null; if(longPressTriggered){suppressNextTapUntil=Date.now()+900;longPressTriggered=false;return;} if (!worldTapMoved && e.changedTouches && e.changedTouches[0] && Date.now()>=suppressNextTapUntil) activateVisibleFileAtPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY); });
     }
 }
 
@@ -3373,7 +3383,8 @@ function showRoomFiles(){
     const isAdminRoom=tileId==='0_3';if(isAdminRoom&&typeof adminSystem!=='undefined'&&typeof adminSystem.syncRole==='function')adminSystem.syncRole();const isAdminUser=isAdminRoom&&typeof adminSystem!=='undefined'&&adminSystem.isAdmin;const level1Button='<button onclick="enterP2PLevel(\''+tileId+'\')" style="border-color:#22d3ee;color:#67e8f9;">'+(tileId==='0_5'?'🌐 المستوى 1 P2P':'⬆️ المستوى 1')+'</button>';const adminButton=isAdminRoom&&isAdminUser?'<button onclick="adminSystem.showAdminPanel()" style="border-color:#fbbf24;color:#fbbf24;">👑 لوحة المدير</button><button onclick="openTileCDNUploadModal()" style="border-color:#4ade80;color:#4ade80;">📤 TileCDN</button><button onclick="toggleServerPanel()" style="border-color:#60a5fa;color:#93c5fd;">📦 السيرفر</button><button onclick="openAdminCryptoPanel()" style="border-color:#ec4899;color:#f9a8d4;">🔐 التشفير</button>':'';const actions='<div style="display:flex;gap:7px;flex-wrap:wrap;margin:10px 0;"><label style="padding:10px 13px;background:rgba(74,222,128,.15);border:1px dashed #4ade80;border-radius:8px;cursor:pointer;">📤 رفع إلى الغرفة<input type="file" multiple onchange="uploadFilesToRoom(this.files)" style="display:none"></label><button onclick="shareFilePrompt()">📤 مشاركة</button>'+level1Button+adminButton+(type.type==='chat'?'<button onclick="openRoomChat(\''+tileId+'\')">💬 الدردشة</button>':'')+(type.type==='video'?'<button onclick="openRoomVideo(\''+tileId+'\')">🎥 الفيديو</button>':'')+'<button onclick="leaveRoom()">⬅️ خروج</button></div>';
     castleOverlay(type.icon+' '+type.name,'<div style="color:#d1d5db;margin-bottom:8px;">📂 ملفات هذه الغرفة مرتبطة بالمربع '+tileId+'</div>'+actions+rows);
 }
-function showAllRooms(){initCastle();const rooms=[];for(let r=0;r<12;r++)for(let c=0;c<12;c++){const id=r+'_'+c,t=castleRoomType(id),count=Object.keys(loadRoomFiles(id)).length;rooms.push('<button onclick="enterTileRoom(\''+id+'\')" style="min-height:66px;background:'+(count?'rgba(74,222,128,.18)':'rgba(255,255,255,.05)')+';border:1px solid '+(count?'#4ade80':'rgba(255,255,255,.1)')+';border-radius:9px;color:#fff;cursor:pointer;">'+t.icon+'<br><small>'+t.name+'</small><br><em style="font-size:10px;">'+id+' • '+count+' ملف</em></button>');}castleOverlay('غرف القلعة','<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:7px;">'+rooms.join('')+'</div>');}
+function roomGridTap(tileId){const now=Date.now();const isDouble=lastTileTap.id===tileId&&now-lastTileTap.at<550;lastTileTap={id:tileId,at:now};if(!isDouble){showToast('📍 تم تحديد الغرفة '+tileId+' — اضغط مرة ثانية للدخول','info');return;}enterTileRoom(tileId);}
+function showAllRooms(){initCastle();const rooms=[];for(let r=0;r<12;r++)for(let c=0;c<12;c++){const id=r+'_'+c,t=castleRoomType(id),count=Object.keys(loadRoomFiles(id)).length;rooms.push('<button onclick="roomGridTap(\''+id+'\')" style="min-height:66px;background:'+(count?'rgba(74,222,128,.18)':'rgba(255,255,255,.05)')+';border:1px solid '+(count?'#4ade80':'rgba(255,255,255,.1)')+';border-radius:9px;color:#fff;cursor:pointer;">'+t.icon+'<br><small>'+t.name+'</small><br><em style="font-size:10px;">'+id+' • '+count+' ملف</em></button>');}castleOverlay('غرف القلعة','<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:7px;">'+rooms.join('')+'</div>');}
 function enterCastle(){initCastle();ensureCastleWorld();if(typeof buildWorld==='function')buildWorld(castleState.worldId);showAllRooms();showRoomButtons();showToast('🏰 دخلت القلعة الأم — اختر غرفة','success');}
 window.castleRoomType=castleRoomType;window.uploadFilesToRoom=uploadFilesToRoom;window.openRoomChat=openRoomChat;window.sendRoomChatMessage=sendRoomChatMessage;window.openRoomVideo=openRoomVideo;
 
@@ -3399,9 +3410,9 @@ function enterAdminRoom(){adminSystem.enterAdminRoom();}
 function publishFromCurrentTile(){adminSystem.publishFromCurrentTile();}
 function showPublishedFiles(){adminSystem.showPublishedFiles();}
 function showAdminPanel(){adminSystem.showAdminPanel();}
-window.adminSystem=adminSystem;window.enterAdminRoom=enterAdminRoom;window.publishFromCurrentTile=publishFromCurrentTile;window.showPublishedFiles=showPublishedFiles;window.showAdminPanel=showAdminPanel;window.openAdminCryptoPanel=openAdminCryp
-    
-                toPanel;
+window.adminSystem=adminSystem;window.enterAdminRoom=enterAdminRoom;window.publishFromCurrentTile=publishFromCurrentTile;window.show
+        
+    PublishedFiles=showPublishedFiles;window.showAdminPanel=showAdminPanel;window.openAdminCryptoPanel=openAdminCryptoPanel;
 setTimeout(()=>{adminSystem.listenToAdminRoom();},800);
 
 </script>
