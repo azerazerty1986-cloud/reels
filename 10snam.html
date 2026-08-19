@@ -125,7 +125,8 @@ head>
         .telegram-section .tg-actions .btn-green:hover{background:rgba(74,222,128,0.25)}
         .telegram-section .tg-actions .btn-gold{background:rgba(255,215,0,0.15);border-color:rgba(255,215,0,0.2);color:#ffd700}
         .telegram-section .tg-actions .btn-gold:hover{background:rgba(255,215,0,0.25)}
-        #toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);z-index:10000;padding:8px 20px;border-radius:8px;font-size:12px;display:none;background:rgba(10,10,30,0.95);border:1px solid rgba(139,92,246,0.2);color:#fff;max-width:90%;text-align:center;animation:fadeIn 0.3s ease}
+        #toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);z-index:20050;padding:10px 20px;border-radius:10px;font-size:12px;display:none;background:rgba(10,10,30,0.98);border:1px solid rgba(139,92,246,0.35);color:#fff;max-width:min(92vw,620px);text-align:center;animation:fadeIn 0.3s ease;pointer-events:none;box-shadow:0 10px 35px rgba(0,0,0,.45)}
+        #toast.server-context{top:max(14px,env(safe-area-inset-top));bottom:auto;z-index:20050;max-width:min(92vw,560px);font-size:13px;font-weight:700}
         #toast.success{border-color:rgba(74,222,128,0.3);color:#4ade80}
         #toast.error{border-color:rgba(239,68,68,0.3);color:#f87171}
         #toast.warning{border-color:rgba(251,191,36,0.3);color:#fbbf24}
@@ -429,8 +430,11 @@ const CONFIG = {
 
 function showToast(message, type) {
     const toast = document.getElementById('toast');
+    if(!toast)return;
+    const serverPanel=document.getElementById('server-panel');
+    const serverVisible=!!(serverPanel&&getComputedStyle(serverPanel).display!=='none');
     toast.textContent = message;
-    toast.className = 'toast ' + (type || 'info');
+    toast.className = 'toast ' + (type || 'info') + (serverVisible ? ' server-context' : '');
     toast.style.display = 'block';
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(() => { toast.style.display = 'none'; }, 3000);
