@@ -198,7 +198,7 @@ head>
         <div class="feat">⛓️ بلوكشين</div>
         <div class="feat">✍️ توقيع رقمي</div>
     </div>
-    <button class="start-btn" id="startGameBtn">🚀 ابدأ المغامرة</button>
+    <button class="start-btn" id="startGameBtn" onclick="showLoginScreen();return false;">🚀 ابدأ المغامرة</button>
     <div style="display:flex;gap:10px;margin-top:10px;">
         <button class="start-btn" style="padding:10px 30px;font-size:14px;" onclick="loadGame()">📂 تحميل</button>
         <button class="start-btn" style="padding:10px 30px;font-size:14px;" onclick="showTutorial()">❓ دليل</button>
@@ -3014,10 +3014,11 @@ function toggleProfile() { showToast('👤 الملف الشخصي: ' + playerNa
 
 let currentUserRole = 'guest';
 function showLoginScreen(){
+    const start=document.getElementById('start-screen');if(start)start.style.display='none';
     let box=document.getElementById('login-screen');
     if(!box){box=document.createElement('div');box.id='login-screen';box.style.cssText='position:fixed;inset:0;z-index:3000;background:linear-gradient(135deg,#090925,#020207 60%,#10102d);display:flex;align-items:center;justify-content:center;padding:20px;direction:rtl;';document.body.appendChild(box);}
     box.innerHTML='<div style="width:min(430px,94vw);background:rgba(10,14,38,.97);border:1px solid rgba(167,139,250,.45);border-radius:20px;padding:24px;text-align:center;box-shadow:0 20px 80px rgba(0,0,0,.7);"><div style="font-size:30px;margin-bottom:8px;">🔐</div><h2 style="color:#c4b5fd;margin:0 0 8px;">تسجيل الدخول</h2><p style="color:#aaa;font-size:12px;margin-bottom:20px;">اختر نوع الدخول لبدء المغامرة بالصلاحيات المناسبة</p><div style="display:grid;gap:10px;"><button onclick="startGameAs(\'user\')" style="padding:13px;border:1px solid rgba(74,222,128,.4);border-radius:10px;background:rgba(74,222,128,.13);color:#86efac;font-weight:700;font-size:15px;cursor:pointer;">👤 دخول كمستخدم</button><button onclick="openGameAdminLogin()" style="padding:13px;border:1px solid rgba(251,191,36,.4);border-radius:10px;background:rgba(251,191,36,.13);color:#fde68a;font-weight:700;font-size:15px;cursor:pointer;">👑 دخول كمدير</button><button onclick="closeLoginScreen()" style="padding:9px;border:0;border-radius:8px;background:rgba(255,255,255,.06);color:#aaa;cursor:pointer;">رجوع</button></div></div>';box.style.display='flex';}
-function closeLoginScreen(){const b=document.getElementById('login-screen');if(b)b.style.display='none';}
+function closeLoginScreen(){const b=document.getElementById('login-screen');if(b)b.style.display='none';const start=document.getElementById('start-screen');if(start&&(!window.currentUserRole))start.style.display='flex';}
 function openGameAdminLogin(){const box=document.getElementById('login-screen');if(!box)return;box.innerHTML='<div style="width:min(430px,94vw);background:rgba(10,14,38,.98);border:1px solid rgba(251,191,36,.45);border-radius:20px;padding:24px;text-align:center;box-shadow:0 20px 80px rgba(0,0,0,.7);"><div style="font-size:30px;">👑</div><h2 style="color:#fde68a;margin:8px 0;">دخول المدير</h2><p style="color:#aaa;font-size:11px;">أدخل كلمة مرور المدير للمتابعة</p><input id="game-admin-password" type="password" autocomplete="current-password" placeholder="كلمة المرور" style="width:100%;box-sizing:border-box;padding:12px;margin:12px 0;border-radius:9px;border:1px solid rgba(255,255,255,.15);background:#080d20;color:#fff;text-align:center;"><div style="display:flex;gap:8px;"><button onclick="verifyGameAdminLogin()" style="flex:1;padding:11px;border:0;border-radius:9px;background:#fbbf24;color:#17100a;font-weight:800;cursor:pointer;">🔓 تحقق وابدأ</button><button onclick="showLoginScreen()" style="padding:11px;border:0;border-radius:9px;background:rgba(255,255,255,.07);color:#aaa;cursor:pointer;">رجوع</button></div><div id="game-admin-error" style="color:#f87171;font-size:11px;margin-top:10px;"></div></div>';box.style.display='flex';setTimeout(()=>document.getElementById('game-admin-password')?.focus(),50);}
 async function verifyGameAdminLogin(){const input=document.getElementById('game-admin-password');const error=document.getElementById('game-admin-error');const password=input?input.value:'';if(!password){if(error)error.textContent='أدخل كلمة المرور أولاً';return;}const hash=await CryptoManager.sha256(password);const stored=localStorage.getItem('tilecdn_admin_hash');if(stored&&stored!==hash){if(error)error.textContent='كلمة المرور غير صحيحة';return;}if(!stored)localStorage.setItem('tilecdn_admin_hash',hash);sessionStorage.setItem('tilecdn_admin_session',password);adminSession=true;startGameAs('admin');}
 function startGameAs(role){currentUserRole=role;window.currentUserRole=role;if(role==='admin'){adminSession=true;}else{adminSession=false;CryptoManager.key=null;CryptoManager.initialized=false;CryptoManager.encryptionReady=false;}closeLoginScreen();launchGameForRole(role);document.querySelectorAll('[onclick*="toggleCryptoPanel"]').forEach(el=>{el.style.display=role==='admin'?'':'none';});showToast(role==='admin'?'👑 مرحبًا بالمدير — صلاحيات كاملة':'👤 مرحبًا بالمستخدم','success');}
@@ -3335,7 +3336,7 @@ window.enterWorldFromTile = enterWorldFromTile;
 document.addEventListener('DOMContentLoaded', function() {
     const startBtn = document.getElementById('startGameBtn');
     if (startBtn) {
-        startBtn.onclick = function(e) { e.preventDefault(); startGame(); };
+        startBtn.onclick = function(e) { e.preventDefault(); showLoginScreen(); };
     }
     console.log('🌐 النظام المتكامل الكامل جاهز!');
     console.log('⛓️ بلوكشين مُوقّع:', blockchain.chain.length, 'بلوك');
@@ -3407,8 +3408,7 @@ class AdminCastleSystem {
     unpublishFile(key){if(!this.requireAdmin())return;if(!confirm('إلغاء نشر الملف؟'))return;delete this.roomData.publishedFiles[key];Object.values(this.roomData.tileFiles).forEach(a=>{const i=a.indexOf(key);if(i>=0)a.splice(i,1)});this.saveAdminRoomData();showToast('🗑️ تم إلغاء النشر','warning');}
     showAllMembers(){const rows=(this.roomData.members||[]).map(m=>'<div style="padding:8px;background:rgba(255,255,255,.05);margin:4px 0;border-radius:7px;">👤 '+m+'</div>').join('');castleOverlay('👥 أعضاء غرفة المدير',rows||'لا يوجد أعضاء');}
     showAdminPanel(){if(!this.requireAdmin())return;const count=Object.keys(this.roomData.publishedFiles||{}).length;castleOverlay('👑 غرفة المدير','<div style="color:#d1d5db;margin-bottom:12px;">الأعضاء: '+this.roomData.members.length+' | الملفات المنشورة: '+count+'</div><div style="display:grid;gap:8px;"><button onclick="adminSystem.publishFromCurrentTile()">📤 نشر من المربع الحالي</button><button on
-    
-        click="adminSystem.showPublishedFiles()">📂 عرض المنشور</button><button onclick="adminSystem.showPublishedFiles({tileId:ServerManager.selectedTile})">📍 منشورات المربع الحالي</button><button onclick="adminSystem.showPublishedFiles({worldId:currentWorldId})">🌍 منشورات العالم الحالي</button><button onclick="adminSystem.showAllMembers()">👥 الأعضاء</button></div>');}
+                          click="adminSystem.showPublishedFiles()">📂 عرض المنشور</button><button onclick="adminSystem.showPublishedFiles({tileId:ServerManager.selectedTile})">📍 منشورات المربع الحالي</button><button onclick="adminSystem.showPublishedFiles({worldId:currentWorldId})">🌍 منشورات العالم الحالي</button><button onclick="adminSystem.showAllMembers()">👥 الأعضاء</button></div>');}
     enterAdminRoom(){if(!this.requireAdmin())return;castleState.currentRoom='0_3';saveCastleData();this.listenToAdminRoom();this.showAdminPanel();showToast('👑 دخلت غرفة المدير العامة','success');}
 }
 const adminSystem=new AdminCastleSystem();
