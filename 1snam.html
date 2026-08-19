@@ -1,4 +1,6 @@
-head>
+DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🌐 العوالم الكروية - النظام المتكامل 100%</title>
@@ -208,6 +210,7 @@ head>
 
 <!-- ===== HUD ===== -->
 <div id="hud">
+    <div class="stat"><span class="val" id="hud-player-name" style="color:#c4b5fd;">زائر</span><span class="label">👤 الهوية</span></div>
     <div class="stat"><span class="val health" id="health-display">100</span><span class="label">❤️ صحة</span></div>
     <div class="stat"><span class="val kills" id="kills-display">0</span><span class="label">💀 قتلى</span></div>
     <div class="stat"><span class="val" id="score-display" style="color:#ffd700;">0</span><span class="label">🏆 نقاط</span></div>
@@ -220,7 +223,7 @@ head>
 <!-- ===== شريط الأدوات الجانبي ===== -->
 <div id="side-toolbar">
     <button class="toolbar-btn" onclick="toggleBlockchainPanel()" title="⛓️ بلوكشين">⛓️</button>
-    <button class="toolbar-btn" onclick="toggleProfile()" title="👤 الملف الشخصي">👤</button>
+    <button class="toolbar-btn" id="identity-user-button" onclick="toggleProfile()" title="👤 الملف الشخصي" style="min-width:92px;font-size:11px;white-space:nowrap;">👤 <span id="identity-role-label">زائر</span></button>
     <button class="toolbar-btn" onclick="saveGame()" title="💾 حفظ">💾</button>
 </div>
 
@@ -282,6 +285,13 @@ head>
         <span style="color:#888;font-size:11px;">🌍 العالم: <span id="sv-world" style="color:#a78bfa;">main</span></span>
         <span style="color:#888;font-size:11px;">📂 المربعات: <span id="sv-tiles-count" style="color:#4ade80;">0</span></span>
         <span style="color:#888;font-size:11px;">📄 الملفات: <span id="sv-files-count" style="color:#fbbf24;">0</span></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 12px;padding:10px 12px;background:rgba(139,92,246,.1);border:1px solid rgba(167,139,250,.25);border-radius:10px;">
+        <label for="sv-icon-selector" style="color:#e9d5ff;font-size:12px;font-weight:700;">🧭 توجه إلى أيقونة:</label>
+        <select id="sv-icon-selector" onchange="selectServerIcon(this.value)" style="flex:1;min-width:190px;padding:9px 10px;border-radius:8px;border:1px solid rgba(167,139,250,.35);background:#0b1028;color:#fff;font-family:inherit;">
+            <option value="">-- اختر الأيقونة --</option>
+        </select>
+        <span style="color:#67e8f9;font-size:10px;">المستوى 0</span>
     </div>
     <div class="sv-grid" id="sv-grid"></div>
     <div class="sv-file-list" id="sv-files"></div>
@@ -1119,19 +1129,22 @@ function openTileCDNUploadModal(prefillTileId,fromTileShortcut) {
     document.getElementById('tilecdn-upload-visible').checked = true;
     document.getElementById('tilecdn-upload-file-status').textContent = 'لم يتم اختيار ملفات';
     modal.style.display = 'flex';
-    if(prefillTileId){setTimeout(()=>{const iconMatch=String(ServerManager.currentWorldId||currentWorldId||'').match(/^world_icon_(\\d+)$/);const iconSelect=document.getElementById('tilecdn-upload-icon');if(iconMatch&&iconSelect){iconSelect.value=iconMatch[1];tileCDNIconChanged();const tileSelect=document.getElementById('tilecdn-upload-tile');if(tileSelect){tileSelect.value=prefillTileId;tileSelect.dispatchEvent(new Event('change'));}}},30);}
+    if(prefillTileId){setTimeout(()=>{const iconMatch=String(ServerManager.currentWorldId||currentWorldId||'').match(/^world_icon_(\d+)$/);const iconSelect=document.getElementById('tilecdn-upload-icon');if(!iconMatch||!iconSelect)return;iconSelect.value=iconMatch[1];tileCDNIconChanged();const applyTile=()=>{const tileSelect=document.getElementById('tilecdn-upload-tile');if(!tileSelect)return;if(!Array.from(tileSelect.options).some(o=>o.value===prefillTileId)){tileCDNIconChanged();}tileSelect.value=prefillTileId;tileSelect.dispatchEvent(new Event('change'));};applyTile();setTimeout(applyTile,80);setTimeout(applyTile,220);},30);}
 }
 
 function tileCDNIconChanged() {
     const iconIndex = parseInt(document.getElementById('tilecdn-upload-icon').value, 10);
     const tileSelect = document.getElementById('tilecdn-upload-tile');
+    if (!tileSelect) return;
     if (isNaN(iconIndex)) { tileSelect.innerHTML = '<option value="">-- اختر الأيقونة أولاً --</option>'; return; }
     const worldId = ensureUploadWorldFromIcon(iconIndex);
-    ServerManager.switchWorld(worldId);
+    if (!worldId) { tileSelect.innerHTML = '<option value="">⚠️ تعذر إنشاء العالم</option>'; return; }
+    try { ServerManager.switchWorld(worldId); } catch(e) { console.warn('TileCDN world switch',e); }
     const world = getWorld(worldId);
-    document.getElementById('tilecdn-upload-world').textContent = '🌍 العالم المحدد: ' + (world ? world.name : worldId) + ' | المستوى ' + (world && world.level || 0);
-    tileSelect.innerHTML = '<option value="">-- اختر المربع --</option>' + Array.from({length: 12}, (_, r) => Array.from({length: 12}, (_, c) => { const id = r + '_' + c; const count = ServerManager.tiles[id] && ServerManager.tiles[id].files ? Object.keys(ServerManager.tiles[id].files).length : 0; return '<option value="' + id + '">📂 مربع (' + r + ',' + c + ')' + (count ? ' — ' + count + ' ملف' : '') + '</option>'; }).join('')).join('');
-    tileSelect.onchange = function() { document.getElementById('tilecdn-upload-selection').textContent = this.value ? '📍 سيتم الرفع إلى: ' + worldId + ' / المربع ' + this.value : ''; ServerManager.selectTile(this.value); };
+    document.getElementById('tilecdn-upload-world').textContent = '🌍 العالم المحدد: ' + (world ? world.name : worldId) + ' | المستوى 0';
+    const options = Array.from({length: 12}, (_, r) => Array.from({length: 12}, (_, c) => { const id = r + '_' + c; const count = ServerManager.tiles[id] && ServerManager.tiles[id].files ? Object.keys(ServerManager.tiles[id].files).length : 0; return '<option value="' + id + '">📂 مربع (' + r + ',' + c + ')' + (count ? ' — ' + count + ' ملف' : '') + '</option>'; }).join('')).join('');
+    tileSelect.innerHTML = '<option value="">-- اختر المربع --</option>' + options;
+    tileSelect.onchange = function() { document.getElementById('tilecdn-upload-selection').textContent = this.value ? '📍 سيتم الرفع إلى: ' + worldId + ' / المستوى 0 / المربع ' + this.value : ''; if(this.value)ServerManager.selectTile(this.value); };
 }
 
 function tileCDNFilesChanged() {
@@ -1451,22 +1464,15 @@ const ServerManager = {
         showToast('🗑️ تم التفريغ', 'warning');
     },
     runFile(tileId, filename) {
-        openFileInsidePlatform(tileId, filename);
-        return;
         const tile = this.tiles[tileId];
-        if (!tile || !tile.files || !tile.files[filename]) return;
-        const content = tile.files[filename];
-        if (content.startsWith('data:image/')) {
-            const win = window.open('', '_blank');
-            if (win) { win.document.write('<title>' + filename + '</title><img src=\"' + content + '\" style=\"max-width:100%;height:auto;display:block;margin:auto\">'); win.document.close(); showToast('🖼️ تم فتح الصورة ' + filename, 'success'); }
-            else showToast('❌ تم حظر النافذة المنبثقة', 'error');
-        } else if (filename.endsWith('.html') || filename.endsWith('.htm')) {
-            const win = window.open('', '_blank');
-            if (win) { win.document.write(content); win.document.close(); showToast('🚀 تم تشغيل ' + filename, 'success'); }
-            else { showToast('❌ تم حظر النافذة المنبثقة', 'error'); }
-        } else if (content.startsWith('data:')) {
-            const link = document.createElement('a'); link.href = content; link.download = filename; link.click(); showToast('⬇️ تم تنزيل ' + filename, 'success');
-        } else { showToast('📄 عرض ' + filename, 'info'); alert(content.substring(0, 500) + (content.length > 500 ? '\n... (مقتطع)' : '')); }
+        if (!tile || !tile.files || tile.files[filename] == null) { showToast('❌ الملف غير موجود في المربع', 'error'); return; }
+        this.selectedTile = tileId;
+        if (typeof AppRunner !== 'undefined' && AppRunner.showInAppPreview) {
+            AppRunner.showInAppPreview(tileId, filename);
+            showToast('🚀 تم تشغيل '+filename+' داخل المنصة', 'success');
+        } else {
+            openFileInsidePlatform(tileId, filename);
+        }
     },
     toggleFileVisibility(tileId, filename) {
         const tile = this.tiles[tileId];
@@ -1514,9 +1520,11 @@ function toggleServerPanel() {
     const panel=document.getElementById('server-panel');
     const willOpen=!panel.classList.contains('open');
     panel.classList.toggle('open');
-    if(willOpen){closeCastleOverlay();panel.style.zIndex='12500';initTileCDNTouchZoom();ServerManager.init();GistManager.init();loadTelegramConfig();loadGistConfig();}
+    if(willOpen){closeCastleOverlay();panel.style.zIndex='12500';initTileCDNTouchZoom();ServerManager.init();GistManager.init();loadTelegramConfig();loadGistConfig();populateServerIconSelector();}
 }
 
+function populateServerIconSelector(){const select=document.getElementById('sv-icon-selector');if(!select||typeof WORLD_ICONS==='undefined')return;const active=String(ServerManager.currentWorldId||currentWorldId||'').match(/^world_icon_(\d+)$/);select.innerHTML='<option value="">-- اختر الأيقونة --</option>'+WORLD_ICONS.map((icon,i)=>'<option value="'+i+'">'+icon.emoji+' '+icon.name+' — المستوى 0</option>').join('');if(active)select.value=active[1];}
+function selectServerIcon(iconValue){if(iconValue===''){return;}const index=parseInt(iconValue,10);if(!Number.isInteger(index)||!WORLD_ICONS[index]){showToast('⚠️ الأيقونة غير صالحة','warning');return;}const worldId=ensureUploadWorldFromIcon(index);if(!worldId){showToast('❌ تعذر إنشاء عالم الأيقونة','error');return;}const world=getWorld(worldId);if(world)world.level=0;ServerManager.switchWorld(worldId);currentWorldId=worldId;window.currentWorldId=worldId;if(typeof buildWorld==='function')buildWorld(worldId);ServerManager.selectTile(ServerManager.selectedTile||'0_0');populateServerIconSelector();showToast('🌍 تم فتح '+WORLD_ICONS[index].emoji+' '+WORLD_ICONS[index].name+' في المستوى 0','success');}
 function closeServerPanel() { document.getElementById('server-panel').classList.remove('open'); }
 function svUploadFile() { ServerManager.uploadFile(); }
 function svCreateWorld() { ServerManager.createWorld(); }
@@ -3023,7 +3031,14 @@ function openGameAdminLogin(){const box=document.getElementById('login-screen');
 async function verifyGameAdminLogin(){const input=document.getElementById('game-admin-password');const error=document.getElementById('game-admin-error');const password=input?input.value:'';if(!password){if(error)error.textContent='أدخل كلمة المرور أولاً';return;}const hash=await CryptoManager.sha256(password);const stored=localStorage.getItem('tilecdn_admin_hash');if(stored&&stored!==hash){if(error)error.textContent='كلمة المرور غير صحيحة';return;}if(!stored)localStorage.setItem('tilecdn_admin_hash',hash);sessionStorage.setItem('tilecdn_admin_session',password);adminSession=true;startGameAs('admin');}
 function startGameAs(role){currentUserRole=role;window.currentUserRole=role;if(role==='admin'){adminSession=true;}else{adminSession=false;CryptoManager.key=null;CryptoManager.initialized=false;CryptoManager.encryptionReady=false;}closeLoginScreen();launchGameForRole(role);document.querySelectorAll('[onclick*="toggleCryptoPanel"]').forEach(el=>{el.style.display=role==='admin'?'':'none';});showToast(role==='admin'?'👑 مرحبًا بالمدير — صلاحيات كاملة':'👤 مرحبًا بالمستخدم','success');}
 function startGame(){showLoginScreen();}
-window.showLoginScreen=showLoginScreen;window.startGameAs=startGameAs;window.openGameAdminLogin=openGameAdminLogin;window.verifyGameAdminLogin=verifyGameAdminLogin;window.startGame=startGame;
+// نافذة الهوية الجديدة: اسم + بريد + توقيع ECDSA أو دخول زائر
+function updateIdentityButton(){const el=document.getElementById('identity-role-label');if(!el)return;const role=window.currentUserRole||currentUserRole||'guest';const suffix=role==='admin'?'كمدير':role==='guest'?'كزائر':'كمستخدم';el.textContent=(playerName||'زائر')+' '+suffix;const btn=document.getElementById('identity-user-button');if(btn)btn.title='👤 '+(playerName||'زائر')+' — '+suffix;}
+function setIdentityInUI(name,email,block){playerName=name||'زائر';window.currentUserEmail=email||'';window.currentIdentityBlock=block||null;const el=document.getElementById('hud-player-name');if(el)el.textContent=playerName;updateIdentityButton();try{localStorage.setItem('tilecdn_identity',JSON.stringify({name:playerName,email:window.currentUserEmail,blockIndex:block&&block.index||null,updatedAt:Date.now()}));}catch(e){}}
+function showLoginScreen(){const start=document.getElementById('start-screen');if(start)start.style.display='none';let box=document.getElementById('login-screen');if(!box){box=document.createElement('div');box.id='login-screen';box.style.cssText='position:fixed;inset:0;z-index:3000;background:linear-gradient(135deg,#090925,#020207 60%,#10102d);display:flex;align-items:center;justify-content:center;padding:20px;direction:rtl;';document.body.appendChild(box);}box.innerHTML='<div style="width:min(460px,96vw);background:rgba(10,14,38,.98);border:1px solid rgba(167,139,250,.45);border-radius:20px;padding:24px;text-align:center;box-shadow:0 20px 80px rgba(0,0,0,.7);"><div style="font-size:30px;margin-bottom:8px;">🔐</div><h2 style="color:#c4b5fd;margin:0 0 8px;">تسجيل الدخول</h2><p style="color:#aaa;font-size:12px;margin-bottom:16px;">أنشئ هوية موقعة أو تابع كزائر</p><label style="display:block;text-align:right;color:#aaa;font-size:11px;margin:8px 0 4px;">👤 الاسم</label><input id="identity-name" type="text" autocomplete="name" placeholder="اكتب اسمك" style="width:100%;box-sizing:border-box;padding:11px;border-radius:9px;border:1px solid rgba(255,255,255,.15);background:#080d20;color:#fff;text-align:right;"><label style="display:block;text-align:right;color:#aaa;font-size:11px;margin:10px 0 4px;">📧 البريد</label><input id="identity-email" type="email" autocomplete="email" placeholder="name@example.com" style="width:100%;box-sizing:border-box;padding:11px;border-radius:9px;border:1px solid rgba(255,255,255,.15);background:#080d20;color:#fff;text-align:left;direction:ltr;"><div id="identity-mining-status" style="display:none;color:#fbbf24;font-size:11px;margin:12px 0;padding:9px;background:rgba(251,191,36,.08);border-radius:8px;">⛏️ جاري التعدين والتوقيع...</div><div style="display:grid;gap:9px;margin-top:16px;"><button id="identity-sign-btn" onclick="startSignedGameLogin()" style="padding:12px;border:0;border-radius:9px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);color:#fff;font-weight:800;cursor:pointer;">🔐 تسجيل الدخول مع التوقيع</button><button onclick="startGuestGameLogin()" style="padding:11px;border:1px solid rgba(255,255,255,.14);border-radius:9px;background:rgba(255,255,255,.06);color:#ddd;font-weight:700;cursor:pointer;">⏭️ تخطي (دخول كزائر)</button><button onclick="openGameAdminLogin()" style="padding:10px;border:1px solid rgba(251,191,36,.35);border-radius:9px;background:rgba(251,191,36,.1);color:#fde68a;font-weight:700;cursor:pointer;">👑 دخول المدير</button><button onclick="closeLoginScreen()" style="padding:8px;border:0;background:transparent;color:#888;cursor:pointer;">رجوع</button></div></div>';box.style.display='flex';setTimeout(()=>document.getElementById('identity-name')?.focus(),40);}
+async function startSignedGameLogin(){const name=(document.getElementById('identity-name')?.value||'').trim();const email=(document.getElementById('identity-email')?.value||'').trim();const status=document.getElementById('identity-mining-status');const btn=document.getElementById('identity-sign-btn');if(name.length<2||!/^\S+@\S+\.\S+$/.test(email)){showToast('⚠️ أدخل اسمًا وبريدًا صحيحًا','warning');return;}if(btn)btn.disabled=true;if(status){status.style.display='block';status.textContent='⛏️ جاري التعدين والتوقيع...';}try{const block=await blockchain.addUser({name,email,role:'user'},nonce=>{if(status)status.textContent='⛏️ جاري التعدين والتوقيع... ('+nonce+')';});setIdentityInUI(name,email,block);addUserToReference(block.userId);syncBlockchainToTile();bcUpdateUI();updateUsersDisplay();syncBlockchainWithGame();saveBlockchainToChannel();if(status)status.textContent='✅ تم إنشاء الهوية والبلوك الموقّع';startGameAs('user');showToast('👤 مرحبًا '+name+'! تم تسجيلك في البلوكشين 🔐','success');}catch(err){if(status)status.textContent='❌ '+(err.message||'فشل التسجيل');showToast('❌ تعذر إنشاء التوقيع','error');if(btn)btn.disabled=false;}}
+function startGuestGameLogin(){setIdentityInUI('زائر','guest@tilecdn.local',null);startGameAs('guest');showToast('⏭️ دخلت كزائر — لم تتم إضافة بلوك','info');}
+function startGameAs(role){currentUserRole=role;window.currentUserRole=role;if(role==='admin'){adminSession=true;setIdentityInUI('المدير',window.currentUserEmail||'admin@tilecdn.local',null);}else if(role==='guest'){adminSession=false;}else{adminSession=false;CryptoManager.key=null;CryptoManager.initialized=false;CryptoManager.encryptionReady=false;}updateIdentityButton();closeLoginScreen();launchGameForRole(role);document.querySelectorAll('[onclick*="toggleCryptoPanel"]').forEach(el=>{el.style.display=role==='admin'?'':'none';});showToast(role==='admin'?'👑 مرحبًا بالمدير — صلاحيات كاملة':role==='guest'?'👤 مرحبًا بالزائر':'👤 مرحبًا بالمستخدم','success');}
+window.showLoginScreen=showLoginScreen;window.startSignedGameLogin=startSignedGameLogin;window.startGuestGameLogin=startGuestGameLogin;window.startGameAs=startGameAs;window.openGameAdminLogin=openGameAdminLogin;window.verifyGameAdminLogin=verifyGameAdminLogin;window.startGame=startGame;
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  القسم 25: بدء اللعبة
@@ -3408,7 +3423,7 @@ class AdminCastleSystem {
     unpublishFile(key){if(!this.requireAdmin())return;if(!confirm('إلغاء نشر الملف؟'))return;delete this.roomData.publishedFiles[key];Object.values(this.roomData.tileFiles).forEach(a=>{const i=a.indexOf(key);if(i>=0)a.splice(i,1)});this.saveAdminRoomData();showToast('🗑️ تم إلغاء النشر','warning');}
     showAllMembers(){const rows=(this.roomData.members||[]).map(m=>'<div style="padding:8px;background:rgba(255,255,255,.05);margin:4px 0;border-radius:7px;">👤 '+m+'</div>').join('');castleOverlay('👥 أعضاء غرفة المدير',rows||'لا يوجد أعضاء');}
     showAdminPanel(){if(!this.requireAdmin())return;const count=Object.keys(this.roomData.publishedFiles||{}).length;castleOverlay('👑 غرفة المدير','<div style="color:#d1d5db;margin-bottom:12px;">الأعضاء: '+this.roomData.members.length+' | الملفات المنشورة: '+count+'</div><div style="display:grid;gap:8px;"><button onclick="adminSystem.publishFromCurrentTile()">📤 نشر من المربع الحالي</button><button on
-            
+                
     click="adminSystem.showPublishedFiles()">📂 عرض المنشور</button><button onclick="adminSystem.showPublishedFiles({tileId:ServerManager.selectedTile})">📍 منشورات المربع الحالي</button><button onclick="adminSystem.showPublishedFiles({worldId:currentWorldId})">🌍 منشورات العالم الحالي</button><button onclick="adminSystem.showAllMembers()">👥 الأعضاء</button></div>');}
     enterAdminRoom(){if(!this.requireAdmin())return;castleState.currentRoom='0_3';saveCastleData();this.listenToAdminRoom();this.showAdminPanel();showToast('👑 دخلت غرفة المدير العامة','success');}
 }
@@ -3424,6 +3439,9 @@ setTimeout(()=>{adminSystem.listenToAdminRoom();},800);
 </body>
 </html>    
 
+
+
+    
 
 
     
