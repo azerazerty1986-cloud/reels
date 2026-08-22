@@ -1,4 +1,4 @@
-متاحر الرابعة 
+متاحر حقيقي 8010@
 
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
@@ -3741,283 +3741,47 @@ function refreshAllDistributorViews() {
             showToastMessage('❌ فشل إرسال الطلب. يرجى المحاولة مرة أخرى', 'error');
         }
     }
-    // ============================================================
-// 📤 دوال إرسال الفاتورة - النسخة النهائية
-// ============================================================
 
-/**
- * إرسال فاتورة الطلب إلى قناة التليجرام
- */
-async function sendOrderToTelegramChannel(customerData, groupedStores, grandTotal, distributor) {
-    console.log('📤 بدء إرسال الفاتورة...');
-    
-    const timestamp = new Date().toLocaleString('ar-EG');
-    const mainOrderId = generateOrderIdFromCustomer(customerData.name, customerData.state);
-    const storeIdsList = Object.keys(groupedStores).join('، ');
-    
-    const store = stores.find(s => s.id === currentStoreId);
-    const storeName = store ? store.name : 'ناردو برو';
-    const storeCode = store?.code || 'NARDO';
-    const region = getRegionByState(customerData.state);
-    
-    try {
-        // ═══════════════════════════════════════════════════════
-        // 📝 بناء الرسالة
-        // ═══════════════════════════════════════════════════════
-        
-        let fullMessage = '';
-        
-        // رأس الفاتورة
-        fullMessage += `🛍️ فاتورة طلب جديد - 🏪 المتجر: ${storeName} #${storeCode}\n`;
+    async function sendOrderToTelegramChannel(customerData, groupedStores, grandTotal, distributor) {
+        const timestamp = new Date().toLocaleString('ar-EG');
+        const mainOrderId = generateOrderIdFromCustomer(customerData.name, customerData.state);
+        const storeIdsList = Object.keys(groupedStores).join('، ');
+        const store = stores.find(s => s.id === currentStoreId);
+        const storeName = store ? store.name : 'ناردو برو';
+        const storeCode = store?.code || 'NARDO';
+        const region = getRegionByState(customerData.state);
+        let fullMessage = `🛍️ فاتورة طلب جديد - 🏪 المتجر: ${storeName} #${storeCode}\n`;
         fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        
-        // معلومات الطلب
         fullMessage += `🆔 رقم الطلب الموحد: ${mainOrderId}\n`;
         fullMessage += `🏷️ معرفات المتاجر: ${storeIdsList}\n`;
         fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        
-        // بيانات الزبون
-        fullMessage += `👤 الزبون: ${customerData.name}\n`;
-        fullMessage += `📞 رقم الجوال: ${customerData.phone}\n`;
-        fullMessage += `📍 المنطقة: ${region} ✅ جديد\n`;
-        fullMessage += `📍 الولاية: ${customerData.state || 'غير محددة'}\n`;
-        if (customerData.addressDetail) {
-            fullMessage += `🏠 العنوان: ${customerData.addressDetail}\n`;
-        }
+        fullMessage += `👤 الزبون: ${customerData.name}\n📞 رقم الجوال: ${customerData.phone}\n📍 المنطقة: ${region}\n📍 الولاية: ${customerData.state || 'غير محددة'}\n`;
+        if (customerData.addressDetail) fullMessage += `🏠 العنوان: ${customerData.addressDetail}\n`;
         fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        
-        // جهة التوصيل
-        if (distributor) {
-            fullMessage += `🚚 جهة التوصيل: ${distributor.name}\n`;
-            fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        }
-        
-        // المنتجات
-        fullMessage += `📦 المنتجات المطلوبة:\n`;
-        fullMessage += `───────────────────────────────\n`;
-        
-        // تفاصيل كل متجر
-        for (const [storeID, storeData] of Object.entries(groupedStores)) {
-            fullMessage += `\n🏪 المتجر: ${storeData.storeName}\n`;
-            fullMessage += `🆔 معرف المتجر: ${storeID}\n`;
-            fullMessage += `───────────────────────────────\n`;
-            
-            storeData.items.forEach((item, idx) => {
-                fullMessage += `${idx + 1}️⃣ ${item.name}\n`;
-                fullMessage += `   🆔 معرف المنتج: ${item.productCompositeID || item.id || 'غير محدد'}\n`;
-                fullMessage += `   📦 الكمية: ${item.quantity}\n`;
-                fullMessage += `   💰 السعر: ${item.price.toLocaleString()} دج\n`;
-                fullMessage += `   💵 المجموع: ${(item.price * item.quantity).toLocaleString()} دج\n`;
-                fullMessage += `───────────────────────────────\n`;
-            });
-            
-            fullMessage += `💰 إجمالي المتجر: ${storeData.total.toLocaleString()} دج\n`;
-            fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        }
-        
-        // الإجمالي والتاريخ
-        fullMessage += `💎 الإجمالي الكلي: ${grandTotal.toLocaleString()} دج\n`;
-        fullMessage += `📅 التاريخ: ${timestamp}\n`;
-        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        fullMessage += `✅ تم استلام الطلب بنجاح`;
-        
-        console.log('📨 الرسالة جاهزة للإرسال');
-        
-        // ═══════════════════════════════════════════════════════
-        // 📤 إرسال الرسالة
-        // ═══════════════════════════════════════════════════════
-        
-        const res = await fetch(`${TELEGRAM.apiUrl}${TELEGRAM.botToken}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TELEGRAM.channelId,
-                text: fullMessage,
-                parse_mode: 'Markdown'
-            })
-        });
-        
-        const data = await res.json();
-        console.log('📨 نتيجة الإرسال:', data);
-        
-        if (data.ok) {
-            saveCustomerOrderLocally(customerData, groupedStores, mainOrderId, timestamp, distributor);
-            toast('✅ تم إرسال الفاتورة بنجاح', 'success');
-            return true;
-        } else {
-            console.error('❌ فشل الإرسال:', data.description);
-            toast('❌ فشل إرسال الفاتورة: ' + data.description, 'error');
-            return false;
-        }
-        
-    } catch (e) {
-        console.error('❌ خطأ في إرسال الطلب:', e);
-        toast('❌ خطأ في الإرسال: ' + e.message, 'error');
-        return false;
-    }
-}
-
-// ============================================================
-// 📤 إرسال رسالة التوصيل
-// ============================================================
-
-async function sendDeliveryNotificationToTelegram(order, distributor) {
-    console.log('📤 بدء إرسال رسالة التوصيل...');
-    
-    const timestamp = new Date().toLocaleString('ar-EG');
-    const deliveryId = 'DLV-' + Date.now();
-    const store = stores.find(s => s.id === order.storeId);
-    const storeName = store ? store.name : 'ناردو برو';
-    const storeCode = store?.code || 'NARDO';
-    const region = getRegionByState(order.customerState || extractStateFromAddress(order.customerAddress));
-    
-    try {
-        let fullMessage = '';
-        
-        fullMessage += `🚚 طلب توصيل - 🏪 المتجر: ${storeName} #${storeCode}\n`;
-        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        fullMessage += `🆔 رقم التوصيل: ${deliveryId}\n`;
-        fullMessage += `🆔 رقم الطلب الأصلي: ${order.telegramOrderId || order.id}\n`;
-        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        fullMessage += `👤 الزبون: ${order.customerName || 'غير معروف'}\n`;
-        fullMessage += `📞 رقم الجوال: ${order.customerPhone || 'غير متوفر'}\n`;
-        fullMessage += `📍 المنطقة: ${region || 'غير محددة'}\n`;
-        fullMessage += `📍 الولاية: ${order.customerState || extractStateFromAddress(order.customerAddress) || 'غير محددة'}\n`;
-        if (order.customerAddress) {
-            fullMessage += `🏠 العنوان: ${order.customerAddress}\n`;
-        }
-        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        fullMessage += `🚚 جهة التوصيل: ${distributor.name}\n`;
-        if (distributor.fullId || distributor.customId) {
-            fullMessage += `🆔 معرف الموزع: ${distributor.fullId || distributor.customId}\n`;
-        }
-        if (distributor.phone) {
-            fullMessage += `📞 هاتف الموزع: ${distributor.phone}\n`;
-        }
-        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        if (distributor) fullMessage += `🚚 جهة التوصيل: ${distributor.name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
         fullMessage += `📦 المنتجات المطلوبة:\n───────────────────────────────\n`;
-        
-        if (order.items && order.items.length > 0) {
-            order.items.forEach((item, idx) => {
-                fullMessage += `${idx + 1}️⃣ ${item.name}\n`;
-                fullMessage += `   🆔 معرف المنتج: ${item.productCompositeID || item.id || 'غير محدد'}\n`;
-                fullMessage += `   📦 الكمية: ${item.quantity}\n`;
-                fullMessage += `   💰 السعر: ${item.price.toLocaleString()} دج\n`;
-                fullMessage += `   💵 المجموع: ${(item.price * item.quantity).toLocaleString()} دج\n`;
-                fullMessage += `───────────────────────────────\n`;
+        for (const [storeID, storeData] of Object.entries(groupedStores)) {
+            fullMessage += `\n🏪 المتجر: ${storeData.storeName}\n🆔 معرف المتجر: ${storeID}\n───────────────────────────────\n`;
+            storeData.items.forEach((item, idx) => {
+                fullMessage += `${idx + 1}️⃣ ${item.name}\n   🆔 معرف المنتج: ${item.productCompositeID || item.id || 'غير محدد'}\n   📦 الكمية: ${item.quantity}\n   💰 السعر: ${item.price.toLocaleString()} دج\n   💵 المجموع: ${(item.price * item.quantity).toLocaleString()} دج\n───────────────────────────────\n`;
             });
+            fullMessage += `💰 إجمالي المتجر: ${storeData.total.toLocaleString()} دج\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
         }
-        
-        fullMessage += `💎 الإجمالي الكلي: ${(order.total || 0).toLocaleString()} دج\n`;
-        fullMessage += `📅 تاريخ التوصيل: ${order.deliveredAt || timestamp}\n`;
-        fullMessage += `📅 تاريخ الطلب: ${order.date || 'غير متوفر'}\n`;
-        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        fullMessage += `✅ تم تسليم الطلب بنجاح\n🚚 الحالة: تم التوصيل\n`;
-        if (order.deliveryNotes) {
-            fullMessage += `📝 ملاحظات: ${order.deliveryNotes}\n`;
-        }
-        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        fullMessage += `✅ شكراً لاستخدام خدمة ناردو كارت برو`;
-        
-        const res = await fetch(`${TELEGRAM.apiUrl}${TELEGRAM.botToken}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TELEGRAM.channelId,
-                text: fullMessage,
-                parse_mode: 'Markdown'
-            })
-        });
-        
-        const data = await res.json();
-        console.log('📨 نتيجة إرسال التوصيل:', data);
-        
-        if (data.ok) {
-            toast('✅ تم إرسال رسالة التوصيل', 'success');
-            return true;
-        } else {
-            console.error('❌ فشل إرسال التوصيل:', data.description);
-            toast('⚠️ فشل إرسال رسالة التوصيل', 'warning');
+        fullMessage += `💎 الإجمالي الكلي: ${grandTotal.toLocaleString()} دج\n📅 التاريخ: ${timestamp}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ تم استلام الطلب بنجاح`;
+        try {
+            const res = await fetch(`${TELEGRAM.apiUrl}${TELEGRAM.botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TELEGRAM.channelId, text: fullMessage, parse_mode: 'Markdown' })
+            });
+            const data = await res.json();
+            if (data.ok) {
+                saveCustomerOrderLocally(customerData, groupedStores, mainOrderId, timestamp, distributor);
+                return true;
+            }
             return false;
-        }
-        
-    } catch (e) {
-        console.error('❌ خطأ في إرسال التوصيل:', e);
-        toast('⚠️ فشل إرسال رسالة التوصيل', 'warning');
-        return false;
+        } catch (e) { console.error('❌ خطأ في إرسال الطلب:', e); return false; }
     }
-}
-
-// ============================================================
-// 📤 تقديم الطلب - الدالة الرئيسية
-// ============================================================
-
-async function submitCustomerOrder() {
-    console.log('📤 بدء تقديم الطلب...');
-    
-    // التحقق من اكتمال البيانات
-    if (!customerFormCompletion.phone || !customerFormCompletion.state || 
-        !customerFormCompletion.address || !customerFormCompletion.distributor) {
-        toast('⚠️ يرجى إكمال جميع البيانات المطلوبة', 'warning');
-        return;
-    }
-    
-    // جمع البيانات
-    const name = document.getElementById('customerName').value.trim();
-    const phone = document.getElementById('customerPhone').value.trim();
-    const state = document.getElementById('customerState').value;
-    const addressDetail = document.getElementById('customerAddress').value.trim();
-    const fullAddress = document.getElementById('fullAddress').value.trim();
-    const notes = document.getElementById('customerNotes').value.trim();
-    
-    const customerData = {
-        name: name,
-        phone: phone,
-        address: fullAddress || (state && addressDetail ? `${state} - ${addressDetail}` : (state || addressDetail)),
-        state: state,
-        addressDetail: addressDetail,
-        notes: notes
-    };
-    
-    const grouped = customerPendingGrouped;
-    const total = customerPendingTotal;
-    const distributor = customerSelectedDistributor;
-    
-    console.log('📊 بيانات الطلب:', { customerData, total, distributor: distributor?.name });
-    
-    toast('📤 جاري إرسال الطلب...', 'info');
-    
-    // إرسال الطلب
-    const success = await sendOrderToTelegramChannel(customerData, grouped, total, distributor);
-    
-    closeCustomerModal();
-    
-    if (success) {
-        // تحديث المخزون
-        cart.forEach(item => {
-            const product = inventory.find(p => p.id === item.id);
-            if (product) product.stock -= item.quantity;
-        });
-        
-        // تفريغ السلة
-        cart = [];
-        localStorage.setItem('nardo_cart', JSON.stringify(cart));
-        localStorage.setItem('nardo_products', JSON.stringify(inventory));
-        
-        updateCartBadges();
-        renderShop();
-        renderOrders();
-        updateStats();
-        
-        toast('✅ تم إرسال الطلب بنجاح! سيتم التواصل معك قريباً', 'success');
-    } else {
-        toast('❌ فشل إرسال الطلب. يرجى المحاولة مرة أخرى', 'error');
-    }
-}
-    
-
-
-        
 
     function generateOrderIdFromCustomer(customerName, stateName) {
         const stateCode = getStateCodeForCustomer(stateName || 'الجزائر');
@@ -5200,9 +4964,7 @@ async function submitCustomerOrder() {
 
 
 
-
-
                             
 
 
-            
+                        
