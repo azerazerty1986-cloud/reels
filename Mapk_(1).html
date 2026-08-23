@@ -317,6 +317,76 @@
         #customerProgressText{text-align:center;font-size:12px;color:var(--gold);margin-bottom:10px}
         #customerModal .modal-actions{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-top:15px}
         @media(max-width:600px){#customerModal .modal-actions{grid-template-columns:1fr}#customerModal .modal-box{padding:20px 15px;margin:10px;max-width:95%}}
+
+        /* ============================================================ */
+/* 🏪 المتجر المصغر في تليجرام - Mini App Styles */
+/* ============================================================ */
+
+#telegram-mini-app{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a1a;z-index:99999;overflow-y:auto;padding:12px;animation:slideUp 0.4s ease;font-family:'Cairo',sans-serif}
+#telegram-mini-app .app-header{display:flex;justify-content:space-between;align-items:center;padding:8px 0 12px;border-bottom:2px solid rgba(255,215,0,0.1);margin-bottom:12px;position:sticky;top:0;background:#0a0a1a;z-index:10}
+#telegram-mini-app .app-header .logo{display:flex;align-items:center;gap:10px}
+#telegram-mini-app .app-header .logo i{font-size:24px;color:var(--gold)}
+#telegram-mini-app .app-header .logo h2{color:var(--gold);font-size:18px;margin:0}
+#telegram-mini-app .app-header .header-actions{display:flex;gap:8px;align-items:center}
+#telegram-mini-app .app-header .btn-close-app{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);color:var(--error);padding:5px 14px;border-radius:8px;cursor:pointer;font-family:'Cairo';font-size:12px;font-weight:600;transition:0.3s}
+#telegram-mini-app .app-header .btn-close-app:hover{background:rgba(248,113,113,0.2)}
+#telegram-mini-app .app-search{display:flex;gap:8px;margin-bottom:12px}
+#telegram-mini-app .app-search input{flex:1;padding:8px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,215,0,0.12);border-radius:10px;color:#fff;font-family:'Cairo';font-size:13px;outline:none}
+#telegram-mini-app .app-search input:focus{border-color:var(--gold)}
+#telegram-mini-app .app-search input::placeholder{color:#555}
+#telegram-mini-app .app-search .btn-clear-search{padding:8px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#888;cursor:pointer;font-family:'Cairo';font-size:13px;transition:0.3s}
+#telegram-mini-app .app-search .btn-clear-search:hover{background:rgba(255,255,255,0.1)}
+#telegram-mini-app .app-categories{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;margin-bottom:8px;scrollbar-width:none}
+#telegram-mini-app .app-categories::-webkit-scrollbar{display:none}
+#telegram-mini-app .app-categories .cat-btn{padding:5px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,215,0,0.08);border-radius:20px;color:#888;font-family:'Cairo';font-size:11px;cursor:pointer;transition:0.3s;white-space:nowrap}
+#telegram-mini-app .app-categories .cat-btn:hover{border-color:rgba(255,215,0,0.3);color:#fff}
+#telegram-mini-app .app-categories .cat-btn.active{background:rgba(255,215,0,0.12);border-color:var(--gold);color:var(--gold)}
+#telegram-mini-app .app-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;padding:8px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,215,0,0.06)}
+#telegram-mini-app .app-stats .stat-item{text-align:center;padding:4px}
+#telegram-mini-app .app-stats .stat-item .number{font-size:18px;font-weight:800;color:var(--gold)}
+#telegram-mini-app .app-stats .stat-item .label{font-size:9px;color:#888;margin-top:1px}
+#telegram-mini-app .app-products-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding-bottom:70px}
+#telegram-mini-app .app-product-item{background:#1a1a2e;border-radius:12px;overflow:hidden;border:2px solid rgba(255,215,0,0.06);transition:0.3s;position:relative}
+#telegram-mini-app .app-product-item:hover{border-color:rgba(255,215,0,0.25);transform:translateY(-2px)}
+#telegram-mini-app .app-product-item .product-image{height:120px;background:#0a0a1a;display:flex;align-items:center;justify-content:center;font-size:40px;color:rgba(255,215,0,0.08)}
+#telegram-mini-app .app-product-item .product-image img{width:100%;height:100%;object-fit:cover}
+#telegram-mini-app .app-product-item .product-info{padding:8px 10px}
+#telegram-mini-app .app-product-item .product-name{font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#telegram-mini-app .app-product-item .product-price{color:var(--gold);font-size:14px;font-weight:700}
+#telegram-mini-app .app-product-item .product-stock{font-size:10px;color:#888;margin-top:2px}
+#telegram-mini-app .app-product-item .product-stock.low{color:var(--error)}
+#telegram-mini-app .app-product-item .product-actions{display:flex;gap:5px;margin-top:6px}
+#telegram-mini-app .app-product-item .product-actions button{flex:1;padding:5px;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-family:'Cairo';font-size:10px;transition:0.3s}
+#telegram-mini-app .app-product-item .product-actions button:disabled{opacity:0.5;cursor:not-allowed}
+#telegram-mini-app .app-product-item .btn-add-cart{background:var(--gold);color:#0a0a1a}
+#telegram-mini-app .app-product-item .btn-add-cart:hover:not(:disabled){transform:scale(1.03)}
+#telegram-mini-app .app-product-item .btn-quick-order{background:rgba(255,215,0,0.08);color:var(--gold);border:1px solid rgba(255,215,0,0.15)!important}
+#telegram-mini-app .app-product-item .btn-quick-order:hover:not(:disabled){background:rgba(255,215,0,0.18)}
+.product-badge-new{position:absolute;top:6px;right:6px;background:rgba(251,191,36,0.2);color:var(--warning);font-size:8px;padding:2px 8px;border-radius:10px;border:1px solid rgba(251,191,36,0.2);z-index:5}
+.product-badge-telegram{position:absolute;top:6px;left:6px;background:rgba(0,136,204,0.15);color:#0088cc;font-size:7px;padding:2px 8px;border-radius:10px;border:1px solid rgba(0,136,204,0.15);z-index:5}
+#telegram-mini-app .app-footer{position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;padding:10px 12px;border-top:2px solid rgba(255,215,0,0.08);display:flex;gap:8px;z-index:10;backdrop-filter:blur(10px)}
+#telegram-mini-app .app-footer .btn-cart{flex:1;padding:10px;background:var(--gold);border:none;border-radius:10px;color:#0a0a1a;font-weight:700;cursor:pointer;font-family:'Cairo';font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px;transition:0.3s}
+#telegram-mini-app .app-footer .btn-cart:hover{transform:scale(1.02)}
+#telegram-mini-app .app-footer .btn-cart .cart-count{background:#0a0a1a;color:var(--gold);padding:0 8px;border-radius:20px;font-size:11px}
+#telegram-mini-app .app-footer .btn-checkout{flex:1;padding:10px;background:linear-gradient(145deg,#4ade80,#22c55e);border:none;border-radius:10px;color:#0a0a1a;font-weight:700;cursor:pointer;font-family:'Cairo';font-size:13px;transition:0.3s}
+#telegram-mini-app .app-footer .btn-checkout:hover{transform:scale(1.02)}
+#telegram-mini-app .app-footer .btn-orders{padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#888;cursor:pointer;font-family:'Cairo';font-size:14px;transition:0.3s}
+#telegram-mini-app .app-footer .btn-orders:hover{background:rgba(255,255,255,0.1);color:#fff}
+#telegram-mini-app .app-empty{text-align:center;padding:50px 20px;color:#666;grid-column:1/-1}
+#telegram-mini-app .app-empty i{font-size:50px;display:block;margin-bottom:12px;opacity:0.3}
+.telegram-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);padding:10px 24px;border-radius:30px;color:#fff;z-index:999999;font-weight:600;font-family:'Cairo',sans-serif;animation:fadeInUp 0.3s ease;max-width:90%;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@media (max-width:500px){#telegram-mini-app .app-products-grid{grid-template-columns:1fr 1fr;gap:8px}
+#telegram-mini-app .app-product-item .product-image{height:90px}
+#telegram-mini-app .app-product-item .product-info{padding:6px 8px}
+#telegram-mini-app .app-product-item .product-name{font-size:11px}
+#telegram-mini-app .app-product-item .product-price{font-size:12px}
+#telegram-mini-app .app-stats{grid-template-columns:repeat(3,1fr);gap:4px}
+#telegram-mini-app .app-stats .stat-item .number{font-size:15px}
+#telegram-mini-app .app-footer{padding:8px 10px}
+#telegram-mini-app .app-footer .btn-cart,#telegram-mini-app .app-footer .btn-checkout{font-size:11px;padding:8px}
+#telegram-mini-app .app-footer .btn-orders{padding:8px 10px;font-size:12px}}
     </style>
 
     <!-- نافذة الدخول -->
@@ -950,6 +1020,74 @@
         <div id="couponResult" style="margin-top:10px;font-size:13px;"></div>
     </div>
 </div>
+    <!-- ============================================================ -->
+<!-- 🏪 المتجر المصغر في تليجرام - Mini App -->
+<!-- ============================================================ -->
+
+<div id="telegram-mini-app">
+    
+    <!-- رأس التطبيق -->
+    <div class="app-header">
+        <div class="logo">
+            <i class="fas fa-store-alt"></i>
+            <h2>ناردو كارت برو</h2>
+        </div>
+        <div class="header-actions">
+            <span id="appProductCount" style="color: #888; font-size: 11px;"></span>
+            <button class="btn-close-app" onclick="closeMiniApp()">
+                <i class="fas fa-times"></i> إغلاق
+            </button>
+        </div>
+    </div>
+
+    <!-- الإحصائيات -->
+    <div class="app-stats" id="appStats">
+        <div class="stat-item">
+            <div class="number" id="statProducts">0</div>
+            <div class="label">📦 منتجات</div>
+        </div>
+        <div class="stat-item">
+            <div class="number" id="statOrders">0</div>
+            <div class="label">📋 طلبات</div>
+        </div>
+        <div class="stat-item">
+            <div class="number" id="statRevenue">0</div>
+            <div class="label">💰 إيرادات</div>
+        </div>
+    </div>
+
+    <!-- شريط البحث -->
+    <div class="app-search">
+        <input type="text" id="appSearchInput" placeholder="🔍 ابحث عن منتج..." oninput="searchMiniAppProducts(this.value)">
+        <button class="btn-clear-search" onclick="clearMiniAppSearch()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- التصنيفات -->
+    <div class="app-categories" id="appCategories"></div>
+
+    <!-- المنتجات -->
+    <div class="app-products-grid" id="appProductsGrid">
+        <div class="app-empty">
+            <i class="fas fa-spinner fa-spin" style="color: var(--gold);"></i>
+            <p style="color: var(--gold);">جاري تحميل المنتجات...</p>
+        </div>
+    </div>
+
+    <!-- الشريط السفلي -->
+    <div class="app-footer">
+        <button class="btn-cart" onclick="showMiniAppCart()">
+            <i class="fas fa-shopping-cart"></i>
+            السلة
+            <span class="cart-count" id="appCartCount">0</span>
+        </button>
+        <button class="btn-checkout" onclick="miniAppCheckout()">
+            <i class="fas fa-credit-card"></i> إتمام الشراء
+        </button>
+        <button class="btn-orders" onclick="showMiniAppOrders()" title="طلباتي">
+            <i class="fas fa-list"></i>
+        </button>
+    </div>
+</div>
 
 <!-- نافذة التقييمات -->
 <div class="modal-overlay" id="reviewModal">
@@ -1192,6 +1330,7 @@
     #customerSubmitBtn:disabled{opacity:0.5;cursor:not-allowed}
     #customerSubmitBtn:disabled:hover{transform:none}
 </style>
+    
 
 <script>
 // ============================================================
@@ -3741,47 +3880,283 @@ function refreshAllDistributorViews() {
             showToastMessage('❌ فشل إرسال الطلب. يرجى المحاولة مرة أخرى', 'error');
         }
     }
+    // ============================================================
+// 📤 دوال إرسال الفاتورة - النسخة النهائية
+// ============================================================
 
-    async function sendOrderToTelegramChannel(customerData, groupedStores, grandTotal, distributor) {
-        const timestamp = new Date().toLocaleString('ar-EG');
-        const mainOrderId = generateOrderIdFromCustomer(customerData.name, customerData.state);
-        const storeIdsList = Object.keys(groupedStores).join('، ');
-        const store = stores.find(s => s.id === currentStoreId);
-        const storeName = store ? store.name : 'ناردو برو';
-        const storeCode = store?.code || 'NARDO';
-        const region = getRegionByState(customerData.state);
-        let fullMessage = `🛍️ فاتورة طلب جديد - 🏪 المتجر: ${storeName} #${storeCode}\n`;
+/**
+ * إرسال فاتورة الطلب إلى قناة التليجرام
+ */
+async function sendOrderToTelegramChannel(customerData, groupedStores, grandTotal, distributor) {
+    console.log('📤 بدء إرسال الفاتورة...');
+    
+    const timestamp = new Date().toLocaleString('ar-EG');
+    const mainOrderId = generateOrderIdFromCustomer(customerData.name, customerData.state);
+    const storeIdsList = Object.keys(groupedStores).join('، ');
+    
+    const store = stores.find(s => s.id === currentStoreId);
+    const storeName = store ? store.name : 'ناردو برو';
+    const storeCode = store?.code || 'NARDO';
+    const region = getRegionByState(customerData.state);
+    
+    try {
+        // ═══════════════════════════════════════════════════════
+        // 📝 بناء الرسالة
+        // ═══════════════════════════════════════════════════════
+        
+        let fullMessage = '';
+        
+        // رأس الفاتورة
+        fullMessage += `🛍️ فاتورة طلب جديد - 🏪 المتجر: ${storeName} #${storeCode}\n`;
         fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        
+        // معلومات الطلب
         fullMessage += `🆔 رقم الطلب الموحد: ${mainOrderId}\n`;
         fullMessage += `🏷️ معرفات المتاجر: ${storeIdsList}\n`;
         fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        fullMessage += `👤 الزبون: ${customerData.name}\n📞 رقم الجوال: ${customerData.phone}\n📍 المنطقة: ${region}\n📍 الولاية: ${customerData.state || 'غير محددة'}\n`;
-        if (customerData.addressDetail) fullMessage += `🏠 العنوان: ${customerData.addressDetail}\n`;
-        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        if (distributor) fullMessage += `🚚 جهة التوصيل: ${distributor.name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        fullMessage += `📦 المنتجات المطلوبة:\n───────────────────────────────\n`;
-        for (const [storeID, storeData] of Object.entries(groupedStores)) {
-            fullMessage += `\n🏪 المتجر: ${storeData.storeName}\n🆔 معرف المتجر: ${storeID}\n───────────────────────────────\n`;
-            storeData.items.forEach((item, idx) => {
-                fullMessage += `${idx + 1}️⃣ ${item.name}\n   🆔 معرف المنتج: ${item.productCompositeID || item.id || 'غير محدد'}\n   📦 الكمية: ${item.quantity}\n   💰 السعر: ${item.price.toLocaleString()} دج\n   💵 المجموع: ${(item.price * item.quantity).toLocaleString()} دج\n───────────────────────────────\n`;
-            });
-            fullMessage += `💰 إجمالي المتجر: ${storeData.total.toLocaleString()} دج\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        
+        // بيانات الزبون
+        fullMessage += `👤 الزبون: ${customerData.name}\n`;
+        fullMessage += `📞 رقم الجوال: ${customerData.phone}\n`;
+        fullMessage += `📍 المنطقة: ${region} ✅ جديد\n`;
+        fullMessage += `📍 الولاية: ${customerData.state || 'غير محددة'}\n`;
+        if (customerData.addressDetail) {
+            fullMessage += `🏠 العنوان: ${customerData.addressDetail}\n`;
         }
-        fullMessage += `💎 الإجمالي الكلي: ${grandTotal.toLocaleString()} دج\n📅 التاريخ: ${timestamp}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ تم استلام الطلب بنجاح`;
-        try {
-            const res = await fetch(`${TELEGRAM.apiUrl}${TELEGRAM.botToken}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: TELEGRAM.channelId, text: fullMessage, parse_mode: 'Markdown' })
+        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        
+        // جهة التوصيل
+        if (distributor) {
+            fullMessage += `🚚 جهة التوصيل: ${distributor.name}\n`;
+            fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        }
+        
+        // المنتجات
+        fullMessage += `📦 المنتجات المطلوبة:\n`;
+        fullMessage += `───────────────────────────────\n`;
+        
+        // تفاصيل كل متجر
+        for (const [storeID, storeData] of Object.entries(groupedStores)) {
+            fullMessage += `\n🏪 المتجر: ${storeData.storeName}\n`;
+            fullMessage += `🆔 معرف المتجر: ${storeID}\n`;
+            fullMessage += `───────────────────────────────\n`;
+            
+            storeData.items.forEach((item, idx) => {
+                fullMessage += `${idx + 1}️⃣ ${item.name}\n`;
+                fullMessage += `   🆔 معرف المنتج: ${item.productCompositeID || item.id || 'غير محدد'}\n`;
+                fullMessage += `   📦 الكمية: ${item.quantity}\n`;
+                fullMessage += `   💰 السعر: ${item.price.toLocaleString()} دج\n`;
+                fullMessage += `   💵 المجموع: ${(item.price * item.quantity).toLocaleString()} دج\n`;
+                fullMessage += `───────────────────────────────\n`;
             });
-            const data = await res.json();
-            if (data.ok) {
-                saveCustomerOrderLocally(customerData, groupedStores, mainOrderId, timestamp, distributor);
-                return true;
-            }
+            
+            fullMessage += `💰 إجمالي المتجر: ${storeData.total.toLocaleString()} دج\n`;
+            fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        }
+        
+        // الإجمالي والتاريخ
+        fullMessage += `💎 الإجمالي الكلي: ${grandTotal.toLocaleString()} دج\n`;
+        fullMessage += `📅 التاريخ: ${timestamp}\n`;
+        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        fullMessage += `✅ تم استلام الطلب بنجاح`;
+        
+        console.log('📨 الرسالة جاهزة للإرسال');
+        
+        // ═══════════════════════════════════════════════════════
+        // 📤 إرسال الرسالة
+        // ═══════════════════════════════════════════════════════
+        
+        const res = await fetch(`${TELEGRAM.apiUrl}${TELEGRAM.botToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM.channelId,
+                text: fullMessage,
+                parse_mode: 'Markdown'
+            })
+        });
+        
+        const data = await res.json();
+        console.log('📨 نتيجة الإرسال:', data);
+        
+        if (data.ok) {
+            saveCustomerOrderLocally(customerData, groupedStores, mainOrderId, timestamp, distributor);
+            toast('✅ تم إرسال الفاتورة بنجاح', 'success');
+            return true;
+        } else {
+            console.error('❌ فشل الإرسال:', data.description);
+            toast('❌ فشل إرسال الفاتورة: ' + data.description, 'error');
             return false;
-        } catch (e) { console.error('❌ خطأ في إرسال الطلب:', e); return false; }
+        }
+        
+    } catch (e) {
+        console.error('❌ خطأ في إرسال الطلب:', e);
+        toast('❌ خطأ في الإرسال: ' + e.message, 'error');
+        return false;
     }
+}
+
+// ============================================================
+// 📤 إرسال رسالة التوصيل
+// ============================================================
+
+async function sendDeliveryNotificationToTelegram(order, distributor) {
+    console.log('📤 بدء إرسال رسالة التوصيل...');
+    
+    const timestamp = new Date().toLocaleString('ar-EG');
+    const deliveryId = 'DLV-' + Date.now();
+    const store = stores.find(s => s.id === order.storeId);
+    const storeName = store ? store.name : 'ناردو برو';
+    const storeCode = store?.code || 'NARDO';
+    const region = getRegionByState(order.customerState || extractStateFromAddress(order.customerAddress));
+    
+    try {
+        let fullMessage = '';
+        
+        fullMessage += `🚚 طلب توصيل - 🏪 المتجر: ${storeName} #${storeCode}\n`;
+        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        fullMessage += `🆔 رقم التوصيل: ${deliveryId}\n`;
+        fullMessage += `🆔 رقم الطلب الأصلي: ${order.telegramOrderId || order.id}\n`;
+        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        fullMessage += `👤 الزبون: ${order.customerName || 'غير معروف'}\n`;
+        fullMessage += `📞 رقم الجوال: ${order.customerPhone || 'غير متوفر'}\n`;
+        fullMessage += `📍 المنطقة: ${region || 'غير محددة'}\n`;
+        fullMessage += `📍 الولاية: ${order.customerState || extractStateFromAddress(order.customerAddress) || 'غير محددة'}\n`;
+        if (order.customerAddress) {
+            fullMessage += `🏠 العنوان: ${order.customerAddress}\n`;
+        }
+        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        fullMessage += `🚚 جهة التوصيل: ${distributor.name}\n`;
+        if (distributor.fullId || distributor.customId) {
+            fullMessage += `🆔 معرف الموزع: ${distributor.fullId || distributor.customId}\n`;
+        }
+        if (distributor.phone) {
+            fullMessage += `📞 هاتف الموزع: ${distributor.phone}\n`;
+        }
+        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        fullMessage += `📦 المنتجات المطلوبة:\n───────────────────────────────\n`;
+        
+        if (order.items && order.items.length > 0) {
+            order.items.forEach((item, idx) => {
+                fullMessage += `${idx + 1}️⃣ ${item.name}\n`;
+                fullMessage += `   🆔 معرف المنتج: ${item.productCompositeID || item.id || 'غير محدد'}\n`;
+                fullMessage += `   📦 الكمية: ${item.quantity}\n`;
+                fullMessage += `   💰 السعر: ${item.price.toLocaleString()} دج\n`;
+                fullMessage += `   💵 المجموع: ${(item.price * item.quantity).toLocaleString()} دج\n`;
+                fullMessage += `───────────────────────────────\n`;
+            });
+        }
+        
+        fullMessage += `💎 الإجمالي الكلي: ${(order.total || 0).toLocaleString()} دج\n`;
+        fullMessage += `📅 تاريخ التوصيل: ${order.deliveredAt || timestamp}\n`;
+        fullMessage += `📅 تاريخ الطلب: ${order.date || 'غير متوفر'}\n`;
+        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        fullMessage += `✅ تم تسليم الطلب بنجاح\n🚚 الحالة: تم التوصيل\n`;
+        if (order.deliveryNotes) {
+            fullMessage += `📝 ملاحظات: ${order.deliveryNotes}\n`;
+        }
+        fullMessage += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        fullMessage += `✅ شكراً لاستخدام خدمة ناردو كارت برو`;
+        
+        const res = await fetch(`${TELEGRAM.apiUrl}${TELEGRAM.botToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM.channelId,
+                text: fullMessage,
+                parse_mode: 'Markdown'
+            })
+        });
+        
+        const data = await res.json();
+        console.log('📨 نتيجة إرسال التوصيل:', data);
+        
+        if (data.ok) {
+            toast('✅ تم إرسال رسالة التوصيل', 'success');
+            return true;
+        } else {
+            console.error('❌ فشل إرسال التوصيل:', data.description);
+            toast('⚠️ فشل إرسال رسالة التوصيل', 'warning');
+            return false;
+        }
+        
+    } catch (e) {
+        console.error('❌ خطأ في إرسال التوصيل:', e);
+        toast('⚠️ فشل إرسال رسالة التوصيل', 'warning');
+        return false;
+    }
+}
+
+// ============================================================
+// 📤 تقديم الطلب - الدالة الرئيسية
+// ============================================================
+
+async function submitCustomerOrder() {
+    console.log('📤 بدء تقديم الطلب...');
+    
+    // التحقق من اكتمال البيانات
+    if (!customerFormCompletion.phone || !customerFormCompletion.state || 
+        !customerFormCompletion.address || !customerFormCompletion.distributor) {
+        toast('⚠️ يرجى إكمال جميع البيانات المطلوبة', 'warning');
+        return;
+    }
+    
+    // جمع البيانات
+    const name = document.getElementById('customerName').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+    const state = document.getElementById('customerState').value;
+    const addressDetail = document.getElementById('customerAddress').value.trim();
+    const fullAddress = document.getElementById('fullAddress').value.trim();
+    const notes = document.getElementById('customerNotes').value.trim();
+    
+    const customerData = {
+        name: name,
+        phone: phone,
+        address: fullAddress || (state && addressDetail ? `${state} - ${addressDetail}` : (state || addressDetail)),
+        state: state,
+        addressDetail: addressDetail,
+        notes: notes
+    };
+    
+    const grouped = customerPendingGrouped;
+    const total = customerPendingTotal;
+    const distributor = customerSelectedDistributor;
+    
+    console.log('📊 بيانات الطلب:', { customerData, total, distributor: distributor?.name });
+    
+    toast('📤 جاري إرسال الطلب...', 'info');
+    
+    // إرسال الطلب
+    const success = await sendOrderToTelegramChannel(customerData, grouped, total, distributor);
+    
+    closeCustomerModal();
+    
+    if (success) {
+        // تحديث المخزون
+        cart.forEach(item => {
+            const product = inventory.find(p => p.id === item.id);
+            if (product) product.stock -= item.quantity;
+        });
+        
+        // تفريغ السلة
+        cart = [];
+        localStorage.setItem('nardo_cart', JSON.stringify(cart));
+        localStorage.setItem('nardo_products', JSON.stringify(inventory));
+        
+        updateCartBadges();
+        renderShop();
+        renderOrders();
+        updateStats();
+        
+        toast('✅ تم إرسال الطلب بنجاح! سيتم التواصل معك قريباً', 'success');
+    } else {
+        toast('❌ فشل إرسال الطلب. يرجى المحاولة مرة أخرى', 'error');
+    }
+}
+    
+
+
+        
 
     function generateOrderIdFromCustomer(customerName, stateName) {
         const stateCode = getStateCodeForCustomer(stateName || 'الجزائر');
@@ -4954,6 +5329,438 @@ function refreshAllDistributorViews() {
     function renderPendingStoreRequests() { renderStoreRequests(); }
 
     document.addEventListener('DOMContentLoaded', init);
+    
+</script>
+    <script>
+// ============================================================
+// 📦 المتجر المصغر - كود Mini App
+// ============================================================
+
+let miniAppProducts = [];
+let miniAppCart = [];
+let miniAppCurrentCategory = 'all';
+let miniAppSearchQuery = '';
+
+// ============================================================
+// 🚀 فتح وإغلاق التطبيق المصغر
+// ============================================================
+
+function openMiniApp() {
+    const app = document.getElementById('telegram-mini-app');
+    if (app) {
+        app.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        loadMiniAppProducts();
+        updateMiniAppStats();
+        loadMiniAppCategories();
+    }
+}
+
+function closeMiniApp() {
+    const app = document.getElementById('telegram-mini-app');
+    if (app) {
+        app.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// ============================================================
+// 📦 تحميل وعرض المنتجات
+// ============================================================
+
+function loadMiniAppProducts() {
+    const grid = document.getElementById('appProductsGrid');
+    if (!grid) return;
+
+    try {
+        miniAppProducts = JSON.parse(localStorage.getItem('nardo_products') || '[]');
+    } catch(e) {
+        miniAppProducts = [];
+    }
+
+    document.getElementById('appProductCount').textContent = `${miniAppProducts.length} منتج`;
+    renderMiniAppProducts();
+}
+
+function renderMiniAppProducts() {
+    const grid = document.getElementById('appProductsGrid');
+    if (!grid) return;
+
+    let filtered = [...miniAppProducts];
+
+    if (miniAppCurrentCategory !== 'all') {
+        filtered = filtered.filter(p => p.category === miniAppCurrentCategory);
+    }
+
+    if (miniAppSearchQuery) {
+        filtered = filtered.filter(p => 
+            p.name.toLowerCase().includes(miniAppSearchQuery.toLowerCase()) ||
+            (p.category && p.category.toLowerCase().includes(miniAppSearchQuery.toLowerCase()))
+        );
+    }
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `
+            <div class="app-empty">
+                <i class="fas fa-search"></i>
+                <p>لا توجد نتائج</p>
+                <p style="font-size: 12px; color: #555;">${miniAppSearchQuery ? 'جرب بحثاً آخر' : 'أضف منتجات إلى المتجر'}</p>
+            </div>
+        `;
+        return;
+    }
+
+    grid.innerHTML = filtered.map(p => {
+        const isNew = p.createdAt && (Date.now() - new Date(p.createdAt).getTime()) < 7 * 24 * 60 * 60 * 1000;
+        const fromTelegram = p.source === 'telegram' || p.telegramId;
+        
+        return `
+        <div class="app-product-item">
+            ${isNew ? '<span class="product-badge-new">🆕 جديد</span>' : ''}
+            ${fromTelegram ? '<span class="product-badge-telegram">📡 قناة</span>' : ''}
+            <div class="product-image">
+                ${p.images && p.images.length > 0 ? 
+                    `<img src="${p.images[0]}" alt="${p.name}" onerror="this.style.display='none';this.parentElement.innerHTML='📦'">` : 
+                    '📦'
+                }
+            </div>
+            <div class="product-info">
+                <div class="product-name">${p.name}</div>
+                <div class="product-price">${p.price.toLocaleString()} دج</div>
+                <div class="product-stock ${p.stock < 5 ? 'low' : ''}">
+                    ${p.stock > 0 ? `📦 ${p.stock}` : '❌ غير متوفر'}
+                </div>
+                <div class="product-actions">
+                    <button class="btn-add-cart" onclick="addToMiniAppCart('${p.id}')" ${p.stock <= 0 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+                        <i class="fas fa-cart-plus"></i> أضف
+                    </button>
+                    <button class="btn-quick-order" onclick="miniAppQuickOrder('${p.id}')" ${p.stock <= 0 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+                        <i class="fas fa-bolt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `}).join('');
+}
+
+// ============================================================
+// 🔍 البحث والتصنيفات
+// ============================================================
+
+function searchMiniAppProducts(query) {
+    miniAppSearchQuery = query;
+    renderMiniAppProducts();
+}
+
+function clearMiniAppSearch() {
+    document.getElementById('appSearchInput').value = '';
+    miniAppSearchQuery = '';
+    renderMiniAppProducts();
+}
+
+function loadMiniAppCategories() {
+    const container = document.getElementById('appCategories');
+    if (!container) return;
+
+    const categories = new Set();
+    miniAppProducts.forEach(p => {
+        if (p.category) categories.add(p.category);
+    });
+
+    if (categories.size === 0) {
+        container.style.display = 'none';
+        return;
+    }
+
+    container.style.display = 'flex';
+    container.innerHTML = `
+        <button class="cat-btn active" onclick="filterMiniAppCategory('all')">📋 الكل</button>
+        ${[...categories].map(cat => `
+            <button class="cat-btn" onclick="filterMiniAppCategory('${cat}')">${cat}</button>
+        `).join('')}
+    `;
+}
+
+function filterMiniAppCategory(category) {
+    miniAppCurrentCategory = category;
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.trim() === category || 
+            (category === 'all' && btn.textContent.includes('الكل')));
+    });
+    renderMiniAppProducts();
+}
+
+// ============================================================
+// 📊 الإحصائيات
+// ============================================================
+
+function updateMiniAppStats() {
+    const products = JSON.parse(localStorage.getItem('nardo_products') || '[]');
+    const orders = JSON.parse(localStorage.getItem('nardo_orders') || '[]');
+    
+    document.getElementById('statProducts').textContent = products.length;
+    document.getElementById('statOrders').textContent = orders.length;
+    document.getElementById('statRevenue').textContent = orders.reduce((sum, o) => sum + (o.total || 0), 0).toLocaleString();
+}
+
+// ============================================================
+// 🛒 السلة
+// ============================================================
+
+function addToMiniAppCart(productId) {
+    const product = miniAppProducts.find(p => p.id == productId);
+    if (!product) return;
+    if (product.stock <= 0) {
+        showMiniAppToast('⚠️ هذا المنتج غير متوفر', 'warning');
+        return;
+    }
+
+    const existing = miniAppCart.find(item => item.id == productId);
+    if (existing) {
+        if (existing.quantity < product.stock) {
+            existing.quantity += 1;
+        } else {
+            showMiniAppToast(`⚠️ لا يوجد مخزون كافٍ`, 'warning');
+            return;
+        }
+    } else {
+        miniAppCart.push({ ...product, quantity: 1 });
+    }
+
+    updateMiniAppCartUI();
+    showMiniAppToast(`✅ تمت إضافة ${product.name}`, 'success');
+}
+
+function updateMiniAppCartUI() {
+    const total = miniAppCart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+    document.getElementById('appCartCount').textContent = total;
+}
+
+function showMiniAppCart() {
+    if (miniAppCart.length === 0) {
+        showMiniAppToast('🛒 السلة فارغة', 'warning');
+        return;
+    }
+
+    let message = '🛒 *السلة*\n━━━━━━━━━━━━━━━━━━\n';
+    let total = 0;
+    
+    miniAppCart.forEach((item, i) => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        message += `${i+1}. ${item.name}\n   × ${item.quantity} = ${subtotal.toLocaleString()} دج\n`;
+    });
+    
+    message += `━━━━━━━━━━━━━━━━━━\n💰 المجموع: ${total.toLocaleString()} دج`;
+
+    if (confirm(message.replace(/\*/g, ''))) {
+        miniAppCheckout();
+    }
+}
+
+// ============================================================
+// ⚡ طلب سريع
+// ============================================================
+
+function miniAppQuickOrder(productId) {
+    const product = miniAppProducts.find(p => p.id == productId);
+    if (!product) return;
+    if (product.stock <= 0) {
+        showMiniAppToast('⚠️ هذا المنتج غير متوفر', 'warning');
+        return;
+    }
+
+    if (!confirm(`🛍️ طلب سريع\n\n📦 ${product.name}\n💰 ${product.price.toLocaleString()} دج\n\nتأكيد الطلب؟`)) return;
+
+    const orders = JSON.parse(localStorage.getItem('nardo_orders') || '[]');
+    orders.push({
+        id: 'ORD-' + Date.now(),
+        customerName: 'عميل (طلب سريع)',
+        items: [{ name: product.name, price: product.price, quantity: 1 }],
+        total: product.price,
+        status: 'pending',
+        source: 'mini_app_quick',
+        date: new Date().toISOString()
+    });
+    localStorage.setItem('nardo_orders', JSON.stringify(orders));
+
+    product.stock -= 1;
+    localStorage.setItem('nardo_products', JSON.stringify(miniAppProducts));
+
+    showMiniAppToast(`✅ تم طلب ${product.name}`, 'success');
+    renderMiniAppProducts();
+    updateMiniAppStats();
+}
+
+// ============================================================
+// 💳 إتمام الشراء
+// ============================================================
+
+function miniAppCheckout() {
+    if (miniAppCart.length === 0) {
+        showMiniAppToast('⚠️ السلة فارغة', 'warning');
+        return;
+    }
+
+    const total = miniAppCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    if (!confirm(`🛍️ تأكيد الطلب\n\n📦 ${miniAppCart.length} منتج\n💰 ${total.toLocaleString()} دج\n\nتأكيد؟`)) return;
+
+    const orders = JSON.parse(localStorage.getItem('nardo_orders') || '[]');
+    orders.push({
+        id: 'ORD-' + Date.now(),
+        customerName: 'عميل (السلة)',
+        items: miniAppCart.map(item => ({
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            total: item.price * item.quantity
+        })),
+        total: total,
+        status: 'pending',
+        source: 'mini_app_cart',
+        date: new Date().toISOString()
+    });
+    localStorage.setItem('nardo_orders', JSON.stringify(orders));
+
+    miniAppCart.forEach(cartItem => {
+        const product = miniAppProducts.find(p => p.id == cartItem.id);
+        if (product) product.stock -= cartItem.quantity;
+    });
+    localStorage.setItem('nardo_products', JSON.stringify(miniAppProducts));
+
+    showMiniAppToast(`✅ تم إرسال طلبك! ${total.toLocaleString()} دج`, 'success');
+    
+    miniAppCart = [];
+    updateMiniAppCartUI();
+    renderMiniAppProducts();
+    updateMiniAppStats();
+}
+
+// ============================================================
+// 📋 عرض الطلبات
+// ============================================================
+
+function showMiniAppOrders() {
+    const orders = JSON.parse(localStorage.getItem('nardo_orders') || '[]');
+    
+    if (orders.length === 0) {
+        showMiniAppToast('📭 لا توجد طلبات سابقة', 'info');
+        return;
+    }
+
+    let message = '📋 *طلباتي*\n━━━━━━━━━━━━━━━━━━\n';
+    
+    orders.slice(-5).reverse().forEach((order, i) => {
+        const statusMap = {
+            pending: '⏳ قيد المعالجة',
+            delivered: '✅ تم التسليم',
+            cancelled: '❌ ملغي'
+        };
+        message += `${i+1}. #${order.id.slice(-6)}\n`;
+        message += `   📦 ${order.items?.length || 0} منتج\n`;
+        message += `   💰 ${order.total?.toLocaleString() || 0} دج\n`;
+        message += `   📌 ${statusMap[order.status] || '⏳ قيد المعالجة'}\n`;
+        message += `   📅 ${new Date(order.date).toLocaleDateString('ar-EG')}\n`;
+        message += `━━━━━━━━━━━━━━━━━━\n`;
+    });
+
+    alert(message.replace(/\*/g, ''));
+}
+
+// ============================================================
+// 🍞 تنبيهات
+// ============================================================
+
+function showMiniAppToast(message, type = 'info') {
+    const oldToast = document.querySelector('.telegram-toast');
+    if (oldToast) oldToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'telegram-toast';
+    toast.style.background = type === 'success' ? '#22c55e' : type === 'warning' ? '#f59e0b' : '#0088cc';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = '0.3s';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// ============================================================
+// 🚀 زر فتح المتجر المصغر
+// ============================================================
+
+function addMiniAppButton() {
+    const productGrid = document.getElementById('productGrid');
+    if (!productGrid) return;
+    
+    const container = document.createElement('div');
+    container.style.cssText = 'text-align:center;margin:15px 0;padding:0 10px;';
+    container.innerHTML = `
+        <button onclick="openMiniApp()" style="
+            background: linear-gradient(145deg, #0088cc, #006699);
+            border: none;
+            border-radius: 14px;
+            padding: 14px 35px;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cairo';
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 25px rgba(0,136,204,0.35);
+            transition: 0.3s;
+            width: 100%;
+            max-width: 350px;
+            justify-content: center;
+        " onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+            <i class="fab fa-telegram" style="font-size: 22px;"></i>
+            🏪 فتح المتجر المصغر
+            <span style="background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 20px; font-size: 10px;">Mini App</span>
+        </button>
+    `;
+    
+    productGrid.parentNode.insertBefore(container, productGrid);
+}
+
+// ============================================================
+// 🚀 التهيئة
+// ============================================================
+// ============================================================
+// 🚀 التهيئة
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    // زر فتح المتجر
+    setTimeout(addMiniAppButton, 500);
+    
+    // ✅ فتح المتجر المصغر تلقائياً عند فتح الرابط
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    const hash = window.location.hash;
+    
+    if (mode === 'mini' || hash === '#mini') {
+        setTimeout(openMiniApp, 800);
+    }
+});
+
+// جعل الدوال عامة للوصول إليها من HTML
+window.openMiniApp = openMiniApp;
+window.closeMiniApp = closeMiniApp;
+window.addToMiniAppCart = addToMiniAppCart;
+window.miniAppQuickOrder = miniAppQuickOrder;
+window.miniAppCheckout = miniAppCheckout;
+window.showMiniAppCart = showMiniAppCart;
+window.showMiniAppOrders = showMiniAppOrders;
+window.searchMiniAppProducts = searchMiniAppProducts;
+window.clearMiniAppSearch = clearMiniAppSearch;
+window.filterMiniAppCategory = filterMiniAppCategory;
+
 </script>
 </body>
 </html>
@@ -4964,7 +5771,8 @@ function refreshAllDistributorViews() {
 
 
 
+
+
                             
 
-
-                
+    
