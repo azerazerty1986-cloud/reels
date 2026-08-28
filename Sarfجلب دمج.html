@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html dir="rtl" lang="ar">
+"ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -951,6 +950,32 @@ function telegramMessageFileInfo(post) {
 }
 function selectedTelegramImportKind() { const separate=document.getElementById('telegram-link-import-modal'), main=document.getElementById('tilecdn-upload-telegram-kind'), separateSelect=document.getElementById('telegram-link-import-kind'); const select=separate&&separate.style.display!=='none'&&separateSelect?separateSelect:main||separateSelect; return String(select?.value||'auto').toLowerCase(); }
 function selectedTileDescription() { const separate=document.getElementById('telegram-link-import-modal'), main=document.getElementById('tilecdn-upload-description'), separateInput=document.getElementById('telegram-link-import-description'); const input=separate&&separate.style.display!=='none'&&separateInput?separateInput:main||separateInput; return String(input?.value||'').trim(); }
+function selectedTelegramSaveKind() { return String(document.getElementById('tilecdn-save-kind')?.value||'auto').toLowerCase(); }
+function selectedTileSaveDescription() { return String(document.getElementById('tilecdn-save-description')?.value||document.getElementById('tilecdn-upload-description')?.value||document.getElementById('telegram-link-import-description')?.value||'').trim(); }
+function saveSelectedTileContent() {
+    const input=document.getElementById('tilecdn-save-content-url'), status=document.getElementById('tilecdn-save-status');
+    const raw=String(input?.value||'').trim(), kind=selectedTelegramSaveKind(), description=selectedTileSaveDescription();
+    const setStatus=text=>{if(status)status.textContent=text;};
+    try {
+        if(!raw) throw new Error('ألصق رابط HTTPS أو رابط رسالة Telegram أولاً');
+        if(kind==='photo-caption'&&!description) throw new Error('اكتب وصفاً عند اختيار «صورة ووصف»');
+        const isChannelMessage=/^https:\/\/(?:t\.me|telegram\.me)\/c\/\d+\/\d+$/i.test(raw);
+        const isTelegramBot=/^https:\/\/(?:t\.me|telegram\.me)\/[^/]+(?:\?.*)?$/i.test(raw)&&!isChannelMessage;
+        if(isTelegramBot) {
+            if(kind!=='auto'&&kind!=='message'&&kind!=='https') throw new Error('رابط Mini App عبر Telegram يحتاج نوع HTTPS أو رابط رسالة أو تلقائي');
+            const field=document.getElementById('tilecdn-upload-telegram-bot-url'); if(field)field.value=raw;
+            const result=saveTelegramBotUrlToSelectedTile(); if(!result) return false; setStatus('✅ تم حفظ رابط Mini App — اضغط البطاقة للدخول'); return true;
+        }
+        if(kind==='https'||(kind==='auto'&&!isChannelMessage)) {
+            const field=document.getElementById('tilecdn-upload-https-url'); if(field)field.value=raw;
+            const result=saveHttpsUrlToSelectedTile(); if(!result) return false; setStatus('✅ تم حفظ رابط HTTPS — اضغط البطاقة لفتحه'); return true;
+        }
+        if(kind==='https') throw new Error('رابط HTTPS المباشر لا يكون بصيغة رسالة قناة');
+        const field=document.getElementById('tilecdn-upload-telegram-message-url'); if(field)field.value=raw;
+        const result=saveTelegramMessageLinkToSelectedTile(); if(!result) return false; setStatus('✅ تم حفظ رابط رسالة القناة — اضغط البطاقة لفتحها'); return true;
+    } catch(error) { setStatus('❌ '+error.message); showToast('❌ '+error.message,'error'); return false; }
+}
+window.saveSelectedTileContent=saveSelectedTileContent;
 function manualTileKindMatchesFile(kind, file) { kind=String(kind||'auto').toLowerCase(); if(kind==='auto') return true; if(kind==='message'||kind==='https') return false; const name=String(file?.name||'').toLowerCase(), type=String(file?.type||'').toLowerCase(); if(kind==='html') return type==='text/html'||/\\.html?$/.test(name); if(kind==='photo'||kind==='photo-caption') return type.indexOf('image/')===0||/\\.(png|jpe?g|gif|webp|svg|bmp|avif)$/.test(name); if(kind==='video') return type.indexOf('video/')===0||/\\.(mp4|webm|ogg|mov|m4v|avi)$/.test(name); return true; }
 function extractHttpsLinksFromTelegramText(text) { const out=[]; const re=/https:\/\/[^\s<>()\]»،]+/gi; let match; while((match=re.exec(String(text||'')))) { const url=match[0].replace(/[.,،)\]]+$/g,''); if(/^https:\/\/(?:t\.me|telegram\.me)\//i.test(url)) continue; if(!out.includes(url)) out.push(url); } return out; }
 function saveTelegramHttpsReferenceToTile(tileId, worldId, info, httpsUrl, sourceUrl, visible) { const tile=ServerManager.tiles[tileId]; if(!tile) throw new Error('المربع المحدد غير موجود'); tile.files=tile.files||{}; tile.fileMeta=tile.fileMeta||{}; const host=new URL(httpsUrl).hostname.replace(/[^a-zA-Z0-9.-]/g,'_'); const filename='telegram_https_'+host+'_'+Date.now()+'.url'; tile.files[filename]=httpsUrl; tile.fileMeta[filename]={type:'text/uri-list',encoding:'url',remoteUrl:httpsUrl,telegramSourceUrl:sourceUrl,telegramMessageId:info?.messageId||null,telegramCaption:info?.caption||'',contentKind:'https',description:selectedTileDescription(),channel:'telegram-https',visible:visible!==false,updatedAt:Date.now()}; tile.worldId=worldId; tile.tileId=tileId; ServerManager.saveTileFileStore(tileId); ServerManager.saveTiles(); ServerManager.renderGrid(); ServerManager.selectTile(tileId); return filename; }
@@ -1055,7 +1080,7 @@ async function importAllTelegramLinksToAdminTile() {
 }
 window.importAllTelegramLinksToAdminTile = importAllTelegramLinksToAdminTile;
 
-function saveTelegramMessageReferenceToTile(link, iconValue, tileId, visible = true) {
+function saveTelegramMessageReferenceToTile(link, iconValue, tileId, visible = true, contentKind = 'message', description = '') {
     const worldId = ensureUploadWorldFromIcon(parseInt(iconValue, 10));
     ServerManager.switchWorld(worldId); ServerManager.selectTile(tileId);
     const tile = ServerManager.tiles[tileId];
@@ -1065,11 +1090,11 @@ function saveTelegramMessageReferenceToTile(link, iconValue, tileId, visible = t
     if (existing) return existing;
     const filename = 'telegram_message_' + link.messageId + '_' + Date.now() + '.url';
     tile.files[filename] = link.url;
-    tile.fileMeta[filename] = { type: 'text/uri-list', encoding: 'url', channel: 'telegram-message', contentKind: 'message', telegramUrl: link.url, telegramMessageId: link.messageId, telegramChatId: link.chatId, description: selectedTileDescription(), visible, updatedAt: Date.now() };
+    tile.fileMeta[filename] = { type: 'text/uri-list', encoding: 'url', channel: 'telegram-message', contentKind: String(contentKind||'message'), telegramUrl: link.url, telegramMessageId: link.messageId, telegramChatId: link.chatId, description: String(description||selectedTileSaveDescription()||selectedTileDescription()||''), visible, updatedAt: Date.now() };
     ServerManager.saveTileFileStore(tileId); ServerManager.saveTiles(); ServerManager.renderGrid(); ServerManager.selectTile(tileId);
     return filename;
 }window.saveTelegramMessageReferenceToTile = saveTelegramMessageReferenceToTile;
-function saveTelegramMessageReferenceByWorld(tileId, worldId, link, visible = true) { const tile=ServerManager.tiles[tileId]; if(!tile) throw new Error('المربع المحدد غير موجود'); tile.files=tile.files||{}; tile.fileMeta=tile.fileMeta||{}; const existing=Object.keys(tile.fileMeta).find(name=>String(tile.fileMeta[name]?.telegramUrl||'')===String(link.url||'')||(String(tile.fileMeta[name]?.telegramChatId||'')===String(link.chatId||'')&&String(tile.fileMeta[name]?.telegramMessageId||'')===String(link.messageId||''))); if(existing) return existing; const filename='telegram_message_'+link.messageId+'_'+Date.now()+'.url'; tile.files[filename]=link.url; tile.fileMeta[filename]={type:'text/uri-list',encoding:'url',channel:'telegram-message',contentKind:'message',telegramUrl:link.url,telegramMessageId:link.messageId,telegramChatId:link.chatId,description:selectedTileDescription(),visible:visible!==false,updatedAt:Date.now()}; tile.worldId=worldId; tile.tileId=tileId; ServerManager.saveTileFileStore(tileId); ServerManager.saveTiles(); ServerManager.renderGrid(); ServerManager.selectTile(tileId); return filename; }
+function saveTelegramMessageReferenceByWorld(tileId, worldId, link, visible = true, contentKind = 'message', description = '') { const tile=ServerManager.tiles[tileId]; if(!tile) throw new Error('المربع المحدد غير موجود'); tile.files=tile.files||{}; tile.fileMeta=tile.fileMeta||{}; const existing=Object.keys(tile.fileMeta).find(name=>String(tile.fileMeta[name]?.telegramUrl||'')===String(link.url||'')||(String(tile.fileMeta[name]?.telegramChatId||'')===String(link.chatId||'')&&String(tile.fileMeta[name]?.telegramMessageId||'')===String(link.messageId||''))); if(existing) return existing; const filename='telegram_message_'+link.messageId+'_'+Date.now()+'.url'; tile.files[filename]=link.url; tile.fileMeta[filename]={type:'text/uri-list',encoding:'url',channel:'telegram-message',contentKind:String(contentKind||'message'),telegramUrl:link.url,telegramMessageId:link.messageId,telegramChatId:link.chatId,description:String(description||selectedTileDescription()||''),visible:visible!==false,updatedAt:Date.now()}; tile.worldId=worldId; tile.tileId=tileId; ServerManager.saveTileFileStore(tileId); ServerManager.saveTiles(); ServerManager.renderGrid(); ServerManager.selectTile(tileId); return filename; }
 window.saveTelegramMessageReferenceByWorld = saveTelegramMessageReferenceByWorld;
 function telegramTileHasMessage(tileId, link) {
     const tile = ServerManager.tiles[tileId];
@@ -1083,15 +1108,16 @@ function saveTelegramMessageLinkToSelectedTile() {
         const isAdmin = typeof adminSystem !== 'undefined' && typeof adminSystem.requireAdmin === 'function' && adminSystem.requireAdmin();
         if (!isAdmin) throw new Error('هذه الميزة متاحة للمدير فقط');
         const link = parseTelegramMessageLink(document.getElementById('tilecdn-upload-telegram-message-url')?.value);
-        const requestedKind = selectedTelegramImportKind();
-        if (requestedKind !== 'auto' && requestedKind !== 'message') throw new Error('اختر نوع رابط رسالة قناة أو تلقائي قبل حفظ الرابط');
+        const requestedKind = selectedTelegramSaveKind();
+        if (requestedKind === 'photo-caption' && !selectedTileSaveDescription()) throw new Error('اكتب وصفاً عند اختيار «صورة ووصف»');
+        if (requestedKind !== 'auto' && !['message','html','photo-caption','video','photo'].includes(requestedKind)) throw new Error('اختر نوع رسالة أو نوع مرفق Telegram قبل حفظ الرابط');
         const config = typeof getTelegramConfig === 'function' ? getTelegramConfig() : {};
         const configuredChannelId = String(config.channelId || config.chatId || '').trim();
         if (configuredChannelId && configuredChannelId !== String(link.chatId)) throw new Error('رابط الرسالة لا يطابق معرف القناة المحفوظ في إعدادات Telegram');
         const iconValue = document.getElementById('tilecdn-upload-icon')?.value;
         const tileId = document.getElementById('tilecdn-upload-tile')?.value;
         if (iconValue === '' || !tileId) throw new Error('اختر الأيقونة والمربع أولاً');
-        const referenceName = saveTelegramMessageReferenceToTile(link, iconValue, tileId, document.getElementById('tilecdn-upload-visible')?.checked !== false);
+        const referenceName = saveTelegramMessageReferenceToTile(link, iconValue, tileId, document.getElementById('tilecdn-upload-visible')?.checked !== false, requestedKind === 'auto' ? 'message' : requestedKind, selectedTileSaveDescription());
         if (typeof buildWorld === 'function' && currentWorldId === ensureUploadWorldFromIcon(parseInt(iconValue, 10))) buildWorld(currentWorldId);
        
         if (status) status.textContent = '✅ تم حفظ رابط رسالة القناة داخل المربع';
@@ -1134,7 +1160,7 @@ async function importTelegramLinkToAdminTile() {
         if (requestedKind === 'photo' && info) info.caption = '';
         if (!info) {
             const worldId = ensureUploadWorldFromIcon(parseInt(iconValue, 10));
-            const referenceName = saveTelegramMessageReferenceToTile(link, iconValue, tileId, document.getElementById('tilecdn-upload-visible')?.checked !== false);
+            const referenceName = saveTelegramMessageReferenceToTile(link, iconValue, tileId, document.getElementById('tilecdn-upload-visible')?.checked !== false, requestedKind === 'auto' ? 'message' : requestedKind, selectedTileSaveDescription());
             if (typeof buildWorld === 'function' && currentWorldId === worldId) buildWorld(worldId);
             setStatus('✅ تم حفظ رابط رسالة Telegram داخل المربع — اضغط البطاقة لفتحها'); showToast('✅ تم حفظ رابط رسالة Telegram في المربع ' + tileId, 'success'); return true;
         }
@@ -1540,17 +1566,24 @@ function openTileCDNUploadModal(prefillTileId,fromTileShortcut) {
             '<div id="tilecdn-upload-world" style="color:#a78bfa;font-size:11px;margin-top:7px;padding:7px 10px;background:rgba(139,92,246,.08);border-radius:8px;">🌍 اختر أيقونة لتحديد العالم</div>' +
             '<label style="display:block;color:#aaa;font-size:11px;margin:14px 0 5px;">2️⃣ اختر المربع</label><select id="tilecdn-upload-tile" style="width:100%;padding:10px;border-radius:9px;background:#11142c;color:#fff;border:1px solid rgba(255,255,255,.12);font-family:inherit;"></select>' +
             '<div id="tilecdn-upload-selection" style="color:#4ade80;font-size:11px;margin-top:7px;"></div>' +
+            '<div style="margin-top:14px;padding:12px;border:1px solid rgba(167,139,250,.45);border-radius:12px;background:linear-gradient(145deg,rgba(76,29,149,.22),rgba(15,23,42,.45));">' +
+            '<div style="color:#c4b5fd;font-size:13px;font-weight:800;margin-bottom:6px;">💾 حفظ المحتوى داخل المربع</div>' +
+            '<div style="color:#94a3b8;font-size:10px;line-height:1.6;margin-bottom:8px;">اختر النوع، ألصق الرابط، ثم اضغط زر الحفظ الواحد. يعمل مع HTTPS وMini App ورابط رسالة القناة والأنواع المرتبطة بها.</div>' +
+            '<select id="tilecdn-save-kind" style="width:100%;box-sizing:border-box;padding:10px;border-radius:9px;border:1px solid rgba(167,139,250,.5);background:#080d20;color:#fff;font-family:inherit;"><option value="auto">تلقائي حسب الرابط</option><option value="https">HTTPS / Mini App</option><option value="html">HTML من رسالة قناة</option><option value="photo-caption">صورة ووصف من رسالة قناة</option><option value="video">فيديو من رسالة قناة</option><option value="photo">صورة من رسالة قناة</option><option value="message">رابط رسالة قناة</option></select>' +
+            '<input id="tilecdn-save-content-url" type="url" placeholder="ألصق رابط HTTPS أو https://t.me/c/.../..." style="width:100%;box-sizing:border-box;padding:10px;margin-top:8px;border-radius:9px;border:1px solid rgba(167,139,250,.45);background:#080d20;color:#fff;direction:ltr;text-align:left;font-family:inherit;">' +
+            '<textarea id="tilecdn-save-description" placeholder="وصف اختياري يظهر على بطاقة المربع (مطلوب مع صورة ووصف)" style="width:100%;box-sizing:border-box;padding:10px;margin-top:8px;min-height:60px;border-radius:9px;border:1px solid rgba(167,139,250,.45);background:#080d20;color:#fff;font-family:inherit;direction:rtl;"></textarea>' +
+            '<button onclick="saveSelectedTileContent()" style="width:100%;padding:11px;margin-top:9px;border:1px solid rgba(167,139,250,.85);border-radius:9px;background:linear-gradient(135deg,#8b5cf6,#4f46e5);color:#fff;font-weight:900;cursor:pointer;font-family:inherit;">💾 حفظ المحتوى في المربع</button><div id="tilecdn-save-status" style="color:#cbd5e1;font-size:10px;margin-top:7px;text-align:center;min-height:15px;"></div></div>' +
             '<label style="display:block;color:#aaa;font-size:11px;margin:14px 0 5px;">3️⃣ اختر الملفات</label><input id="tilecdn-upload-files" type="file" accept="*/*" multiple style="width:100%;padding:9px;border:1px dashed rgba(74,222,128,.35);border-radius:9px;color:#aaa;background:rgba(74,222,128,.04);" onchange="tileCDNFilesChanged()">' +
             '<div id="tilecdn-upload-file-status" style="color:#888;font-size:11px;margin-top:7px;">لم يتم اختيار ملفات</div>' +
-            '<div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(56,189,248,.2);color:#7dd3fc;font-size:11px;font-weight:700;">أو حفظ رابط HTTPS داخل المربع</div>' +
-            '<input id="tilecdn-upload-https-url" type="url" placeholder="https://nardomini-2nsqperx.manus.space/ أو رابط ملف مباشر" style="width:100%;box-sizing:border-box;padding:10px;margin-top:7px;border-radius:9px;border:1px solid rgba(56,189,248,.4);background:#080d20;color:#fff;direction:ltr;text-align:left;font-family:inherit;">' +
-            '<button onclick="saveHttpsUrlToSelectedTile()" style="width:100%;padding:10px;margin-top:7px;border:1px solid rgba(56,189,248,.65);border-radius:9px;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;">🔗 حفظ رابط HTTPS في المربع</button><div id="tilecdn-upload-https-status" style="color:#94a3b8;font-size:10px;margin-top:6px;text-align:center;min-height:15px;"></div>' +
-            '<div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(236,72,153,.2);color:#f9a8d4;font-size:11px;font-weight:700;">أو فتح التطبيق عبر Telegram</div>' +
-            '<input id="tilecdn-upload-telegram-bot-url" type="url" placeholder="https://t.me/اسم_البوت?startapp" style="width:100%;box-sizing:border-box;padding:10px;margin-top:7px;border-radius:9px;border:1px solid rgba(236,72,153,.4);background:#080d20;color:#fff;direction:ltr;text-align:left;font-family:inherit;">' +
-            '<button onclick="saveTelegramBotUrlToSelectedTile()" style="width:100%;padding:10px;margin-top:7px;border:1px solid rgba(236,72,153,.65);border-radius:9px;background:linear-gradient(135deg,#ec4899,#9333ea);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;">📲 حفظ وفتح التطبيق عبر Telegram</button><div id="tilecdn-upload-telegram-bot-status" style="color:#cbd5e1;font-size:10px;margin-top:6px;text-align:center;min-height:15px;"></div>' +
-            '<div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(167,139,250,.18);color:#c4b5fd;font-size:11px;font-weight:700;">🔗 رابط رسالة القناة — يحفظ ويفتح الرسالة من المربع</div>' +
-            '<input id="tilecdn-upload-telegram-message-url" type="url" placeholder="https://t.me/c/3822964890/10068" style="width:100%;box-sizing:border-box;padding:10px;margin-top:7px;border-radius:9px;border:1px solid rgba(167,139,250,.55);background:#080d20;color:#fff;direction:ltr;text-align:left;font-family:inherit;">' +
-            '<button onclick="saveTelegramMessageLinkToSelectedTile()" style="width:100%;padding:10px;margin-top:7px;border:1px solid rgba(167,139,250,.85);border-radius:9px;background:linear-gradient(135deg,#8b5cf6,#4f46e5);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;">🔗 حفظ رابط الرسالة داخل المربع</button><div id="tilecdn-upload-telegram-message-status" style="color:#cbd5e1;font-size:10px;margin-top:6px;text-align:center;min-height:15px;"></div>' +
+            '<div style="display:none;margin-top:12px;padding-top:10px;border-top:1px solid rgba(56,189,248,.2);color:#7dd3fc;font-size:11px;font-weight:700;">أو حفظ رابط HTTPS داخل المربع</div>' +
+            '<input id="tilecdn-upload-https-url" type="url" placeholder="https://nardomini-2nsqperx.manus.space/ أو رابط ملف مباشر" style="display:none;width:100%;box-sizing:border-box;padding:10px;margin-top:7px;border-radius:9px;border:1px solid rgba(56,189,248,.4);background:#080d20;color:#fff;direction:ltr;text-align:left;font-family:inherit;">' +
+            '<button onclick="saveHttpsUrlToSelectedTile()" style="display:none;width:100%;padding:10px;margin-top:7px;border:1px solid rgba(56,189,248,.65);border-radius:9px;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;">🔗 حفظ رابط HTTPS في المربع</button><div id="tilecdn-upload-https-status" style="display:none;color:#94a3b8;font-size:10px;margin-top:6px;text-align:center;min-height:15px;"></div>' +
+            '<div style="display:none;margin-top:12px;padding-top:10px;border-top:1px solid rgba(236,72,153,.2);color:#f9a8d4;font-size:11px;font-weight:700;">أو فتح التطبيق عبر Telegram</div>' +
+            '<input id="tilecdn-upload-telegram-bot-url" type="url" placeholder="https://t.me/اسم_البوت?startapp" style="display:none;width:100%;box-sizing:border-box;padding:10px;margin-top:7px;border-radius:9px;border:1px solid rgba(236,72,153,.4);background:#080d20;color:#fff;direction:ltr;text-align:left;font-family:inherit;">' +
+            '<button onclick="saveTelegramBotUrlToSelectedTile()" style="display:none;width:100%;padding:10px;margin-top:7px;border:1px solid rgba(236,72,153,.65);border-radius:9px;background:linear-gradient(135deg,#ec4899,#9333ea);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;">📲 حفظ وفتح التطبيق عبر Telegram</button><div id="tilecdn-upload-telegram-bot-status" style="display:none;color:#cbd5e1;font-size:10px;margin-top:6px;text-align:center;min-height:15px;"></div>' +
+            '<div style="display:none;margin-top:12px;padding-top:10px;border-top:1px solid rgba(167,139,250,.18);color:#c4b5fd;font-size:11px;font-weight:700;">🔗 رابط رسالة القناة — يحفظ ويفتح الرسالة من المربع</div>' +
+            '<input id="tilecdn-upload-telegram-message-url" type="url" placeholder="https://t.me/c/3822964890/10068" style="display:none;width:100%;box-sizing:border-box;padding:10px;margin-top:7px;border-radius:9px;border:1px solid rgba(167,139,250,.55);background:#080d20;color:#fff;direction:ltr;text-align:left;font-family:inherit;">' +
+            '<button onclick="saveTelegramMessageLinkToSelectedTile()" style="display:none;width:100%;padding:10px;margin-top:7px;border:1px solid rgba(167,139,250,.85);border-radius:9px;background:linear-gradient(135deg,#8b5cf6,#4f46e5);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;">🔗 حفظ رابط الرسالة داخل المربع</button><div id="tilecdn-upload-telegram-message-status" style="display:none;color:#cbd5e1;font-size:10px;margin-top:6px;text-align:center;min-height:15px;"></div>' +
             '<div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(167,139,250,.18);color:#c4b5fd;font-size:11px;font-weight:700;">أو استيراد مرفق من رابط رسالة Telegram</div>' +
             '<input id="tilecdn-upload-telegram-url" type="url" placeholder="https://t.me/c/4434068057/435" style="width:100%;box-sizing:border-box;padding:10px;margin-top:7px;border-radius:9px;border:1px solid rgba(167,139,250,.35);background:#080d20;color:#fff;direction:ltr;text-align:left;font-family:inherit;">' +
             '<select id="tilecdn-upload-telegram-kind" style="width:100%;box-sizing:border-box;padding:10px;margin-top:8px;border-radius:9px;border:1px solid rgba(167,139,250,.35);background:#080d20;color:#fff;font-family:inherit;"><option value="auto">تلقائي حسب الرسالة</option><option value="html">HTML</option><option value="https">HTTPS</option><option value="photo-caption">صورة ووصف</option><option value="video">فيديو</option><option value="photo">صورة فقط</option><option value="message">رابط رسالة قناة</option></select>' +
@@ -1567,6 +1600,10 @@ function openTileCDNUploadModal(prefillTileId,fromTileShortcut) {
     iconSelect.innerHTML = '<option value="">-- اختر الأيقونة --</option>' + WORLD_ICONS.map((icon, i) => '<option value="' + i + '">' + icon.emoji + ' ' + icon.name + '</option>').join('');
     document.getElementById('tilecdn-upload-tile').innerHTML = '<option value="">-- اختر الأيقونة أولاً --</option>';
     document.getElementById('tilecdn-upload-files').value = '';
+    document.getElementById('tilecdn-save-kind').value = 'auto';
+    document.getElementById('tilecdn-save-content-url').value = '';
+    document.getElementById('tilecdn-save-description').value = '';
+    document.getElementById('tilecdn-save-status').textContent = '';
     document.getElementById('tilecdn-upload-https-url').value = '';
     document.getElementById('tilecdn-upload-https-status').textContent = '';
     document.getElementById('tilecdn-upload-telegram-bot-url').value = '';
@@ -1608,7 +1645,7 @@ function saveHttpsUrlToSelectedTile() {
     const raw = String(input?.value || '').trim();
     try {
         const parsed = new URL(raw);
-        const requestedKind = selectedTelegramImportKind();
+        const requestedKind = selectedTelegramSaveKind();
         if (requestedKind !== 'auto' && requestedKind !== 'https') throw new Error('اختر نوع HTTPS أو تلقائي قبل حفظ رابط HTTPS');
         if (parsed.protocol !== 'https:') throw new Error('يجب أن يبدأ الرابط بـ https://');
         const iconValue = document.getElementById('tilecdn-upload-icon')?.value;
@@ -1629,7 +1666,7 @@ function saveHttpsUrlToSelectedTile() {
         const safeHost = parsed.hostname.replace(/[^a-zA-Z0-9.-]/g, '_');
         const filename = 'https_' + safeHost + '_' + Date.now() + '.url';
         tile.files[filename] = parsed.toString();
-        tile.fileMeta[filename] = { type: 'text/uri-list', encoding: 'url', remoteUrl: parsed.toString(), contentKind: selectedTelegramImportKind(), description: selectedTileDescription(), size: parsed.toString().length, visible: document.getElementById('tilecdn-upload-visible')?.checked !== false, updatedAt: Date.now() };
+        tile.fileMeta[filename] = { type: 'text/uri-list', encoding: 'url', remoteUrl: parsed.toString(), contentKind: 'https', description: selectedTileSaveDescription(), size: parsed.toString().length, visible: document.getElementById('tilecdn-upload-visible')?.checked !== false, updatedAt: Date.now() };
         ServerManager.saveTileFileStore(tileId);
         ServerManager.saveTiles();
         ServerManager.renderGrid();
@@ -1652,7 +1689,7 @@ function saveTelegramBotUrlToSelectedTile() {
     const raw = String(input?.value || '').trim();
     try {
         const parsed = new URL(raw);
-        const requestedKind = selectedTelegramImportKind();
+        const requestedKind = selectedTelegramSaveKind();
         if (requestedKind !== 'auto' && requestedKind !== 'message') throw new Error('اختر نوع رابط رسالة قناة أو تلقائي قبل حفظ رابط Telegram');
         if (parsed.protocol !== 'https:' || !/^t\.me$/i.test(parsed.hostname)) throw new Error('أدخل رابط بوت Telegram بصيغة https://t.me/اسم_البوت?startapp');
         if (parsed.pathname.length < 2 || parsed.pathname.includes('/c/')) throw new Error('يجب أن يحتوي الرابط على اسم البوت وليس رابط قناة أو رسالة');
@@ -1674,7 +1711,7 @@ function saveTelegramBotUrlToSelectedTile() {
         const botName = parsed.pathname.slice(1).replace(/[^a-zA-Z0-9_]/g, '_');
         const filename = 'telegram_' + botName + '_' + Date.now() + '.url';
         tile.files[filename] = parsed.toString();
-        tile.fileMeta[filename] = { type: 'text/uri-list', encoding: 'url', remoteUrl: parsed.toString(), contentKind: 'message', description: selectedTileDescription(), channel: 'telegram-bot', visible: document.getElementById('tilecdn-upload-visible')?.checked !== false, updatedAt: Date.now() };
+        tile.fileMeta[filename] = { type: 'text/uri-list', encoding: 'url', remoteUrl: parsed.toString(), contentKind: 'message', description: selectedTileSaveDescription(), channel: 'telegram-bot', visible: document.getElementById('tilecdn-upload-visible')?.checked !== false, updatedAt: Date.now() };
         ServerManager.saveTileFileStore(tileId);
         ServerManager.saveTiles();
         ServerManager.renderGrid();
@@ -4282,7 +4319,7 @@ function showRoomFiles(){
     const isAdminRoom=tileId==='0_3';if(isAdminRoom&&typeof adminSystem!=='undefined'&&typeof adminSystem.syncRole==='function')adminSystem.syncRole();const isAdminUser=isAdminRoom&&typeof adminSystem!=='undefined'&&adminSystem.isAdmin;const level1Button='<button onclick="enterP2PLevel(\''+tileId+'\')" style="border-color:#22d3ee;color:#67e8f9;">'+(tileId==='0_5'?'🌐 المستوى 1 P2P':'⬆️ المستوى 1')+'</button>';const adminButton=isAdminRoom&&isAdminUser?'<button onclick="adminSystem.showAdminPanel()" style="border-color:#fbbf24;color:#fbbf24;">👑 لوحة المدير</button><button onclick="openTileCDNUploadModal()" style="border-color:#4ade80;color:#4ade80;">📤 TileCDN</button><button onclick="toggleServerPanel()" style="border-color:#60a5fa;color:#93c5fd;">📦 السيرفر</button><button onclick="openAdminCryptoPanel()" style="border-color:#ec4899;color:#f9a8d4;">🔐 التشفير</button>':'';const productButton=tileId==='5_0'?'<button onclick="showTelegramProductsWindow()" style="border-color:#4ade80;color:#86efac;">🛍️ عرض جميع المنتجات</button>':'';const actions='<div style="display:flex;gap:7px;flex-wrap:wrap;margin:10px 0;"><label style="padding:10px 13px;background:rgba(74,222,128,.15);border:1px dashed #4ade80;border-radius:8px;cursor:pointer;">📤 رفع إلى الغرفة<input type="file" multiple onchange="uploadFilesToRoom(this.files)" style="display:none"></label><button onclick="shareFilePrompt()">📤 مشاركة</button>'+productButton+level1Button+adminButton+(type.type==='chat'?'<button onclick="openRoomChat(\''+tileId+'\')">💬 الدردشة</button>':'')+(type.type==='video'?'<button onclick="openRoomVideo(\''+tileId+'\')">🎥 الفيديو</button>':'')+'<button onclick="leaveRoom()">⬅️ خروج</button></div>';
     castleOverlay(type.icon+' '+type.name,'<div style="color:#d1d5db;margin-bottom:8px;">📂 ملفات هذه الغرفة مرتبطة بالمربع '+tileId+'</div>'+productBlock+actions+rows);
 }
-function tileContentKindLabel(filename, meta) { const type=String(meta?.type||'').toLowerCase(); const name=String(filename||'').toLowerCase(); if(meta?.channel==='telegram-message'&&String(meta?.type||'')==='text/uri-list') return '🔗 رسالة قناة'; if(/html?/.test(name)||type==='text/html') return '🌐 HTML'; if(type.indexOf('image/')===0||/\.(png|jpe?g|gif|webp|svg|bmp|avif)$/.test(name)) return '🖼️ صورة'; if(type.indexOf('video/')===0||/\.(mp4|webm|ogg|mov|m4v|avi)$/.test(name)) return '🎬 فيديو'; if(type.indexOf('audio/')===0||/\.(mp3|wav|m4a|aac|flac)$/.test(name)) return '🔊 صوت'; if(/^https?:\/\//i.test(String(meta?.remoteUrl||''))) return '🔗 HTTPS'; return '📄 ملف'; }
+function tileContentKindLabel(filename, meta) { const type=String(meta?.type||'').toLowerCase(); const name=String(filename||'').toLowerCase(); const chosen=String(meta?.contentKind||'').toLowerCase(); const chosenLabels={html:'🌐 HTML',https:'🔗 HTTPS','photo-caption':'🖼️ صورة ووصف',photo:'🖼️ صورة',video:'🎬 فيديو',message:'🔗 رسالة قناة',audio:'🔊 صوت',document:'📄 ملف'}; if(meta?.channel==='telegram-message'&&chosenLabels[chosen]) return chosenLabels[chosen]; if(meta?.channel==='telegram-message'&&String(meta?.type||'')==='text/uri-list') return '🔗 رسالة قناة'; if(/html?/.test(name)||type==='text/html') return '🌐 HTML'; if(type.indexOf('image/')===0||/\.(png|jpe?g|gif|webp|svg|bmp|avif)$/.test(name)) return '🖼️ صورة'; if(type.indexOf('video/')===0||/\.(mp4|webm|ogg|mov|m4v|avi)$/.test(name)) return '🎬 فيديو'; if(type.indexOf('audio/')===0||/\.(mp3|wav|m4a|aac|flac)$/.test(name)) return '🔊 صوت'; if(/^https?:\/\//i.test(String(meta?.remoteUrl||''))) return '🔗 HTTPS'; return '📄 ملف'; }
 function renderTileContentCarousel(tileId, files) { const tile=ServerManager.tiles[tileId]||{}, metaMap=tile.fileMeta||{}; const names=Object.keys(files||{}).filter(n=>n!=='telegram_products.json'&&(!metaMap[n]||metaMap[n].visible!==false)); if(!names.length) return '<div style="padding:24px;text-align:center;color:#94a3b8;background:rgba(255,255,255,.04);border-radius:14px;">لا توجد روابط أو ملفات ظاهرة في هذا المربع</div>'; const cards=names.map((name,index)=>{ const meta=metaMap[name]||{}, label=tileContentKindLabel(name,meta), telegram=String(meta.telegramUrl||'').trim(), remote=String(meta.remoteUrl||'').trim(), safeName=tgEscape(name), source=telegram||remote; return '<button type="button" onclick="openFileInsidePlatform(\''+tileId+'\',\''+String(name).replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')" style="flex:0 0 min(78vw,245px);min-height:132px;scroll-snap-align:start;border:1px solid '+(telegram?'rgba(167,139,250,.65)':'rgba(74,222,128,.38)')+';border-radius:16px;background:linear-gradient(145deg,rgba(30,41,59,.96),rgba(15,23,42,.94));color:#fff;padding:14px;text-align:right;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.2);font-family:inherit;"><span style="display:block;font-size:30px;margin-bottom:8px;">'+(label.split(' ')[0]||'📄')+'</span><strong style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:left;">'+safeName+'</strong><span style="display:block;margin-top:8px;color:#c4b5fd;font-size:11px;">'+tgEscape(label.replace(/^\S+\s*/,''))+'</span>'+(source?'<small style="display:block;margin-top:8px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:left;">'+tgEscape(source)+'</small>':'')+((meta.telegramCaption||meta.description)?'<small style="display:block;margin-top:8px;color:#cbd5e1;line-height:1.5;max-height:34px;overflow:hidden;">'+tgEscape(String(meta.telegramCaption||meta.description).slice(0,160))+'</small>':'')+'<span style="display:block;margin-top:12px;color:#86efac;font-size:11px;">اضغط للتشغيل أو الدخول</span></button>'; }).join(''); return '<div style="display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;padding:4px 2px 12px;direction:ltr;scroll-snap-type:x mandatory;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;">'+cards+'</div><div style="text-align:center;color:#64748b;font-size:10px;margin-top:-4px;">اسحب يميناً أو يساراً لاستعراض '+names.length+' عنصراً، ثم اضغط على العنصر لفتحه</div>'; }
 function showRoomFiles(){ const tileId=castleState.currentRoom||ServerManager.selectedTile; if(!tileId)return; const type=castleRoomType(tileId),files=loadRoomFiles(tileId); const productBlock=tileId==='5_0'?'<div style="margin:10px 0 14px;padding:10px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.25);border-radius:12px;"><div style="color:#86efac;font-weight:800;margin-bottom:8px;">🛍️ منتجات Telegram</div>'+renderTelegramProducts()+'</div>':''; const isAdminRoom=tileId==='0_3'; if(isAdminRoom&&typeof adminSystem!=='undefined'&&typeof adminSystem.syncRole==='function')adminSystem.syncRole(); const isAdminUser=isAdminRoom&&typeof adminSystem!=='undefined'&&adminSystem.isAdmin; const adminButton=isAdminRoom&&isAdminUser?'<button onclick="adminSystem.showAdminPanel()" style="border-color:#fbbf24;color:#fbbf24;">👑 لوحة المدير</button><button onclick="openTileCDNUploadModal()" style="border-color:#4ade80;color:#4ade80;">📤 TileCDN</button><button onclick="toggleServerPanel()" style="border-color:#60a5fa;color:#93c5fd;">📦 السيرفر</button>':''; const productButton=tileId==='5_0'?'<button onclick="showTelegramProductsWindow()" style="border-color:#4ade80;color:#86efac;">🛍️ عرض جميع المنتجات</button>':''; const actions='<div style="display:flex;gap:7px;flex-wrap:wrap;margin:10px 0;"><label style="padding:10px 13px;background:rgba(74,222,128,.15);border:1px dashed #4ade80;border-radius:8px;cursor:pointer;">📤 رفع إلى الغرفة<input type="file" multiple onchange="uploadFilesToRoom(this.files)" style="display:none"></label><button onclick="shareFilePrompt()">📤 مشاركة</button>'+productButton+adminButton+(type.type==='chat'?'<button onclick="openRoomChat(\''+tileId+'\')">💬 الدردشة</button>':'')+(type.type==='video'?'<button onclick="openRoomVideo(\''+tileId+'\')">🎥 الفيديو</button>':'')+'<button onclick="leaveRoom()">⬅️ خروج</button></div>'; castleOverlay(type.icon+' '+type.name,'<div style="color:#d1d5db;margin-bottom:8px;">📂 محتويات المربع '+tileId+'</div>'+productBlock+actions+'<div style="color:#c4b5fd;font-weight:800;margin:8px 0;">روابط وملفات المربع</div>'+renderTileContentCarousel(tileId,files)); }
 window.showRoomFiles=showRoomFiles;
