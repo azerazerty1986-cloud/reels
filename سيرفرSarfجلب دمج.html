@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html dir="rtl" lang="ar">
+r">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -201,7 +200,7 @@
         <div class="feat">⛓️ بلوكشين</div>
         <div class="feat">✍️ توقيع رقمي</div>
     </div>
-    <button class="start-btn" id="startGameBtn" onclick="showLoginScreen();return false;">🚀 ابدأ المغامرة</button>
+    <button type="button" class="start-btn" id="startGameBtn" onclick="return window.nardoStartAdventure ? window.nardoStartAdventure(event) : false;">🚀 ابدأ المغامرة</button>
     <div style="display:flex;gap:10px;margin-top:10px;">
         <button class="start-btn" style="padding:10px 30px;font-size:14px;" onclick="loadGame()">📂 تحميل</button>
         <button class="start-btn" style="padding:10px 30px;font-size:14px;" onclick="showTutorial()">❓ دليل</button>
@@ -3932,7 +3931,8 @@ function startGameAs(role){
         showToast('❌ تعذر بدء المنصة: '+(err.message||'خطأ غير معروف'),'error');
     }
 }
-window.showLoginScreen=showLoginScreen;window.startSignedGameLogin=startSignedGameLogin;window.startGuestGameLogin=startGuestGameLogin;window.startGameAs=startGameAs;window.openGameAdminLogin=openGameAdminLogin;window.verifyGameAdminLogin=verifyGameAdminLogin;window.startGame=startGame;
+function nardoStartAdventure(event){if(event&&typeof event.preventDefault==='function')event.preventDefault();try{if(typeof window.showLoginScreen==='function'){window.showLoginScreen();return false;}throw new Error('نافذة تسجيل الدخول غير جاهزة بعد');}catch(error){console.error('Nardo start button failed',error);if(typeof showToast==='function')showToast('❌ تعذر فتح نافذة الدخول، أعد تحميل الملف وحاول مرة أخرى','error');return false;}}
+window.showLoginScreen=showLoginScreen;window.nardoStartAdventure=nardoStartAdventure;window.startSignedGameLogin=startSignedGameLogin;window.startGuestGameLogin=startGuestGameLogin;window.startGameAs=startGameAs;window.openGameAdminLogin=openGameAdminLogin;window.verifyGameAdminLogin=verifyGameAdminLogin;window.startGame=startGame;
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  القسم 25: بدء اللعبة
@@ -4270,7 +4270,7 @@ window.enterWorldFromTile = enterWorldFromTile;
 document.addEventListener('DOMContentLoaded', function() {
     const startBtn = document.getElementById('startGameBtn');
     if (startBtn) {
-        startBtn.onclick = function(e) { e.preventDefault(); showLoginScreen(); };
+        startBtn.onclick = nardoStartAdventure;
     }
     console.log('🌐 النظام المتكامل الكامل جاهز!');
     console.log('⛓️ بلوكشين مُوقّع:', blockchain.chain.length, 'بلوك');
@@ -4349,7 +4349,7 @@ class AdminCastleSystem {
     unpublishFile(key){if(!this.requireAdmin())return;if(!confirm('إلغاء نشر الملف؟'))return;delete this.roomData.publishedFiles[key];Object.values(this.roomData.tileFiles).forEach(a=>{const i=a.indexOf(key);if(i>=0)a.splice(i,1)});this.saveAdminRoomData();showToast('🗑️ تم إلغاء النشر','warning');}
     showAllMembers(){const rows=(this.roomData.members||[]).map(m=>'<div style="padding:8px;background:rgba(255,255,255,.05);margin:4px 0;border-radius:7px;">👤 '+m+'</div>').join('');castleOverlay('👥 أعضاء غرفة المدير',rows||'لا يوجد أعضاء');}
     showAdminPanel(){if(!this.requireAdmin())return;const count=Object.keys(this.roomData.publishedFiles||{}).length;castleOverlay('👑 غرفة المدير','<div style="color:#d1d5db;margin-bottom:12px;">الأعضاء: '+this.roomData.members.length+' | الملفات المنشورة: '+count+'</div><div style="display:grid;gap:8px;"><button onclick="adminSystem.publishFromCurrentTile()">📤 نشر من المربع الحالي</button><button onclick="adminSystem.showPublishedFiles()">📂 عرض المنشور</button><button onclick="adminSystem.showPublishedFiles({tileId:ServerManager.selectedTile})">📍 منشورات المربع الحالي</button><button onclick="adminSystem
-        
+                                                    
     
     .showPublishedFiles({worldId:currentWorldId})">🌍 منشورات العالم الحالي</button><button onclick="adminSystem.showAllMembers()">👥 الأعضاء</button></div>');}
     enterAdminRoom(){if(!this.requireAdmin())return;castleState.currentRoom='0_3';saveCastleData();this.listenToAdminRoom();this.showAdminPanel();showToast('👑 دخلت غرفة المدير العامة','success');}
