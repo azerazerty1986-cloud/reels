@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🛍️ المنتجات</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:system-ui,sans-serif;background:#0a0a1a;color:#fff;padding:12px}
+  button{width:100%;padding:14px;border:0;border-radius:10px;
+         background:#4ade80;color:#000;font-size:16px;font-weight:700;cursor:pointer}
+  button:disabled{opacity:.5}
+  #grid{display:grid;gap:10px;margin-top:12px;
+        grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+  .card{background:#1a1a2e;border-radius:10px;overflow:hidden}
+  .card img{width:100%;height:150px;object-fit:cover;display:block}
+  .card .body{padding:10px;font-size:13px;line-height:1.7}
+  .card .name{color:#86efac;font-weight:700;margin-bottom:4px}
+  .card .price{color:#fbbf24;font-weight:700}
+  .empty{text-align:center;padding:40px;color:#666}
+</style>
+</head>
+<body>
+
+<button id="btn" onclick="go()">🔄 جلب المنتجات</button>
+<div id="grid"></div>
+
+<script>
+// ═══ خريطة مربعات أيقونة السحر ═══
+const ORDER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:-_.@#$%^&*()+/=?!,;\'"<>';
+const TILE = {};
+[...ORDER].forEach((c,i)=>TILE[c] = Math.floor(i/12)+'_'+(i%12));
+
+// ═══ قراءة الإعدادات من المربعات ═══
+function readCreds(){
+  const t = {};
+  for(const c of ORDER){
+    const tile = JSON.parse(localStorage.getItem('tiles_world_icon_16')||'{}')[TILE[c]];
+    if(!tile?.files) continue;
+    let e = {}; try{ e = JSON.parse(tile.files['credential.json']||'{}') }catch(_){}
+    (e.tokenPositions||[]).forEach(p => t[p] = c);
+  }
+  const token = Object.keys(t).sort((a,b)=>a-b).map(p=>t[p]).join('');
+  if(!token) return null;
+
+  const i = {};
+  for(const c of ORDER){
+    const tile = JSON.parse(localStorage.getItem('tiles_world_icon_16')||'{}')[TILE[c]];
+    if(!tile?.files) continue;
+    let e = {}; try{ e = JSON.parse(tile.files['credential.json']||'{}') }catch(_){}
+    (e.idPositions||[]).forEach(p => i[p] = c);
+  }
+  const chatId = Object.keys(i).sort((a,b)=>a-b).map(p=>i[p]).join('');
+  return token && chatId ? {token, chatId} : null;
+}
+
+// ═══ استخراج المنتج ═══
+function parse(txt){
+  if(!/منتج\s*جديد/.test(txt) || !/📦\s*المنتج/.test(txt)) return null;
+  const r = l => { const m = txt.match(new RegExp(l+'\\s*[:：]\\s*(.+?)(?=\\n|$)')); return m?m[1].trim():'' };
+  const p = {
+    name:     r('📦\\s*المنتج'),
+    price:    r('💰\\s*السعر'),
+    category: r('🏷️\\s*القسم'),
+    quantity: r('📊\\s*الكمية'),
+    pid:      r('🆔\\s*معرف\\s*المنتج'),
+    store:    r('🏪\\s*المتجر'),
+    desc:     r('📝\\s*الوصف')
+  };
+  return p.name ? p : null;
+}
+
+// ═══ العرض ═══
+function show(list){
+  const g = document.getElementById('grid');
+  if(!list.length){ g.innerHTML = '<div class="empty">لا توجد منتجات</div>'; return }
+  g.innerHTML = list.map(p => `
+    <div class="card">
+      ${p.img ? `<img src="${p.img}" loading="lazy">` : ''}
+      <div class="body">
+        <div class="name">${p.name}</div>
+        <div class="price">${p.price}</div>
+        <div>🏷️ ${p.category}</div>
+        <div>📊 ${p.quantity}</div>
+        <div>🆔 ${p.pid}</div>
+        <div>🏪 ${p.store}</div>
+        ${p.desc ? `<div>📝 ${p.desc}</div>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+// ═══ الجلب عند الضغط ═══
+async function go(){
+  const btn = document.getElementById('btn');
+  btn.disabled = true; btn.textContent = '⏳ جاري الجلب...';
+
+  try{
+    const c = readCreds();
+    if(!c) throw new Error('لم أجد الإعدادات في مربعات أيقونة السحر 🧙');
+
+    // جلب التحديثات
+    const r = await fetch(`https://api.telegram.org/bot${c.token}/getUpdates?limit=100`);
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.description);
+
+    // فلترة + استخراج
+    const chatId = c.chatId.startsWith('-100') ? c.chatId : '-100'+c.chatId;
+    const list = [];
+
+    for(const u of (d.result||[])){
+      const m = u.channel_post || u.edited_channel_post || u.message;
+      if(!m) continue;
+      if(String(m.chat?.id) !== chatId) continue;
+
+      const p = parse(m.caption || m.text || '');
+      if(!p) continue;
+
+      // صورة
+      if(m.photo?.length){
+        try{
+          const f = m.photo[m.photo.length-1];
+          const fr = await fetch(`https://api.telegram.org/bot${c.token}/getFile?file_id=${f.file_id}`);
+          const fd = await fr.json();
+          if(fd.ok) p.img = `https://api.telegram.org/file/bot${c.token}/${fd.result.file_path}`;
+        }catch(_){}
+      }
+      list.push(p);
+    }
+
+    show(list);
+    if(!list.length) alert('لا توجد منتجات بالتنسيق المحدد');
+  }
+  catch(e){ alert('❌ ' + e.message) }
+  finally{
+    btn.disabled = false; btn.textContent = '🔄 جلب المنتجات';
+  }
+}
+</script>
+</body>
+</html>
+
