@@ -17,7 +17,7 @@
   .card .body{padding:10px;font-size:13px;line-height:1.7}
   .card .name{color:#86efac;font-weight:700;margin-bottom:4px}
   .card .price{color:#fbbf24;font-weight:700}
-  .empty{text-align:center;padding:40px;color:#666}
+  .empty{text-align:center;padding:40px;color:#666;grid-column:1/-1}
 </style>
 </head>
 <body>
@@ -26,37 +26,45 @@
 <div id="grid"></div>
 
 <script>
-// ═══ خريطة مربعات أيقونة السحر ═══
 const ORDER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:-_.@#$%^&*()+/=?!,;\'"<>';
 const TILE = {};
-[...ORDER].forEach((c,i)=>TILE[c] = Math.floor(i/12)+'_'+(i%12));
+[...ORDER].forEach((c,i)=>TILE[c]=Math.floor(i/12)+'_'+(i%12));
 
-// ═══ قراءة الإعدادات من المربعات ═══
 function readCreds(){
-  const t = {};
-  for(const c of ORDER){
-    const tile = JSON.parse(localStorage.getItem('tiles_world_icon_16')||'{}')[TILE[c]];
-    if(!tile?.files) continue;
-    let e = {}; try{ e = JSON.parse(tile.files['credential.json']||'{}') }catch(_){}
-    (e.tokenPositions||[]).forEach(p => t[p] = c);
+  // 1) النسخ الاحتياطية أولاً
+  const src = localStorage.getItem('magic_credentials_source_v1') || 'local';
+  const bk = src==='channel' ? 'magic_credentials_channel_v1' : 'magic_credentials_local_v1';
+  for (const k of [bk, 'magic_credentials_full_v1']) {
+    try {
+      const b = JSON.parse(localStorage.getItem(k)||'null');
+      if (b?.token && b?.chatId) return {token:b.token, chatId:b.chatId};
+    } catch(_){}
   }
-  const token = Object.keys(t).sort((a,b)=>a-b).map(p=>t[p]).join('');
-  if(!token) return null;
-
-  const i = {};
-  for(const c of ORDER){
-    const tile = JSON.parse(localStorage.getItem('tiles_world_icon_16')||'{}')[TILE[c]];
+  // 2) قراءة من المربعات
+  let tiles = {};
+  try { tiles = JSON.parse(localStorage.getItem('tiles_world_icon_16')||'{}') } catch(_){}
+  const t={}, i={};
+  for (const c of ORDER){
+    const tile = tiles[TILE[c]];
     if(!tile?.files) continue;
-    let e = {}; try{ e = JSON.parse(tile.files['credential.json']||'{}') }catch(_){}
-    (e.idPositions||[]).forEach(p => i[p] = c);
+    let m={}; try{ m=JSON.parse(tile.files['credential.json']||'{}') }catch(_){}
+    if(m.char !== c) continue;
+    (m.tokenPositions||[]).forEach(p=>t[p]=c);
+    (m.idPositions||[]).forEach(p=>i[p]=c);
   }
-  const chatId = Object.keys(i).sort((a,b)=>a-b).map(p=>i[p]).join('');
+  const build = map => {
+    const ps = Object.keys(map).map(Number).sort((a,b)=>a-b);
+    if(!ps.length) return '';
+    for(let x=0;x<ps.length;x++) if(ps[x]!==x+1) return '';
+    return ps.map(p=>map[p]).join('');
+  };
+  const token = build(t), chatId = build(i);
   return token && chatId ? {token, chatId} : null;
 }
 
-// ═══ استخراج المنتج ═══
 function parse(txt){
-  if(!/منتج\s*جديد/.test(txt) || !/📦\s*المنتج/.test(txt)) return null;
+  if(!/منتج\s*جديد/.test(txt)) return null;
+  if(!/📦\s*المنتج/.test(txt)) return null;
   const r = l => { const m = txt.match(new RegExp(l+'\\s*[:：]\\s*(.+?)(?=\\n|$)')); return m?m[1].trim():'' };
   const p = {
     name:     r('📦\\s*المنتج'),
@@ -70,13 +78,12 @@ function parse(txt){
   return p.name ? p : null;
 }
 
-// ═══ العرض ═══
 function show(list){
   const g = document.getElementById('grid');
-  if(!list.length){ g.innerHTML = '<div class="empty">لا توجد منتجات</div>'; return }
-  g.innerHTML = list.map(p => `
+  if(!list.length){ g.innerHTML='<div class="empty">لا توجد منتجات</div>'; return }
+  g.innerHTML = list.map(p=>`
     <div class="card">
-      ${p.img ? `<img src="${p.img}" loading="lazy">` : ''}
+      ${p.img?`<img src="${p.img}" loading="lazy" onerror="this.remove()">`:''}
       <div class="body">
         <div class="name">${p.name}</div>
         <div class="price">${p.price}</div>
@@ -84,26 +91,22 @@ function show(list){
         <div>📊 ${p.quantity}</div>
         <div>🆔 ${p.pid}</div>
         <div>🏪 ${p.store}</div>
-        ${p.desc ? `<div>📝 ${p.desc}</div>` : ''}
+        ${p.desc?`<div>📝 ${p.desc}</div>`:''}
       </div>
     </div>`).join('');
 }
 
-// ═══ الجلب عند الضغط ═══
 async function go(){
   const btn = document.getElementById('btn');
   btn.disabled = true; btn.textContent = '⏳ جاري الجلب...';
-
-  try{
+  try {
     const c = readCreds();
     if(!c) throw new Error('لم أجد الإعدادات في مربعات أيقونة السحر 🧙');
 
-    // جلب التحديثات
     const r = await fetch(`https://api.telegram.org/bot${c.token}/getUpdates?limit=100`);
     const d = await r.json();
     if(!d.ok) throw new Error(d.description);
 
-    // فلترة + استخراج
     const chatId = c.chatId.startsWith('-100') ? c.chatId : '-100'+c.chatId;
     const list = [];
 
@@ -111,15 +114,13 @@ async function go(){
       const m = u.channel_post || u.edited_channel_post || u.message;
       if(!m) continue;
       if(String(m.chat?.id) !== chatId) continue;
-
       const p = parse(m.caption || m.text || '');
       if(!p) continue;
 
-      // صورة
       if(m.photo?.length){
         try{
-          const f = m.photo[m.photo.length-1];
-          const fr = await fetch(`https://api.telegram.org/bot${c.token}/getFile?file_id=${f.file_id}`);
+          const fid = m.photo[m.photo.length-1].file_id;
+          const fr = await fetch(`https://api.telegram.org/bot${c.token}/getFile?file_id=${fid}`);
           const fd = await fr.json();
           if(fd.ok) p.img = `https://api.telegram.org/file/bot${c.token}/${fd.result.file_path}`;
         }catch(_){}
@@ -129,11 +130,8 @@ async function go(){
 
     show(list);
     if(!list.length) alert('لا توجد منتجات بالتنسيق المحدد');
-  }
-  catch(e){ alert('❌ ' + e.message) }
-  finally{
-    btn.disabled = false; btn.textContent = '🔄 جلب المنتجات';
-  }
+  } catch(e){ alert('❌ ' + e.message) }
+  finally { btn.disabled = false; btn.textContent = '🔄 جلب المنتجات' }
 }
 </script>
 </body>
