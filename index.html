@@ -125,6 +125,12 @@
         .product-card{background:#0a0a1a;border-radius:12px;padding:15px;text-align:center;border:2px solid rgba(255,215,0,0.08);transition:0.3s;cursor:pointer;position:relative}
         .product-card:hover{border-color:rgba(255,215,0,0.3);transform:translateY(-3px)}
         .product-card.selected{border-color:var(--gold);background:rgba(255,215,0,0.08);box-shadow:0 0 30px rgba(255,215,0,0.1)}
+        .product-card.buyer-catalog-selected{border-color:#20b2aa;box-shadow:0 0 0 2px rgba(32,178,170,.35),0 0 25px rgba(32,178,170,.15)}
+        .buyer-product-select{position:absolute;top:10px;right:10px;z-index:25;width:25px;height:25px;accent-color:#20b2aa;cursor:pointer;filter:drop-shadow(0 2px 4px #0008)}
+        .buyer-catalog-toolbar{background:linear-gradient(135deg,rgba(32,178,170,.12),rgba(139,92,246,.10));border:1px solid rgba(32,178,170,.35);border-radius:14px;padding:12px;margin-bottom:15px}
+        .buyer-catalog-toolbar .live-link-row{display:flex;gap:7px;align-items:center;margin-top:10px;flex-wrap:wrap}
+        .buyer-catalog-toolbar input{flex:1;min-width:180px;margin:0;background:#0a0a1a;color:#9fe9df;font-size:11px;direction:ltr;text-align:left}
+        .buyer-catalog-toolbar small{color:#aab8b3;font-size:11px}
         .product-card .img{width:100%;height:140px;background:#0a0a1a;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:50px;color:rgba(255,215,0,0.3);margin-bottom:10px;overflow:hidden;cursor:pointer;transition:0.3s}
         .product-card .img:hover{transform:scale(1.05);color:var(--gold)}
         .product-card .img img{width:100%;height:100%;object-fit:cover}
@@ -1099,6 +1105,21 @@ select.invalid { border-color: #f87171 !important; background: rgba(248, 113, 11
                     </div>
                 </div>
                 <div id="subStoreManagementContainer"></div>
+                <div id="buyerCatalogToolbar" class="buyer-catalog-toolbar">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+                        <div><strong style="color:#9fe9df;"><i class="fas fa-link"></i> كتالوج المشتري</strong><br><small>حدد المنتجات المطلوبة من البطاقات، وسيتم تحديث الرابط مباشرة.</small></div>
+                        <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center;">
+                            <span id="buyerCatalogSelectedCount" style="color:#9fe9df;font-weight:700;font-size:12px;">0 محدد</span>
+                            <button class="btn btn-green" onclick="generateBuyerCatalog()" style="width:auto;padding:8px 12px;font-size:11px;"><i class="fas fa-file-export"></i> إنشاء الكتالوج</button>
+                            <button class="btn btn-gray" onclick="clearBuyerCatalogSelection()" style="width:auto;padding:8px 12px;font-size:11px;"><i class="fas fa-eraser"></i> مسح التحديد</button>
+                        </div>
+                    </div>
+                    <div id="buyerCatalogLiveLinkRow" class="live-link-row" style="display:none;">
+                        <input id="buyerCatalogLiveLink" readonly aria-label="الرابط المباشر للكتالوج">
+                        <button class="btn btn-blue" onclick="copyBuyerCatalogLink()" style="width:auto;padding:8px 12px;font-size:11px;"><i class="fas fa-copy"></i> نسخ الرابط</button>
+                        <button class="btn btn-purple" onclick="openBuyerCatalogLink()" style="width:auto;padding:8px 12px;font-size:11px;"><i class="fas fa-external-link-alt"></i> فتح</button>
+                    </div>
+                </div>
                 <div class="product-grid" id="productGrid"></div>
             </div>
 
@@ -1774,6 +1795,7 @@ let lastAutoFetchTime = 0;
 const AUTO_FETCH_INTERVAL = 15000;
 let storesState = JSON.parse(localStorage.getItem('stores_state') || '{}');
 let selectedDistributor = null;
+let buyerCatalogSelectedIds = new Set(JSON.parse(localStorage.getItem('nardo_buyer_catalog_selected') || '[]').map(String));
 
 // ============================================================
 // 🚀 دالة الجلب من القناة (الأولوية القصوى)
@@ -3633,6 +3655,7 @@ function refreshAllDistributorViews() {
             html = products.map(product => createProductCard(product, false, [])).join('');
         }
         grid.innerHTML = html;
+        if (typeof syncBuyerCatalogSelectionUI === 'function') syncBuyerCatalogSelectionUI();
         updateProductRelativeTimes();
         if (!window.__nardoProductTimeInterval) {
             window.__nardoProductTimeInterval = setInterval(updateProductRelativeTimes, 60000);
@@ -3729,6 +3752,7 @@ function refreshAllDistributorViews() {
         badges += '</div>';
         return `
         <div class="product-card ${isTelegram ? 'telegram-fetched' : ''}" id="card-${product.id}" ondblclick="addToCart(${product.id})" title="اضغط مرتين لإضافة المنتج إلى السلة">
+            <input class="buyer-product-select" type="checkbox" data-product-id="${String(product.id)}" aria-label="إضافة ${product.name} إلى كتالوج المشتري" title="إضافة إلى كتالوج المشتري" onchange="toggleBuyerProductSelection(event, this.dataset.productId)">
             ${badges}
             <div class="img">${imageHtml}</div>
             <div class="name">${product.name}</div>
@@ -7285,15 +7309,103 @@ window.__SERVER_OWNER_ID = window.__SERVER_OWNER_ID || 'main';
 // ============================================================
 // 🛒 كتالوج المشتري — إنشاء ملف مستقل ومشاركته عبر Telegram
 // ============================================================
+const BUYER_CATALOG_URL = 'https://buyer-catalo-h9koblxw.manus.space/';
+
+function getBuyerCatalogSelectedIds() {
+    return Array.from(buyerCatalogSelectedIds || []).map(String);
+}
+
+function getBuyerCatalogProducts() {
+    const ids = getBuyerCatalogSelectedIds();
+    const source = Array.isArray(inventory) ? inventory : JSON.parse(localStorage.getItem('nardo_products') || '[]');
+    return source.filter(p => p && p.name && Number(p.stock ?? 0) > 0)
+        .filter(p => !currentStoreId || !p.storeId || p.storeId === currentStoreId)
+        .filter(p => !ids.length || ids.includes(String(p.id)))
+        .map(p => ({id:p.id,name:p.name,price:Number(p.price||0),stock:Number(p.stock||0),category:p.category||'',description:p.description||'',image:Array.isArray(p.images)&&p.images.length?p.images[0]:''}));
+}
+
+function encodeBuyerCatalogPayload(products) {
+    const json = JSON.stringify(products).replace(/</g, '\\u003c');
+    try { return btoa(unescape(encodeURIComponent(json))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+    catch (e) { return encodeURIComponent(json); }
+}
+
+function getBuyerCatalogLiveLink() {
+    const products = getBuyerCatalogProducts();
+    if (!products.length) return '';
+    return `${BUYER_CATALOG_URL}?catalog=selected#data=${encodeBuyerCatalogPayload(products)}`;
+}
+
+function updateBuyerCatalogLink() {
+    const count = document.getElementById('buyerCatalogSelectedCount');
+    const row = document.getElementById('buyerCatalogLiveLinkRow');
+    const input = document.getElementById('buyerCatalogLiveLink');
+    const ids = getBuyerCatalogSelectedIds();
+    if (count) count.textContent = `${ids.length} محدد${ids.length === 1 ? '' : 'ة'}`;
+    const link = getBuyerCatalogLiveLink();
+    if (input) input.value = link;
+    if (row) row.style.display = link ? 'flex' : 'none';
+    localStorage.setItem('nardo_buyer_catalog_selected', JSON.stringify(ids));
+}
+
+function syncBuyerCatalogSelectionUI() {
+    document.querySelectorAll('.buyer-product-select').forEach(box => {
+        const card = box.closest('.product-card');
+        const id = String(box.dataset.productId || '');
+        if (!id) return;
+        const checked = buyerCatalogSelectedIds.has(id);
+        box.checked = checked;
+        if (card) card.classList.toggle('buyer-catalog-selected', checked);
+    });
+    updateBuyerCatalogLink();
+}
+
+function toggleBuyerProductSelection(event, id) {
+    event?.stopPropagation();
+    id = String(id);
+    if (event?.target?.checked) buyerCatalogSelectedIds.add(id);
+    else buyerCatalogSelectedIds.delete(id);
+    const card = document.getElementById(`card-${id}`);
+    if (card) card.classList.toggle('buyer-catalog-selected', buyerCatalogSelectedIds.has(id));
+    updateBuyerCatalogLink();
+}
+
+function clearBuyerCatalogSelection() {
+    buyerCatalogSelectedIds.clear();
+    syncBuyerCatalogSelectionUI();
+    if (typeof toast === 'function') toast('✅ تم مسح تحديد الكتالوج', 'success');
+}
+
+async function copyBuyerCatalogLink() {
+    const link = getBuyerCatalogLiveLink();
+    if (!link) return (typeof toast === 'function' ? toast('⚠️ حدد منتجًا واحدًا على الأقل أولًا', 'warning') : alert('حدد منتجًا واحدًا على الأقل أولًا'));
+    try { await navigator.clipboard.writeText(link); }
+    catch (e) { const input=document.getElementById('buyerCatalogLiveLink'); input?.select(); document.execCommand('copy'); }
+    if (typeof toast === 'function') toast('✅ تم نسخ الرابط المباشر للكتالوج', 'success');
+}
+
+function openBuyerCatalogLink() {
+    const link = getBuyerCatalogLiveLink();
+    if (!link) return (typeof toast === 'function' ? toast('⚠️ حدد منتجًا واحدًا على الأقل أولًا', 'warning') : alert('حدد منتجًا واحدًا على الأقل أولًا'));
+    window.open(link, '_blank', 'noopener');
+}
+
 function escapeCatalogHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 function buildBuyerCatalogFile() {
     const source = Array.isArray(inventory) ? inventory : JSON.parse(localStorage.getItem('nardo_products') || '[]');
+    const selectedIds = getBuyerCatalogSelectedIds();
+    if (!selectedIds.length) {
+        if (typeof toast === 'function') toast('⚠️ حدد المنتجات التي تريد إضافتها إلى كتالوج المشتري أولًا', 'warning');
+        else alert('حدد المنتجات التي تريد إضافتها إلى كتالوج المشتري أولًا');
+        return null;
+    }
     const products = source
         .filter(p => p && p.name && Number(p.stock ?? 0) > 0)
         .filter(p => !currentStoreId || !p.storeId || p.storeId === currentStoreId)
+        .filter(p => !selectedIds.length || selectedIds.includes(String(p.id)))
         .map(p => ({
             id: p.id,
             name: p.name,
@@ -7334,24 +7446,29 @@ render();update();
 }
 
 async function generateBuyerCatalog() {
+    updateBuyerCatalogLink();
     const file = buildBuyerCatalogFile();
     if (!file) return;
     try {
         if (navigator.share && navigator.canShare && navigator.canShare({files:[file]})) {
             await navigator.share({title:'كتالوج المشتري',text:'كتالوج المنتجات المحدث',files:[file]});
-            if (typeof toast === 'function') toast('✅ تمت مشاركة الكتالوج — اختر Telegram', 'success');
+            if (typeof toast === 'function') toast('✅ تمت مشاركة الكتالوج المحدد — اختر Telegram', 'success');
             return;
         }
     } catch (e) { if (e.name === 'AbortError') return; }
     const url = URL.createObjectURL(file), a = document.createElement('a');
     a.href = url; a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1500);
-    if (typeof toast === 'function') toast('✅ تم إنشاء ملف الكتالوج؛ أرسله عبر Telegram', 'success');
+    if (typeof toast === 'function') toast('✅ تم إنشاء ملف الكتالوج المحدد؛ ويمكن نسخ الرابط المباشر من الشريط', 'success');
 }
 window.generateBuyerCatalog = generateBuyerCatalog;
+window.updateBuyerCatalogLink = updateBuyerCatalogLink;
 </script>
 
 </body>
 
 
                                                                                                 
+
+
+                
